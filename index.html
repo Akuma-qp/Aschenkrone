@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>Aschenkrone – Die Chroniken von Eldmar</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+html,body{margin:0;height:100%;overflow:hidden;background:#000;font-family:Georgia,'Palatino Linotype','Book Antiqua',serif;color:#2b1a0a;overscroll-behavior:none}
+input{user-select:text;-webkit-user-select:text}
+:root{--s:min(38px,calc((100vw - 40px)/9))}
+canvas.full{display:block;position:fixed;inset:0;touch-action:none}
+#c3d{display:none}
+body.pc #ctrls,body.pc #joyHint,body.pc #bRotL,body.pc #bRotR,body.pc #bTiltU,body.pc #bTiltD,body.pc #bAtk,body.pc #bInv,body.pc #bAct,body.pc #bJump,body.pc #bDodge,body.pc #bSprint{display:none!important}
+body.pc canvas#c2d{cursor:none}
+.kbd{display:inline-block;min-width:18px;padding:0 4px;border:1px solid #5a3d1e;border-bottom-width:2px;border-radius:4px;background:#fffaf0;font-family:sans-serif;font-size:11px;text-align:center}
+button{touch-action:manipulation;cursor:pointer}
+.parch{background:linear-gradient(#f4e6c4,#e3cc98);border:3px solid #5a3d1e;border-radius:8px;box-shadow:0 0 0 2px #c9a86a inset,0 4px 14px rgba(0,0,0,.6)}
+#hud{display:none}
+#hudTL{position:fixed;left:calc(8px + env(safe-area-inset-left));top:calc(8px + env(safe-area-inset-top));width:min(54vw,250px);pointer-events:none}
+.row{display:flex;align-items:center;gap:6px}
+#lvl{pointer-events:auto;touch-action:manipulation;cursor:pointer;width:36px;height:36px;border-radius:50%;background:radial-gradient(#ffe08a,#b8860b);border:2px solid #5a3d1e;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:15px;color:#3b2612;flex:none;box-shadow:0 2px 5px #000}
+.bars{flex:1}
+.bar{height:15px;border:2px solid #3b2612;background:#2a1a0c;border-radius:4px;position:relative;overflow:hidden}
+.bar+.bar,.bar+.bar2{margin-top:3px}.bar2{display:flex;gap:3px}.bar2 .bar{flex:1;height:11px}.bar2 .bar span{font-size:8.5px;line-height:8px}#stf{background:linear-gradient(#c5e1a5,#558b2f)}#mpf{background:linear-gradient(#82b1ff,#2962ff)}#ammo{display:none;font-size:11px;color:#ffe9b0;text-shadow:0 0 3px #000;font-weight:bold}.mapP{width:auto;max-width:96vw}#mapC{display:block;margin:4px auto;border:2px solid #5a3d1e;border-radius:4px;image-rendering:pixelated}
+.bar i{position:absolute;left:0;top:0;bottom:0;width:0}
+#hpf{background:linear-gradient(#ef5350,#b71c1c)}#hpf.poison{background:linear-gradient(#9ccc65,#33691e)}
+#xpf{background:linear-gradient(#ffe082,#c8a400)}
+.bar span{position:absolute;inset:0;font-size:10px;line-height:11px;text-align:center;color:#fff;text-shadow:0 0 2px #000,0 0 2px #000;font-family:sans-serif}
+#gold{margin-top:4px;font-size:12px;color:#ffd54a;text-shadow:0 1px 2px #000,0 0 3px #000;font-weight:bold}
+#zone{margin-top:2px;font-size:12px;color:#f4e6c4;text-shadow:0 1px 2px #000,0 0 3px #000;font-weight:bold}
+#quests{margin-top:5px;padding:5px 7px;font-size:11px;line-height:1.4;background:rgba(30,18,8,.74);color:#f4e6c4;border:1px solid #8a6a3a;border-radius:6px}
+#quests .ch{color:#ffd54a;font-weight:bold;font-size:10.5px;letter-spacing:.5px}
+#quests .ob{color:#fff;margin-bottom:2px}
+#quests .sq{color:#d7c9a8;font-size:10.5px}
+#quests .qh{color:#ffd54a;font-weight:bold;font-size:10.5px;letter-spacing:.4px}#quests .qh2{color:#e0c48a;font-weight:bold;font-size:10px;margin-top:4px;border-top:1px solid rgba(138,106,58,.6);padding-top:3px}
+#quests .qd{color:#ffd54a;font-size:10px;white-space:nowrap;opacity:.9}
+#invTabs{display:flex;gap:4px;margin-bottom:6px}#invTabs button{flex:1;font-family:inherit;font-weight:bold;font-size:13px;padding:6px;border:2px solid #5a3d1e;border-radius:6px;background:#c9a86a;color:#3b2410;cursor:pointer}#invTabs button.on{background:#5a3d1e;color:#ffe9b0}
+#qBook{max-height:calc(100vh - 150px);overflow:auto;color:#3b2410;font-size:13px;line-height:1.45}.qbh{font-weight:bold;font-size:14px;margin:8px 0 4px;color:#5a3d1e;border-bottom:2px solid #8a6a3a}.qbc{background:rgba(255,245,215,.55);border:1px solid #a88a5a;border-radius:6px;padding:6px 8px;margin-bottom:6px}.qbt{font-weight:bold;color:#7a4a10}.qbd{color:#8a5a00;font-weight:bold;font-size:12px;margin-top:2px}.qbg{font-size:11.5px;opacity:.8}.qbi{font-style:italic;font-size:11.5px;opacity:.75;margin-top:3px}.qbe{opacity:.8}
+#hudTR{position:fixed;right:calc(8px + env(safe-area-inset-right));top:calc(8px + env(safe-area-inset-top));display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+#hotbar,#hudTL,#ctrls,#inv>.panel,.tbtns{zoom:var(--gui,1)}#inv>.panel{max-height:calc(100% / var(--gui,1))}
+#mini{width:120px;height:120px;border:3px solid #5a3d1e;border-radius:6px;background:#000;box-shadow:0 2px 8px #000}
+.tbtns{display:flex;gap:6px}
+.rbtn{width:40px;height:40px;border-radius:50%;border:3px solid #5a3d1e;background:radial-gradient(#f4e6c4,#c9a86a);font-size:19px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px #000;color:#3b2612;font-family:inherit;padding:0;font-weight:bold}
+#hotbar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(6px + env(safe-area-inset-bottom));display:flex;gap:2px;padding:3px;background:rgba(30,18,8,.82);border:2px solid #5a3d1e;border-radius:6px}
+.slot{position:relative;width:var(--s);height:var(--s);background-color:#3a2a18;border:2px solid #6b5233;border-radius:4px;background-size:82%;background-position:center;background-repeat:no-repeat;flex:none}
+.slot .cnt{position:absolute;right:2px;bottom:0;font-size:11px;color:#fff;text-shadow:0 0 2px #000,0 0 2px #000;font-family:sans-serif;font-weight:bold}
+.slot .num{position:absolute;left:2px;top:0;font-size:8px;color:rgba(255,255,255,.45);font-family:sans-serif}
+.slot.sel{outline:3px solid #fff;outline-offset:-1px}
+.slot.pick{outline:3px solid #ffd54a;outline-offset:-1px;box-shadow:0 0 12px #ffd54a}
+#ctrls{position:fixed;right:calc(10px + env(safe-area-inset-right));bottom:calc(var(--s) + 22px + env(safe-area-inset-bottom));width:215px;height:150px;pointer-events:none}
+#ctrls button{position:absolute;pointer-events:auto;border-radius:50%;border:3px solid #5a3d1e;box-shadow:0 3px 8px #000;font-family:inherit;padding:0;color:#3b2612}
+#bAtk{right:0;bottom:0;width:82px;height:82px;font-size:38px;background:radial-gradient(#ffcdd2,#c62828)}
+#bAtk.on{transform:scale(.93);filter:brightness(1.2)}
+#bAct{right:92px;bottom:2px;width:62px;height:62px;font-size:11px;font-weight:bold;background:radial-gradient(#fff3c4,#d4a017);line-height:1.1}
+#bAct.off{opacity:.4}
+#bDodge{right:12px;bottom:92px;width:54px;height:54px;font-size:24px;background:radial-gradient(#e1f5fe,#4f9fd4)}
+#bDodge.cd{opacity:.45}#bJump{right:150px;bottom:62px;width:50px;height:50px;font-size:24px;font-weight:bold;background:radial-gradient(#f1f8e9,#7cb342)}#bSprint{right:162px;bottom:6px;width:46px;height:46px;font-size:20px;background:radial-gradient(#fff8e1,#ffa000)}#bSprint.on{box-shadow:0 0 0 3px #ffeb3b,0 3px 8px #000}#skyclock{position:fixed;left:50%;transform:translateX(-50%);top:calc(6px + env(safe-area-inset-top));width:120px;height:44px;zoom:var(--gui,1);pointer-events:none}
+@media (max-aspect-ratio:1/1){#skyclock{left:auto;transform:none;right:calc(10px + env(safe-area-inset-right));top:calc(198px + env(safe-area-inset-top))}}
+#bInv{right:94px;bottom:74px;width:52px;height:52px;font-size:25px;background:radial-gradient(#f4e6c4,#a07840)}
+#joy{position:fixed;width:116px;height:116px;margin:-58px 0 0 -58px;border-radius:50%;border:3px solid rgba(244,230,196,.55);background:rgba(0,0,0,.22);display:none;pointer-events:none}
+#knob{position:absolute;left:50%;top:50%;width:50px;height:50px;margin:-25px 0 0 -25px;border-radius:50%;background:radial-gradient(#f4e6c4,#a07840);border:2px solid #5a3d1e}
+#joyHint{position:fixed;left:18px;bottom:calc(var(--s) + 46px + env(safe-area-inset-bottom));color:rgba(244,230,196,.65);font-size:12px;pointer-events:none;text-shadow:0 1px 2px #000;max-width:40vw}
+#toasts{position:fixed;left:50%;top:calc(200px + env(safe-area-inset-top));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;width:92vw;z-index:5}
+.toast{background:rgba(25,15,6,.9);border:2px solid #8a6a3a;border-radius:6px;padding:3px 9px;font-size:12px;color:#f4e6c4;display:flex;align-items:center;gap:6px;animation:tin .25s ease-out;max-width:100%}
+.toast img{width:24px;height:24px;flex:none}
+.toast.big{font-size:13.5px;padding:5px 12px;border-color:#ffd54a}
+@keyframes tin{from{transform:translateY(-8px);opacity:0}}
+#bossbar{position:fixed;left:50%;transform:translateX(-50%);top:calc(166px + env(safe-area-inset-top));width:min(72vw,330px);display:none;text-align:center;pointer-events:none;color:#ffcdd2;font-weight:bold;font-size:13px;text-shadow:0 1px 3px #000}
+#bossbar .bar{height:13px;border-color:#5a0000}
+#bbf{background:linear-gradient(#ff5252,#8b0000)}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:10;padding:calc(8px + env(safe-area-inset-top)) 6px calc(8px + env(safe-area-inset-bottom))}
+.overlay.show{display:flex}
+.panel{width:min(440px,100%);max-height:100%;overflow-y:auto;padding:10px;-webkit-overflow-scrolling:touch}
+.ph{display:flex;justify-content:space-between;align-items:center;font-size:18px;font-weight:bold;border-bottom:2px solid #8a6a3a;padding-bottom:5px;margin-bottom:8px;letter-spacing:1px;color:#4a2a10}
+.x{width:34px;height:34px;border-radius:6px;border:2px solid #5a3d1e;background:#c9a86a;font-size:16px;font-weight:bold;color:#3b2612;padding:0;font-family:inherit;flex:none}
+.charRow{display:flex;gap:6px;justify-content:space-between;margin-bottom:8px;align-items:stretch}
+.eqCol{display:flex;flex-direction:column;gap:3px;align-items:center}
+.eqCol .slot{--s:42px}
+.slot.eqe::after{content:attr(data-l);position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;color:#a08a6a;text-align:center;line-height:1}
+#statBox{flex:1;font-size:11.5px;line-height:1.5;background:rgba(255,255,255,.35);border:1px solid #a88a5a;border-radius:6px;padding:4px 7px}
+#statBox b{float:right}
+.grid{display:grid;grid-template-columns:repeat(9,var(--s));gap:2px;justify-content:center}
+.ilabel{font-size:11px;margin:6px 0 3px;font-weight:bold;color:#5a3d1e;text-align:center}
+#itemInfo{margin-top:6px;height:218px;overflow-y:auto;padding:6px 8px;background:rgba(255,255,255,.42);border:1px solid #a88a5a;border-radius:6px;font-size:12.5px;line-height:1.45}
+.slot.mark{outline:3px solid #ff5252;outline-offset:-1px}.slot.mark::before{content:'✓';position:absolute;right:1px;top:-2px;color:#ff5252;font-weight:bold;font-size:13px;text-shadow:0 0 2px #000}
+.slot.low{filter:saturate(.35) brightness(.8)}.slot.low::before{content:'🔒';position:absolute;left:1px;top:0;font-size:10px}
+.ih{font-weight:bold;font-size:13.5px;line-height:1.2}.isub{font-size:11px;color:#5a4a30;line-height:1.35;margin-top:2px}.hint{font-size:12px;color:#6b5233}
+.cmp{display:flex;gap:6px}.ccol{flex:1;min-width:0;background:rgba(255,255,255,.3);border-radius:5px;padding:3px 5px}.ccol.cur{background:rgba(90,61,30,.1)}.ctag{font-size:9.5px;text-transform:uppercase;letter-spacing:1px;color:#8a7350}
+.ist{width:100%;border-collapse:collapse;font-size:11.5px;margin-top:3px}.ist td{padding:0 2px;border-bottom:1px dotted #c9b07a}.ist td+td{text-align:right;font-weight:bold;white-space:nowrap}.ist tr.miss td{color:#a0906a;font-weight:normal}.ist i{font-style:normal;font-size:10.5px}
+.iset{font-size:11px;margin-top:3px;padding:2px 5px;border-left:3px solid;background:#0000000d}
+#markBar{display:flex;gap:5px;align-items:center;margin-top:6px;flex-wrap:wrap}.btn.sm{font-size:11.5px;padding:4px 8px}.btn.on{background:linear-gradient(#ffe08a,#e0a020);box-shadow:0 0 6px #ffd54a}.mkn{font-size:12px;font-weight:bold;color:#c62828}.btn.dis{opacity:.45}
+#shopBar{display:none;margin-bottom:6px}.tabs{display:flex;gap:4px;margin-bottom:5px}.tabs button{flex:1;font-family:inherit;font-weight:bold;font-size:12.5px;padding:6px 4px;border:2px solid #5a3d1e;border-radius:6px 6px 0 0;background:#c9a86a;color:#3b2612}.tabs button.on{background:#f4e6c4;border-bottom-color:#f4e6c4}
+.shopL{max-height:190px;overflow-y:auto;display:flex;flex-direction:column;gap:3px}.shopI{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.35);border:1px solid #a88a5a;border-radius:5px;padding:3px 5px}.slot.sm{--s:34px}.sn{flex:1;font-weight:bold;font-size:12.5px;line-height:1.15}.sn small{display:block;font-weight:normal;font-size:10.5px;color:#6b5233}
+.btns{display:flex;flex-wrap:wrap;gap:6px;margin-top:7px}
+.btn{font-family:inherit;font-size:13px;font-weight:bold;padding:8px 12px;border-radius:6px;border:2px solid #5a3d1e;background:linear-gradient(#ecd08a,#b8893a);color:#2b1a0a}
+.btn.red{background:linear-gradient(#e57373,#b23b3b);color:#fff}
+.btn.blue{background:linear-gradient(#bfe3ff,#5a9ad0)}
+.btn.big{font-size:17px;padding:12px 18px;width:100%}
+#dialog{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(10px + env(safe-area-inset-bottom));width:min(480px,96vw);padding:10px 12px;display:none;z-index:9;max-height:70vh;overflow-y:auto}
+.dn{font-weight:bold;font-size:15px;color:#7a2e0e;margin-bottom:4px}
+.dt{font-size:14px;line-height:1.45}
+#chat{position:fixed;left:50%;transform:translateX(-50%);top:calc(8px + env(safe-area-inset-top));width:min(480px,96vw);max-height:62vh;display:none;flex-direction:column;z-index:11;padding:8px}
+#chat.show{display:flex}
+#chatLog{flex:1;overflow-y:auto;min-height:120px;padding:4px;display:flex;flex-direction:column;gap:5px;-webkit-overflow-scrolling:touch}
+.msg{max-width:85%;padding:6px 9px;border-radius:10px;font-size:13.5px;line-height:1.4;user-select:text;-webkit-user-select:text}
+.msg.n{align-self:flex-start;background:#fffaf0;border:1px solid #c9a86a}
+.msg.p{align-self:flex-end;background:#5a3d1e;color:#f4e6c4}
+.msg.n b{display:block;font-size:11px;color:#7a2e0e}
+#chatRow{display:flex;gap:6px;margin-top:6px}
+#chatIn{flex:1;font-family:inherit;font-size:16px;padding:8px 10px;border:2px solid #5a3d1e;border-radius:6px;background:#fffaf0;min-width:0}
+#chatNote{font-size:10.5px;color:#6b5233;margin-top:3px}
+table.dr{width:100%;border-collapse:collapse;font-size:12px;margin:4px 0 8px}
+table.dr td,table.dr th{border-bottom:1px solid #c9a86a;padding:3px 4px;text-align:left}
+.help p{font-size:13px;line-height:1.45;margin:4px 0 8px}
+.help h3{font-size:14px;margin:10px 0 2px;color:#7a2e0e}
+#flash{position:fixed;inset:0;pointer-events:none;background:radial-gradient(rgba(255,45,85,.0),rgba(255,45,85,.55));opacity:0;transition:opacity .4s}
+/* Menü */
+#menu{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:8;padding:20px;text-align:center}
+#menu.show{display:flex}
+#menu h1{font-size:clamp(34px,11vw,64px);margin:0;color:#ffd77a;letter-spacing:3px;text-shadow:0 3px 0 #5a3d1e,0 0 24px rgba(255,180,60,.6),0 4px 18px #000}
+#menu h2{font-size:clamp(14px,4.4vw,20px);margin:4px 0 26px;color:#f4e6c4;font-weight:normal;font-style:italic;text-shadow:0 2px 6px #000}
+#menuBtns{display:flex;flex-direction:column;gap:10px;width:min(300px,80vw)}
+.mbtn{font-family:inherit;font-size:19px;font-weight:bold;padding:13px;border-radius:8px;border:3px solid #5a3d1e;background:linear-gradient(#f4e6c4,#c9a86a);color:#3b2612;box-shadow:0 4px 12px rgba(0,0,0,.6)}
+.mbtn:active{transform:scale(.97)}
+#menuFoot{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));left:0;right:0;text-align:center;color:rgba(244,230,196,.6);font-size:12px;text-shadow:0 1px 2px #000}
+.vol{display:flex;align-items:center;gap:8px;margin:2px 0 6px}.vol span{width:86px;font-weight:bold;color:#5a3d1e;font-size:13px}.vol input{flex:1;accent-color:#c8901f;height:26px}.vol b{width:34px;text-align:right;color:#5a3d1e;font-size:13px}
+.seg{display:flex;gap:4px;margin:4px 0 10px;flex-wrap:wrap}
+.seg button{flex:1;font-family:inherit;font-size:13px;font-weight:bold;padding:9px 4px;border-radius:6px;border:2px solid #5a3d1e;background:#e8d5a8;color:#5a3d1e;min-width:70px}
+.seg button.on{background:linear-gradient(#ffd77a,#c8901f);color:#2b1a0a;box-shadow:0 0 0 2px #fff6 inset}
+.slabel{font-weight:bold;font-size:14px;color:#4a2a10}
+.snote{font-size:11.5px;color:#6b5233;margin:-6px 0 10px;line-height:1.35}
+.dcard{border:3px solid #8a6a3a;border-radius:8px;padding:9px 11px;margin-bottom:8px;background:rgba(255,255,255,.35);text-align:left;cursor:pointer}
+.dcard.on{border-color:#c8901f;background:rgba(255,215,122,.45);box-shadow:0 0 12px rgba(255,180,40,.6)}
+.dcard b{font-size:16px}.dcard p{margin:3px 0 0;font-size:12.5px;line-height:1.35}
+.dcard ul{margin:4px 0 0;padding-left:18px;font-size:11.5px;line-height:1.4}
+/* Zwischensequenz */
+#cs{position:fixed;inset:0;z-index:12;display:none}
+#cs.show{display:block}
+#csText{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(60px + env(safe-area-inset-bottom));width:min(560px,92vw);color:#f4e6c4;font-size:clamp(15px,4.3vw,19px);line-height:1.5;text-align:center;text-shadow:0 2px 6px #000,0 0 12px #000;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.55) 20%,rgba(0,0,0,.55) 80%,rgba(0,0,0,0));padding:14px 10px;font-style:italic}
+#csSkip{position:absolute;right:calc(12px + env(safe-area-inset-right));top:calc(12px + env(safe-area-inset-top));font-family:inherit;font-size:13px;padding:7px 12px;border-radius:6px;border:2px solid rgba(244,230,196,.6);background:rgba(0,0,0,.45);color:#f4e6c4}
+.cwrap{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;justify-content:center}#charCv{background:radial-gradient(#f4e6c4,#c9a86a);border:3px solid #5a3d1e;border-radius:8px;flex:none;width:180px;height:230px;touch-action:none;cursor:grab}.ctabs{display:flex;gap:4px;margin:6px 0 4px;flex-wrap:wrap}.ctab{flex:1;min-width:60px;padding:5px 4px;border:2px solid #5a3d1e;border-radius:6px;background:#e8d5a8;font:bold 12px Georgia;color:#5a3d1e;cursor:pointer}.ctab.on{background:linear-gradient(#ffd77a,#c8901f)}.cop.none{background:#e8d5a8;color:#7a2a20;font:bold 13px Georgia}#charOpts{flex:1;min-width:220px}.crow{display:flex;align-items:center;gap:6px;margin:3px 0}.crow>span{width:74px;font-weight:bold;font-size:13px;color:#5a3d1e;flex:none}.cops{display:flex;flex-wrap:wrap;gap:4px}.krow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:3px 0;font-size:13px}.kbtn{min-width:110px;padding:4px 8px;border:2px solid #5a3d1e;border-radius:6px;background:#f4e6c4;font:bold 13px Georgia;color:#3b2612;cursor:pointer}.kbtn.cap{background:#ffd54a;animation:kb 1s infinite}@keyframes kb{50%{background:#fff3b0}}body:not(.pc) .pcOnly{display:none}
+.cpick{position:relative;display:inline-flex;align-items:center;gap:4px;padding:3px 8px 3px 3px;border:2px solid #5a3d1e;border-radius:8px;background:#f4e6c4;cursor:pointer;font-size:15px;margin-right:6px}.cpick input{position:absolute;opacity:0;width:100%;height:100%;left:0;top:0;cursor:pointer}.cpick span{width:30px;height:30px;border-radius:6px;border:2px solid #3b2612;display:inline-block}
+.cop{width:28px;height:28px;border-radius:50%;border:2px solid #5a3d1e;padding:0;cursor:pointer}.cop.txt{width:auto;border-radius:6px;padding:0 7px;background:#e8d5a8;font:bold 12px Georgia;color:#5a3d1e}.cop.on{outline:3px solid #ffd54a;box-shadow:0 0 0 2px #2b1a0a}.cop.txt.on{background:linear-gradient(#ffd77a,#c8901f)}
+#csTap{position:absolute;left:0;right:0;bottom:calc(20px + env(safe-area-inset-bottom));text-align:center;color:#ffe9b0;font-size:14px;font-weight:bold;text-shadow:0 1px 4px #000;opacity:0}
+#bigmap .panel{width:auto;max-width:96vw}#mapC{max-width:none!important;flex:none}
+body.pc #inv .panel{width:min(820px,100%)}body.pc .invWrap{display:flex;gap:10px;align-items:stretch}body.pc .invL{flex:none}body.pc #itemInfo{flex:1;height:auto;min-height:420px;max-height:calc(100vh - 140px);margin-top:0}
+body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #bTiltD,body:not(.pc) #bSprint,body:not(.pc) #bDodge{display:none!important}#joy.sprint{box-shadow:0 0 0 3px #ffd54a,0 0 16px #ffb300}.slotCard{border:2px solid #8b6a3a;border-radius:8px;padding:8px 10px;margin:8px 0;background:rgba(255,248,230,.6)}.slotCard.cur{border-color:#c8901f;box-shadow:0 0 0 2px #ffd77a}.slotCard .sh{font:bold 15px Georgia;color:#5a3d1e}.slotCard .si{font-size:13px;margin:4px 0}.slotCard .sb{display:flex;gap:6px;flex-wrap:wrap}.dsug{padding:5px 6px;border-bottom:1px solid #2a2620;cursor:pointer;font-size:13px}.dsug:hover{background:#2a2418}.dsug b{color:#ffd54a}.dsug small{color:#aaa}#devC{z-index:200}</style>
+<!-- PWA: App-Infos & Icons -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3b2410">
+<link rel="icon" type="image/png" href="icons/favicon-48.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Aschenkrone">
+</head>
+<body>
+<canvas id="c3d" class="full"></canvas>
+<canvas id="c2d" class="full"></canvas>
+<div id="flash"></div>
+
+<div id="hud">
+ <div id="hudTL">
+  <div class="row"><div id="lvl">1</div>
+   <div class="bars">
+    <div class="bar"><i id="hpf"></i><span id="hpt"></span></div>
+    <div class="bar"><i id="xpf"></i><span id="xpt"></span></div>
+    <div class="bar2"><div class="bar sm"><i id="stf"></i><span id="stt"></span></div><div class="bar sm"><i id="mpf"></i><span id="mpt"></span></div></div>
+   </div>
+  </div>
+  <div id="gold"></div><div id="ammo"></div>
+  <div id="zone"></div>
+  <div id="quests"></div>
+ </div>
+ <canvas id="skyclock" width="120" height="44"></canvas>
+ <div id="hudTR">
+  <canvas id="mini" width="96" height="96"></canvas>
+  <div class="tbtns"><button class="rbtn" id="bRotL" aria-label="Kamera links drehen" style="display:none">⟲</button><button class="rbtn" id="bRotR" aria-label="Kamera rechts drehen" style="display:none">⟳</button><button class="rbtn" id="bTiltU" aria-label="Kamera steiler" style="display:none">⤴</button><button class="rbtn" id="bTiltD" aria-label="Kamera flacher" style="display:none">⤵</button><button class="rbtn" id="bCam" aria-label="Kamera wechseln" style="display:none">👁</button><button class="rbtn" id="bHelp" aria-label="Hilfe">?</button><button class="rbtn" id="bPause" aria-label="Menü">⚙</button></div>
+ </div>
+ <div id="bossbar"><div id="bbn"></div><div class="bar"><i id="bbf"></i></div></div>
+ <div id="joy"><div id="knob"></div></div>
+ <div id="joyHint">Links ziehen = laufen · Rechts wischen = Kamera</div>
+ <div id="ctrls">
+  <button id="bInv" aria-label="Inventar">🎒</button>
+  <button id="bDodge" aria-label="Ausweichen">🌀</button>
+  <button id="bJump" aria-label="Springen">⤒</button>
+  <button id="bSprint" aria-label="Sprinten">🏃</button>
+  <button id="bAct" class="off">✋</button>
+  <button id="bAtk" aria-label="Angriff">⚔</button>
+ </div>
+ <div id="hotbar"></div>
+</div>
+<div id="toasts"></div>
+<div id="dialog" class="parch"></div>
+
+<div id="chat" class="parch">
+ <div class="ph" style="margin-bottom:4px"><span id="chatName">Gespräch</span><button class="x" id="chatClose">✕</button></div>
+ <div id="chatLog"></div>
+ <form id="chatRow" autocomplete="off"><input id="chatIn" maxlength="200" placeholder="Schreib etwas …" enterkeyhint="send"><button class="btn" id="chatSend" type="submit">Senden</button></form>
+ <div id="chatNote"></div>
+</div>
+
+<div id="inv" class="overlay">
+ <div class="panel parch">
+  <div class="ph"><span id="invTitle">⚜ Inventar ⚜</span><button class="x" id="invClose">✕</button></div>
+  <div id="invTabs"><button data-t="inv" class="on">🎒 Inventar</button><button data-t="quest">📜 Quests</button></div>
+  <div id="shopBar"></div>
+  <div id="qBook" style="display:none"></div>
+  <div class="invWrap"><div class="invL">
+  <div class="charRow"><div class="eqCol" id="eqL"></div><div id="statBox"></div><div class="eqCol" id="eqR"></div></div>
+  <div class="ilabel">Rucksack</div><div class="grid" id="gMain"></div>
+  <div class="ilabel">Hotbar</div><div class="grid" id="gHot"></div>
+  <div id="markBar"></div>
+  </div><div id="itemInfo"></div></div>
+ </div>
+</div>
+
+<div id="help" class="overlay">
+ <div class="panel parch help">
+  <div class="ph"><span>📜 Anleitung</span><button class="x" id="helpClose">✕</button></div>
+  <h3>Steuerung (Handy)</h3>
+  <p>Linke Bildschirmhälfte: Finger ziehen = laufen, weit ziehen = sprinten. Rechte Bildschirmhälfte: wischen = Kamera drehen und neigen, doppelt tippen = Ausweichrolle (kurz unverwundbar). ⚔ = angreifen (halten = Dauerangriff). ✋ = reden, pflanzen, ernten. 🎒 = Inventar. Im Gespräch mit Dorfbewohnern kannst du über „💬 Unterhalten“ selbst schreiben, was du sagen willst.</p>
+  <h3>Steuerung (PC)</h3>
+  <p><span class="kbd">W</span><span class="kbd">A</span><span class="kbd">S</span><span class="kbd">D</span> laufen · <b>Linksklick</b> angreifen (halten = Dauerangriff, Richtung = Maus) · <span class="kbd">Leertaste</span> springen · <span class="kbd">Shift</span> halten = sprinten · <span class="kbd">Strg</span> oder <span class="kbd">C</span> ausweichen · <b>Rechte Maustaste ziehen</b> = Kamera drehen und neigen, <b>Mausrad</b> = neigen (3D)<br>
+  <span class="kbd">F</span> reden / pflanzen / ernten · <span class="kbd">E</span> Inventar · <span class="kbd">Q</span> Schnellheilung (Trank oder Brot) · <span class="kbd">M</span> große Karte (am Handy: Minikarte antippen) · <span class="kbd">1</span>–<span class="kbd">9</span> oder <b>Mausrad</b> Hotbar · <span class="kbd">J</span> Questbuch · <span class="kbd">H</span> Hilfe · <span class="kbd">Esc</span> Pause/Schließen<br>
+  Im Gespräch wählst du Antworten mit <span class="kbd">1</span>–<span class="kbd">9</span>.</p>
+  <h3>Springen, Sprinten &amp; Klettern</h3>
+  <p>Springen (Leertaste oder ⤒) bringt dich etwa einen Meter hoch, auf graue Felsstufen und darüber. Manche Orte erreichst du nur so, zum Beispiel die Ringe um die Abtei und das Pharaonengrab. Sprinten (Shift oder 🏃) kostet Ausdauer. An Kletterwänden mit Seilen und Ranken kletterst du die Schlucht hinunter und auf den Frostgipfel. Geht dir dabei die Ausdauer aus, rutschst du ab. Hinweis: Strg+W schließt im Browser den Tab, nimm zum Ausweichen notfalls <span class="kbd">C</span>.</p>
+  <h3>Dein Haus 🏠</h3>
+  <p>Du wohnst jetzt im eigenen Häuschen in Eichenhain, am Anfang mit einem Strohlager. Schreiner Holger in der Schreinerei verkauft Möbel: Bett (Stroh → Feld → Einzel → Doppel → Königsbett), Tisch, Kamin, Regal, Teppich, Licht, Deko und Katzenkorb. Gekaufte Möbel landen in deinem <b>Möbellager</b> und nehmen keinen Inventarplatz weg. Nimm Holgers <b>Schreinerhammer</b> in die Hand und drück Rechtsklick (Handy: im Haus ✋), dann öffnet sich das Lager. Stell dich vor eine freie Stelle und tippe „Aufstellen“. Mit dem Hammer ein Möbelstück anvisieren und <span class="kbd">F</span>/✋ drücken baut es ab, es wandert zurück ins Lager. In deinem eigenen Bett kannst du abends schlafen und die Nacht überspringen. Je gemütlicher dein Haus, desto stärker der Bonus „Ausgeruht“ (mehr Leben und Regeneration für einen Tag).</p>
+  <h3>Angeln 🎣 &amp; Katzen 🐱</h3>
+  <p>Angler Fiete wohnt am Weiher im Schattenwald. Hilf ihm, dann bekommst du eine Angelrute. Wähle sie aus, schau aufs Wasser und wirf mit ⚔ aus. Zuckt der Schwimmer („!“), sofort nochmal drücken. Du fängst Fische (zum Essen und Verkaufen), Müll, Schätze und manchmal etwas ganz Besonderes. In Eichenhain streunen Katzen herum: Fütterst du eine mit Fisch, wird sie dein Haustier (+5 % Glück). Auf dem Königsbett schläft sie neben dir.</p>
+  <h3>Quests 📜</h3>
+  <p>Oben links siehst du die Hauptquest (mit Himmelsrichtung und Entfernung) und darunter deine Nebenquests. Im Inventar gibt es den Reiter „📜 Quests“ (Taste <span class="kbd">J</span>) mit allen Details. Der Kompass oben zeigt mit einem goldenen ★ immer zum Ziel der Hauptquest, Nebenquests mit einem blauen „!“.</p>
+  <h3>Der Aschenfluch 🔥</h3>
+  <p>Seit Ignaroks Rückkehr rieselt Asche über Eldmar und vergiftet die Tiere. Befallene Tiere haben glühend rote Augen und Glut im Fell und greifen alles an. Gesunde Hasen und Füchse fliehen vor dir, Wildschweine verteidigen nur ihr Revier, wenn du ihnen zu nahe kommst.</p>
+  <h3>Städte 🏘</h3>
+  <p>Jede Stadt hat jetzt einen Markt (Händler kaufen deine Beute an), einen Bauernhof mit Feld und mehr Wohnhäuser. Alle Bewohner haben einen Tagesablauf, und du kannst ihre Häuser betreten.</p>
+  <h3>Tag &amp; Nacht im Dorf ☀🌙</h3>
+  <p>Die Uhr unter der Minikarte zeigt Sonne, Mond und Uhrzeit. Die Bewohner haben jetzt einen Tagesablauf: morgens zu Hause, tagsüber bei der Arbeit, abends oft in der Taverne und nachts im Bett. Du kannst sie in ihren Häusern besuchen.</p>
+  <h3>Ego-Sicht 👁 (nur 3D)</h3>
+  <p>Mit <span class="kbd">V</span> oder dem 👁-Knopf wechselst du zwischen der Ansicht von oben und der Ego-Sicht. Am PC klickst du ins Bild, dann schaust du dich mit der Maus um (<span class="kbd">Esc</span> gibt die Maus frei, <span class="kbd">←</span><span class="kbd">→</span> drehen auch). Am Handy läufst du links und ziehst rechts zum Umsehen. Du triffst immer, wohin du schaust.</p>
+  <h3>Häuser &amp; Dungeons</h3>
+  <p>Du kannst die Häuser im Dorf betreten: Lauf einfach in die Tür oder drück ✋ / F. Drinnen findest du Truhen. In der Wildnis gibt es Höhlen, einen Turm, eine Hütte, eine Mine und einen Schrein (☠). Dort lauert jeweils ein Mini-Boss: ein Champion einer zufälligen Monsterart, die du schon einmal besiegt hast. Er erscheint jedes Mal neu, wenn du hineingehst, und die Truhen füllen sich nach ein paar Minuten wieder.</p>
+  <h3>Welt &amp; Biome</h3>
+  <p>Eldmar ist riesig. In der Mitte liegt Eichenhain mit der Burg des Fürsten. Ringsum liegen die Sonnenwiesen (Stufe 1–10), im Osten der Finsterwald mit Waldheim, im Westen das Nebelmoor mit dem Pfahldorf Moorbruck, im Nordwesten die Frostlande mit Frosthafen, im Norden das Graukamm-Gebirge, im Nordosten die Aschenberge mit Glutwacht und der Drachenfestung (Endgebiet), im Süden die Steinöde mit einer tiefen Schlucht, im Südosten die Sengenden Dünen mit Sandfeste und im Südwesten der finstere Schattenwald. Überall gibt es Ruinen, Steinkreise, Höhlen, Lager und Dungeons zu entdecken. Jede Straße führt zu einem Ort. Die Fürsten und Herrscher der Städte vergeben eigene Aufträge (📜).</p>
+  <h3>Tag &amp; Nacht 🌙</h3>
+  <p>Ein Tag dauert etwa 12 Minuten. Nachts erheben sich Zombies, Skelette, Riesenspinnen, Fledermäuse, Schattenhunde im Rudel, Irrlichter, kreischende Banshees, Nekromanten, die Tote erwecken, Sensenmänner und Vampire. Sie zerfallen in der Morgensonne. In manchen Nächten steht der Vollmond am Himmel: Dann streifen Werwölfe umher, und Banditen können sich verwandeln.</p>
+  <h3>Kampf</h3>
+  <p>Gegner kündigen jeden Angriff an: ein roter Kreis und ein „!“. Erst am Ende trifft der Schlag. Weichst du in diesem Moment aus (Rolle), bist du kurz unverwundbar. Viele Monster haben Fähigkeiten: Sprungangriffe, Netze, die dich verlangsamen, Haken, die dich heranziehen, oder Teleport. Wölfe heulen ihr Rudel herbei, Trolle heilen sich. Manche Gegner lassen dich nicht einfach vorbeilaufen: Dornenranken und Eishexen halten dich fest, Kobold-Fallensteller werfen Netze und Banshees verlangsamen dich mit ihrem Schrei. Mit der Ausweichrolle reißt du dich los, das kostet aber extra Ausdauer. Bosse haben Angriffsmuster mit markierten Zonen (Kombo, Sprung, Rundumschlag) und geraten unter halber Lebenskraft in Raserei.</p>
+  <h3>Wegschreine ✨</h3>
+  <p>In jeder Stadt steht ein leuchtender Wegschrein. Lauf hin, um ihn zu entdecken. Danach reist du per ✋ / F zu jedem entdeckten Schrein.</p>
+  <h3>Ausdauer, Mana &amp; Munition</h3>
+  <p><b>⚡ Ausdauer</b> (grün): Jeder Nahkampfschlag und jede Ausweichrolle kosten Ausdauer. Schwere Waffen kosten mehr. Sie füllt sich, sobald du kurz nicht schlägst. <b>🔷 Mana</b> (blau): Zauberbücher verbrauchen Mana, das langsam zurückkommt. Manatränke füllen es auf. <b>Bogen und Langbogen</b> brauchen <b>Pfeile</b>, die <b>Armbrust</b> braucht <b>Bolzen</b>. Kaufen kannst du sie bei Händlern, und Schützen lassen sie fallen.</p>
+  <h3>Stufen &amp; Ausrüstung</h3>
+  <p>Jeder Gegenstand braucht eine Mindeststufe (Gegenstandsstufe − 2). Zu starke Ausrüstung ist 🔒 gesperrt und wirkt erst, wenn du sie erreicht hast. Gegner über deiner Stufe sind sehr gefährlich: Du machst kaum Schaden und sie treffen viel härter.</p>
+  <h3>Handeln &amp; Schmiede</h3>
+  <p>Bei Händlern (Greta, Sven, Brann) und Schmiedin Hilda öffnet „Handeln“ ein Menü mit <b>Kaufen</b> und <b>Verkaufen</b>. Bei Hilda kannst du außerdem <b>umschmieden</b>: Gegen Gold bekommt ein Gegenstand einen zufälligen Zusatz, zum Beispiel <i>Scharf</i>, <i>Schnell</i>, <i>Tödlich</i> oder <i>Legendär</i> für Waffen und <i>Hart</i>, <i>Vital</i> oder <i>Wehrhaft</i> für Rüstung und Schmuck. Es kann auch schlechter werden, dann einfach nochmal.</p>
+  <h3>Inventar</h3>
+  <p>Fährst du mit der Maus über einen Gegenstand (oder tippst ihn an), siehst du unten links, was du gerade trägst, und rechts den Gegenstand, mit ▲▼ für jeden Wert. <b>Shift+Klick</b> oder <b>Rechtsklick</b> markiert mehrere Gegenstände (am Handy über „☑ Markieren“). Die markierten kannst du dann alle auf einmal wegwerfen oder beim Händler verkaufen.</p>
+  <h3>Waffen</h3>
+  <p>Du triffst nur, was vor dir liegt, nie hinter dir. <b>Schwert</b> schlägt im Bogen mit mittlerer Reichweite. <b>Dolch</b>: sehr kurz, aber sehr schnell. <b>Axt</b> und <b>Streitkolben</b> sind schwerer, der Kolben unterbricht ausholende Gegner. <b>Zweihänder</b>, <b>Kriegshammer</b> (betäubt), <b>Morgenstern</b> (breiter Bogen) und <b>Sense</b> (riesiger Bogen) sind langsam und wuchtig. <b>Speer &amp; Hellebarde</b> stoßen nur geradeaus, haben aber die größte Reichweite. <b>Bogen</b>: normal. <b>Langbogen</b>: schießt schneller und weiter, du läufst beim Spannen langsamer. <b>Armbrust</b>: langsam, aber viel mehr Schaden, durchschlagend. <b>Zauberbücher</b> (Feuer, Frost, Sturm, Licht) verschießen Magie: Feuer brennt, Frost verlangsamt, Sturm springt über, Licht heilt dich.</p>
+  <h3>Rüstungssets</h3>
+  <p><b>Ritter</b> mehr Nahkampfschaden · <b>Waldläufer</b> mehr Fernkampfschaden · <b>Wächter</b> mehr Rüstung · <b>Heiler</b> Resistenz gegen Zauber, Gift, Brand &amp; Frost · <b>Magier</b> mehr Zauberschaden. 2 und 4 Teile desselben Sets geben Boni. Beute wird mit der Stufe des Gegners stärker: Ein Bosslegendär schlägt ein Legendär vom Schleim um Längen. Jedes Monster lässt seine eigene Art Beute fallen: Bögen nur von Skeletten und Jägern, Sensen nur vom Sensenmann.</p>
+  <h3>★ Einzigartige Beute</h3>
+  <p>Viele Monster haben eine seltene, einzigartige Waffe oder Rüstung mit Spezialeffekt, z. B. <i>Knochenbogen</i> (Skelett), <i>Sense des Schnitters</i> (Sensenmann, Lebensraub), <i>Blutfang</i> (Vampir), <i>Mondklaue</i> (Werwolf), <i>Rindenhammer</i> (Baumhirte, betäubt) oder <i>Gletscherbrecher</i> (Frostriese). Die Herolde und Bosse lassen immer besondere Beute fallen und kehren zurück: Es lohnt sich, sie öfter zu jagen.</p>
+  <h3>Ackerbau 🌱</h3>
+  <p>Halte Saat (Weizensaat, Karotte oder Kräutersaat) in der Hand. Am PC zeigst du mit der Maus auf das Feld und klickst. Am Handy schaust du in die Richtung und drückst ✋. Das geht auf Gras oder Erde, nicht mehr als 4 Felder von Wasser entfernt. Die Pflanzen wachsen langsam in 4 Stufen, auf Ackerboden etwas schneller. Reif glänzen sie golden.</p>
+  <h3>Die Geschichte</h3>
+  <p>Folge dem goldenen ★ im Kompass oben. Er zeigt immer zum nächsten Ziel der Hauptgeschichte. Bevor du dich dem Drachen stellen kannst, musst du Ignaroks drei Herolde besiegen: Vael den Schnitter, Mortholz den Baumhirten und Khepri den Sandkönig. Jeder trägt einen Glutsiegel-Splitter. Nebenquests bekommst du bei Dorfbewohnern mit einem <b>!</b>. Ein graues ! bedeutet: Du brauchst eine höhere Stufe.</p>
+  <h3>Kämpfen</h3>
+  <p>Gegner über deiner Stufe teilen mehr Schaden aus und stecken mehr ein. Je nach Schwierigkeit ist das deutlich spürbar! Achte auf die Farbe der Stufe: <span style="color:#d32f2f">rot</span> = sehr gefährlich, <span style="color:#e65100">orange</span> = schwer. Schützen und Schamanen schießen aus der Ferne, Wildschweine und Lavaechsen stürmen auf dich zu, und Spinnen, Hexen und Moorleichen vergiften dich. Heiltränke heilen auch Gift. Fliehst du ins Dorf oder läufst zu weit weg, geben Monster auf, kehren heim und heilen sich vollständig.</p>
+  <h3>Beute &amp; Seltenheiten (aktuelle Schwierigkeit)</h3>
+  <p id="dropInfo"></p>
+  <table class="dr" id="dropTable"></table>
+ </div>
+</div>
+
+<div id="pause" class="overlay">
+ <div class="panel parch" style="width:min(320px,100%)">
+  <div class="ph"><span>⚜ Pause ⚜</span><button class="x" id="pauseClose">✕</button></div>
+  <div class="btns" style="flex-direction:column">
+   <button class="btn big" id="pResume">Weiterspielen</button>
+   <button class="btn big" id="pLook">🎨 Aussehen</button>
+   <button class="btn big" id="pSettings">Einstellungen</button>
+   <button class="btn big" id="pHelp">Anleitung</button>
+   <button class="btn big" id="pBackup">💾 Spielstand sichern</button>
+   <button class="btn big red" id="pMenu">Speichern &amp; Hauptmenü</button>
+  </div>
+ </div>
+</div>
+
+<div id="settings" class="overlay">
+ <div class="panel parch">
+  <div class="ph"><span>⚙ Einstellungen</span><button class="x" id="setClose">✕</button></div>
+  <div class="slabel">Ansicht</div>
+  <div class="seg" data-k="mode"><button data-v="2d">2D Klassisch</button><button data-v="3d">3D</button></div>
+  <div class="slabel">Grafikqualität</div>
+  <div class="seg" data-k="quality"><button data-v="low">Niedrig</button><button data-v="mid">Mittel</button><button data-v="high">Hoch</button></div>
+  <div class="snote">„Hoch“ zeigt mehr Sichtweite und schärfere Kanten. Wenn das Spiel ruckelt, nimm „Niedrig“.</div>
+  <div class="slabel">Kamera</div>
+  <div class="seg" data-k="zoom"><button data-v="near">Nah</button><button data-v="normal">Normal</button><button data-v="far">Weit</button></div>
+  <div class="slabel">Perspektive (nur 3D)</div>
+  <div class="seg" data-k="cam"><button data-v="top">Von oben</button><button data-v="fp">Ego-Sicht</button></div>
+  <div class="snote">Ego-Sicht: am PC mit der Maus umsehen (ins Bild klicken), am Handy die rechte Bildschirmhälfte ziehen. Taste V oder 👁 wechselt schnell.</div>
+  <div class="slabel">👁 Sichtweite (Render-Distanz)</div>
+  <div class="seg" data-k="rd"><button data-v="auto">Auto</button><button data-v="25">25 m</button><button data-v="50">50 m</button><button data-v="100">100 m</button><button data-v="0">Unbegrenzt</button></div>
+  <div class="snote">Alles außerhalb wird nicht gezeichnet und Gegner dort ruhen im Energiesparmodus. Weniger Sichtweite = flüssiger. „Auto“ richtet sich nach der Grafikqualität.</div>
+  <div class="slabel">⏱ Bildrate (FPS-Limit)</div>
+  <div class="seg" data-k="fps"><button data-v="30">30</button><button data-v="60">60</button><button data-v="120">120</button><button data-v="0">Unbegrenzt</button></div>
+  <div class="snote">60 reicht für flüssiges Spielen und schont Grafikkarte und Akku. Höher nur bei 120/144-Hz-Monitoren und starker Grafikkarte.</div>
+  <div class="slabel">🖥 Anzeigemodus (PC)</div>
+  <div class="seg" data-k="win"><button data-v="full">Vollbild</button><button data-v="borderless">Randlos</button><button data-v="window">Fenster</button></div>
+  <div class="snote">Vollbild fängt auch Esc und die Windows-Taste ab (Esc gedrückt halten zum Verlassen). Randlos: Vollbild, das du mit Esc/Alt+Tab normal verlässt. Falls der Browser Vollbild blockiert, öffne das Spiel in einem eigenen Tab.</div>
+  <div class="slabel pcOnly">⌨ Tastenbelegung (PC)</div>
+  <div id="keyBind" class="pcOnly"></div>
+  <div class="snote pcOnly">Auf eine Taste klicken, dann die neue Taste drücken. Ist die Taste schon belegt, werden die beiden getauscht. Esc bricht ab.</div>
+  <div class="slabel">GUI-Größe (Hotbar, Inventar, Knöpfe)</div>
+  <div class="seg" data-k="gui"><button data-v="85">Klein</button><button data-v="100">Normal</button><button data-v="120">Groß</button><button data-v="140">Sehr groß</button></div>
+  <div class="slabel">Minimap-Größe</div>
+  <div class="seg" data-k="mini"><button data-v="96">Klein</button><button data-v="140">Mittel</button><button data-v="190">Groß</button><button data-v="240">Riesig</button></div>
+  <div class="slabel">Schwierigkeit</div>
+  <div class="seg" data-k="diff"><button data-v="leicht">Leicht</button><button data-v="normal">Normal</button><button data-v="schwer">Schwer</button></div>
+  <div class="snote" id="diffNote"></div>
+  <div class="slabel">🔊 Lautstärke</div>
+  <div class="vol"><span>Gesamt</span><input type="range" min="0" max="100" data-v="vMaster"><b></b></div>
+  <div class="vol"><span>Spielsound</span><input type="range" min="0" max="100" data-v="vSfx"><b></b></div>
+  <div class="vol"><span>Musik</span><input type="range" min="0" max="100" data-v="vMusic"><b></b></div>
+  <div class="vol"><span>Stimmen</span><input type="range" min="0" max="100" data-v="vVoice"><b></b></div>
+  <div class="slabel">NPC-Stimmen</div>
+  <div class="seg" data-k="voices"><button data-v="speech">Sprache</button><button data-v="babble">Gebrabbel</button><button data-v="off">Aus</button></div>
+  <div class="snote">„Sprache“ liest die Texte mit einer eigenen Stimme pro Figur vor. Wenn dein Gerät keine deutsche Stimme hat, hörst du automatisch das Gebrabbel.</div>
+  <div class="slabel">Schadenszahlen</div>
+  <div class="seg" data-k="dmgNums"><button data-v="1">An</button><button data-v="0">Aus</button></div>
+  <div class="slabel">🎮 Kamera links/rechts</div>
+  <div class="seg" data-k="invX"><button data-v="0">Normal</button><button data-v="1">Invertiert</button></div>
+  <div class="slabel">🎮 Kamera hoch/runter</div>
+  <div class="seg" data-k="invY"><button data-v="0">Normal</button><button data-v="1">Invertiert</button></div>
+  <div class="slabel">Kamera-Empfindlichkeit</div>
+  <div class="seg" data-k="sens"><button data-v="0.5">Langsam</button><button data-v="1">Normal</button><button data-v="1.7">Schnell</button></div>
+  <div class="snote">Gilt für Maus, Touch-Wischen in der Ego-Sicht, Mausrad und Rechtsklick-Ziehen.</div>
+ </div>
+</div>
+
+<div id="death" class="overlay">
+ <div class="panel parch" style="text-align:center">
+  <div class="ph" style="justify-content:center"><span>☠ Du bist gefallen ☠</span></div>
+  <p style="font-size:14px" id="deathTxt"></p>
+  <div class="btns" style="justify-content:center"><button class="btn" id="bRespawn">Im Dorf erwachen</button></div>
+ </div>
+</div>
+
+<div id="slotSel" class="overlay"><div class="panel parch" style="width:min(460px,100%)"><div class="ph"><span>⚜ Spielstände ⚜</span><button class="x" id="slotClose">✕</button></div><div id="slotList"></div></div></div>
+<div id="devC" class="overlay"><div class="panel" style="width:min(560px,100%);background:#141210;color:#e8e2d0;border:2px solid #ffd54a;font-family:monospace">
+ <div id="devPw"><div style="display:flex;justify-content:space-between;align-items:center"><b>🔒 Entwickler-Konsole</b><button class="x" id="devClose2">✕</button></div><p style="font-size:13px">Passwort eingeben:</p><input id="devPwIn" type="password" autocomplete="off" style="width:100%;padding:8px;font:15px monospace;background:#000;color:#ffd54a;border:1px solid #665"><button class="btn" id="devPwGo" style="margin-top:8px">Entsperren</button></div>
+ <div id="devMain" style="display:none"><div style="display:flex;justify-content:space-between;align-items:center"><b style="color:#ffd54a">⌨ Entwickler-Konsole</b><button class="x" id="devClose">✕</button></div>
+ <div id="devOut" style="height:180px;overflow:auto;background:#000;border:1px solid #443;padding:6px;font-size:12px;margin:6px 0;white-space:pre-wrap"></div>
+ <div style="display:flex;gap:6px"><input id="devIn" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="/befehl …" style="flex:1;padding:8px;font:15px monospace;background:#000;color:#ffd54a;border:1px solid #665"><button class="btn" id="devGo">▶</button></div>
+ <div id="devSug" style="max-height:190px;overflow:auto;margin-top:6px"></div></div></div></div>
+<div id="menu">
+ <h1>ASCHENKRONE</h1>
+ <h2>Die Chroniken von Eldmar</h2>
+ <div id="menuBtns">
+  <button class="mbtn" id="mContinue">Fortsetzen</button>
+  <button class="mbtn" id="mNew">Spiel starten</button>
+  <button class="mbtn" id="mSettings">Einstellungen</button>
+  <button class="mbtn" id="mHelp">Anleitung</button>
+ </div>
+ <div id="menuFoot">Ein mittelalterliches Abenteuer</div>
+</div>
+
+<div id="diffSel" class="overlay">
+ <div class="panel parch">
+  <div class="ph"><span>Wähle deinen Weg</span><button class="x" id="diffClose">✕</button></div>
+  <div id="diffCards"></div>
+  <p id="diffWarn" style="font-size:12px;color:#8b1a1a;margin:4px 0"></p>
+  <button class="btn big" id="diffGo">⚔ Abenteuer beginnen</button>
+ </div>
+</div>
+
+<div id="charSel" class="overlay">
+ <div class="panel parch" style="width:min(640px,100%)">
+  <div class="ph"><span>⚜ Dein Held ⚜</span><button class="x" id="charClose">✕</button></div>
+  <div class="cwrap"><div style="flex:none"><canvas id="charCv" width="360" height="460"></canvas><div style="font-size:11px;color:#6b5233;text-align:center;margin-top:2px;width:180px">↔ Ziehen zum Drehen</div></div><div id="charOpts"></div></div>
+  <div class="btns"><button class="btn" id="charRnd">🎲 Zufall</button><button class="btn big" id="charGo">⚔ Abenteuer beginnen</button></div>
+ </div>
+</div>
+<div id="cs"><div id="csText"></div><button id="csSkip">Überspringen ⏭</button><div id="csTap">▶ Tippen / Klicken zum Weiterlesen</div></div>
+
+<script src="core.js?v=14.3"></script>
+<script src="sound.js?v=14.3"></script>
+<script src="r2d.js?v=14.3"></script>
+<script src="r3d.js?v=14.3"></script>
+<script src="ui.js?v=14.3"></script>
+<!-- PWA: Service Worker starten (für Offline-Betrieb) -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').catch(e => console.warn('Service Worker:', e));
+  });
+}
+// Spielstände dauerhaft schützen (Browser soll sie nicht automatisch löschen)
+if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
+</script>
+</body>
+</html>
