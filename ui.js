@@ -117,7 +117,14 @@ function renderInv(){if(!invOpen)return;const P=G.P;const S=G.S=G.calc();
  $('statBox').innerHTML=`Stufe <b>${P.level}</b><br>❤ Leben <b>${Math.ceil(P.hp)}/${S.maxhp}</b><br>⚡ Ausdauer <b>${S.maxSta}</b><br>🔷 Mana <b>${S.maxMp}</b><br>⚔ Schaden <b>${Math.round(S.total)}</b><br>🛡 Rüstung <b>${S.def}</b><br>🗡/🏹/🔮 <b>${S.melee}/${S.ranged}/${S.spell}%</b><br>✚ Resist. <b>${S.res}%</b><br>🎯 Krit <b>${S.crit}%</b><br>💨 Tempo <b>+${S.spd}%</b><br>🍀 Glück <b>+${S.luck}%</b><div style="clear:both;font-size:10px;margin-top:2px;color:#5a3d1e">In der Hand: ${w?G.iname(w):'nichts'}${S.tooHigh?' <b style="float:none;color:#c62828">(Stufe zu niedrig!)</b>':''}</div>`;
  renderMarks();renderInfo();}
 let confirmDrop=null;
-function setInvTab(t){invTab=t;document.querySelectorAll('#invTabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));$('qBook').style.display=t==='quest'?'block':'none';document.querySelector('#inv .invWrap').style.display=t==='quest'?'none':'';if(t==='quest')renderQBook();}
+function setInvTab(t){invTab=t;document.querySelectorAll('#invTabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));$('qBook').style.display=t==='quest'?'block':'none';$('skBook').style.display=t==='skill'?'block':'none';document.querySelector('#inv .invWrap').style.display=t!=='inv'?'none':'';if(t==='quest')renderQBook();if(t==='skill')renderSkills();}
+function skBadge(){const b=document.querySelector('#invTabs button[data-t=skill]');if(!b||!G.P)return;const n=G.skillPts();b.innerHTML='⭐ Fähigkeiten'+(n?` <span class="skb">${n}</span>`:'');const l=$('lvl');if(l)l.classList.toggle('skp',n>0);}
+function renderSkills(){const P=G.P,pts=G.skillPts(),sp=G.skillSpent();let h=`<div class="skh"><b>Freie Punkte: <span style="color:${pts?'#2e7d32':'#6b5233'}">${pts}</span></b><small>1 Punkt pro Stufe · ausgegeben: ${sp}</small></div>`;let grp='';
+ for(const k of G.SKILLS){if(k.g!==grp){grp=k.g;h+=`<div class="qbh">${grp}</div>`;}const r=(P.skill&&P.skill[k.id])||0,lock=k.req&&sp<k.req&&!r,can=pts>0&&r<k.max&&!lock;
+  h+=`<div class="skc${r>=k.max?' max':''}${lock?' lock':''}"><span class="ski">${k.ic}</span><div class="skt"><b>${k.n}</b> <small>${r}/${k.max}</small><div class="skbar"><i style="width:${r/k.max*100}%"></i></div><div class="skd">${r?'Jetzt: '+k.d(r):'Noch nicht gelernt'}${r<k.max?`<br><span style="color:#2e7d32">Nächste Stufe: ${k.d(r+1)}</span>`:''}${lock?`<br><span style="color:#a02818">🔒 Erst ${k.req} Punkte in andere Fähigkeiten stecken</span>`:''}</div></div><button class="btn skplus" data-k="${k.id}" ${can?'':'disabled'}>+</button></div>`;}
+ h+=`<div class="btns"><button class="btn red" id="skReset" ${sp?'':'disabled'}>↺ Alle Punkte zurücksetzen (${G.skillResetCost()} Gold)</button></div>`;
+ $('skBook').innerHTML=h;$('skBook').querySelectorAll('.skplus').forEach(b=>b.onclick=()=>{if(G.skillUp(b.dataset.k)){renderSkills();skBadge();G.invDirty=true;}});const rs=$('skReset');rs.onclick=()=>{if(rs.dataset.c!=='1'){rs.dataset.c='1';rs.textContent='Wirklich zurücksetzen?';return;}if(G.skillReset()){renderSkills();skBadge();}};}
+ui.openSkills=()=>{if(!invOpen)openInv();setInvTab('skill');};
 let invTab='inv';
 function renderQBook(){const QL=G.questLog(),m=QL.main;let h=`<div class="qbh">⭐ Hauptquest</div><div class="qbc"><div class="qbt">${m.ch}</div><div>➤ ${m.t}</div>${m.to?`<div class="qbd">Richtung: ${G.dirTo(m.to)} – der goldene ★ im Kompass oben zeigt den Weg.</div>`:''}</div>`;
  h+=`<div class="qbh">📜 Nebenquests (${QL.side.length})</div>`;if(!QL.side.length)h+=`<div class="qbc qbe">Keine aktiven Nebenquests. Achte auf <b style="color:#b8860b">!</b> über den Köpfen der Dorfbewohner.</div>`;
@@ -125,7 +132,7 @@ function renderQBook(){const QL=G.questLog(),m=QL.main;let h=`<div class="qbh">�
  if(QL.done.length)h+=`<div class="qbh">✔ Abgeschlossen</div><div class="qbc qbe">${QL.done.join(' · ')}</div>`;
  $('qBook').innerHTML=h;}
 ui.openQuests=()=>{if(!invOpen)openInv();setInvTab('quest');};
-function openInv(mode){if(G.P.dead)return;closeDialog();if(mode!=='shop')shopId=null;invMode=mode||'normal';invOpen=true;$('invTabs').style.display=mode==='shop'?'none':'flex';setInvTab('inv');invSel=null;hoverK=null;marked.clear();markMode=false;G.attackHeld=false;$('inv').classList.add('show');renderInv();}
+function openInv(mode){if(G.P.dead)return;closeDialog();if(mode!=='shop')shopId=null;invMode=mode||'normal';invOpen=true;$('invTabs').style.display=mode==='shop'?'none':'flex';setInvTab('inv');skBadge();invSel=null;hoverK=null;marked.clear();markMode=false;G.attackHeld=false;$('inv').classList.add('show');renderInv();}
 function closeInv(){invOpen=false;invSel=null;shopId=null;marked.clear();markMode=false;$('inv').classList.remove('show');G.invDirty=true;}
 ui.openInv=openInv;
 $('invClose').addEventListener('click',closeInv);document.querySelectorAll('#invTabs button').forEach(b=>b.addEventListener('click',()=>setInvTab(b.dataset.t)));$('inv').addEventListener('click',e=>{if(e.target.id==='inv')closeInv();});
@@ -383,7 +390,7 @@ function hud(){const P=G.P,S=G.S||G.calc(),tx=Math.floor(P.x/TILE),ty=Math.floor
  $('stf').style.width=(100*Math.max(0,P.sta)/S.maxSta)+'%';$('stt').textContent=`⚡ ${Math.floor(P.sta)}`;$('mpf').style.width=(100*Math.max(0,P.mp)/S.maxMp)+'%';$('mpt').textContent=`🔷 ${Math.floor(P.mp)}`;const am=S.cls==='ranged'?(G.WKIND[S.kind].proj==='bolt'?'bolt':'arrow'):null;$('ammo').style.display=am?'block':'none';if(am)$('ammo').textContent=`${am==='bolt'?'Bolzen':'Pfeile'}: ${G.countItem(am)}`;
  const xn=G.xpNeed(P.level);$('xpf').style.width=(100*P.xp/xn)+'%';$('xpt').textContent=`XP ${Math.floor(P.xp)} / ${xn}`;$('gold').textContent=`🪙 ${P.gold} Gold · ${G.D().n}`;
  const b=G.biome(tx,ty),zl=G.zoneLevel(tx,ty);$('zone').textContent=G.room?(G.room.dungeon?`☠ ${G.room.name} · Stufe ~${G.room.lvl}`:`🏠 ${G.room.name}`):G.inSafe(P.x,P.y)?(G.inCastle(tx,ty)?'🏰 Burg Eichenhain · Sicher':G.townAt(tx,ty)?`🏘 ${G.townAt(tx,ty).name} · Sicher`:'🏡 Eichenhain · Sicher'):`⚔ ${G.ZN[b]} · Monster Stufe ~${zl}`;
- if(!hud.qT||G.time-hud.qT>.25){hud.qT=G.time;const QL=G.questLog(),m=QL.main;hud.QL=QL;let h=`<div class="qh">⭐ Hauptquest · ${m.ch}</div><div class="ob">➤ ${m.t}${m.to&&!G.room?` <span class="qd">${G.dirTo(m.to)}</span>`:''}</div>`;
+ if(!hud.qT||G.time-hud.qT>.25){hud.qT=G.time;skBadge();const QL=G.questLog(),m=QL.main;hud.QL=QL;let h=`<div class="qh">⭐ Hauptquest · ${m.ch}</div><div class="ob">➤ ${m.t}${m.to&&!G.room?` <span class="qd">${G.dirTo(m.to)}</span>`:''}</div>`;
   if(QL.side.length){h+=`<div class="qh2">📜 Nebenquests</div>`+QL.side.slice(0,4).map(s=>`<div class="sq">• <b>${s.n}</b>: ${s.t.split(' – ')[0]}${s.to&&!G.room?` <span class="qd">${G.dirTo(s.to)}</span>`:''}</div>`).join('')+(QL.side.length>4?`<div class="sq">… +${QL.side.length-4} (Questbuch: J)</div>`:'');}
   if(h!==hud.qH){hud.qH=h;$('quests').innerHTML=h;}}
  const t=G.target(),ba=$('bAct');if(t){ba.classList.remove('off');const lb=G.targetLabel(t);ba.innerHTML=lb[0]+'<br>'+lb[1];}else{ba.classList.add('off');ba.innerHTML='✋';}
@@ -475,7 +482,7 @@ $('bCam').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagatio
 $('bInv').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();if(state!=='game')return;invOpen?closeInv():openInv();});
 // Fokus behalten: Maus wieder einfangen & versteckte Eingabefelder freigeben
 // ===== Tastenbelegung =====
-const KACT=[['up','Vorwärts','w'],['down','Rückwärts','s'],['left','Links','a'],['right','Rechts','d'],['jump','Springen',' '],['sprint','Sprinten','shift'],['dodge','Ausweichen','c'],['act','Reden / Benutzen','f'],['inv','Inventar','e'],['heal','Schnellheilung','q'],['map','Karte','m'],['quest','Questbuch','j'],['help','Hilfe','h'],['cam','Kamera wechseln','v']];
+const KACT=[['up','Vorwärts','w'],['down','Rückwärts','s'],['left','Links','a'],['right','Rechts','d'],['jump','Springen',' '],['sprint','Sprinten','shift'],['dodge','Ausweichen','c'],['act','Reden / Benutzen','f'],['inv','Inventar','e'],['heal','Schnellheilung','q'],['map','Karte','m'],['quest','Questbuch','j'],['skill','Fähigkeiten','k'],['help','Hilfe','h'],['cam','Kamera wechseln','v']];
 let keyCap=null;
 function mapKey(k){const B=G.settings.keys||{};for(const [id,,def] of KACT){if((B[id]||def)===k)return def;}for(const [id,,def] of KACT){if(def===k&&(B[id]||def)!==k)return '';}return k;}
 const keyName=k=>({' ':'Leertaste','shift':'Shift','control':'Strg','alt':'Alt','tab':'Tab','enter':'Enter','arrowup':'↑','arrowdown':'↓','arrowleft':'←','arrowright':'→','capslock':'Feststell','backspace':'⌫'})[k]||k.toUpperCase();
@@ -504,6 +511,7 @@ addEventListener('keydown',e=>{if(e.target&&(e.target.tagName==='INPUT'||e.targe
  if(k==='escape'){if(invOpen||ui.dlgNpc||chatNpc||helpOpen||setOpen){closeInv();closeDialog();closeChat();helpOpen=false;show('help',0);setOpen=false;show('settings',0);}else{pauseOpen=!pauseOpen;show('pause',pauseOpen);}return;}
  if(ui.dlgNpc&&!e.repeat){if(k>='1'&&k<='9'){const b=$('dialog').querySelectorAll('.btn')[+k-1];if(b)b.click();return;}if(k==='f'||k==='e'){closeDialog();return;}}
  if(k==='e'&&!e.repeat){if(invOpen)closeInv();else if(!G.paused())openInv();return;}
+ if(k==='k'&&!e.repeat){if(invOpen&&invTab==='skill')closeInv();else if(!G.paused()||invOpen)ui.openSkills();return;}
  if(k==='j'&&!e.repeat){if(invOpen&&invTab==='quest')closeInv();else if(!G.paused()||invOpen)ui.openQuests();return;}
  if(k==='h'&&!e.repeat){if(helpOpen){helpOpen=false;show('help',0);}else if(!G.paused())openHelp();return;}
  if(G.paused())return;

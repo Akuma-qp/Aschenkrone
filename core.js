@@ -618,6 +618,25 @@ G.newGame=newGame;
 const xpNeed=l=>Math.round((8+6*l)*(12+1.15*l)*G.D().xpN);G.xpNeed=xpNeed;
 const held=()=>{const it=P.inv[P.sel];return it&&it.type==='weapon'?it:null;};G.held=held;
 function setCounts(){const c={};for(const k of SLOTS4){const it=P.eq[k];if(it&&it.set&&reqLvl(it)<=P.level)c[it.set]=(c[it.set]||0)+1;}return c;}G.setCounts=()=>setCounts();
+// ===== Skilltree: 1 Punkt pro Stufe =====
+const SKILLS=[
+ {id:'vit',n:'Lebenskraft',ic:'❤',max:10,g:'Grundwerte',d:r=>`+${r*4}% max. Leben`},
+ {id:'sta',n:'Ausdauer',ic:'⚡',max:10,g:'Grundwerte',d:r=>`+${r*4}% max. Ausdauer`},
+ {id:'mana',n:'Geisteskraft',ic:'🔷',max:10,g:'Grundwerte',d:r=>`+${r*4}% max. Mana`},
+ {id:'reg',n:'Regeneration',ic:'✚',max:10,g:'Grundwerte',d:r=>`+${r*8}% Regeneration (Leben, Ausdauer, Mana)`},
+ {id:'str',n:'Waffenmeister',ic:'⚔',max:10,g:'Kampf',d:r=>`+${r*2}% Nahkampfschaden`},
+ {id:'aim',n:'Adlerauge',ic:'🏹',max:10,g:'Kampf',d:r=>`+${r*2}% Fernkampfschaden`},
+ {id:'arc',n:'Arkane Macht',ic:'🔮',max:10,g:'Kampf',d:r=>`+${r*2}% Zauberschaden`},
+ {id:'tough',n:'Zähigkeit',ic:'🛡',max:10,g:'Kampf',d:r=>`−${(r*1.5).toFixed(1).replace('.0','')}% erlittener Schaden`},
+ {id:'swift',n:'Leichtfuß',ic:'🪶',max:5,g:'Besonderes',d:r=>`+${r*2}% Tempo, −${r*5}% Ausdauer für Sprinten, Springen & Ausweichen`},
+ {id:'second',n:'Zweite Chance',ic:'🕯',max:1,g:'Besonderes',req:15,d:r=>`Ein tödlicher Treffer lässt dich mit 1 Leben überleben (+2 s unverwundbar). Lädt 10 Minuten nach.`}];
+G.SKILLS=SKILLS;
+const skR=id=>(P.skill&&P.skill[id])||0;
+G.skillSpent=()=>{let n=0;for(const k in P.skill||{})n+=P.skill[k];return n;};
+G.skillPts=()=>Math.max(0,(P.level-1)-G.skillSpent());
+G.skillUp=id=>{const k=SKILLS.find(x=>x.id===id);if(!k)return false;P.skill=P.skill||{};const r=skR(id);if(r>=k.max||G.skillPts()<1)return false;if(k.req&&G.skillSpent()<k.req){G.toast(`Erst ${k.req} Punkte in andere Fähigkeiten stecken.`,'#ffcc80');return false;}P.skill[id]=r+1;G.S=calc();sfx('coin');G.save();return true;};
+G.skillResetCost=()=>Math.max(50,P.level*25);
+G.skillReset=()=>{const c=G.skillResetCost();if(!G.skillSpent())return false;if(P.gold<c){G.toast(`Zurücksetzen kostet ${c} Gold.`,'#ff8a80');return false;}P.gold-=c;P.skill={};G.S=calc();P.hp=Math.min(P.hp,G.S.maxhp);G.toast('Alle Skillpunkte zurückgesetzt.','#ffd54a');G.save();return true;};
 function calc(){const L=P.level,s={base:3+L*1.2,def:0,maxhp:100+L*12,melee:0,ranged:0,spell:0,defp:0,res:0,crit:5,regen:.4,regenPct:0,hpPct:0,luck:0,spd:0,cd:.5,cls:'melee',kind:null,reach:52,arc:1.3,wdmg:0};
  const add=af=>{for(const k in af){if(k==='hp')s.maxhp+=af[k];else s[k]=(s[k]||0)+af[k];}};
  s.maxSta=100+Math.min(60,L*2);s.maxMp=40+L*4;s.mpRegen=2.5+L*.15;
@@ -626,6 +645,7 @@ function calc(){const L=P.level,s={base:3+L*1.2,def:0,maxhp:100+L*12,melee:0,ran
  const sc=setCounts();s.sets=sc;for(const k in sc)SETS[k].fx(s,sc[k]);
  if(s.castFast&&s.cls==='magic')s.cd*=.8;if(sc.magier>=2){s.maxMp=Math.round(s.maxMp*1.3);s.mpRegen*=1.4;}if(s.spell>0)s.mpRegen*=1+s.spell/200;
  if(s.cls==='melee'){const K=WKIND[s.kind||'sword'];s.staCost=Math.round(8+K.cd*13);}else if(s.cls==='magic')s.mpCost=WKIND[s.kind].mana;
+ {const R=skR;s.hpPct+=R('vit')*4;s.maxSta=Math.round(s.maxSta*(1+R('sta')*.04));s.maxMp=Math.round(s.maxMp*(1+R('mana')*.04));const rg=1+R('reg')*.08;s.regen*=rg;s.mpRegen*=rg;s.staReg=rg;s.melee+=R('str')*2;s.ranged+=R('aim')*2;s.spell+=R('arc')*2;s.dr=R('tough')*.015;s.spd+=R('swift')*2;s.staMul=1-R('swift')*.05;}
  s.def=Math.round(s.def*(1+s.defp/100));s.maxhp=Math.round(s.maxhp*(1+s.hpPct/100));s.regen+=s.maxhp*s.regenPct/100;
  s.crit=Math.min(s.crit,75);s.spd=Math.min(s.spd,50);s.res=Math.min(s.res,80);
  const cb=s.cls==='magic'?s.spell:s.cls==='ranged'?s.ranged:s.melee;s.total=(s.base+s.wdmg)*(1+cb/100);s.speed=140*(1+s.spd/100)*(P.slow>0?.6:1);if(P.rested&&P.dayT<P.rested.until){s.maxhp=Math.round(s.maxhp*(1+P.rested.b/100));s.regen*=1+P.rested.b/40;}if(P.pet)s.luck=(s.luck||0)+5;s.regen=Math.round(s.regen*10)/10;return s;}
@@ -661,8 +681,8 @@ function attack(){if(P.atkCd>0||P.dead||P.dodgeT>0)return;{const hs=P.inv[P.sel]
  else if(S.cls==='magic'){if(P.mp<S.mpCost){warn('Kein Mana!');P.atkCd=.3;return;}P.mp-=S.mpCost;}
  else{const am=WKIND[S.kind].proj==='bolt'?'bolt':'arrow';if(countItem(am)<1){warn(am==='bolt'?'Keine Bolzen!':'Keine Pfeile!');P.atkCd=.4;return;}removeItem(am,1);}
  P.atkCd=S.cd;P.swing=.22;
- if(G.aim){P.fx=G.aim.x;P.fy=G.aim.y;}const FPB=G.settings.cam==='fp'&&G.settings.mode!=='2d'?12:0,RCH=S.reach+FPB;const rng=S.cls==='melee'?RCH+24:S.range;const precise=S.cls!=='melee'&&!!G.aim;const t=pickTarget(rng,S.cls==='melee'?(S.thrust?.9:.55):precise?.988:.9);
- if(t){const d=Math.hypot(t.x-P.x,t.y-P.y)||1;const k=S.cls==='melee'?1:precise?.3:.6;let fx=P.fx*(1-k)+(t.x-P.x)/d*k,fy=P.fy*(1-k)+(t.y-P.y)/d*k;const l=Math.hypot(fx,fy)||1;P.fx=fx/l;P.fy=fy/l;}P.atkFx=P.fx;P.atkFy=P.fy;
+ if(G.aim){P.fx=G.aim.x;P.fy=G.aim.y;}const FPB=G.settings.cam==='fp'&&G.settings.mode!=='2d'?12:0,RCH=S.reach+FPB;const rng=S.cls==='melee'?RCH+24:S.range;const precise=S.cls!=='melee'&&!!G.aim;const t=pickTarget(rng,S.cls==='melee'?(S.thrust?.9:.55):precise?.972:.86);
+ if(t){const d=Math.hypot(t.x-P.x,t.y-P.y)||1;const k=S.cls==='melee'?1:precise?.5:.72;let fx=P.fx*(1-k)+(t.x-P.x)/d*k,fy=P.fy*(1-k)+(t.y-P.y)/d*k;const l=Math.hypot(fx,fy)||1;P.fx=fx/l;P.fy=fy/l;}P.atkFx=P.fx;P.atkFy=P.fy;
  if(S.cls==='melee'){const fa=Math.atan2(P.fy,P.fx);let hit=false,anyCrit=false;
   for(const m of G.mons){if(m.dead)continue;const dx=m.x-P.x,dy=m.y-P.y,d=Math.hypot(dx,dy);if(d>RCH+m.r)continue;let a=Math.atan2(dy,dx)-fa;while(a>Math.PI)a-=6.283;while(a<-Math.PI)a+=6.283;
    let ok;if(S.thrust){const al=dx*P.fx+dy*P.fy,pe=Math.abs(-dx*P.fy+dy*P.fx);ok=al>-4&&pe<m.r+9;}else ok=Math.abs(a)<S.arc+Math.min(.35,m.r/Math.max(d,1));
@@ -672,19 +692,20 @@ function attack(){if(P.atkCd>0||P.dead||P.dodgeT>0)return;{const hs=P.inv[P.sel]
  const K=WKIND[S.kind];const cr=Math.random()*100<S.crit;let dmg=S.total*rnd(.9,1.1);if(cr)dmg*=2;
  const uf=S.ufx||{};G.pproj.push({x:P.x+P.fx*14,y:P.y+P.fy*14,vx:P.fx*K.spd,vy:P.fy*K.spd,dmg,cr,kind:K.proj,elem:K.elem||(uf.burn?'fire':uf.slow?'frost':null),pierce:(K.pierce?3:0)+(uf.pierce?2:0),kb:K.kbk||.4,life:K.range/K.spd+.05,hits:[]});
  sfx(K.cls==='magic'?'zap':'arrow');}
-function jump(){if(P.dead||P.z>0||P.vz>0||P.climb||P.rootT>0||P.dodgeT>0)return;if(P.sta<6){warn('Erschöpft!');return;}P.sta-=6;P.staT=.4;P.vz=262;P.z=.01;P.landSfx=true;sfx('dodge');}
+function jump(){if(P.dead||P.z>0||P.vz>0||P.climb||P.rootT>0||P.dodgeT>0)return;if(P.sta<6){warn('Erschöpft!');return;}P.sta-=6*(G.S.staMul||1);P.staT=.4;P.vz=262;P.z=.01;P.landSfx=true;sfx('dodge');}
 G.jump=()=>jump();
-function dodge(){if(P.dead||P.dodgeCd>0||P.climb)return;if(P.sta<20){warn('Erschöpft!');return;}if(P.rootT>0){if(P.sta<35){warn('Erschöpft!');return;}P.sta-=15;P.rootT=0;G.floats.push({x:P.x,y:P.y-34,t:'Losgerissen!',c:'#a5d6a7',life:.8});}P.sta-=20;P.staT=.7;let dx=G.input.x,dy=G.input.y;const l=Math.hypot(dx,dy);if(l<.2){dx=P.fx;dy=P.fy;}else{dx/=l;dy/=l;}P.ddx=dx;P.ddy=dy;P.dodgeT=.26;P.dodgeCd=1.1;sfx('dodge');}
+function dodge(){if(P.dead||P.dodgeCd>0||P.climb)return;if(P.sta<20){warn('Erschöpft!');return;}if(P.rootT>0){if(P.sta<35){warn('Erschöpft!');return;}P.sta-=15;P.rootT=0;G.floats.push({x:P.x,y:P.y-34,t:'Losgerissen!',c:'#a5d6a7',life:.8});}P.sta-=20*(G.S.staMul||1);P.staT=.7;let dx=G.input.x,dy=G.input.y;const l=Math.hypot(dx,dy);if(l<.2){dx=P.fx;dy=P.fy;}else{dx/=l;dy/=l;}P.ddx=dx;P.ddy=dy;P.dodgeT=.26;P.dodgeCd=1.1;sfx('dodge');}
 // Schaden am Spieler: src {lvl, type:'phys'|'magic', poison, burn, chill}
 function hitPlayer(dmg,src){if(P.dead||G.god)return;if(P.frost&&src&&(src.burn||src.fire||src.boss==='dragon'||src.type==='dragon'))dmg*=.5;if(P.dodgeT>0){G.floats.push({x:P.x,y:P.y-30,t:'Ausgewichen!',c:'#9be7ff',life:.6});return;}
  const D=G.D(),lvl=src.lvl||1,diff=Math.max(0,lvl-P.level),S=G.S;dmg*=1+diff*D.pen*2.4;
  const red=S.def/(S.def+50+lvl*6);if(src.type==='magic')dmg*=(1-S.res/100)*(1-red*.5);else dmg*=1-red;
- dmg=Math.max(1,Math.round(dmg*rnd(.9,1.1)));P.hp-=dmg;P.hurtT=.25;sfx('hurt');G.floats.push({x:P.x,y:P.y-30,t:'-'+dmg,c:'#ff5252',life:.8});
+ if(P.invT>0)return;dmg*=1-(S.dr||0);
+ dmg=Math.max(1,Math.round(dmg*rnd(.9,1.1)));if(P.hp-dmg<=0&&skR('second')&&!(P.secondT>0)){dmg=Math.max(0,P.hp-1);P.secondT=600;P.invT=2;G.toast('🕯 Zweite Chance! Du überlebst mit letzter Kraft.','#ffd54a',true);for(let i=0;i<20;i++)G.parts.push({x:P.x,y:P.y,z:20,vx:rnd(-120,120),vy:rnd(-120,120),life:.8,c:'#ffe082'});}P.hp-=dmg;P.hurtT=.25;sfx('hurt');G.floats.push({x:P.x,y:P.y-30,t:'-'+dmg,c:'#ff5252',life:.8});
  const rf=1-S.res/100;if(src.poison)P.poison={t:3.5,dps:Math.max(1,dmg*.12*rf)};if(src.burn)P.burn={t:3,dps:Math.max(1,dmg*.14*rf)};if(src.chill)P.slow=2*rf;if(src.root&&P.dodgeT<=0){P.rootT=Math.max(P.rootT||0,src.root*rf);G.floats.push({x:P.x,y:P.y-30,t:src.net?'Im Netz gefangen!':'Festgehalten!',c:'#ff8a80',life:.9});}if(src.grab||src.slow)P.slow=Math.max(P.slow||0,(src.slow?2.4:1.4)*rf);if(src.pull&&!src.pull.dead){P.pullFrom=src.pull;P.pullT=.32;G.floats.push({x:P.x,y:P.y-30,t:'Herangezogen!',c:'#ff8a80',life:.8});}if(src.vamp&&!src.vamp.dead){src.vamp.hp=Math.min(src.vamp.maxhp,src.vamp.hp+dmg*.6);}
  if(P.hp<=0){P.hp=0;die();}}
 function die(){sfx('death');P.dead=true;P.poison=null;P.burn=null;const loss=Math.floor(P.gold*G.D().goldLoss);P.gold-=loss;G.lastLoss=loss;G.ui&&G.ui.onDeath&&G.ui.onDeath(loss);}
 G.respawn=()=>{if(G.room){G.mons=G.mons.filter(m=>m.room!==G.room.id);G.room=null;}P.dead=false;P.x=SPAWN.x;P.y=SPAWN.y;G.S=calc();P.hp=G.S.maxhp;P.slow=0;G.teles=[];G.proj=[];G.mons.forEach(m=>m.aggro=false);};
-function gainXP(x){P.xp+=x;let up=false;while(P.xp>=xpNeed(P.level)){P.xp-=xpNeed(P.level);P.level++;up=true;}if(up){sfx('levelup');G.S=calc();P.hp=G.S.maxhp;G.toast(`⭐ Stufe ${P.level} erreicht! Volle Heilung.`,'#ffd54a',true);for(let i=0;i<24;i++)G.parts.push({x:P.x,y:P.y,z:20,vx:rnd(-120,120),vy:rnd(-120,120),life:.8,c:'#ffd54a'});}}
+function gainXP(x){P.xp+=x;let up=false;while(P.xp>=xpNeed(P.level)){P.xp-=xpNeed(P.level);P.level++;up=true;}if(up){sfx('levelup');G.S=calc();P.hp=G.S.maxhp;G.toast(`⭐ Stufe ${P.level} erreicht! Volle Heilung. +1 Skillpunkt (Taste K / ⭐ im Inventar)`,'#ffd54a',true);for(let i=0;i<24;i++)G.parts.push({x:P.x,y:P.y,z:20,vx:rnd(-120,120),vy:rnd(-120,120),life:.8,c:'#ffd54a'});}}
 G.gainXP=gainXP;
 const UNIQ={
  skeleton:[{k:'bow',name:'Knochenbogen',ufx:{crit:10},d:'+10 % Krit'}],skarcher:[{k:'longbow',name:'Bogen des Grabwächters',ufx:{pierce:1},d:'Pfeile durchschlagen 2 weitere Gegner'}],
@@ -958,11 +979,11 @@ G.dayInfo=()=>{const t=((G.P&&G.P.dayT)||0)%DAYLEN,n=Math.floor(((G.P&&G.P.dayT)
  return{t,n,light:clamp(L,.22,1),night:t>=505&&t<700,dusk:t>=440&&t<540,full:h2(n,7,777)<.1,sunA:(t/DAYLEN)};};
 G.update=function(dt){P=G.P;G.time+=dt;P.dayT=(P.dayT||0)+dt;{const di=G.dayInfo();if(di.night!==G._wasNight){if(di.night){G.toast(di.full?'🌕 Vollmond! Werwölfe streifen umher …':'🌙 Die Nacht bricht herein. Untote erheben sich.','#b3c7ff',true);sfx('horn');}else if(G._wasNight!=null)G.toast('🌅 Der Morgen graut.','#ffe0a0');G._wasNight=di.night;}}const S=G.S=calc();if(P.hp>S.maxhp)P.hp=S.maxhp;
  let mx=G.input.x,my=G.input.y;const len=Math.hypot(mx,my);P.moving=false;
- P.dodgeCd-=dt;
+ P.dodgeCd-=dt;if(P.invT>0)P.invT-=dt;if(P.secondT>0)P.secondT-=dt;
  {const ptx=Math.floor(P.x/TILE),pty=Math.floor(P.y/TILE),ct=tileAt(ptx,pty);const wasC=P.climb;P.onLedge=ct===T.LEDGE&&P.z<=1;P.climb=ct===T.CLIMB;
   if(P.climb&&!wasC){P.climbFrom={x:P.prevX||P.x,y:P.prevY||P.y};G.toast('🧗 Klettern! Ausdauer im Blick behalten.','#ffe0a0');}
   if(P.climb&&!P.dead){P.sta-=9*dt;P.staT=.6;if(P.sta<=0){P.sta=0;const f=P.climbFrom||{x:P.x,y:P.y};P.x=f.x;P.y=f.y;P.climb=false;const dmg=Math.round(G.S.maxhp*.15);P.hp=Math.max(1,P.hp-dmg);P.hurtT=.4;G.floats.push({x:P.x,y:P.y-34,t:'Abgerutscht! -'+dmg,c:'#ff8a80',life:1});sfx('hurt');}}
-  P.sprint=!!(G.sprintHeld&&len>.15&&!P.climb&&P.sta>4&&!P.dead&&P.dodgeT<=0);if(P.sprint){P.sta-=13*dt;P.staT=.5;if(Math.random()<.25)G.parts.push({x:P.x+rnd(-5,5),y:P.y+8,z:2,vx:-mx*30,vy:-my*30,life:.3,c:'#d8c8a0'});}
+  P.sprint=!!(G.sprintHeld&&len>.15&&!P.climb&&P.sta>4&&!P.dead&&P.dodgeT<=0);if(P.sprint){P.sta-=13*dt*(G.S.staMul||1);P.staT=.5;if(Math.random()<.25)G.parts.push({x:P.x+rnd(-5,5),y:P.y+8,z:2,vx:-mx*30,vy:-my*30,life:.3,c:'#d8c8a0'});}
   if(P.z>0||P.vz>0){P.vz-=980*dt;P.z+=P.vz*dt;if(P.z<=0){P.z=0;P.vz=0;if(P.landSfx){sfx('step');P.landSfx=false;}}}
   if(!P.climb&&!P.onLedge&&P.z<=0&&!G.noclip&&tileAt(Math.floor(P.x/TILE),Math.floor(P.y/TILE))!==T.LEDGE&&solidPP(P.x,P.y)){const f=P.prevX!=null&&P.prevRoom===(G.room?G.room.id:null)&&Math.hypot(P.prevX-P.x,P.prevY-P.y)<TILE*1.5?{x:P.prevX,y:P.prevY}:null;if(f&&!solidPP(f.x,f.y)){P.x=f.x;P.y=f.y;}else{const rr=G.room;let done=0;for(let rad=6;rad<=TILE*3&&!done;rad+=6)for(let a=0;a<16&&!done;a++){const x=P.x+Math.cos(a*.3927)*rad,y=P.y+Math.sin(a*.3927)*rad;if(rr&&(x<rr.x0*TILE||y<rr.y0*TILE||x>=(rr.x0+rr.w)*TILE||y>=(rr.y0+rr.h)*TILE))continue;if(!solidPP(x,y)&&canMoveP(x,y,10)){P.x=x;P.y=y;done=1;}}}}
   P.prevX=P.x;P.prevY=P.y;P.prevRoom=G.room?G.room.id:null;}
@@ -974,7 +995,7 @@ G.update=function(dt){P=G.P;G.time+=dt;P.dayT=(P.dayT||0)+dt;{const di=G.dayInfo
  G.enterT=(G.enterT||0)-dt;
  if(G.enterT<=0&&!P.dead){if(G.room){if(tileAt(Math.floor(P.x/TILE),Math.floor((P.y+6)/TILE))===T.DOOR){exitRoom();}}
   else if(P.moving&&P.fy<-.5){for(const b of BUILD){if(!b.room)continue;const fx=(b.door.tx+.5)*TILE,fy=(b.y+b.h)*TILE;if(Math.abs(P.x-fx)<16&&P.y-fy>0&&P.y-fy<16){enterRoom(b.room);break;}}}}
- if(G.v8tick){if(!G.attackHeld)G._rodLatch=0;G.v8tick(dt);}P.atkCd-=dt;P.swing-=dt;P.hurtT-=dt;P.staT-=dt;if(P.staT<=0)P.sta=Math.min(S.maxSta,P.sta+42*dt);P.mp=Math.min(S.maxMp,P.mp+S.mpRegen*dt);if(G.attackHeld)attack();
+ if(G.v8tick){if(!G.attackHeld)G._rodLatch=0;G.v8tick(dt);}P.atkCd-=dt;P.swing-=dt;P.hurtT-=dt;P.staT-=dt;if(P.staT<=0)P.sta=Math.min(S.maxSta,P.sta+42*dt*(S.staReg||1));P.mp=Math.min(S.maxMp,P.mp+S.mpRegen*dt);if(G.attackHeld)attack();
  const safe=inSafe(P.x,P.y);if(!P.dead){P.hp=Math.min(S.maxhp,P.hp+S.regen*(safe?5:1)*dt);P.slow=Math.max(0,(P.slow||0)-dt);if(P.burn){P.burn.t-=dt;P.hp-=P.burn.dps*dt;if(Math.random()<.4)G.parts.push({x:P.x+rnd(-8,8),y:P.y,z:16,vx:0,vy:-40,life:.4,c:'#ff8a2a'});if(P.burn.t<=0)P.burn=null;if(P.hp<=0){P.hp=0;die();}}if(P.poison){P.poison.t-=dt;P.hp-=P.poison.dps*dt;if(Math.random()<.3)G.parts.push({x:P.x+rnd(-8,8),y:P.y,z:20,vx:0,vy:-30,life:.4,c:'#7cff6b'});if(P.poison.t<=0)P.poison=null;if(P.hp<=0){P.hp=0;die();}}}
  // Monster
  const SLEEPR=G.simR();for(const m of G.mons){if(m.dead)continue;if(!m.boss&&!m.aggro&&!m.room&&Math.abs(m.x-P.x)+Math.abs(m.y-P.y)>SLEEPR){m.mvg=0;continue;}m.atkCd-=dt;m.hitT-=dt;m.swing-=dt;{const _d=Math.hypot(m.x-(m._lx==null?m.x:m._lx),m.y-(m._ly==null?m.y:m._ly));m._lx=m.x;m._ly=m.y;m.mvg=(m.mvg||0)*.82+(_d>dt*6?.18:0);if(m.mvg>.3)m.anim+=dt*Math.min(1.6,Math.max(.5,_d/dt/55));}
@@ -1167,7 +1188,7 @@ function clearPose(n){n.lie=0;n.sit=0;n.spot=null;n.ract=null;n.act=null;}
 function enterB(n,b){const r=b.room;n.loc=r;n.x=(r.door.tx+.5)*TILE;n.y=(r.door.ty-.5)*TILE;n.path=[];}
 function leaveB(n){const r=n.loc;n.loc=null;const b=r.b;n.x=(b.door.tx+.5)*TILE;n.y=(b.y+b.h+.6)*TILE;n.path=[];clearPose(n);n.job=null;}
 G.routine=(n,dt,dn)=>{if(n.abs&&n.id==='elara')return false;const di=G.dayInfo(),w=want(n,di.t);const near=dn<TILE*40;
- if(!near){n._ft=(n._ft||0)-dt;if(n._ft>0)return !!(w||n.loc);n._ft=2.5;if(w&&w.b&&w.b.room){if(n.loc!==w.b.room){n.loc=w.b.room;}const s=spotIn(n.loc,w.spot,n);clearPose(n);if(s){n.spot=s;n.x=(s.sx+.5)*TILE;n.y=(s.sy+.5)*TILE;n.ract=w.act;applyPose(n,s);}return true;}if(n.loc){leaveB(n);}if(n.lord||n.id==='aldric'){n.x=n.hx;n.y=n.hy;}return false;}
+ if(!near){n._ft=(n._ft||0)-dt;if(n._ft>0)return !!(w||n.loc);n._ft=2.5;if(w&&w.b&&w.b.room){if(n.loc!==w.b.room){n.loc=w.b.room;}if(n.spot&&n.ract===w.act&&n.posed&&n.loc===w.b.room){n.path=[];return true;}const s=spotIn(n.loc,w.spot,n);clearPose(n);n.path=[];n.moving=false;if(s){n.spot=s;n.x=(s.sx+.5)*TILE;n.y=(s.sy+.5)*TILE;n.ract=w.act;applyPose(n,s);}return true;}if(n.loc){leaveB(n);n.path=[];}if(n.lord||n.id==='aldric'){n.x=n.hx;n.y=n.hy;}return false;}
  if(dn<70&&!n.lie&&(!n.path||!n.path.length)){n.moving=false;return !!(w||n.loc);}
  if(G.ui&&G.ui.dlgNpc===n){n.moving=false;return true;}
  if(!w||!w.b||!w.b.room){if(n.loc){const r=n.loc;if(n.lie||n.sit)clearPose(n);const tx=r.door.tx,ty=r.door.ty-1;if(Math.floor(n.x/TILE)===tx&&Math.floor(n.y/TILE)===ty){leaveB(n);return true;}if(!n.path||!n.path.length)goTo(n,tx,ty);if(!stepPath(n,dt)){n.x=(tx+.5)*TILE;n.y=(ty+.5)*TILE;}return true;}
@@ -1175,7 +1196,7 @@ G.routine=(n,dt,dn)=>{if(n.abs&&n.id==='elara')return false;const di=G.dayInfo()
  const R0=w.b.room;
  if(n.loc!==R0){if(n.loc){const r=n.loc;if(n.lie||n.sit)clearPose(n);const tx=r.door.tx,ty=r.door.ty-1;if(Math.floor(n.x/TILE)===tx&&Math.floor(n.y/TILE)===ty){leaveB(n);return true;}if(!n.path||!n.path.length)goTo(n,tx,ty);if(!stepPath(n,dt)){n.x=(tx+.5)*TILE;n.y=(ty+.5)*TILE;}return true;}
   const b=w.b,tx=b.door.tx,ty=b.y+b.h;if(Math.abs(Math.floor(n.x/TILE)-tx)<=0&&Math.abs(Math.floor(n.y/TILE)-ty)<=1){enterB(n,b);return true;}n.act=null;n.job=null;if(!n.path||!n.path.length||n._goal!==b.id){n._goal=b.id;goTo(n,tx,ty);if(!n.path.length){n.x=(tx+.5)*TILE;n.y=(ty+.5)*TILE;}}if(!stepPath(n,dt)&&n.path&&!n.path.length&&!(Math.floor(n.y/TILE)>=ty-1)){n.x=(tx+.5)*TILE;n.y=(ty+.5)*TILE;}return true;}
- if(n.spot&&n.ract===w.act){if(stepPath(n,dt))return true;if(!n.posed){applyPose(n,n.spot);}poseAct(n,dt);return true;}
+ if(n.spot&&n.ract===w.act){if(!n.posed&&stepPath(n,dt))return true;if(!n.posed){n.path=[];applyPose(n,n.spot);}n.moving=false;poseAct(n,dt);return true;}
  clearPose(n);n.posed=0;const s=spotIn(R0,w.spot,n)||spotIn(R0,'any',n);if(!s)return true;n.spot=s;n.ract=w.act;goTo(n,s.sx,s.sy);if(!n.path.length){n.x=(s.sx+.5)*TILE;n.y=(s.sy+.5)*TILE;}return true;};
 function applyPose(n,s){n.posed=1;const dx=s.fx-s.sx,dy=s.fy-s.sy,l=Math.hypot(dx,dy)||1;n.fx=dx/l||0;n.fy=dy/l||1;if(n.ract==='sleep'){n.lie=1;let top=s.fy;while(tileAt(s.fx,top-1)===T.BED)top--;const by=top+Math.floor((s.fy-top)/2)*2+1;n.x=(s.fx+.5)*TILE;n.y=(Math.min(by,s.fy+1)+.5)*TILE;if(tileAt(s.fx,Math.floor(n.y/TILE))!==T.BED)n.y=(s.fy+.5)*TILE;}else if(n.ract==='drink'||n.ract==='eat'||n.ract==='sit'){n.sit=1;if(n.ract==='sit'){n.x=(s.fx+.5)*TILE;n.y=(s.fy+.62)*TILE;n.fx=0;n.fy=1;}}n.act=n.ract==='hammer'?'hammer':n.ract==='saw'?'hammer':n.ract==='knead'?'hoe':n.ract==='brew'?'heal':n.ract==='pray'?'pray':null;n.moving=false;}
 function poseAct(n,dt){n.moving=false;n.actT=(n.actT||0)+dt;if(n.actT>1.3){n.actT=0;if(n.lie)G.parts.push({x:n.x+8,y:n.y-14,z:22,vx:8,vy:-18,life:1.2,c:'#cfd8ff',txt:'z'});else if(n.ract==='drink'&&Math.random()<.3)G.parts.push({x:n.x,y:n.y-10,z:26,vx:0,vy:-20,life:.8,c:'#ffd54a'});else if(n.ract==='brew')G.parts.push({x:n.x+n.fx*12,y:n.y+n.fy*12,z:18,vx:0,vy:-30,life:.8,c:'#7fff9a'});else if(n.ract==='hammer'||n.ract==='saw'){for(let i=0;i<4;i++)G.parts.push({x:n.x+n.fx*14,y:n.y+n.fy*14,z:14,vx:rnd(-60,60),vy:rnd(-60,20),life:.3,c:n.ract==='saw'?'#c8a070':'#ffb04a'});}}}

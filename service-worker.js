@@ -1,7 +1,7 @@
 // Aschenkrone – Service Worker: speichert alle Spieldateien, damit das Spiel offline läuft.
 // WICHTIG: Bei jedem Spiel-Update die Versionsnummer hier um 1 erhöhen,
 // dann holen sich alle Handys automatisch die neue Version.
-const CACHE = 'aschenkrone-v14-3';
+const CACHE = 'aschenkrone-v15';
 
 const FILES = [
   './',
