@@ -602,8 +602,8 @@ function npcTick(n,dt,dn){const J=JOBS[n.id];if(!J&&!n.wander)return;
    else if(n.act==='heal'&&n.healT){const o=n.healT;for(let i=0;i<8;i++)G.parts.push({x:o.x+rnd(-10,10),y:o.y+rnd(-6,6),z:10,vx:0,vy:-40,life:.7,c:i%2?'#7fff9a':'#c8ffd0'});}
    else if(n.act==='play'){G.parts.push({x:n.x+rnd(-6,6),y:n.y-6,z:30,vx:rnd(-20,20),vy:-40,life:.9,c:'#ffe9a0'});}
    else if(n.act==='pray'){G.parts.push({x:n.x,y:n.y-6,z:34,vx:0,vy:-25,life:.8,c:'#fff3b0'});}}}}
-G.npcSwing=n=>n.act==='hammer'||n.act==='hoe'?Math.max(0,.22-(n.actT||0)):0;
-G.npcTool=n=>n.id==='fiete'&&n.act==='fish'?'rod':n.ract==='saw'?'axe':n.act==='hammer'?'mace':n.act==='hoe'?'hoe':n.act==='heal'?'staff':n.act==='play'?'lute':null;
+G.npcSwing=n=>n.swingAt&&G.time-n.swingAt<.3?Math.max(0,.22-(G.time-n.swingAt)):n.act==='hammer'||n.act==='hoe'?Math.max(0,.22-(n.actT||0)):0;
+G.npcTool=n=>G.isGuard&&G.isGuard(n)?(n.id==='wache_burg'||n.id==='konrad'?'sword':'spear'):n.id==='fiete'&&n.act==='fish'?'rod':n.ract==='saw'?'axe':n.act==='hammer'?'mace':n.act==='hoe'?'hoe':n.act==='heal'?'staff':n.act==='play'?'lute':null;
 G.npcVisible=n=>!n.dead&&(n.id!=='elara'||G.P.main>=7);
 function placeElara(){const e=NPCS.find(n=>n.id==='elara');if(G.P.main>=8){e.x=(VCX+2.5)*TILE;e.y=(VCY-29.5)*TILE;}else{e.x=(LAIR.x+.5)*TILE;e.y=(LAIR.y+2.5)*TILE;}}
 
@@ -1240,7 +1240,7 @@ G.addBounty=addBounty;
 function stealAt(t){const key=t.rid+':'+t.x+','+t.y;P.searched=P.searched||{};P.searched[key]=dayNo();sfx('pickup');
  const r=Math.random();let val=0;if(r<.42){const g=rint(2,12);P.gold+=g;val=g;G.floats.push({x:P.x,y:P.y-40,t:`+${g} Gold`,c:'#ffd54a',life:.9});}else if(r<.67){give(mkStack(pick(['bread','carrot','bread']),rint(1,2)));val=6;}else if(r<.77){give(mkStack('potion',1));val=15;}else if(r<.88){give(mkStack('arrow',rint(3,8)));val=6;}else{G.toast('Nichts Brauchbares gefunden.','#ccc');}
  const w=witnesses();if(w.length){const n=w[0];G.floats.push({x:n.x,y:n.y-46,t:'Dieb! Wachen!',c:'#ff5252',life:1.4});addBounty(20+val*2,`Diebstahl – ${n.short||n.name} hat dich gesehen!`);if(!isGuard(n))G.floats.push({x:n.x,y:n.y-60,t:'📣 Meldet es den Wachen!',c:'#ffcc80',life:1.6});}else if(val)G.toast('🤫 Niemand hat dich gesehen …','#b0bec5');G.save();}
-function hitNPC(n,dmg){if(n.dead||n.ko>0)return;sfx('hit');
+function hitNPC(n,dmg){if(n.dead||n.ko>0)return;sfx('hit');if(isGuard(n)&&!hostile()){P.guardHostile=1;addBounty(80,`Angriff auf ${n.short||n.name}!`);n.ghp=0;return;}
  if(isGuard(n)&&hostile()){const gl=guardLvl(),mx=60+gl*22;if(!(n.ghp>0))n.ghp=mx;const d=Math.max(1,Math.round(dmg*rnd(.85,1.15)));n.ghp-=d;n.hitFlash=.15;if(G.settings.dmgNums)G.floats.push({x:n.x+rnd(-6,6),y:n.y-44,t:`${d}`,c:'#fff',life:.8});P.bounty+=5;if(n.ghp<=0){n.ghp=0;n.ko=60;n.lie=1;n.path=[];addBounty(60,`${n.short||n.name} niedergeschlagen!`);G.toast(`💫 ${n.short||n.name} ist bewusstlos.`,'#ffcc80');}return;}
  n.scared=6;n.hitCnt=(n.hitCnt||0)+1;G.floats.push({x:n.x,y:n.y-40,t:pick(['Au!','Hey!','Lass das!','Hilfe!']),c:'#ff8a80',life:.9});
  if(!P.npcWarn||G.time-P.npcWarn>90){P.npcWarn=G.time;n.hitCnt=0;G.toast('⚠ Vorsicht! Wer Bürger angreift, bekommt Kopfgeld und die Wachen jagen ihn.','#ffcc80',true);return;}
@@ -1255,9 +1255,10 @@ G.crimeTick=(n,dt,dn)=>{if(n.dead){if((P.dayT||0)>=(n.deadUntil||0)){n.dead=0;n.
  const same=G.room?n.loc===G.room:!n.loc;
  if(n.post&&!(n.ko>0)){if(n.loc!==n.post){n.loc=n.post;n.x=n.hx;n.y=n.hy;}if(!(P.bounty>0&&G.room===n.post)){n.lie=0;n.sit=0;n.path=[];const dx=n.hx-n.x,dy=n.hy-n.y,d=Math.hypot(dx,dy);if(d>3){const sp=Math.min(d,70*dt);n.x+=dx/d*sp;n.y+=dy/d*sp;n.fx=dx/d;n.fy=dy/d;n.moving=true;n.anim+=dt;}else{n.moving=false;n.fx=0;n.fy=1;}return true;}}
  if(P.bounty>0&&isGuard(n)&&hostile()&&same&&!n.lie&&!P.dead&&dn<TILE*24&&!(G.ui&&G.ui.dlgNpc)){const dx=P.x-n.x,dy=P.y-n.y,d=Math.hypot(dx,dy)||1;n.sit=0;n.path=[];n.fx=dx/d;n.fy=dy/d;if(!P._hostT||G.time-P._hostT>30){P._hostT=G.time;G.toast(`⚔ Die Wachen (Stufe ${guardLvl()}) greifen dich an! Sprich eine Wache an, um dich zu ergeben.`,'#ff6b5a',true);}
-  if(d<34){n.moving=false;n.gcd=(n.gcd||0)-dt;if(n.gcd<=0){n.gcd=1.15;n.swing=.25;const gl=guardLvl(),raw=4+gl*1.6;if(P.hp<=raw*1.4&&!(P.invT>0)&&!(P.dodgeT>0)){jail(`${n.short||n.name} hat dich überwältigt. `);return true;}hitPlayer(raw,{lvl:gl,type:'melee',name:n.name});}return true;}
+  if(d<34){n.moving=false;n.gcd=(n.gcd||0)-dt;if(n.gcd<=0){n.gcd=1.15;n.swingAt=G.time;const gl=guardLvl(),raw=4+gl*1.6;if(P.hp<=raw*1.4&&!(P.invT>0)&&!(P.dodgeT>0)){jail(`${n.short||n.name} hat dich überwältigt. `);return true;}hitPlayer(raw,{lvl:gl,type:'melee',name:n.name});}return true;}
   n.gcd=Math.min(n.gcd||0,.5);const sp=150*dt;const nx=n.x+dx/d*sp,ny=n.y+dy/d*sp;if(canMove(nx,ny,10)||G.room){n.x=nx;n.y=ny;}else if(canMove(nx,n.y,10))n.x=nx;else if(canMove(n.x,ny,10))n.y=ny;n.moving=true;n.anim+=dt;if(!n._shout||G.time-n._shout>4){n._shout=G.time;G.floats.push({x:n.x,y:n.y-44,t:pick(['Ergib dich!','Halt, Verbrecher!','Im Namen des Fürsten!']),c:'#ff8a80',life:1.2});}return true;}
  if(P.bounty>0&&isGuard(n)&&same&&!n.lie&&!P.dead&&dn<TILE*16&&(G.time>(P.guardCd||0))&&!(G.ui&&G.ui.dlgNpc)){const dx=P.x-n.x,dy=P.y-n.y,d=Math.hypot(dx,dy)||1;n.sit=0;n.path=[];if(d<38){P.guardCd=G.time+25;P.guardHostile=1;n.moving=false;G.ui&&G.ui.openDialog&&G.ui.openDialog(n);return true;}const sp=150*dt;const nx=n.x+dx/d*sp,ny=n.y+dy/d*sp;if(canMove(nx,ny,10)||G.room){n.x=nx;n.y=ny;}else if(canMove(nx,n.y,10))n.x=nx;else if(canMove(n.x,ny,10))n.y=ny;n.fx=dx/d;n.fy=dy/d;n.moving=true;n.anim+=dt;if(!n._shout||G.time-n._shout>4){n._shout=G.time;G.floats.push({x:n.x,y:n.y-44,t:'Halt! Stehen bleiben!',c:'#ffcc80',life:1.2});}return true;}
+ if(n.scared>0&&isGuard(n))n.scared=0;
  if(n.scared>0){n.scared-=dt;if(!same||n.lie)return false;const dx=n.x-P.x,dy=n.y-P.y,d=Math.hypot(dx,dy)||1;if(d<TILE*6){const sp=120*dt;const nx=n.x+dx/d*sp,ny=n.y+dy/d*sp;if(canMove(nx,ny,10)){n.x=nx;n.y=ny;n.moving=true;n.fx=dx/d;n.fy=dy/d;n.anim+=dt;}}return true;}
  return !!n.post;};
 function guardDialog(n){const b=P.bounty,B=(l,f,c)=>({l,f,c}),st=wanted();return{t:`Halt, im Namen des Gesetzes! Auf deinen Kopf sind ${b} Gold ausgesetzt (Fahndungsstufe ${'★'.repeat(st)}). Bezahl, oder du wanderst in den Kerker.`,b:[
