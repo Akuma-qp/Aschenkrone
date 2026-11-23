@@ -3,7 +3,7 @@
 const G=window.G,$=id=>document.getElementById(id),TILE=G.TILE,RAR=G.RAR;
 const ui=G.ui={dlgNpc:null};
 let state='menu',invOpen=false,invMode='normal',invSel=null,helpOpen=false,pauseOpen=false,setOpen=false,chatNpc=null,discardArm=false;
-G.paused=()=>state!=='game'||(typeof furnOpen!=='undefined'&&furnOpen)||(typeof mapOpen!=='undefined'&&mapOpen)||(typeof travelOpen!=='undefined'&&travelOpen)||invOpen||helpOpen||pauseOpen||setOpen||!!ui.dlgNpc||!!chatNpc||(G.P&&G.P.dead);
+G.paused=()=>state!=='game'||(typeof furnOpen!=='undefined'&&(furnOpen||buildOpen))||(typeof mapOpen!=='undefined'&&mapOpen)||(typeof travelOpen!=='undefined'&&travelOpen)||invOpen||helpOpen||pauseOpen||setOpen||!!ui.dlgNpc||!!chatNpc||(G.P&&G.P.dead);
 const c2d=$('c2d'),ctx=c2d.getContext('2d'),c3d=$('c3d');
 let VW=1,VH=1,DPR=1,use3d=false;
 let RS=1,rsT=0;const qPR=()=>{const d=window.devicePixelRatio||1,q=G.settings.quality;let pr={low:Math.min(d,1.5),mid:Math.min(d,2),high:Math.min(d,2.5)}[q]||1;const px=Math.max(1,innerWidth*innerHeight),bud={low:1.3e6,mid:2.6e6,high:3.9e6}[q]||2.6e6;pr=Math.min(pr,Math.sqrt(bud/px));return Math.max(.5,pr)*RS;};
@@ -30,7 +30,7 @@ function renderHot(){for(let i=0;i<9;i++){setSlotEl(hotEls[i],G.P.inv[i]);hotEls
 const EQL=[['helm','Helm'],['chest','Brust'],['legs','Beine'],['boots','Stiefel']],EQR=[['ring','Ring'],['amulet','Amulett']];
 const invEls={};let hoverK=null,marked=new Set(),markMode=false,shopId=null,shopTab='buy',forgeK=null;
 function mkInvSlot(key,parent,label){const e=document.createElement('div');e.className='slot';e.innerHTML='<span class="cnt"></span>';if(label)e.dataset.l=label;
- e.addEventListener('click',ev=>{if((ev.shiftKey||markMode)&&key[0]==='i'){toggleMark(key);return;}slotTap(key);});
+ e.addEventListener('click',ev=>{if(performance.now()-dragEnd<350)return;if((ev.shiftKey||markMode)&&key[0]==='i'){toggleMark(key);return;}slotTap(key);});bindDrag(e,key);
  e.addEventListener('contextmenu',ev=>{ev.preventDefault();if(key[0]==='i'&&getS(key))toggleMark(key);});
  e.addEventListener('mouseenter',()=>{if(!pcMode)return;hoverK=key;renderInfo();});e.addEventListener('mouseleave',()=>{if(hoverK===key){hoverK=null;renderInfo();}});
  parent.appendChild(e);invEls[key]=e;}
@@ -43,11 +43,26 @@ const lvOK=it=>!it||G.reqLvl(it)<=G.P.level;
 function toggleMark(k){if(!getS(k))return;if(marked.has(k))marked.delete(k);else marked.add(k);invSel=null;renderInv();}
 function slotTap(k){discardArm=false;
  if(shopId&&shopTab==='forge'){const it=getS(k);if(it&&!it.stack){forgeK=k;invSel=k;}renderInv();return;}
- if(invSel===null){if(getS(k))invSel=k;}else if(invSel===k)invSel=null;
- else{const a=getS(invSel),b=getS(k);
-  if(a&&b&&a.stack&&b.stack&&a.id===b.id){const cap=a.type==='ammo'?999:64;const mv=Math.min(cap-b.count,a.count);b.count+=mv;a.count-=mv;if(a.count<=0)setS(invSel,null);invSel=null;}
-  else if(fits(k,a)&&fits(invSel,b)){if(k[0]==='e'&&!lvOK(a)||invSel[0]==='e'&&!lvOK(b)){toast(`Benötigt Stufe ${G.reqLvl(k[0]==='e'?a:b)}`,'#ff8a80');}else{setS(k,a);setS(invSel,b);marked.delete(k);marked.delete(invSel);invSel=null;}}else toast('Das passt dort nicht hinein','#ff8a80');}
+ if(moveArm&&invSel!==null&&invSel!==k){moveArm=false;moveSlot(invSel,k);renderInv();return;}moveArm=false;
+ if(invSel===k)invSel=null;else invSel=getS(k)?k:null;
  renderInv();}
+let moveArm=false;
+// Gegenstand von Slot a nach Slot b bewegen (tauschen / stapeln)
+function moveSlot(from,k){const a=getS(from),b=getS(k);if(!a||from===k)return false;
+ if(b&&a.stack&&b.stack&&a.id===b.id){const cap=a.type==='ammo'?999:64;const mv=Math.min(cap-b.count,a.count);b.count+=mv;a.count-=mv;if(a.count<=0)setS(from,null);G.invDirty=true;invSel=null;return true;}
+ if(fits(k,a)&&fits(from,b)){if(k[0]==='e'&&!lvOK(a)||from[0]==='e'&&!lvOK(b)){toast(`Benötigt Stufe ${G.reqLvl(k[0]==='e'?a:b)}`,'#ff8a80');return false;}setS(k,a);setS(from,b);marked.delete(k);marked.delete(from);invSel=k;return true;}
+ toast('Das passt dort nicht hinein','#ff8a80');return false;}
+// Ziehen (Drag & Drop) – Maus sofort, Touch nach kurzem Halten
+let drag=null,dragEnd=0;
+function dragStart(k,x,y){const it=getS(k);if(!it)return;const src=invEls[k];const g=src.cloneNode(true);g.className='slot dragGhost';g.style.left=x+'px';g.style.top=y+'px';const cv=src.querySelector('canvas');if(cv){const c2=g.querySelector('canvas');if(c2)c2.getContext('2d').drawImage(cv,0,0);}document.body.appendChild(g);drag={k,g};src.classList.add('dragFrom');}
+function dragMove(x,y){if(!drag)return;drag.g.style.left=x+'px';drag.g.style.top=y+'px';const t=document.elementFromPoint(x,y);for(const kk in invEls)invEls[kk].classList.toggle('dropT',!!t&&invEls[kk].contains(t)&&kk!==drag.k);}
+function dragDrop(x,y){if(!drag)return;const d=drag;drag=null;d.g.remove();for(const kk in invEls)invEls[kk].classList.remove('dropT','dragFrom');dragEnd=performance.now();const t=document.elementFromPoint(x,y);let to=null;for(const kk in invEls)if(t&&invEls[kk].contains(t))to=kk;if(to&&to!==d.k){moveSlot(d.k,to);}renderInv();}
+function bindDrag(e,key){let st=null,hold=null;
+ e.addEventListener('mousedown',ev=>{if(ev.button!==0||!getS(key)||(shopId&&shopTab==='forge'))return;st={x:ev.clientX,y:ev.clientY};const mv=m=>{if(!drag&&st&&Math.hypot(m.clientX-st.x,m.clientY-st.y)>6)dragStart(key,m.clientX,m.clientY);if(drag)dragMove(m.clientX,m.clientY);};const up=m=>{removeEventListener('mousemove',mv);removeEventListener('mouseup',up);st=null;if(drag)dragDrop(m.clientX,m.clientY);};addEventListener('mousemove',mv);addEventListener('mouseup',up);});
+ e.addEventListener('touchstart',ev=>{if(ev.touches.length!==1||!getS(key)||(shopId&&shopTab==='forge'))return;const t=ev.touches[0];st={x:t.clientX,y:t.clientY};clearTimeout(hold);hold=setTimeout(()=>{if(st){dragStart(key,st.x,st.y);if(navigator.vibrate)try{navigator.vibrate(15);}catch(_){}}},280);},{passive:true});
+ e.addEventListener('touchmove',ev=>{const t=ev.touches[0];if(drag){ev.preventDefault();dragMove(t.clientX,t.clientY);return;}if(st&&Math.hypot(t.clientX-st.x,t.clientY-st.y)>8){clearTimeout(hold);st=null;}},{passive:false});
+ e.addEventListener('touchend',ev=>{clearTimeout(hold);const t=ev.changedTouches[0];if(drag){ev.preventDefault();dragDrop(t.clientX,t.clientY);}st=null;},{passive:false});
+ e.addEventListener('touchcancel',()=>{clearTimeout(hold);st=null;if(drag){drag.g.remove();for(const kk in invEls)invEls[kk].classList.remove('dropT','dragFrom');drag=null;}});}
 function freeBag(){for(let i=9;i<36;i++)if(!G.P.inv[i])return 'i'+i;for(let i=0;i<9;i++)if(!G.P.inv[i])return 'i'+i;return null;}
 // ---- einheitliche Werte für den Vergleich
 const ROWS=[['dmg','⚔ Schaden',''],['aps','⏱ Angriffe/s',''],['dps','💥 Schaden/s',''],['rng','📏 Reichweite',''],['mana','🔷 Mana/Zauber',''],['sta','⚡ Ausdauer/Schlag',''],['def','🛡 Rüstung',''],
@@ -87,7 +102,7 @@ function renderShop(){const el=$('shopBar');if(!shopId){el.style.display='none';
 ui.openShop=(id,tab)=>{shopId=id;shopTab=tab||'buy';openInv('shop');};
 // ---- Info unten (feste Höhe)
 function renderInfo(){if(!invOpen)return;const P=G.P,info=$('itemInfo');const k=hoverK&&getS(hoverK)?hoverK:invSel;
- if(!k||!getS(k)){let t=shopId?(shopTab==='forge'?'Wähle einen Gegenstand zum Umschmieden.':shopTab==='sell'?'Wähle Gegenstände zum Verkaufen.':'Kaufe oben, oder wechsle zu „Verkaufen“.'):'Tippe einen Gegenstand an, um ihn auszuwählen, und dann einen anderen Platz, um ihn zu verschieben oder anzulegen.'+(pcMode?' Fahre mit der Maus darüber, um ihn mit deiner Ausrüstung zu vergleichen. Shift+Klick markiert mehrere.':'');
+ if(!k||!getS(k)){let t=shopId?(shopTab==='forge'?'Wähle einen Gegenstand zum Umschmieden.':shopTab==='sell'?'Wähle Gegenstände zum Verkaufen.':'Kaufe oben, oder wechsle zu „Verkaufen“.'):(pcMode?'Klicke einen Gegenstand an, um ihn auszuwählen. Zum Verschieben ziehst du ihn mit gedrückter Maustaste auf einen anderen Platz.':'Tippe einen Gegenstand an, um ihn auszuwählen. Zum Verschieben hältst du ihn kurz gedrückt und ziehst ihn auf einen anderen Platz.')+(pcMode?' Fahre mit der Maus darüber, um ihn mit deiner Ausrüstung zu vergleichen. Shift+Klick markiert mehrere.':'');
   info.innerHTML=`<div class="hint">${t}</div>`;return;}
  const it=getS(k);info.innerHTML=itemHTML(it,k)+(k===invSel?'<div class="btns" id="ib"></div>':'<div class="hint" style="margin-top:4px">Klicken für Aktionen</div>');
  if(k!==invSel)return;const ib=$('ib');const inEq=k[0]==='e',idx=inEq?-1:+k.slice(1);
@@ -95,6 +110,7 @@ function renderInfo(){if(!invOpen)return;const P=G.P,info=$('itemInfo');const k=
  if(shopId&&shopTab==='forge'&&!it.stack){const c=G.reforgeCost(it);btn(`⚒ Umschmieden: ${c} Gold`,()=>{if(P.gold<c){toast('Nicht genug Gold','#ff8a80');return;}P.gold-=c;const old=it.pre;let n;do n=G.rollPre(it);while(n===old&&Math.random()<.7);it.pre=n;G.sfx('hit');G.sfx('coin');const p=G.PRE[n];toast(`⚒ ${G.iname(it)}`,p.best?'#ffd54a':p.dmg<0||p.def<0||p.spd<0||p.mspd<0?'#ff8a80':'#a5d6a7',!!p.best);G.invDirty=true;renderInv();});return;}
  if(shopId){const pr=G.sellPrice(it);if(pr>0)btn(`💰 Verkaufen: ${pr} Gold`,()=>{P.gold+=pr;setS(k,null);invSel=null;G.sfx('coin');toast(`+${pr} Gold`,'#ffd54a');renderInv();});else ib.insertAdjacentHTML('beforeend','<small>Das kauft hier niemand.</small>');}
  if(it.type==='food')btn('Benutzen',()=>{G.useItem(idx);if(!P.inv[idx])invSel=null;renderInv();});
+ if(!shopId){btn(moveArm?'↔ Ziel antippen …':'↔ Verschieben',()=>{moveArm=!moveArm;renderInv();});if(!inEq&&idx>=9&&!it.stack||(!inEq&&idx>=9&&it.type!=='furn')){btn('⬇ In die Hotbar',()=>{let t=-1;for(let i=0;i<9;i++)if(!P.inv[i]){t=i;break;}if(t<0)t=P.sel;moveSlot(k,'i'+t);renderInv();});}}
  if(it.type==='furn'&&!inEq)btn(G.room&&G.room.player?'🏠 Aufstellen (Feld vor dir)':'🏠 Aufstellen (nur im eigenen Haus)',()=>{if(G.placeFurn(idx)){invSel=null;closeInv();}else renderInv();});
  if(it.id==='hammer')btn('📦 Möbellager öffnen',()=>{closeInv();ui.openFurnBox();});
  if(it.id==='hammer'&&idx>=9)btn('In die Hand nehmen',()=>{const o=P.inv[P.sel];P.inv[P.sel]=it;P.inv[idx]=o;invSel=null;G.invDirty=true;renderInv();});
@@ -143,8 +159,12 @@ let lastSpoken='';
 ui.showText=(n,t,b)=>{ui.dlgNpc=n;ui._custom={t,b:b||[]};};
 function renderDialog(){const n=ui.dlgNpc;if(!n)return;G.S=G.calc();const cu=ui._custom;ui._custom=null;const d=cu||G.npcDialog(n),el=$('dialog');if(d.t!==lastSpoken){lastSpoken=d.t;G.voice&&G.voice.speak(n,d.t);}el.innerHTML=`<div class="dn">${n.name}</div><div class="dt"></div><div class="btns"></div>`;el.querySelector('.dt').textContent=d.t;const bb=el.querySelector('.btns');
  const add=(l,f,cls)=>{const e=document.createElement('button');e.className='btn'+(cls?' '+cls:'');e.textContent=l;e.addEventListener('click',f);bb.appendChild(e);};
- d.b.forEach(b=>add(b.l,()=>{if(b.f)b.f();if(b.c)closeDialog();else renderDialog();G.save();}));
- if(!cu)add('💬 Unterhalten',()=>{closeDialog();openChat(n);},'blue');add(cu?'Weiter':'Tschüss',cu?renderDialog:closeDialog);el.style.display='block';}
+ const SERV=/Handeln|Ausrüstung|Schmiede|Heile mich|→|Gold|Hammer|Saat|Später|Geschenk|Kopfgeld|Gefängnis|Fliehen|Möbel/;const isQ=b=>b.q||!SERV.test(b.l);const qb=d.b.filter(isQ),sb=d.b.filter(b=>!isQ(b));
+ if(qb.length){const h=document.createElement('div');h.className='dqh';h.textContent='❗ Quest';bb.appendChild(h);}
+ qb.forEach(b=>add('❗ '+b.l.replace(/^📜\s*/,''),()=>{if(b.f)b.f();if(b.c)closeDialog();else renderDialog();G.save();},'qopt'));
+ if(qb.length&&sb.length){const h=document.createElement('div');h.className='dqh dqs';h.textContent='Sonstiges';bb.appendChild(h);}
+ sb.forEach(b=>add(b.l,()=>{if(b.f)b.f();if(b.c)closeDialog();else renderDialog();G.save();}));
+ if(!cu)add('💬 Unterhalten',()=>{closeDialog();openChat(n);},'blue');add(cu?'Weiter':'Tschüss',cu?renderDialog:closeDialog);el.style.display=pcMode?'block':'flex';}
 function closeDialog(){if(ui.dlgNpc&&G.voice)G.voice.stop();lastSpoken='';ui.dlgNpc=null;$('dialog').style.display='none';}
 // ===================== Gespräche (KI) =====================
 let sampleFn=null,aiTried=false,aiOff=false;
@@ -385,10 +405,24 @@ function drawMini(){const P=G.P,MS=+G.settings.mini||120,d=Math.min(window.devic
  mctx.fillStyle='#fff';mctx.strokeStyle='#000';mctx.lineWidth=1;mctx.beginPath();mctx.arc(X(ptx),Y(pty),2.6,0,7);mctx.fill();mctx.stroke();
  const tw=G.townAt&&G.townAt(Math.floor(ptx),Math.floor(pty));const bn={village:'Eichenhain',meadow:'Wiesen',forest:'Wald',swamp:'Sumpf',waste:'Ödland',winter:'Frostlande',ash:'Aschland',dark:'Schattenwald',desert:'Wüste',peaks:'Gebirge'}[G.biome(Math.floor(ptx),Math.floor(pty))];
  mctx.fillStyle='rgba(0,0,0,.55)';mctx.fillRect(0,82,96,14);mctx.fillStyle='#ffe9b0';mctx.font='bold 9px Georgia';mctx.fillText(G.room?'Innenraum':tw?tw.name:(bn||''),48,92);}
-function hud(){const P=G.P,S=G.S||G.calc(),tx=Math.floor(P.x/TILE),ty=Math.floor(P.y/TILE);
+// ===== Kleines Tutorial für neue Spieler =====
+const TUT=[
+ {t:()=>pcMode?'🚶 Bewege dich mit <b>W A S D</b>. Mit <b>Shift</b> sprintest du.':'🚶 Bewege dich mit dem <b>linken Daumen</b> (Joystick). Mit 🚶/🏃 schaltest du Sprinten fest an.',ok:s=>s.dist>TILE*3},
+ {t:()=>pcMode?'🎥 Drehe die Kamera mit gedrückter <b>rechter Maustaste</b>, zoomen mit dem <b>Mausrad</b>. <b>V</b> wechselt die Ansicht.':'🎥 Wische mit dem <b>rechten Daumen</b>, um die Kamera zu drehen.',ok:s=>s.t>7},
+ {t:()=>`⭐ Der <b>Kompass</b> oben zeigt dein Ziel. Geh zu <b>Heilerin Mara</b> und sprich mit ihr: ${pcMode?'<b>F</b>':'<b>✋</b>'}.`,ok:s=>G.P.main>=1||(ui.dlgNpc&&ui.dlgNpc.id==='mara')},
+ {t:()=>`🎒 Öffne dein <b>Inventar</b>: ${pcMode?'<b>E</b>':'<b>🎒</b>'}. Ausrüstung legst du über „Anlegen“ an, verschieben per Ziehen.`,ok:()=>invOpen},
+ {t:()=>pcMode?'⚔ <b>Linksklick</b> greift an, <b>C</b> weicht aus, <b>Leertaste</b> springt. Ohne Ausdauer schlägst du nur schwach zu.':'⚔ <b>⚔-Knopf</b> greift an, <b>doppelt rechts tippen</b> weicht aus. Ohne Ausdauer schlägst du nur schwach zu.',ok:s=>s.t>14||Object.keys(G.P.kills||{}).length>0},
+ {t:()=>`📜 Quests: ${pcMode?'<b>J</b>':'Reiter im Inventar'} · ⭐ Fähigkeiten: ${pcMode?'<b>K</b>':'Reiter im Inventar'} – pro Stufe 1 Punkt. Viel Spaß in Eldmar!`,ok:s=>s.t>10}];
+let tutS=null;
+function tutTick(){const P=G.P;if(!P)return;if(P.tut==null){P.tut=(P.level>1||P.main>1)?99:0;}if(P.tut>=TUT.length){const e=$('tut');if(e)e.remove();return;}
+ if(G.cutscene||state!=='game')return;let e=$('tut');if(!e){e=document.createElement('div');e.id='tut';document.body.appendChild(e);tutS=null;}
+ if(!tutS||tutS.i!==P.tut){tutS={i:P.tut,t:0,x:P.x,y:P.y,dist:0};e.innerHTML=`<div class="tutn">Tipp ${P.tut+1}/${TUT.length}</div><div class="tutt">${TUT[P.tut].t()}</div><button class="tutx">Überspringen</button>`;e.querySelector('.tutx').onclick=ev=>{ev.stopPropagation();P.tut=99;e.remove();G.save();};}
+ if(!G.paused()||invOpen||ui.dlgNpc){tutS.t+=1/60;tutS.dist+=Math.hypot(P.x-tutS.x,P.y-tutS.y);tutS.x=P.x;tutS.y=P.y;}
+ if(TUT[P.tut].ok(tutS)){P.tut++;tutS=null;if(P.tut>=TUT.length){e.remove();G.save();}}}
+function hud(){tutTick();const P=G.P,S=G.S||G.calc(),tx=Math.floor(P.x/TILE),ty=Math.floor(P.y/TILE);
  $('lvl').textContent=P.level;$('hpf').style.width=(100*Math.max(0,P.hp)/S.maxhp)+'%';$('hpf').classList.toggle('poison',!!P.poison);$('hpt').textContent=`${Math.ceil(Math.max(0,P.hp))} / ${S.maxhp} LP${P.poison?' · vergiftet':''}`;
  $('stf').style.width=(100*Math.max(0,P.sta)/S.maxSta)+'%';$('stt').textContent=`⚡ ${Math.floor(P.sta)}`;$('mpf').style.width=(100*Math.max(0,P.mp)/S.maxMp)+'%';$('mpt').textContent=`🔷 ${Math.floor(P.mp)}`;const am=S.cls==='ranged'?(G.WKIND[S.kind].proj==='bolt'?'bolt':'arrow'):null;$('ammo').style.display=am?'block':'none';if(am)$('ammo').textContent=`${am==='bolt'?'Bolzen':'Pfeile'}: ${G.countItem(am)}`;
- const xn=G.xpNeed(P.level);$('xpf').style.width=(100*P.xp/xn)+'%';$('xpt').textContent=`XP ${Math.floor(P.xp)} / ${xn}`;$('gold').textContent=`🪙 ${P.gold} Gold · ${G.D().n}`;
+ const xn=G.xpNeed(P.level);$('xpf').style.width=(100*P.xp/xn)+'%';$('xpt').textContent=`XP ${Math.floor(P.xp)} / ${xn}`;$('gold').innerHTML=`🪙 ${P.gold} Gold · ${G.D().n}`+(P.bounty>0?` · <span style="color:#ff6b5a">⚖ Kopfgeld ${P.bounty}</span>`:'');
  const b=G.biome(tx,ty),zl=G.zoneLevel(tx,ty);$('zone').textContent=G.room?(G.room.dungeon?`☠ ${G.room.name} · Stufe ~${G.room.lvl}`:`🏠 ${G.room.name}`):G.inSafe(P.x,P.y)?(G.inCastle(tx,ty)?'🏰 Burg Eichenhain · Sicher':G.townAt(tx,ty)?`🏘 ${G.townAt(tx,ty).name} · Sicher`:'🏡 Eichenhain · Sicher'):`⚔ ${G.ZN[b]} · Monster Stufe ~${zl}`;
  if(!hud.qT||G.time-hud.qT>.25){hud.qT=G.time;skBadge();const QL=G.questLog(),m=QL.main;hud.QL=QL;let h=`<div class="qh">⭐ Hauptquest · ${m.ch}</div><div class="ob">➤ ${m.t}${m.to&&!G.room?` <span class="qd">${G.dirTo(m.to)}</span>`:''}</div>`;
   if(QL.side.length){h+=`<div class="qh2">📜 Nebenquests</div>`+QL.side.slice(0,4).map(s=>`<div class="sq">• <b>${s.n}</b>: ${s.t.split(' – ')[0]}${s.to&&!G.room?` <span class="qd">${G.dirTo(s.to)}</span>`:''}</div>`).join('')+(QL.side.length>4?`<div class="sq">… +${QL.side.length-4} (Questbuch: J)</div>`:'');}
@@ -477,7 +511,7 @@ $('bDodge').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagat
 for(const [id,dir,tl] of [['bRotL',-1,0],['bRotR',1,0],['bTiltU',1,1],['bTiltD',-1,1]]){const el=$(id);const st=v=>{if(tl)tiltHold=v;else rotHold=v;};el.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();st(dir);});el.addEventListener('pointerup',()=>st(0));el.addEventListener('pointerleave',()=>st(0));el.addEventListener('pointercancel',()=>st(0));}
 addEventListener('wheel',e=>{if(state!=='game'||!use3d||isFP()||G.paused())return;G.camTilt=Math.max(.22,Math.min(1.5,(G.camTilt==null?.893:G.camTilt)+(e.deltaY>0?.06:-.06)*IY()));},{passive:true});
 $('bJump').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();if(!G.paused())G.jump();});
-$('bSprint').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();sprintTog=!sprintTog;G.sprintHeld=sprintTog;$('bSprint').classList.toggle('on',sprintTog);toast(sprintTog?'🏃 Sprint an':'🚶 Sprint aus','#ffe0a0');});
+$('bSprint').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();sprintTog=!sprintTog;G.sprintHeld=sprintTog;$('bSprint').classList.toggle('on',sprintTog);$('bSprint').textContent=sprintTog?'🏃':'🚶';toast(sprintTog?'🏃 Sprinten (fest) – nochmal tippen zum Gehen':'🚶 Gehen','#ffe0a0');});
 $('bCam').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();toggleCam();});
 $('bInv').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();if(state!=='game')return;invOpen?closeInv():openInv();});
 // Fokus behalten: Maus wieder einfangen & versteckte Eingabefelder freigeben
@@ -503,7 +537,7 @@ function applyWin(v,quiet){const de=document.documentElement;const kl=on=>{try{i
  try{const r=(de.requestFullscreen||de.webkitRequestFullscreen).call(de,{navigationUI:'hide'});if(r&&r.then)r.then(()=>kl(v==='full')).catch(()=>{if(!quiet)toast('⚠ Der Browser hat Vollbild blockiert – öffne das Spiel in einem eigenen Tab.','#ffcc80',true);regrab.fsWant=0;});}catch(_){if(!quiet)toast('⚠ Vollbild ist hier nicht möglich.','#ffcc80');}}
 document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement){regrab.fsWant=0;try{navigator.keyboard&&navigator.keyboard.unlock&&navigator.keyboard.unlock();}catch(_){}}setTimeout(resize,60);});
 const keys={};
-addEventListener('keydown',e=>{if(e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')){const el=e.target;if(el.offsetWidth>0&&el.getClientRects().length){if(e.key==='Escape')closeChat();return;}try{el.blur();}catch(_){}}if(state==='game'&&!e.repeat&&/^(w|a|s|d|arrow\w+| |shift)$/i.test(e.key))regrab();if(ui.closeTravel&&(e.key==='Escape'||e.key.toLowerCase()==='f')){ui.closeTravel();return;}if(ui.closeFurn&&e.key==='Escape'){ui.closeFurn();return;}if(keyCap)return;const k=mapKey(e.key.toLowerCase());if(k==='')return;keys[k]=true;if(state==='cutscene'&&cs&&(k===' '||k==='enter')&&!e.repeat){e.preventDefault();const txt=cs.list[cs.i][1];if(cs.chars<txt.length)cs.chars=txt.length;else csNext();return;}if(state!=='game')return;
+addEventListener('keydown',e=>{if(e.target&&(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA')){const el=e.target;if(el.offsetWidth>0&&el.getClientRects().length){if(e.key==='Escape')closeChat();return;}try{el.blur();}catch(_){}}if(state==='game'&&!e.repeat&&/^(w|a|s|d|arrow\w+| |shift)$/i.test(e.key))regrab();if(ui.closeTravel&&(e.key==='Escape'||e.key.toLowerCase()==='f')){ui.closeTravel();return;}if(ui.closeFurn&&e.key==='Escape'){ui.closeFurn();return;}if(ui.closeBuild&&e.key==='Escape'){ui.closeBuild();return;}if(keyCap)return;const k=mapKey(e.key.toLowerCase());if(k==='')return;keys[k]=true;if(state==='cutscene'&&cs&&(k===' '||k==='enter')&&!e.repeat){e.preventDefault();const txt=cs.list[cs.i][1];if(cs.chars<txt.length)cs.chars=txt.length;else csNext();return;}if(state!=='game')return;
  if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright'].includes(k))setPC(true);
  if(k===' '||k.startsWith('arrow')||k==='tab')e.preventDefault();
  if(k==='escape'&&mapOpen){closeMap();return;}if(k==='m'&&mapOpen&&!e.repeat){closeMap();return;}
@@ -608,8 +642,46 @@ function drawBig(){const c=$('mapC'),P=G.P;const sz=Math.min(innerWidth-40,inner
  
  const ob=G.objective();if(ob.to){g.strokeStyle='#ffd54a';g.lineWidth=2;g.beginPath();g.arc(X(ob.to.x/TILE),X(ob.to.y/TILE),7,0,7);g.stroke();}
  const pp=G.room?G.room.ent:P;g.fillStyle='#fff';g.strokeStyle='#000';g.lineWidth=1.5;g.beginPath();g.arc(X(pp.x/TILE),X(pp.y/TILE),5,0,7);g.fill();g.stroke();}
+// ===== Einrichtungsmodus: Rasterplan von oben, frei platzieren mit Vorschau =====
+let buildOpen=false;
+ui.openBuild=function(){const P=G.P,HR=G.HR;if(!(G.room&&G.room.player)){ui.openFurnBox();return;}if(buildOpen)return;buildOpen=true;G.attackHeld=false;
+ const ov=document.createElement('div');ov.className='overlay';ov.style.display='flex';ov.style.zIndex=60;ov.id='buildOv';
+ ov.innerHTML=`<div class="panel parch bpanel"><div class="ph"><span>🔨 Haus einrichten</span><button class="x">✕</button></div><div class="bhint"></div><div class="bwrap"><canvas class="bcv"></canvas></div><div class="bbtns btns"></div><div class="bsub">📦 Möbellager</div><div class="blist"></div></div>`;document.body.appendChild(ov);
+ const cv=ov.querySelector('.bcv'),cx=cv.getContext('2d'),hint=ov.querySelector('.bhint'),bb=ov.querySelector('.bbtns'),bl=ov.querySelector('.blist');
+ let sel=null;// {mode:'new',id,k,t,ax,ay} | {mode:'move',k,t,ax,ay} | {mode:'pick',k}
+ const close=()=>{ov.remove();buildOpen=false;ui.closeBuild=null;};ui.closeBuild=close;ov.querySelector('.x').onclick=close;
+ const W=HR.w,H=HR.h;let cs=40;
+ const FC={bed:'#8d5a3b',table:'#a0703a',hearth:'#7a7a7a',shelf:'#6b4a2a',rug:'#a03030',lamp:'#d8b040',deco:'#4a8a4a',basket:'#b08850'};
+ function size(){const mw=Math.min(ov.querySelector('.bwrap').clientWidth||420,560),mh=Math.max(160,Math.min(innerHeight*.42,360));cs=Math.max(22,Math.floor(Math.min(mw/W,mh/(H+.6))));cv.width=cs*W*devicePixelRatio;cv.height=cs*(H+.6)*devicePixelRatio;cv.style.width=cs*W+'px';cv.style.height=cs*(H+.6)+'px';cx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
+ function drawItem(k,t,ax,ay,alpha,outline){const fp=G.furnFoot(k,t,ax,ay),solid=G.furnSolid(k,t);let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9;for(const [x,y] of fp){x0=Math.min(x0,x);y0=Math.min(y0,y);x1=Math.max(x1,x+1);y1=Math.max(y1,y+1);}
+  cx.globalAlpha=alpha;cx.fillStyle=FC[k]||'#888';if(solid)cx.fillRect(x0*cs+2,y0*cs+2,(x1-x0)*cs-4,(y1-y0)*cs-4);else{cx.beginPath();cx.arc((x0+.5)*cs,(y0+.5)*cs,cs*.36,0,7);cx.fill();}
+  if(outline){cx.globalAlpha=1;cx.strokeStyle=outline;cx.lineWidth=3;if(solid)cx.strokeRect(x0*cs+2,y0*cs+2,(x1-x0)*cs-4,(y1-y0)*cs-4);else{cx.beginPath();cx.arc((x0+.5)*cs,(y0+.5)*cs,cs*.4,0,7);cx.stroke();}}
+  cx.globalAlpha=Math.min(1,alpha+.2);cx.font=Math.round(cs*.55)+'px serif';cx.textAlign='center';cx.textBaseline='middle';cx.fillText(G.FURN[k].ic,(x0+x1)/2*cs,(y0+y1)/2*cs+1);cx.globalAlpha=1;}
+ function draw(){cx.clearRect(0,0,cs*W,cs*(H+.6));cx.fillStyle='#c9a46a';cx.fillRect(0,0,cs*W,cs*H);cx.strokeStyle='rgba(90,60,30,.35)';cx.lineWidth=1;for(let x=0;x<=W;x++){cx.beginPath();cx.moveTo(x*cs+.5,0);cx.lineTo(x*cs+.5,H*cs);cx.stroke();}for(let y=0;y<=H;y++){cx.beginPath();cx.moveTo(0,y*cs+.5);cx.lineTo(W*cs,y*cs+.5);cx.stroke();}
+  cx.fillStyle='rgba(90,60,30,.25)';cx.fillRect(0,0,W*cs,cs*.18);cx.font='bold '+Math.round(cs*.28)+'px Georgia';cx.fillStyle='#5a3d1e';cx.textAlign='left';cx.textBaseline='top';cx.fillText('Rückwand',4,2);
+  const dx=HR.door.tx-HR.x0;cx.fillStyle='rgba(60,140,60,.35)';cx.fillRect((dx)*cs,(H-2)*cs,cs,2*cs);cx.fillStyle='#3b2410';cx.fillRect(dx*cs+cs*.15,H*cs,cs*.7,cs*.5);cx.fillStyle='#ffe9b0';cx.font='bold '+Math.round(cs*.26)+'px Georgia';cx.textAlign='center';cx.fillText('Tür',(dx+.5)*cs,H*cs+cs*.08);
+  for(const k in G.FURN){const t=P.home[k]||0;if(!t)continue;if(sel&&sel.mode==='move'&&sel.k===k)continue;const a=G.furnAnchor(k);if(!a)continue;drawItem(k,t,a[0],a[1],sel&&sel.mode==='new'&&sel.k===k?.35:1,sel&&sel.mode==='pick'&&sel.k===k?'#ffd54a':null);}
+  {const px=(P.x/32)-HR.x0,py=(P.y/32)-HR.y0;cx.fillStyle='#2a5aa8';cx.beginPath();cx.arc(px*cs,py*cs,cs*.18,0,7);cx.fill();cx.strokeStyle='#fff';cx.lineWidth=2;cx.stroke();}
+  if(sel&&(sel.mode==='new'||sel.mode==='move')&&sel.ax!=null){const ok=G.furnValid(sel.k,sel.t,sel.ax,sel.ay);drawItem(sel.k,sel.t,sel.ax,sel.ay,.75,ok?'#43a047':'#e53935');sel.ok=ok;}}
+ function names(k,t){return G.FURN[k].t[t][0];}
+ function ui2(){bb.innerHTML='';const B=(l,f,c)=>{const b=document.createElement('button');b.className='btn'+(c?' '+c:'');b.textContent=l;b.onclick=f;bb.appendChild(b);};
+  if(!sel)hint.innerHTML='Wähle unten ein Möbelstück aus dem Lager, oder tippe ein aufgestelltes Möbelstück im Plan an, um es umzustellen.';
+  else if(sel.mode==='pick'){hint.innerHTML=`<b>${names(sel.k,P.home[sel.k])}</b> ausgewählt.`;B('↔ Umstellen',()=>{const a=G.furnAnchor(sel.k);sel={mode:'move',k:sel.k,t:P.home[sel.k],ax:a[0],ay:a[1]};render();});B('📦 Abbauen',()=>{G.pickFurn(sel.k);sel=null;render();});B('Abbrechen',()=>{sel=null;render();});}
+  else{const wall=G.furnWall(sel.k,sel.t);hint.innerHTML=`<b>${names(sel.k,sel.t)}</b>: Tippe oder ziehe im Plan an die gewünschte Stelle.${wall?' <i>Wandmöbel – nur an der Rückwand.</i>':''}${sel.ax!=null?(sel.ok?' <span style="color:#2e7d32">✔ passt</span>':' <span style="color:#c62828">✖ hier nicht möglich</span>'):''}`;
+   B('✔ Platzieren',()=>{if(sel.ax==null||!sel.ok){toast('Wähle zuerst eine freie (grüne) Stelle.','#ff8a80');return;}const ok=sel.mode==='new'?G.furnPut(sel.id,sel.ax,sel.ay):G.furnMoveTo(sel.k,sel.ax,sel.ay);if(ok){toast(`${G.FURN[sel.k].ic} Aufgestellt!`,'#a5d6a7');sel=null;}render();},sel.ax!=null&&sel.ok?'':'dim');B('Abbrechen',()=>{sel=null;render();});}}
+ function list(){bl.innerHTML='';const ids=Object.keys(P.furn||{}).filter(id=>P.furn[id]>0&&G.STACK[id]);if(!ids.length){bl.innerHTML='<div class="hint">Leer – Möbel kaufst du bei Schreiner Holger.</div>';return;}
+  ids.sort().forEach(id=>{const S=G.STACK[id];const e=document.createElement('button');e.className='bitem'+(sel&&sel.mode==='new'&&sel.id===id?' on':'');e.innerHTML=`<span>${G.FURN[S.fk].ic}</span><b>${S.name}</b>${P.furn[id]>1?' ×'+P.furn[id]:''}${(P.home[S.fk]||0)?'<small>ersetzt '+names(S.fk,P.home[S.fk])+'</small>':''}`;e.onclick=()=>{const wall=G.furnWall(S.fk,S.ft);sel={mode:'new',id,k:S.fk,t:S.ft,ax:null,ay:null};if(wall)sel.ay=0;render();};bl.appendChild(e);});}
+ function render(){draw();ui2();list();}
+ function cellOf(e){const r=cv.getBoundingClientRect();return[Math.floor((e.clientX-r.left)/cs),Math.floor((e.clientY-r.top)/cs)];}
+ let down=false;
+ cv.addEventListener('pointerdown',e=>{e.preventDefault();const [x,y]=cellOf(e);if(sel&&(sel.mode==='new'||sel.mode==='move')){down=true;cv.setPointerCapture(e.pointerId);sel.ax=x;sel.ay=G.furnWall(sel.k,sel.t)?0:y;render();return;}
+  let hitK=null;for(const k in G.FURN){const t=P.home[k]||0;if(!t)continue;const a=G.furnAnchor(k);if(!a)continue;if(G.furnFoot(k,t,a[0],a[1]).some(([fx,fy])=>fx===x&&fy===y))hitK=hitK&&G.furnSolid(hitK,P.home[hitK])?hitK:k;}
+  sel=hitK?{mode:'pick',k:hitK}:null;render();});
+ cv.addEventListener('pointermove',e=>{if(!down||!sel)return;const [x,y]=cellOf(e);const ny=G.furnWall(sel.k,sel.t)?0:y;if(x!==sel.ax||ny!==sel.ay){sel.ax=x;sel.ay=ny;render();}});
+ cv.addEventListener('pointerup',()=>{down=false;});cv.style.touchAction='none';
+ size();render();addEventListener('resize',function rs(){if(!buildOpen){removeEventListener('resize',rs);return;}size();render();});};
 let furnOpen=false;
-ui.openFurnBox=function(){if(furnOpen)return;const P=G.P;G.attackHeld=false;const ov=document.createElement('div');ov.className='overlay';ov.style.display='flex';ov.style.zIndex=60;ov.id='furnOv';ov.innerHTML=`<div class="panel parch" style="max-width:420px"><div class="ph"><span>📦 Möbellager</span><button class="x">✕</button></div><div id="fbl" style="max-height:60vh;overflow:auto"></div><p style="font-size:12px;color:#6b5233;margin-top:6px">Gekaufte und abgebaute Möbel liegen hier und nehmen keinen Inventarplatz weg. Stell dich in deinem Haus vor eine freie Stelle und drück „Aufstellen“. Wandmöbel kommen an die hintere Wand.</p></div>`;document.body.appendChild(ov);furnOpen=true;
+ui.openFurnBox=function(force){if(!force&&G.room&&G.room.player&&!buildOpen){ui.openBuild();return;}if(furnOpen)return;const P=G.P;G.attackHeld=false;const ov=document.createElement('div');ov.className='overlay';ov.style.display='flex';ov.style.zIndex=60;ov.id='furnOv';ov.innerHTML=`<div class="panel parch" style="max-width:420px"><div class="ph"><span>📦 Möbellager</span><button class="x">✕</button></div><div id="fbl" style="max-height:60vh;overflow:auto"></div><p style="font-size:12px;color:#6b5233;margin-top:6px">Gekaufte und abgebaute Möbel liegen hier und nehmen keinen Inventarplatz weg. Stell dich in deinem Haus vor eine freie Stelle und drück „Aufstellen“. Wandmöbel kommen an die hintere Wand.</p></div>`;document.body.appendChild(ov);furnOpen=true;
  const close=()=>{ov.remove();furnOpen=false;ui.closeFurn=null;};ui.closeFurn=close;ov.querySelector('.x').onclick=close;ov.addEventListener('click',e=>{if(e.target===ov)close();});
  const render=()=>{const l=ov.querySelector('#fbl');l.innerHTML='';const ids=Object.keys(P.furn||{}).filter(id=>P.furn[id]>0&&G.STACK[id]);const inHome=G.room&&G.room.player;
   if(!ids.length){l.innerHTML='<div class="hint" style="padding:8px">Dein Möbellager ist leer. Schreiner Holger verkauft Möbel, und mit dem Hammer abgebaute Möbel landen auch hier.</div>';return;}

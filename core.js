@@ -28,7 +28,7 @@ G.DIFF={
 const DK=['leicht','normal','schwer'];
 G.D=()=>G.DIFF[G.settings.diff]||G.DIFF.normal;
 G.di=()=>Math.max(0,DK.indexOf(G.settings.diff));
-const QD={lvH:[14,15,17],schnitter:[17,18,20],eldtree:[20,21,23],sandking:[21,22,24],prove:[5,8,12],wolves:[8,10,14],ears:[5,7,10],draugr:[8,10,14],lvG:[7,8,10],lvM:[13,14,16],lvD:[22,24,27],grukk:[9,10,12],morvax:[15,16,18],dragon:[28,30,33]};
+const QD={lvH:[11,12,14],schnitter:[13,14,16],eldtree:[15,16,18],sandking:[16,17,19],prove:[4,6,10],wolves:[6,8,12],ears:[4,6,9],draugr:[6,8,12],lvG:[4,5,7],lvM:[9,10,12],lvD:[18,20,23],grukk:[6,7,9],morvax:[11,12,14],dragon:[22,24,27]};
 const qd=k=>QD[k][G.di()];G.qd=qd;
 
 
@@ -490,9 +490,9 @@ function mkMonster(key,lvl,x,y){const t=MT[key],D=G.D();const hpS=1+Math.max(0,l
  return m;}
 // Aschenfluch: Chance, dass ein Tier von Ignaroks Asche befallen ist (rote Augen, Ascheglut, aggressiv)
 const CORCH={rabbit:.3,fox:.45,boar:.4,deer:.2,bear:.7};
-function mkBoss(key,lvl,x,y){const B=BOSSES[key];const m=mkMonster(B.base,lvl,x,y);const dr=key==='dragon';m.boss=key;m.B=B;m.name=B.n;m.c=B.c;m.r=B.r;m.cr=Math.min(14,B.r*.5);m.maxhp=m.hp=Math.round(m.maxhp*(dr?24:15));m.dmg*=dr?1.8:1.6;m.armor=dr?.3:.2;m.xp=Math.round(m.xp*(dr?15:10));m.spd*=.85;m.home={x,y};m.abT=3;m.abI=0;m.ai='melee';m.passive=false;m.scale=B.r/MT[B.base].r*(MT[B.base].scale||1);m.heads=B.heads||0;if(dr)m.shape='dragon';return m;}
+function mkBoss(key,lvl,x,y){const B=BOSSES[key];const m=mkMonster(B.base,lvl,x,y);const dr=key==='dragon';m.boss=key;m.B=B;m.name=B.n;m.c=B.c;m.r=B.r;m.cr=Math.min(14,B.r*.5);const roam=!B.fixed;m.maxhp=m.hp=Math.round(m.maxhp*(dr?24:roam?7:15));m.dmg*=dr?1.8:roam?1.25:1.6;m.armor=dr?.3:roam?.05:.2;m.xp=Math.round(m.xp*(dr?15:10));m.spd*=.85;m.home={x,y};m.abT=3;m.abI=0;m.ai='melee';m.passive=false;m.scale=B.r/MT[B.base].r*(MT[B.base].scale||1);m.heads=B.heads||0;if(dr)m.shape='dragon';return m;}
 function mkMini(key,lvl,x,y){const t=MT[key];const m=mkMonster(key,lvl,x,y);m.boss='mini';m.B={n:t.n,mini:1,fixed:1,abil:t.ai==='ranged'?['volley','slam']:['slam','summon'],minion:key,lg:t.lg,poison:t.poison};m.name=`${t.n}-${pick(['Champion','Koloss','Anführer','Urahn'])}`;
- m.maxhp=m.hp=Math.round(m.maxhp*7);m.dmg*=1.4;m.armor=.1;m.xp=Math.round(m.xp*5);m.scale=(t.scale||1)*1.7;m.r=Math.round(t.r*1.7);m.cr=Math.min(14,m.r*.5);m.abT=3;m.abI=0;m.passive=false;return m;}
+ m.maxhp=m.hp=Math.round(m.maxhp*4.5);m.dmg*=1.15;m.armor=0;m.xp=Math.round(m.xp*5);m.scale=(t.scale||1)*1.7;m.r=Math.round(t.r*1.7);m.cr=Math.min(14,m.r*.5);m.abT=3;m.abI=0;m.passive=false;return m;}
 G.mkMonster=mkMonster;G.mkBoss=mkBoss;G.mkMini=mkMini;
 function pickType(tx,ty,lvl){const bl=BL[biome(tx,ty)],d=dV(tx,ty);let c=Object.keys(MT).filter(k=>{const t=MT[k];if(t.b.indexOf(bl)<0)return false;if(t.rare)return d>=t.minD&&Math.random()<t.rare;return lvl>=t.lv[0]-1&&lvl<=t.lv[1]+1;});
  if(!c.length)c=Object.keys(MT).filter(k=>MT[k].b.indexOf(bl)>=0&&!MT[k].rare);if(!c.length)return 'rat';
@@ -562,6 +562,8 @@ for(const tid in TPPL){const a=TADD[tid];const homes=[[tid+'_farm',a.farm[0],a.f
   if(i===0)JOBS_ADD[d[0]]=[['field','hoe',[8,12]],['door:'+tid+'_farm','idle',[3,5]],['field','hoe',[6,10]],['home','idle',[2,4]]];
   else if(i===1){JOBS_ADD[d[0]]=[['door:'+tid+'_mkt','idle',[7,10]],['home','idle',[2,4]]];SHOP_ADD[d[0]]={n:d[1].split(' ')[1]+'s Marktstand',items:TSHOP[d[0]]};}
   else JOBS_ADD[d[0]]=[['patrol','idle',[3,5]],['door:'+tid+'_mkt','idle',[3,5]],['home','idle',[3,6]],['patrol','idle',[2,4]]];});}
+// Update 16: Stadtwachen
+for(const [tid,nm,sh] of [['frost','Wache Torvald','Torvald'],['moor','Wache Hennes','Hennes'],['wald','Wache Kuno','Kuno'],['sand','Wache Rashid','Rashid']]){const tw=TOWNS.find(t=>t.id===tid);const p=TP(tid,1,tw.r-4);NPCS.push({id:'wache_'+tid,name:nm,short:sh,abs:1,tx:p.x,ty:p.y,town:tid,guard:1,look:{body:'#4a5a7a',skin:tid==='sand'?'#c68642':'#f0d0b0',helm:'#9aa0a6'},persona:'Stadtwache von '+tw.name+'. Streng, aber fair. Achtet auf Diebe und Unruhestifter.',greet:['Halte dich an die Gesetze, Fremder.','Alles ruhig in '+tw.name+'.','Diebe landen bei mir im Kerker.']});JOBS_ADD['wache_'+tid]=[['patrol','idle',[3,5]]];}
 NPCS.forEach(n=>{if(!n.abs){n.tx+=OX;n.ty+=OY;}n.x=n.hx=(n.tx+.5)*TILE;n.y=n.hy=(n.ty+.5)*TILE;n.fx=0;n.fy=1;n.wt=0;n.vx=0;n.vy=0;n.anim=0;});
 G.NPCS=NPCS;G.LORE=LORE;
 const JOBS={hilda:[['anvil','hammer',[7,12]],['home','idle',[3,6]],['anvil','hammer',[6,9]],['door:smith','idle',[2,4]]],
@@ -602,18 +604,18 @@ function npcTick(n,dt,dn){const J=JOBS[n.id];if(!J&&!n.wander)return;
    else if(n.act==='pray'){G.parts.push({x:n.x,y:n.y-6,z:34,vx:0,vy:-25,life:.8,c:'#fff3b0'});}}}}
 G.npcSwing=n=>n.act==='hammer'||n.act==='hoe'?Math.max(0,.22-(n.actT||0)):0;
 G.npcTool=n=>n.id==='fiete'&&n.act==='fish'?'rod':n.ract==='saw'?'axe':n.act==='hammer'?'mace':n.act==='hoe'?'hoe':n.act==='heal'?'staff':n.act==='play'?'lute':null;
-G.npcVisible=n=>n.id!=='elara'||G.P.main>=7;
+G.npcVisible=n=>!n.dead&&(n.id!=='elara'||G.P.main>=7);
 function placeElara(){const e=NPCS.find(n=>n.id==='elara');if(G.P.main>=8){e.x=(VCX+2.5)*TILE;e.y=(VCY-29.5)*TILE;}else{e.x=(LAIR.x+.5)*TILE;e.y=(LAIR.y+2.5)*TILE;}}
 
 // ===================== Spieler & Zustand =====================
 const SPAWN={x:(VCX+15.5)*TILE,y:(VCY-.5)*TILE};
 let P;G.mons=[];G.grounds=[];G.proj=[];G.pproj=[];G.teles=[];G.floats=[];G.parts=[];G.farm=new Map();G.time=0;G.input={x:0,y:0};
-G.fixT={grukk:0,bonelord:0,dragon:0,schnitter:0,eldtree:0,sandking:0};let bossT=80,spawnT=0;G.flashT=0;let fullT=0;
+G.fixT={grukk:0,bonelord:0,dragon:0,schnitter:0,eldtree:0,sandking:0};let bossT=300,spawnT=0;G.flashT=0;let fullT=0;
 function newGame(diff){G.room=null;ROOMS.forEach(r=>r.chests.forEach(c=>{c.opened=false;c.at=0;}));if(diff)G.settings.diff=diff;G.saveSettings();
  P={x:SPAWN.x,y:SPAWN.y,fx:0,fy:1,hp:112,level:1,xp:0,gold:15,inv:new Array(36).fill(null),eq:{helm:null,chest:null,legs:null,boots:null,ring:null,amulet:null},sel:0,q:{},main:0,mN:0,macc:false,mflag:0,barrier:false,chat:{},kills:{},ways:{city:1},atkCd:0,swing:0,hurtT:0,dead:false,anim:0,moving:false,dodgeT:0,dodgeCd:0,poison:null,burn:null,slow:0,sta:100,mp:44,staT:0,dayT:60,side:{},z:0,vz:0,home:{bed:1},pet:null,och:{},diff:G.settings.diff,started:Date.now()};
  G.P=P;const sw=genItem('weapon',1,0,{kind:'sword',name:'Rostiges Schwert'});sw.dmg=4;P.inv[0]=sw;P.inv[1]=mkStack('bread',2);P.inv[2]=mkStack('seed',3);
  P.eq.chest=genItem('chest',1,0,{set:'ritter',name:'Leinenhemd'});P.eq.chest.def=1;
- G.slashes=[];G.farm=new Map();G.mons=[];G.grounds=[];G.proj=[];G.pproj=[];G.teles=[];G.fixT={grukk:0,bonelord:0,dragon:0,schnitter:0,eldtree:0,sandking:0};bossT=80;G.flags.barrier=false;placeElara();G.S=calc();}
+ G.slashes=[];G.farm=new Map();G.mons=[];G.grounds=[];G.proj=[];G.pproj=[];G.teles=[];G.fixT={grukk:0,bonelord:0,dragon:0,schnitter:0,eldtree:0,sandking:0};bossT=300;G.flags.barrier=false;placeElara();G.S=calc();}
 G.newGame=newGame;
 const xpNeed=l=>Math.round((8+6*l)*(12+1.15*l)*G.D().xpN);G.xpNeed=xpNeed;
 const held=()=>{const it=P.inv[P.sel];return it&&it.type==='weapon'?it:null;};G.held=held;
@@ -644,8 +646,8 @@ function calc(){const L=P.level,s={base:3+L*1.2,def:0,maxhp:100+L*12,melee:0,ran
  for(const k in P.eq){const it=P.eq[k];if(!it)continue;if(reqLvl(it)>L){s.eqHigh=1;continue;}const e=itemEff(it);if(e.def)s.def+=e.def;if(e.hpPct)s.hpPct+=e.hpPct;if(e.crit)s.crit+=e.crit;if(e.luck)s.luck+=e.luck;if(e.spd)s.spd+=e.spd;add(it.af);}
  const sc=setCounts();s.sets=sc;for(const k in sc)SETS[k].fx(s,sc[k]);
  if(s.castFast&&s.cls==='magic')s.cd*=.8;if(sc.magier>=2){s.maxMp=Math.round(s.maxMp*1.3);s.mpRegen*=1.4;}if(s.spell>0)s.mpRegen*=1+s.spell/200;
- if(s.cls==='melee'){const K=WKIND[s.kind||'sword'];s.staCost=Math.round(8+K.cd*13);}else if(s.cls==='magic')s.mpCost=WKIND[s.kind].mana;
- {const R=skR;s.hpPct+=R('vit')*4;s.maxSta=Math.round(s.maxSta*(1+R('sta')*.04));s.maxMp=Math.round(s.maxMp*(1+R('mana')*.04));const rg=1+R('reg')*.08;s.regen*=rg;s.mpRegen*=rg;s.staReg=rg;s.melee+=R('str')*2;s.ranged+=R('aim')*2;s.spell+=R('arc')*2;s.dr=R('tough')*.015;s.spd+=R('swift')*2;s.staMul=1-R('swift')*.05;}
+ if(s.cls==='melee'){const K=WKIND[s.kind||'sword'];s.staCost=Math.round(5+K.cd*9);}else if(s.cls==='magic')s.mpCost=WKIND[s.kind].mana;
+ {const R=skR;s.hpPct+=R('vit')*4;s.maxSta=Math.round(s.maxSta*(1+R('sta')*.04));s.maxMp=Math.round(s.maxMp*(1+R('mana')*.04));const rg=1+R('reg')*.08;s.regen*=rg;s.mpRegen*=rg;s.staReg=rg;s.melee+=R('str')*2;s.ranged+=R('aim')*2;s.spell+=R('arc')*2;s.dr=R('tough')*.015;s.spd+=R('swift')*2;s.staMul=1-R('swift')*.05;if(s.staCost)s.staCost=Math.max(3,Math.round(s.staCost*s.staMul));}
  s.def=Math.round(s.def*(1+s.defp/100));s.maxhp=Math.round(s.maxhp*(1+s.hpPct/100));s.regen+=s.maxhp*s.regenPct/100;
  s.crit=Math.min(s.crit,75);s.spd=Math.min(s.spd,50);s.res=Math.min(s.res,80);
  const cb=s.cls==='magic'?s.spell:s.cls==='ranged'?s.ranged:s.melee;s.total=(s.base+s.wdmg)*(1+cb/100);s.speed=140*(1+s.spd/100)*(P.slow>0?.6:1);if(P.rested&&P.dayT<P.rested.until){s.maxhp=Math.round(s.maxhp*(1+P.rested.b/100));s.regen*=1+P.rested.b/40;}if(P.pet)s.luck=(s.luck||0)+5;s.regen=Math.round(s.regen*10)/10;return s;}
@@ -677,16 +679,17 @@ function pickTarget(range,cone){let best=null,bs=-1e9;const ax=G.aim?G.aim.x:P.f
 let warnT=0;function warn(t){if(G.time-warnT<1.4)return;warnT=G.time;G.floats.push({x:P.x,y:P.y-40,t,c:'#ffcc80',life:1});}
 function attack(){if(P.atkCd>0||P.dead||P.dodgeT>0)return;{const hs=P.inv[P.sel];if(hs&&hs.id==='rod'){if(!G._rodLatch){G._rodLatch=1;G.fishAct();}return;}}const S=G.S;
  if(S.tooHigh){warn(`Benötigt Stufe ${reqLvl(S.tooHigh)}!`);}
- if(S.cls==='melee'){if(P.sta<S.staCost){warn('Erschöpft!');P.atkCd=.25;return;}P.sta-=S.staCost;P.staT=.7;}
+ let weak=1;if(S.cls==='melee'){if(P.sta<S.staCost){weak=.45;P.sta=Math.max(0,P.sta-S.staCost*.3);warn('Erschöpft – schwacher Schlag!');}else P.sta-=S.staCost;P.staT=.7;}
  else if(S.cls==='magic'){if(P.mp<S.mpCost){warn('Kein Mana!');P.atkCd=.3;return;}P.mp-=S.mpCost;}
  else{const am=WKIND[S.kind].proj==='bolt'?'bolt':'arrow';if(countItem(am)<1){warn(am==='bolt'?'Keine Bolzen!':'Keine Pfeile!');P.atkCd=.4;return;}removeItem(am,1);}
- P.atkCd=S.cd;P.swing=.22;
+ P.atkCd=S.cd*(weak<1?1.35:1);P.swing=.22;
  if(G.aim){P.fx=G.aim.x;P.fy=G.aim.y;}const FPB=G.settings.cam==='fp'&&G.settings.mode!=='2d'?12:0,RCH=S.reach+FPB;const rng=S.cls==='melee'?RCH+24:S.range;const precise=S.cls!=='melee'&&!!G.aim;const t=pickTarget(rng,S.cls==='melee'?(S.thrust?.9:.55):precise?.972:.86);
  if(t){const d=Math.hypot(t.x-P.x,t.y-P.y)||1;const k=S.cls==='melee'?1:precise?.5:.72;let fx=P.fx*(1-k)+(t.x-P.x)/d*k,fy=P.fy*(1-k)+(t.y-P.y)/d*k;const l=Math.hypot(fx,fy)||1;P.fx=fx/l;P.fy=fy/l;}P.atkFx=P.fx;P.atkFy=P.fy;
  if(S.cls==='melee'){const fa=Math.atan2(P.fy,P.fx);let hit=false,anyCrit=false;
   for(const m of G.mons){if(m.dead)continue;const dx=m.x-P.x,dy=m.y-P.y,d=Math.hypot(dx,dy);if(d>RCH+m.r)continue;let a=Math.atan2(dy,dx)-fa;while(a>Math.PI)a-=6.283;while(a<-Math.PI)a+=6.283;
    let ok;if(S.thrust){const al=dx*P.fx+dy*P.fy,pe=Math.abs(-dx*P.fy+dy*P.fx);ok=al>-4&&pe<m.r+9;}else ok=Math.abs(a)<S.arc+Math.min(.35,m.r/Math.max(d,1));
-   if(ok){hit=true;let dmg=S.total*rnd(.85,1.15);const cr=Math.random()*100<S.crit;if(cr){dmg*=2;anyCrit=true;}const K=WKIND[S.kind];hitMonster(m,dmg,cr,{kb:S.thrust?.6:K.stag?2.2:1,pl:1,stag:K.stag,stun:K.stun});}}
+   if(ok){hit=true;let dmg=S.total*rnd(.85,1.15)*weak;const cr=Math.random()*100<S.crit;if(cr){dmg*=2;anyCrit=true;}const K=WKIND[S.kind];hitMonster(m,dmg,cr,{kb:S.thrust?.6:K.stag?2.2:1,pl:1,stag:K.stag,stun:K.stun});}}
+  if(!hit){for(const n of NPCS){if(!G.npcVisible(n)||n.ko>0||n.lie||(G.room?n.loc!==G.room:!!n.loc))continue;const dx=n.x-P.x,dy=n.y-P.y,d=Math.hypot(dx,dy);if(d>RCH+10)continue;let a=Math.atan2(dy,dx)-fa;while(a>Math.PI)a-=6.283;while(a<-Math.PI)a+=6.283;if(Math.abs(a)<S.arc*.8){hitNPC(n,S.total);hit=true;break;}}}
   G.slashes.push({x:P.x,y:P.y,a:fa,arc:S.arc,r:S.reach,thrust:S.thrust,t:.18});
   sfx(hit?(anyCrit?'crit':'hit'):'swing');return;}
  const K=WKIND[S.kind];const cr=Math.random()*100<S.crit;let dmg=S.total*rnd(.9,1.1);if(cr)dmg*=2;
@@ -694,7 +697,7 @@ function attack(){if(P.atkCd>0||P.dead||P.dodgeT>0)return;{const hs=P.inv[P.sel]
  sfx(K.cls==='magic'?'zap':'arrow');}
 function jump(){if(P.dead||P.z>0||P.vz>0||P.climb||P.rootT>0||P.dodgeT>0)return;if(P.sta<6){warn('Erschöpft!');return;}P.sta-=6*(G.S.staMul||1);P.staT=.4;P.vz=262;P.z=.01;P.landSfx=true;sfx('dodge');}
 G.jump=()=>jump();
-function dodge(){if(P.dead||P.dodgeCd>0||P.climb)return;if(P.sta<20){warn('Erschöpft!');return;}if(P.rootT>0){if(P.sta<35){warn('Erschöpft!');return;}P.sta-=15;P.rootT=0;G.floats.push({x:P.x,y:P.y-34,t:'Losgerissen!',c:'#a5d6a7',life:.8});}P.sta-=20*(G.S.staMul||1);P.staT=.7;let dx=G.input.x,dy=G.input.y;const l=Math.hypot(dx,dy);if(l<.2){dx=P.fx;dy=P.fy;}else{dx/=l;dy/=l;}P.ddx=dx;P.ddy=dy;P.dodgeT=.26;P.dodgeCd=1.1;sfx('dodge');}
+function dodge(){if(P.dead||P.dodgeCd>0||P.climb)return;if(P.sta<16){warn('Erschöpft!');return;}if(P.rootT>0){if(P.sta<35){warn('Erschöpft!');return;}P.sta-=15;P.rootT=0;G.floats.push({x:P.x,y:P.y-34,t:'Losgerissen!',c:'#a5d6a7',life:.8});}P.sta-=16*(G.S.staMul||1);P.staT=.7;let dx=G.input.x,dy=G.input.y;const l=Math.hypot(dx,dy);if(l<.2){dx=P.fx;dy=P.fy;}else{dx/=l;dy/=l;}P.ddx=dx;P.ddy=dy;P.dodgeT=.26;P.dodgeCd=1.1;sfx('dodge');}
 // Schaden am Spieler: src {lvl, type:'phys'|'magic', poison, burn, chill}
 function hitPlayer(dmg,src){if(P.dead||G.god)return;if(P.frost&&src&&(src.burn||src.fire||src.boss==='dragon'||src.type==='dragon'))dmg*=.5;if(P.dodgeT>0){G.floats.push({x:P.x,y:P.y-30,t:'Ausgewichen!',c:'#9be7ff',life:.6});return;}
  const D=G.D(),lvl=src.lvl||1,diff=Math.max(0,lvl-P.level),S=G.S;dmg*=1+diff*D.pen*2.4;
@@ -777,19 +780,20 @@ Object.assign(G,{attack,dodge});
 // ===================== Spawns =====================
 // Spawns nur im Umkreis des Spielers; weniger Monster; Energiesparmodus außerhalb der Sichtweite
 G.simR=()=>{const rd=G.settings.rd;const v=rd&&rd!=='auto'&&rd!=='0'?+rd:40;return TILE*Math.max(16,Math.min(40,v*.8));};
-function spawnTick(dt){spawnT-=dt;if(spawnT>0)return;spawnT=1.1;
- G.mons=G.mons.filter(m=>!m.dead&&(m.boss==='dragon'||m.boss&&Math.hypot(m.x-P.x,m.y-P.y)<TILE*40||Math.hypot(m.x-P.x,m.y-P.y)<TILE*28));if(G.room)return;
- if(G.mons.filter(m=>!m.boss&&!m.passive).length>=(G.dayInfo().night?11:8))return;
+function spawnTick(dt){spawnT-=dt;if(spawnT>0)return;spawnT=1.8;
+ G.mons=G.mons.filter(m=>!m.dead&&(m.boss==='dragon'||m.boss&&Math.hypot(m.x-P.x,m.y-P.y)<TILE*40||Math.hypot(m.x-P.x,m.y-P.y)<TILE*34));if(G.room)return;
+ if(G.mons.filter(m=>!m.boss&&!m.passive).length>=(G.dayInfo().night?8:6))return;
  const ptx=P.x/TILE,pty=P.y/TILE;
- for(let i=0;i<10;i++){const a=Math.random()*6.283,d=rnd(11,18);const tx=Math.floor(ptx+Math.cos(a)*d),ty=Math.floor(pty+Math.sin(a)*d);
-  if(tx<2||ty<2||tx>=WW-2||ty>=H-2||!walkTile(tx,ty)||dV(tx,ty)<RV+6||townAt(tx,ty)||Math.hypot(tx-LAIR.x,ty-LAIR.y)<15||TOWNS.some(t=>Math.hypot(tx-t.x,ty-t.y)<t.r+4)||BUILD.some(b=>b.wild&&Math.abs(tx-b.x-2)<5&&Math.abs(ty-b.y-1)<5))continue;
-  const lvl=Math.max(1,zoneLevel(tx,ty)+rint(-1,1));const di=G.dayInfo();let key;if(di.night&&Math.random()<.55){const NL=['zombie','zombie','skeleton','spider','bat','shadowhound','wisp','banshee'];if(lvl>=8)NL.push('reaper','necro');if(lvl>=10)NL.push('vampire');if(di.full)NL.push('werewolf','werewolf','werewolf');key=pick(NL);}else key=pickType(tx,ty,lvl);const t=MT[key];const L=t.night?lvl:(t.rare?t.lv[0]:clamp(lvl,t.lv[0],t.lv[1]));const n=1+(t.pack&&Math.random()<.7?rint(1,t.pack):0);
+ for(let i=0;i<10;i++){const a=Math.random()*6.283,d=rnd(13,26);const tx=Math.floor(ptx+Math.cos(a)*d),ty=Math.floor(pty+Math.sin(a)*d);
+  if(G.mons.some(m=>!m.dead&&Math.hypot(m.x-(tx+.5)*TILE,m.y-(ty+.5)*TILE)<TILE*7))continue;
+  if(tx<2||ty<2||tx>=WW-2||ty>=H-2||!walkTile(tx,ty)||dV(tx,ty)<RV+9||townAt(tx,ty)||TOWNS.some(t=>Math.hypot(tx-t.x,ty-t.y)<t.r+6)||Math.hypot(tx-LAIR.x,ty-LAIR.y)<15||TOWNS.some(t=>Math.hypot(tx-t.x,ty-t.y)<t.r+4)||BUILD.some(b=>b.wild&&Math.abs(tx-b.x-2)<5&&Math.abs(ty-b.y-1)<5))continue;
+  const lvl=Math.max(1,zoneLevel(tx,ty)+rint(-1,1));const di=G.dayInfo();let key;if(di.night&&Math.random()<.55){const NL=['zombie','zombie','skeleton','spider','bat','shadowhound','wisp','banshee'];if(lvl>=8)NL.push('reaper','necro');if(lvl>=10)NL.push('vampire');if(di.full)NL.push('werewolf','werewolf','werewolf');key=pick(NL);}else key=pickType(tx,ty,lvl);const t=MT[key];const L=t.night?lvl:(t.rare?t.lv[0]:clamp(lvl,t.lv[0],t.lv[1]));const n=1+(t.pack&&Math.random()<.5?rint(1,Math.min(2,t.pack)):0);
   for(let k=0;k<n;k++){const x=(tx+.5)*TILE+(k?rnd(-30,30):0),y=(ty+.5)*TILE+(k?rnd(-30,30):0);if(k&&!canMove(x,y,10))continue;G.mons.push(mkMonster(key,L,x,y));}break;}}
 function spawnBoss(){const ptx=P.x/TILE,pty=P.y/TILE,zl=zoneLevel(Math.floor(ptx),Math.floor(pty));if(zl<1)return false;const bl=BL[biome(ptx,pty)];
- if(G.dayInfo().night&&zl>=12&&Math.random()<.35){for(let i=0;i<20;i++){const a=Math.random()*6.283,d=rnd(7,11);const tx=Math.floor(ptx+Math.cos(a)*d),ty=Math.floor(pty+Math.sin(a)*d);if(!walkTile(tx,ty)||townAt(tx,ty)||dV(tx,ty)<RV+2)continue;const m=mkBoss('vampirelord',clamp(zl+1,12,30),(tx+.5)*TILE,(ty+.5)*TILE);G.mons.push(m);sfx('horn');G.toast(`🦇 ${m.name} erhebt sich aus der Nacht! (Stufe ${m.lvl})`,'#ff6e6e',true);return true;}}
+ if(G.dayInfo().night&&zl>=12&&Math.random()<.35){for(let i=0;i<20;i++){const a=Math.random()*6.283,d=rnd(7,11);const tx=Math.floor(ptx+Math.cos(a)*d),ty=Math.floor(pty+Math.sin(a)*d);if(!walkTile(tx,ty)||townAt(tx,ty)||dV(tx,ty)<RV+2)continue;const m=mkBoss('vampirelord',clamp(Math.min(zl+1,P.level+2),12,30),(tx+.5)*TILE,(ty+.5)*TILE);G.mons.push(m);sfx('horn');G.toast(`🦇 ${m.name} erhebt sich aus der Nacht! (Stufe ${m.lvl})`,'#ff6e6e',true);return true;}}
  let c=Object.keys(BOSSES).filter(k=>!BOSSES[k].fixed&&BOSSES[k].b.indexOf(bl)>=0&&zl>=BOSSES[k].lv[0]-1&&zl<=BOSSES[k].lv[1]);if(!c.length)c=Object.keys(BOSSES).filter(k=>!BOSSES[k].fixed&&BOSSES[k].b.indexOf(bl)>=0);if(!c.length)return false;const key=pick(c);
  for(let i=0;i<25;i++){const a=Math.random()*6.283,d=rnd(7,11);const tx=Math.floor(ptx+Math.cos(a)*d),ty=Math.floor(pty+Math.sin(a)*d);
-  if(tx>=WW-2||!walkTile(tx,ty)||dV(tx,ty)<RV+6||townAt(tx,ty))continue;const m=mkBoss(key,clamp(zl+1,BOSSES[key].lv[0],BOSSES[key].lv[1]),(tx+.5)*TILE,(ty+.5)*TILE);G.mons.push(m);sfx('horn');sfx('aggro',{type:'boss'});G.toast(`⚠ Ein Boss ist erschienen: ${m.name} (Stufe ${m.lvl})`,'#ff6e6e',true);return true;}return false;}
+  if(tx>=WW-2||!walkTile(tx,ty)||dV(tx,ty)<RV+14||townAt(tx,ty)||TOWNS.some(t=>Math.hypot(tx-t.x,ty-t.y)<t.r+12))continue;const m=mkBoss(key,clamp(Math.min(zl+1,P.level+2),1,BOSSES[key].lv[1]),(tx+.5)*TILE,(ty+.5)*TILE);G.mons.push(m);sfx('horn');sfx('aggro',{type:'boss'});G.toast(`⚠ Ein Boss ist erschienen: ${m.name} (Stufe ${m.lvl})`,'#ff6e6e',true);return true;}return false;}
 G.spawnBoss=spawnBoss;
 const FIX=[{key:'grukk',at:CAMP,lv:()=>qd('grukk'),cond:()=>P.main>3||(P.main===3&&P.macc)},{key:'bonelord',at:CRYPT,lv:()=>qd('morvax'),cond:()=>P.main>4||(P.main===4&&P.macc)},{key:'dragon',at:LAIR,lv:()=>qd('dragon'),cond:()=>P.main>=6&&(P.frost||P.main>6)},{key:'schnitter',at:{x:ASHVALE.x,y:ASHVALE.y-4},lv:()=>qd('schnitter'),cond:()=>P.main>5||(P.main===5&&P.macc)},{key:'eldtree',at:{x:151,y:510},lv:()=>qd('eldtree'),cond:()=>P.main>5||(P.main===5&&P.macc)},{key:'sandking',at:{x:529,y:546},lv:()=>qd('sandking'),cond:()=>P.main>5||(P.main===5&&P.macc)}];
 function fixedTick(dt){for(const f of FIX){G.fixT[f.key]-=dt;if(G.fixT[f.key]>0||!f.cond())continue;if(G.mons.some(m=>m.boss===f.key&&!m.dead))continue;const px=(f.at.x+.5)*TILE,py=(f.at.y+.5)*TILE;if(Math.hypot(P.x-px,P.y-py)>TILE*40)continue;
@@ -983,7 +987,7 @@ G.update=function(dt){P=G.P;G.time+=dt;P.dayT=(P.dayT||0)+dt;{const di=G.dayInfo
  {const ptx=Math.floor(P.x/TILE),pty=Math.floor(P.y/TILE),ct=tileAt(ptx,pty);const wasC=P.climb;P.onLedge=ct===T.LEDGE&&P.z<=1;P.climb=ct===T.CLIMB;
   if(P.climb&&!wasC){P.climbFrom={x:P.prevX||P.x,y:P.prevY||P.y};G.toast('🧗 Klettern! Ausdauer im Blick behalten.','#ffe0a0');}
   if(P.climb&&!P.dead){P.sta-=9*dt;P.staT=.6;if(P.sta<=0){P.sta=0;const f=P.climbFrom||{x:P.x,y:P.y};P.x=f.x;P.y=f.y;P.climb=false;const dmg=Math.round(G.S.maxhp*.15);P.hp=Math.max(1,P.hp-dmg);P.hurtT=.4;G.floats.push({x:P.x,y:P.y-34,t:'Abgerutscht! -'+dmg,c:'#ff8a80',life:1});sfx('hurt');}}
-  P.sprint=!!(G.sprintHeld&&len>.15&&!P.climb&&P.sta>4&&!P.dead&&P.dodgeT<=0);if(P.sprint){P.sta-=13*dt*(G.S.staMul||1);P.staT=.5;if(Math.random()<.25)G.parts.push({x:P.x+rnd(-5,5),y:P.y+8,z:2,vx:-mx*30,vy:-my*30,life:.3,c:'#d8c8a0'});}
+  P.sprint=!!(G.sprintHeld&&len>.15&&!P.climb&&P.sta>4&&!P.dead&&P.dodgeT<=0);if(P.sprint){P.sta-=9*dt*(G.S.staMul||1);P.staT=.5;if(Math.random()<.25)G.parts.push({x:P.x+rnd(-5,5),y:P.y+8,z:2,vx:-mx*30,vy:-my*30,life:.3,c:'#d8c8a0'});}
   if(P.z>0||P.vz>0){P.vz-=980*dt;P.z+=P.vz*dt;if(P.z<=0){P.z=0;P.vz=0;if(P.landSfx){sfx('step');P.landSfx=false;}}}
   if(!P.climb&&!P.onLedge&&P.z<=0&&!G.noclip&&tileAt(Math.floor(P.x/TILE),Math.floor(P.y/TILE))!==T.LEDGE&&solidPP(P.x,P.y)){const f=P.prevX!=null&&P.prevRoom===(G.room?G.room.id:null)&&Math.hypot(P.prevX-P.x,P.prevY-P.y)<TILE*1.5?{x:P.prevX,y:P.prevY}:null;if(f&&!solidPP(f.x,f.y)){P.x=f.x;P.y=f.y;}else{const rr=G.room;let done=0;for(let rad=6;rad<=TILE*3&&!done;rad+=6)for(let a=0;a<16&&!done;a++){const x=P.x+Math.cos(a*.3927)*rad,y=P.y+Math.sin(a*.3927)*rad;if(rr&&(x<rr.x0*TILE||y<rr.y0*TILE||x>=(rr.x0+rr.w)*TILE||y>=(rr.y0+rr.h)*TILE))continue;if(!solidPP(x,y)&&canMoveP(x,y,10)){P.x=x;P.y=y;done=1;}}}}
   P.prevX=P.x;P.prevY=P.y;P.prevRoom=G.room?G.room.id:null;}
@@ -995,7 +999,7 @@ G.update=function(dt){P=G.P;G.time+=dt;P.dayT=(P.dayT||0)+dt;{const di=G.dayInfo
  G.enterT=(G.enterT||0)-dt;
  if(G.enterT<=0&&!P.dead){if(G.room){if(tileAt(Math.floor(P.x/TILE),Math.floor((P.y+6)/TILE))===T.DOOR){exitRoom();}}
   else if(P.moving&&P.fy<-.5){for(const b of BUILD){if(!b.room)continue;const fx=(b.door.tx+.5)*TILE,fy=(b.y+b.h)*TILE;if(Math.abs(P.x-fx)<16&&P.y-fy>0&&P.y-fy<16){enterRoom(b.room);break;}}}}
- if(G.v8tick){if(!G.attackHeld)G._rodLatch=0;G.v8tick(dt);}P.atkCd-=dt;P.swing-=dt;P.hurtT-=dt;P.staT-=dt;if(P.staT<=0)P.sta=Math.min(S.maxSta,P.sta+42*dt*(S.staReg||1));P.mp=Math.min(S.maxMp,P.mp+S.mpRegen*dt);if(G.attackHeld)attack();
+ if(G.v8tick){if(!G.attackHeld)G._rodLatch=0;G.v8tick(dt);}P.atkCd-=dt;P.swing-=dt;P.hurtT-=dt;P.staT-=dt;if(P.staT<=0)P.sta=Math.min(S.maxSta,P.sta+50*dt*(S.staReg||1));P.mp=Math.min(S.maxMp,P.mp+S.mpRegen*dt);if(G.attackHeld)attack();
  const safe=inSafe(P.x,P.y);if(!P.dead){P.hp=Math.min(S.maxhp,P.hp+S.regen*(safe?5:1)*dt);P.slow=Math.max(0,(P.slow||0)-dt);if(P.burn){P.burn.t-=dt;P.hp-=P.burn.dps*dt;if(Math.random()<.4)G.parts.push({x:P.x+rnd(-8,8),y:P.y,z:16,vx:0,vy:-40,life:.4,c:'#ff8a2a'});if(P.burn.t<=0)P.burn=null;if(P.hp<=0){P.hp=0;die();}}if(P.poison){P.poison.t-=dt;P.hp-=P.poison.dps*dt;if(Math.random()<.3)G.parts.push({x:P.x+rnd(-8,8),y:P.y,z:20,vx:0,vy:-30,life:.4,c:'#7cff6b'});if(P.poison.t<=0)P.poison=null;if(P.hp<=0){P.hp=0;die();}}}
  // Monster
  const SLEEPR=G.simR();for(const m of G.mons){if(m.dead)continue;if(!m.boss&&!m.aggro&&!m.room&&Math.abs(m.x-P.x)+Math.abs(m.y-P.y)>SLEEPR){m.mvg=0;continue;}m.atkCd-=dt;m.hitT-=dt;m.swing-=dt;{const _d=Math.hypot(m.x-(m._lx==null?m.x:m._lx),m.y-(m._ly==null?m.y:m._ly));m._lx=m.x;m._ly=m.y;m.mvg=(m.mvg||0)*.82+(_d>dt*6?.18:0);if(m.mvg>.3)m.anim+=dt*Math.min(1.6,Math.max(.5,_d/dt/55));}
@@ -1052,11 +1056,11 @@ G.update=function(dt){P=G.P;G.time+=dt;P.dayT=(P.dayT||0)+dt;{const di=G.dayInfo
  G.grounds=G.grounds.filter(g=>!g.gone);if(G.grounds.length>70)G.grounds.shift();
  // NPCs
  for(const n of NPCS){n.anim+=dt;const dn=Math.hypot(P.x-n.x,P.y-n.y);if(dn<110&&!n.lie&&!n.sit){const l=dn||1;n.fx=(P.x-n.x)/l;n.fy=(P.y-n.y)/l;}
-  if(n.id==='elara')continue;if(G.routine&&G.routine(n,dt,dn))continue;if(n.id==='aldric'||n.lord&&!JOBS[n.id])continue;if(dn<TILE*40)npcTick(n,dt,dn);}
+  if(n.id==='elara')continue;if(G.crimeTick(n,dt,dn))continue;if(G.routine&&G.routine(n,dt,dn))continue;if(n.id==='aldric'||n.lord&&!JOBS[n.id])continue;if(dn<TILE*40)npcTick(n,dt,dn);}
  for(const f of G.floats){f.life-=dt;f.y-=28*dt;}G.floats=G.floats.filter(f=>f.life>0);
  for(const p of G.parts){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.92;p.vy*=.92;p.z=(p.z||0)+(p.vz||0)*dt;}G.parts=G.parts.filter(p=>p.life>0);if(G.parts.length>400)G.parts.splice(0,G.parts.length-400);
  spawnTick(dt);if(!G.room)fixedTick(dt);
- if(!safe&&!P.dead&&!G.room){bossT-=dt;if(bossT<=0){if(!G.mons.some(m=>m.boss&&!BOSSES[m.boss].fixed&&!m.dead)){bossT=spawnBoss()?rnd(130,190):10;}else bossT=30;}}
+ if(!safe&&!P.dead&&!G.room){bossT-=dt;if(bossT<=0){if(!G.mons.some(m=>m.boss&&!BOSSES[m.boss].fixed&&!m.dead)){bossT=(P.level>=3&&spawnBoss())?rnd(480,720):30;}else bossT=30;}}
  G.flashT-=dt;};
 
 // ===================== Speichern =====================
@@ -1110,6 +1114,17 @@ G.placeFurn=function(i,fromBox){const it=fromBox?(P.furn&&P.furn[i]>0?{id:i,coun
  if(bad||clash){G.toast(bad?'Hier ist kein Platz (Wand, Tür oder du stehst im Weg). Dreh dich zu einer freien Stelle.':'Da steht schon ein anderes Möbelstück. Bau es mit dem Hammer ab oder such dir einen anderen Platz.','#ff8a80');sfx('click');return false;}
  const old=P.home[k]||0;if(it.box){P.furn[i]--;if(P.furn[i]<=0)delete P.furn[i];}else{it.count--;if(it.count<=0)P.inv[i]=null;}if(old)furnAdd('f_'+k+old);P.home[k]=t;P.home.pos=P.home.pos||{};P.home.pos[k]=[ax,ay];applyHome();G.invDirty=true;sfx('door');
  G.toast(`${FURN[k].ic} ${S.name} aufgestellt!${old?` Das alte Stück liegt in deinem Möbellager.`:''}`,'#ffd54a',true);G.save();return true;};
+// ===== Einrichtungsmodus (Rasterplan von oben) =====
+const LDEF={1:[2,0],2:[5,0],3:[4,2]};
+G.furnAnchor=k=>{const t=P.home[k]||0;if(!t)return null;const p=P.home.pos&&P.home.pos[k];if(p)return p.slice();const f=FOOT[k](t);if(f.length)return f[0].slice();if(k==='lamp')return (LDEF[t]||[2,0]).slice();if(k==='deco')return[5,0];return (HDEF[k]||[0,0]).slice();};
+G.furnFoot=(k,t,ax,ay)=>{const f=FOOT[k](t);return f.length?homeRel(k,t,[ax,ay]):[[ax,ay]];};
+G.furnSolid=(k,t)=>FOOT[k](t).length>0;
+G.furnWall=(k,t)=>wallItem(k,t);
+G.furnValid=(k,t,ax,ay)=>{if(wallItem(k,t)&&ay!==0)return false;const fp=G.furnFoot(k,t,ax,ay),dx=HR.door.tx-HR.x0;if(fp.some(([x,y])=>x<0||y<0||x>=HR.w||y>=HR.h))return false;if(!G.furnSolid(k,t))return true;if(fp.some(([x,y])=>y>=HR.h-2&&Math.abs(x-dx)<1))return false;
+ for(const k2 of ['bed','table','hearth','shelf','deco']){if(k2===k)continue;const t2=P.home[k2]||0;if(!t2)continue;for(const q of homeRel(k2,t2))if(fp.some(([x,y])=>x===q[0]&&y===q[1]))return false;}return true;};
+G.furnPut=(id,ax,ay)=>{const S=STACK[id];if(!S||!(P.furn&&P.furn[id]>0))return false;const k=S.fk,t=S.ft;if(!G.furnValid(k,t,ax,ay))return false;const old=P.home[k]||0;P.furn[id]--;if(P.furn[id]<=0)delete P.furn[id];if(old)furnAdd('f_'+k+old);P.home[k]=t;P.home.pos=P.home.pos||{};P.home.pos[k]=[ax,ay];applyHome();sfx('door');G.invDirty=true;G.save();return true;};
+G.furnMoveTo=(k,ax,ay)=>{const t=P.home[k]||0;if(!t||!G.furnValid(k,t,ax,ay))return false;P.home.pos=P.home.pos||{};P.home.pos[k]=[ax,ay];applyHome();sfx('door');G.save();return true;};
+G.HR=HR;
 const hasHammerHeld=()=>{const h=P.inv[P.sel];return h&&h.id==='hammer';};G.hasHammer=()=>hasHammerHeld();
 function furnAt(){let best=null,bd=60;for(const k in FURN){const t=P.home[k]||0;if(!t)continue;let tiles=G.homeFoot(k);if(!tiles.length){const p=G.homePos(k,k==='lamp'?(t===2?[5,0]:t>=3?[4,2]:[2,0]):k==='deco'?[5,0]:null);tiles=[p];}for(const [x,y] of tiles){const d=Math.hypot((x+.5)*TILE-P.x,(y+.5)*TILE-P.y);if(d<bd){bd=d;best={k:'furnpick',fk:k,x,y};}}}return best;}
 G.pickFurn=function(fk){const t=P.home[fk]||0;if(!t)return;furnAdd('f_'+fk+t);P.home[fk]=0;if(P.home.pos)delete P.home.pos[fk];applyHome();G.invDirty=true;sfx('hit');G.toast(`🔨 ${FURN[fk].t[t][0]} abgebaut – liegt im Möbellager.`,'#ffd54a');G.save();};
@@ -1201,17 +1216,47 @@ G.routine=(n,dt,dn)=>{if(n.abs&&n.id==='elara')return false;const di=G.dayInfo()
 function applyPose(n,s){n.posed=1;const dx=s.fx-s.sx,dy=s.fy-s.sy,l=Math.hypot(dx,dy)||1;n.fx=dx/l||0;n.fy=dy/l||1;if(n.ract==='sleep'){n.lie=1;let top=s.fy;while(tileAt(s.fx,top-1)===T.BED)top--;const by=top+Math.floor((s.fy-top)/2)*2+1;n.x=(s.fx+.5)*TILE;n.y=(Math.min(by,s.fy+1)+.5)*TILE;if(tileAt(s.fx,Math.floor(n.y/TILE))!==T.BED)n.y=(s.fy+.5)*TILE;}else if(n.ract==='drink'||n.ract==='eat'||n.ract==='sit'){n.sit=1;if(n.ract==='sit'){n.x=(s.fx+.5)*TILE;n.y=(s.fy+.62)*TILE;n.fx=0;n.fy=1;}}n.act=n.ract==='hammer'?'hammer':n.ract==='saw'?'hammer':n.ract==='knead'?'hoe':n.ract==='brew'?'heal':n.ract==='pray'?'pray':null;n.moving=false;}
 function poseAct(n,dt){n.moving=false;n.actT=(n.actT||0)+dt;if(n.actT>1.3){n.actT=0;if(n.lie)G.parts.push({x:n.x+8,y:n.y-14,z:22,vx:8,vy:-18,life:1.2,c:'#cfd8ff',txt:'z'});else if(n.ract==='drink'&&Math.random()<.3)G.parts.push({x:n.x,y:n.y-10,z:26,vx:0,vy:-20,life:.8,c:'#ffd54a'});else if(n.ract==='brew')G.parts.push({x:n.x+n.fx*12,y:n.y+n.fy*12,z:18,vx:0,vy:-30,life:.8,c:'#7fff9a'});else if(n.ract==='hammer'||n.ract==='saw'){for(let i=0;i<4;i++)G.parts.push({x:n.x+n.fx*14,y:n.y+n.fy*14,z:14,vx:rnd(-60,60),vy:rnd(-60,20),life:.3,c:n.ract==='saw'?'#c8a070':'#ffb04a'});}}}
 G.npcPose=n=>n.lie?'lie':n.sit?'sit':null;
+// ===================== Kriminalität: Diebstahl, Angriffe, Kopfgeld, Wachen =====================
+const GUARDS=new Set(['otto','konrad','dieter','ilse','gerd','wache_frost','wache_moor','wache_wald','wache_sand']);
+const isGuard=n=>!!n&&(GUARDS.has(n.id)||!!n.guard);G.isGuard=isGuard;
+const QUESTNPC=()=>{const s2=new Set(['mara','aldric','elara','gunnar','hilda','bernd','greta','holger','fiete','liv','ragna','samira','aldwin','brann','konrad','otto']);for(const k in SQ)s2.add(SQ[k].npc);return s2;};
+const killable=n=>!!n.town&&!SHOPS[n.id]&&!isGuard(n)&&!QUESTNPC().has(n.id);
+const STEALT=new Set([T.BARREL,T.CRATE,T.SACK,T.SHELF]);
+const dayNo=()=>Math.floor((P.dayT||0)/720);
+function witnesses(){const out=[];for(const n of NPCS){if(n.dead||n.ko>0||n.lie)continue;if(G.room?n.loc!==G.room:!!n.loc)continue;if(Math.hypot(n.x-P.x,n.y-P.y)<TILE*8)out.push(n);}return out;}
+function addBounty(v,why){P.bounty=Math.round((P.bounty||0)+v);G.toast(`🚨 ${why} Kopfgeld +${v} (gesamt ${P.bounty} Gold). Zahle es bei einer Wache.`,'#ff6b5a',true);sfx('horn');}
+G.addBounty=addBounty;
+function stealAt(t){const key=t.rid+':'+t.x+','+t.y;P.searched=P.searched||{};P.searched[key]=dayNo();sfx('pickup');
+ const r=Math.random();let val=0;if(r<.42){const g=rint(2,12);P.gold+=g;val=g;G.floats.push({x:P.x,y:P.y-40,t:`+${g} Gold`,c:'#ffd54a',life:.9});}else if(r<.67){give(mkStack(pick(['bread','carrot','bread']),rint(1,2)));val=6;}else if(r<.77){give(mkStack('potion',1));val=15;}else if(r<.88){give(mkStack('arrow',rint(3,8)));val=6;}else{G.toast('Nichts Brauchbares gefunden.','#ccc');}
+ const w=witnesses();if(w.length){const n=w[0];G.floats.push({x:n.x,y:n.y-46,t:'Dieb! Wachen!',c:'#ff5252',life:1.4});addBounty(20+val*2,`Diebstahl – ${n.short||n.name} hat dich gesehen!`);}else if(val)G.toast('🤫 Niemand hat dich gesehen …','#b0bec5');G.save();}
+function hitNPC(n,dmg){if(n.dead||n.ko>0)return;sfx('hit');n.scared=6;n.hitCnt=(n.hitCnt||0)+1;G.floats.push({x:n.x,y:n.y-40,t:pick(['Au!','Hey!','Lass das!','Hilfe!']),c:'#ff8a80',life:.9});
+ if(!P.npcWarn||G.time-P.npcWarn>90){P.npcWarn=G.time;n.hitCnt=0;G.toast('⚠ Vorsicht! Wer Bürger angreift, bekommt Kopfgeld und die Wachen jagen ihn.','#ffcc80',true);return;}
+ addBounty(isGuard(n)?80:40,`Angriff auf ${n.short||n.name}!`);
+ if(n.hitCnt>=4){n.hitCnt=0;if(killable(n)){n.dead=1;n.deadUntil=(P.dayT||0)+1080;n.loc=null;n.path=[];addBounty(250,`${n.name} ist tot!`);}else{n.ko=45;n.lie=1;n.path=[];G.toast(`💫 ${n.short||n.name} ist bewusstlos.`,'#ffcc80');}}}
+G.hitNPC=hitNPC;
+G.crimeTick=(n,dt,dn)=>{if(n.dead){if((P.dayT||0)>=(n.deadUntil||0)){n.dead=0;n.x=n.hx;n.y=n.hy;n.loc=null;n.lie=0;}return true;}
+ if(n.ko>0){n.ko-=dt;n.moving=false;if(n.ko<=0){n.ko=0;n.lie=0;}return true;}
+ const same=G.room?n.loc===G.room:!n.loc;
+ if(P.bounty>0&&isGuard(n)&&same&&!n.lie&&!P.dead&&dn<TILE*16&&(G.time>(P.guardCd||0))&&!(G.ui&&G.ui.dlgNpc)){const dx=P.x-n.x,dy=P.y-n.y,d=Math.hypot(dx,dy)||1;n.sit=0;n.path=[];if(d<38){P.guardCd=G.time+25;n.moving=false;G.ui&&G.ui.openDialog&&G.ui.openDialog(n);return true;}const sp=150*dt;const nx=n.x+dx/d*sp,ny=n.y+dy/d*sp;if(canMove(nx,ny,10)||G.room){n.x=nx;n.y=ny;}else if(canMove(nx,n.y,10))n.x=nx;else if(canMove(n.x,ny,10))n.y=ny;n.fx=dx/d;n.fy=dy/d;n.moving=true;n.anim+=dt;if(!n._shout||G.time-n._shout>4){n._shout=G.time;G.floats.push({x:n.x,y:n.y-44,t:'Halt! Stehen bleiben!',c:'#ffcc80',life:1.2});}return true;}
+ if(n.scared>0){n.scared-=dt;if(!same||n.lie)return false;const dx=n.x-P.x,dy=n.y-P.y,d=Math.hypot(dx,dy)||1;if(d<TILE*6){const sp=120*dt;const nx=n.x+dx/d*sp,ny=n.y+dy/d*sp;if(canMove(nx,ny,10)){n.x=nx;n.y=ny;n.moving=true;n.fx=dx/d;n.fy=dy/d;n.anim+=dt;}}return true;}
+ return false;};
+function guardDialog(n){const b=P.bounty,B=(l,f,c)=>({l,f,c});return{t:`Halt, im Namen des Gesetzes! Auf deinen Kopf sind ${b} Gold ausgesetzt. Bezahl, oder du wanderst in den Kerker.`,b:[
+ B(`⚖ Kopfgeld bezahlen (${b} Gold)`,()=>{if(P.gold<b){G.toast(`Du hast nur ${P.gold} Gold.`,'#ff8a80');return;}P.gold-=b;P.bounty=0;sfx('coin');G.toast('⚖ Kopfgeld bezahlt. Du bist wieder ein freier Bürger.','#a5d6a7',true);},1),
+ B('⛓ Ins Gefängnis (Kopfgeld wird erlassen)',()=>{const fine=Math.floor(P.gold*.1);P.gold-=fine;P.bounty=0;P.dayT+=720;if(G.room){G.room=null;}P.x=SPAWN.x;P.y=SPAWN.y;P.prevX=null;G.mons.length=0;G.toast(`⛓ Du hast einen Tag im Kerker verbracht${fine?` und ${fine} Gold Strafe gezahlt`:''}. Das Kopfgeld ist erlassen.`,'#ffcc80',true);},1),
+ B('🏃 Fliehen',()=>{P.guardCd=G.time+12;P.bounty+=10;G.toast('🏃 Die Wache wird dich weiter verfolgen!','#ff8a80');},1)]};}
 // Ziel-Erweiterung: Truhen, Gipfel, Bett, Katzen
 G.extraTarget=(best,bd)=>{if(G.room){if(G.room===HR&&hasHammerHeld()){const f=furnAt();if(f)return f;return{k:'furnbox'};}if(G.room===HR&&!hasHammerHeld()){for(const [x,y] of G.homeFoot('bed')){const d=Math.hypot((x+.5)*TILE-P.x,(y+.5)*TILE-P.y);if(d<Math.min(bd,50)){bd=d;best={k:'bed'};}}}
-  for(const n of NPCS){if(n.loc!==G.room)continue;const d=Math.hypot(n.x-P.x,n.y-P.y);if(d<Math.min(bd,52)){bd=d;best={k:'npc',n};}}for(const h of G.HORSES||[]){if(h.room!==G.room)continue;const d=Math.hypot(h.x+h.fx*28-P.x,h.y+h.fy*28-P.y);if(d<Math.min(bd,46)){bd=d;best={k:'horse',h};}}if(G.PET&&G.PET.room===G.room){}return best;}
+  for(const n of NPCS){if(n.loc!==G.room||n.dead)continue;const d=Math.hypot(n.x-P.x,n.y-P.y);if(d<Math.min(bd,52)){bd=d;best={k:'npc',n};}}
+  {const r=G.room;if(r&&!r.player&&!r.dungeon&&r.b&&r.kind!=='stall'){const ptx=Math.floor(P.x/TILE),pty=Math.floor(P.y/TILE),dn=dayNo();for(let yy=pty-1;yy<=pty+1;yy++)for(let xx=ptx-1;xx<=ptx+1;xx++){if(!STEALT.has(tileAt(xx,yy)))continue;if(P.searched&&P.searched[r.id+':'+xx+','+yy]===dn)continue;const d=Math.hypot((xx+.5)*TILE-P.x,(yy+.5)*TILE-P.y);if(d<Math.min(bd,44)){bd=d;best={k:'steal',rid:r.id,x:xx,y:yy};}}}}for(const h of G.HORSES||[]){if(h.room!==G.room)continue;const d=Math.hypot(h.x+h.fx*28-P.x,h.y+h.fy*28-P.y);if(d<Math.min(bd,46)){bd=d;best={k:'horse',h};}}if(G.PET&&G.PET.room===G.room){}return best;}
  for(const c of OCH){if(P.och&&P.och[c.id])continue;const d=Math.hypot((c.tx+.5)*TILE-P.x,(c.ty+.5)*TILE-P.y);if(d<Math.min(bd,48)){bd=d;best={k:'och',c};}}
  {const d=Math.hypot((G.SUMMIT.x+.5)*TILE-P.x,(G.SUMMIT.y+.5)*TILE-P.y);if(d<Math.min(bd,60)){bd=d;best={k:'frost'};}}
  for(const c of G.CATS||[]){const d=Math.hypot(c.x-P.x,c.y-P.y);if(d<Math.min(bd,44)){bd=d;best={k:'cat',c};}}for(const h of G.HORSES||[]){if(h.room)continue;const d=Math.hypot(h.x+h.fx*20-P.x,h.y+h.fy*20-P.y);if(d<Math.min(bd,52)){bd=d;best={k:'horse',h};}}return best;};
-G.extraAct=t=>{if(t.k==='furnbox'){G.ui&&G.ui.openFurnBox&&G.ui.openFurnBox();return true;}if(t.k==='furnpick'){G.pickFurn(t.fk);return true;}if(t.k==='bed'){sleep();return true;}if(t.k==='och'){openOCH(t.c);return true;}if(t.k==='frost'){takeFrost();return true;}if(t.k==='cat'){feedCat(t.c);return true;}if(t.k==='horse'){patHorse(t.h);return true;}return false;};
-G.extraPos=t=>t.k==='furnbox'?{x:P.x,y:P.y}:t.k==='furnpick'?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='och'?{x:(t.c.tx+.5)*TILE,y:(t.c.ty+.5)*TILE}:t.k==='frost'?{x:(G.SUMMIT.x+.5)*TILE,y:(G.SUMMIT.y+.5)*TILE}:t.k==='cat'?{x:t.c.x,y:t.c.y}:t.k==='horse'?{x:t.h.x+t.h.fx*20,y:t.h.y+t.h.fy*20}:t.k==='bed'?(()=>{const b=G.homeFoot('bed')[0];return{x:(b[0]+.5)*TILE,y:(b[1]+.5)*TILE};})():null;
-G.extraLabel=t=>t.k==='furnbox'?['📦','Möbellager']:t.k==='furnpick'?['🔨','Abbauen: '+FURN[t.fk].t[P.home[t.fk]||1][0]]:t.k==='horse'?['🐴','Streicheln']:t.k==='bed'?['🛏','Schlafen']:t.k==='och'?['🧰','Öffnen']:t.k==='frost'?['❄','Frostherz']:t.k==='cat'?(['trout','carp','salmon','pike','cfish','goldfish'].some(id=>countItem(id)>0)?['🐟','Füttern']:['🐱','Streicheln']):null;
+G.extraAct=t=>{if(t.k==='steal'){stealAt(t);return true;}if(t.k==='furnbox'){G.ui&&G.ui.openFurnBox&&G.ui.openFurnBox();return true;}if(t.k==='furnpick'){G.pickFurn(t.fk);return true;}if(t.k==='bed'){sleep();return true;}if(t.k==='och'){openOCH(t.c);return true;}if(t.k==='frost'){takeFrost();return true;}if(t.k==='cat'){feedCat(t.c);return true;}if(t.k==='horse'){patHorse(t.h);return true;}return false;};
+G.extraPos=t=>t.k==='steal'?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='furnbox'?{x:P.x,y:P.y}:t.k==='furnpick'?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='och'?{x:(t.c.tx+.5)*TILE,y:(t.c.ty+.5)*TILE}:t.k==='frost'?{x:(G.SUMMIT.x+.5)*TILE,y:(G.SUMMIT.y+.5)*TILE}:t.k==='cat'?{x:t.c.x,y:t.c.y}:t.k==='horse'?{x:t.h.x+t.h.fx*20,y:t.h.y+t.h.fy*20}:t.k==='bed'?(()=>{const b=G.homeFoot('bed')[0];return{x:(b[0]+.5)*TILE,y:(b[1]+.5)*TILE};})():null;
+G.extraLabel=t=>t.k==='steal'?['🖐','Stehlen']:t.k==='furnbox'?['📦','Möbellager']:t.k==='furnpick'?['🔨','Abbauen: '+FURN[t.fk].t[P.home[t.fk]||1][0]]:t.k==='horse'?['🐴','Streicheln']:t.k==='bed'?['🛏','Schlafen']:t.k==='och'?['🧰','Öffnen']:t.k==='frost'?['❄','Frostherz']:t.k==='cat'?(['trout','carp','salmon','pike','cfish','goldfish'].some(id=>countItem(id)>0)?['🐟','Füttern']:['🐱','Streicheln']):null;
 // Dialoge
 G.extraDialog=n=>{const q=P.q,B=(l,f,c)=>({l,f,c});
+ if(isGuard(n)&&P.bounty>0)return guardDialog(n);
  if(n.id==='holger'){const b=[];if(countItem('hammer')<1)b.push(B('🔨 Schreinerhammer – 60 Gold',()=>{if(buy('hammer',1,60))G.toast('🔨 Halte den Hammer in der Hand und bau in deinem Haus Möbel ab, um sie neu zu stellen.','#ffd54a',true);setTimeout(()=>G.ui&&G.ui.openDialog(n),60);},0));for(const k in FURN){const f=FURN[k],cur=bestFurn(k),nx=f.t[cur+1];if(nx)b.push(B(`${f.ic} ${nx[0]} – ${nx[1]} Gold`,()=>{buyFurn(k);setTimeout(()=>G.ui&&G.ui.openDialog(n),60);},0));}
   return{t:`Na, ${P.level>=10?'Held':'Neuling'}? Dein Haus ist ja noch ziemlich ${comfort()<6?'leer':comfort()<15?'gemütlich':'prächtig'}. Ich zimmere dir, was du willst – du nimmst es mit und stellst es in deinem Haus auf, wo du magst. Mit meinem Schreinerhammer kannst du alles wieder abbauen und umstellen. Gemütlichkeit: ${comfort()}. (Du hast ${P.gold} Gold)`,b};}
  if(n.id==='fiete'){if(n.lie)return{t:'Zzz … hm? Die Fische schlafen auch, Junge. Komm morgen wieder.',b:[]};

@@ -1,7 +1,8 @@
-// Aschenkrone – Service Worker: speichert alle Spieldateien, damit das Spiel offline läuft.
-// WICHTIG: Bei jedem Spiel-Update die Versionsnummer hier um 1 erhöhen,
-// dann holen sich alle Handys automatisch die neue Version.
-const CACHE = 'aschenkrone-v15';
+// Aschenkrone – Service Worker
+// Mit Internet: holt immer die neueste Version (Updates kommen sofort an).
+// Ohne Internet: startet das Spiel aus dem Speicher.
+// Bei jedem Spiel-Update die Versionsnummer hier um 1 erhöhen.
+const CACHE = 'aschenkrone-v16';
 
 const FILES = [
   './',
@@ -19,13 +20,11 @@ const FILES = [
   './icons/favicon-48.png'
 ];
 
-// 1) Installieren: alle Dateien in den Speicher legen
 self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)));
+  event.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES.map(f => new Request(f, { cache: 'reload' })))));
   self.skipWaiting();
 });
 
-// 2) Aktivieren: alte Versionen aus dem Speicher löschen
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
@@ -33,19 +32,22 @@ self.addEventListener('activate', event => {
   );
 });
 
-// 3) Laden: zuerst aus dem Speicher (offline), sonst aus dem Internet
+// Netzwerk zuerst (max. 4 Sekunden warten), sonst Speicher
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
-  event.respondWith(
-    caches.match(event.request, { ignoreSearch: true }).then(hit => {
-      if (hit) return hit;
-      return fetch(event.request).then(res => {
-        if (res && res.ok && new URL(event.request.url).origin === location.origin) {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(event.request, copy));
-        }
-        return res;
-      }).catch(() => caches.match('./index.html'));
-    })
-  );
+  const req = event.request;
+  if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE);
+    try {
+      const net = await Promise.race([
+        fetch(req, { cache: 'no-cache' }),
+        new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 4000))
+      ]);
+      if (net && net.ok) cache.put(req, net.clone());
+      return net;
+    } catch (e) {
+      const hit = await cache.match(req, { ignoreSearch: true });
+      return hit || cache.match('./index.html');
+    }
+  })());
 });
