@@ -2,7 +2,7 @@
 // Mit Internet: holt immer die neueste Version (Updates kommen sofort an).
 // Ohne Internet: startet das Spiel aus dem Speicher.
 // Bei jedem Spiel-Update die Versionsnummer hier um 1 erhöhen.
-const CACHE = 'aschenkrone-v16-4';
+const CACHE = 'aschenkrone-v16-5';
 
 const FILES = [
   './',

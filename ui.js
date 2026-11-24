@@ -165,7 +165,7 @@ function renderDialog(){const n=ui.dlgNpc;if(!n)return;G.S=G.calc();const cu=ui.
  if(qb.length&&sb.length){const h=document.createElement('div');h.className='dqh dqs';h.textContent='Sonstiges';bb.appendChild(h);}
  sb.forEach(b=>add(b.l,()=>{if(b.f)b.f();if(b.c)closeDialog();else renderDialog();G.save();}));
  if(!cu)add('💬 Unterhalten',()=>{closeDialog();openChat(n);},'blue');add(cu?'Weiter':'Tschüss',cu?renderDialog:closeDialog);el.style.display=pcMode?'block':'flex';}
-function closeDialog(){if(ui.dlgNpc&&G.voice)G.voice.stop();lastSpoken='';ui.dlgNpc=null;$('dialog').style.display='none';}
+ui.closeDialog=()=>closeDialog();function closeDialog(){if(ui.dlgNpc&&G.voice)G.voice.stop();lastSpoken='';ui.dlgNpc=null;$('dialog').style.display='none';}
 // ===================== Gespräche (KI) =====================
 let sampleFn=null,aiTried=false,aiOff=false;
 async function getSample(){if(sampleFn)return sampleFn;if(aiOff)return null;if(!window.claude||!window.claude.use){return null;}
@@ -420,7 +420,7 @@ function tutTick(){const P=G.P;if(!P)return;if(P.tut==null){P.tut=(P.level>1||P.
  if(!G.paused()||invOpen||ui.dlgNpc){tutS.t+=1/60;tutS.dist+=Math.hypot(P.x-tutS.x,P.y-tutS.y);tutS.x=P.x;tutS.y=P.y;}
  if(TUT[P.tut].ok(tutS)){P.tut++;tutS=null;if(P.tut>=TUT.length){e.remove();G.save();}}}
 function hud(){tutTick();const P=G.P,S=G.S||G.calc(),tx=Math.floor(P.x/TILE),ty=Math.floor(P.y/TILE);
- $('lvl').textContent=P.level;$('hpf').style.width=(100*Math.max(0,P.hp)/S.maxhp)+'%';$('hpf').classList.toggle('poison',!!P.poison);$('hpt').textContent=`${Math.ceil(Math.max(0,P.hp))} / ${S.maxhp} LP${P.poison?' · vergiftet':''}`;
+ {const dk=P.drunk||0,st=dk>=3?`rotate(${(Math.sin(G.time*.8)*Math.min(1.6,(dk-2)*.3)).toFixed(2)}deg) scale(${(1+Math.min(.05,(dk-2)*.008)).toFixed(3)})`:'';if(st!==ui._dst){ui._dst=st;$('c3d').style.transform=st;$('c2d').style.transform=st;}}$('lvl').textContent=P.level;$('hpf').style.width=(100*Math.max(0,P.hp)/S.maxhp)+'%';$('hpf').classList.toggle('poison',!!P.poison);$('hpt').textContent=`${Math.ceil(Math.max(0,P.hp))} / ${S.maxhp} LP${P.poison?' · vergiftet':''}${(P.drunk||0)>=1?' · 🍺 '+G.DRUNKN[G.drunkLvl()]:''}${P.hangover&&P.dayT<P.hangover?' · 🤕 Kater':''}`;
  $('stf').style.width=(100*Math.max(0,P.sta)/S.maxSta)+'%';$('stt').textContent=`⚡ ${Math.floor(P.sta)}`;$('mpf').style.width=(100*Math.max(0,P.mp)/S.maxMp)+'%';$('mpt').textContent=`🔷 ${Math.floor(P.mp)}`;const am=S.cls==='ranged'?(G.WKIND[S.kind].proj==='bolt'?'bolt':'arrow'):null;$('ammo').style.display=am?'block':'none';if(am)$('ammo').textContent=`${am==='bolt'?'Bolzen':'Pfeile'}: ${G.countItem(am)}`;
  const xn=G.xpNeed(P.level);$('xpf').style.width=(100*P.xp/xn)+'%';$('xpt').textContent=`XP ${Math.floor(P.xp)} / ${xn}`;$('gold').innerHTML=`🪙 ${P.gold} Gold · ${G.D().n}`+(P.bounty>0?` · <span style="color:#ff6b5a">⚖ ${P.bounty} <span style="color:#ffd54a">${'★'.repeat(G.wanted())}</span>${G.guardHostile()?' ⚔':''}</span>`:'');
  const b=G.biome(tx,ty),zl=G.zoneLevel(tx,ty);$('zone').textContent=G.room?(G.room.dungeon?`☠ ${G.room.name} · Stufe ~${G.room.lvl}`:`🏠 ${G.room.name}`):G.inSafe(P.x,P.y)?(G.inCastle(tx,ty)?'🏰 Burg Eichenhain · Sicher':G.townAt(tx,ty)?`🏘 ${G.townAt(tx,ty).name} · Sicher`:'🏡 Eichenhain · Sicher'):`⚔ ${G.ZN[b]} · Monster Stufe ~${zl}`;
