@@ -448,7 +448,13 @@ function scr(x,y,h){return use3d?G.R3D.toScreen(x,y,h||0):G.R2D._fp?G.R2D.toScre
 const monTop=m=>use3d?G.R3D.monTop(m):(m.shape==='hum'?1.4*(m.scale||1):m.r/TILE*2.4+.4);
 function lbl(x,y,t,col,font){ctx.font=font||'bold 11px Georgia';ctx.textAlign='center';ctx.lineWidth=3;ctx.strokeStyle='rgba(0,0,0,.8)';ctx.strokeText(t,x,y);ctx.fillStyle=col;ctx.fillText(t,x,y);}
 // Kompassleiste oben: Himmelsrichtungen + Quest-Icons
-function drawCompass(){const P=G.P;if(G.room||P.dead)return;const port=VH>VW,W=Math.min(440,VW*(pcMode?.36:port?.62:.5)),H=24,cx=VW/2,y0=port?Math.round(254*(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gui'))||1)):pcMode?58:54,half=Math.PI*.55;
+// 2D: kleiner Wegweiser-Pfeil, der um die Spielfigur kreist und zum Questziel zeigt (statt Kompassleiste)
+function drawGuide2D(){const P=G.P,ob=G.objective();if(!ob||!ob.to)return;const d=Math.hypot(ob.to.x-P.x,ob.to.y-P.y);if(d<TILE*4)return;const ps=scr(P.x,P.y,0);if(!ps)return;const ts=scr(ob.to.x,ob.to.y,0);
+ if(ts&&ts.x>30&&ts.x<VW-30&&ts.y>150&&ts.y<VH-120)return;
+ const ang=ts?Math.atan2(ts.y-ps.y,ts.x-ps.x):Math.atan2(ob.to.y-P.y,ob.to.x-P.x),R=48+Math.sin(G.time*3)*2,x=ps.x+Math.cos(ang)*R,y=ps.y-8+Math.sin(ang)*R;
+ ctx.save();ctx.globalAlpha=.88;ctx.translate(x,y);ctx.rotate(ang);ctx.fillStyle='#ffd54a';ctx.strokeStyle='rgba(0,0,0,.75)';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(14,0);ctx.lineTo(-6,-9);ctx.lineTo(-2,0);ctx.lineTo(-6,9);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+ const m=Math.round(d/TILE),tx=ps.x+Math.cos(ang)*(R+20),ty=ps.y-8+Math.sin(ang)*(R+20);ctx.globalAlpha=.85;lbl(tx,ty+4,m+' m','#ffe9a0','bold 10px Georgia');ctx.globalAlpha=1;}
+function drawCompass(){const P=G.P;if(G.room||P.dead)return;if(!use3d&&!(G.R2D&&G.R2D._fp)){drawGuide2D();return;}const port=VH>VW,W=Math.min(440,VW*(pcMode?.36:port?.62:.5)),H=24,cx=VW/2,y0=port?Math.round(254*(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gui'))||1)):pcMode?58:54,half=Math.PI*.55;
  let hd;if(isFP()){const f=fpDir();hd=Math.atan2(f.x,-f.y);}else hd=use3d?-(G.camRot||0):0;
  const rel=b=>{let r=b-hd;while(r>Math.PI)r-=2*Math.PI;while(r<-Math.PI)r+=2*Math.PI;return r;};const X=r=>cx+r/half*W/2;
  ctx.save();const g=ctx.createLinearGradient(cx-W/2,0,cx+W/2,0);g.addColorStop(0,'rgba(20,12,6,0)');g.addColorStop(.12,'rgba(20,12,6,.62)');g.addColorStop(.88,'rgba(20,12,6,.62)');g.addColorStop(1,'rgba(20,12,6,0)');ctx.fillStyle=g;ctx.fillRect(cx-W/2,y0,W,H);
