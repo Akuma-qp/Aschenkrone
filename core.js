@@ -1182,11 +1182,12 @@ Object.assign(G,{enterRoom,exitRoom});
 const ALLK=Object.keys(WKIND).concat(Object.keys(SETS),['ring','amulet']);
 // ---- Ackerbau (wie Minecraft: nahe Wasser, wächst langsam in Stufen)
 const CROPS={wheat:{n:'Weizen',grow:[40,70],col:'#e8c95a',yield:()=>[['wheat',rint(1,2)],['seed',rint(1,3)]]},carrot:{n:'Karotten',grow:[35,60],col:'#ff8a1e',yield:()=>[['carrot',rint(2,4)]]},herb:{n:'Heilkraut',grow:[45,80],col:'#4ac04a',yield:()=>[['herb',rint(1,2)],['hseed',rint(0,2)]]}};
-G.CROPS=CROPS;const fk=(x,y)=>x*1000+y;
+G.CROPS=CROPS;const fk=(x,y)=>x*2048+y;G.farmAt=(x,y)=>G.farm.has(fk(x,y));
 const FARMABLE=[T.GRASS,T.GRASS2,T.DIRT,T.FLOWER,T.SWAMP,T.SAND,T.FIELD,T.SNOW];
 function nearWater(tx,ty){for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++)if(tileAt(tx+dx,ty+dy)===T.WATER)return true;return false;}
 function plantable(tx,ty){if(tx>=WW||G.farm.has(fk(tx,ty)))return false;const t=tileAt(tx,ty);if(t===T.FIELD)return true;if(FARMABLE.indexOf(t)<0)return false;return nearWater(tx,ty);}
 function seedSlot(){const it=P.inv[P.sel];if(it&&STACK[it.id]&&STACK[it.id].plant)return P.sel;for(const id of ['seed','carrot','hseed']){const i=P.inv.findIndex(s=>s&&s.id===id);if(i>=0)return i;}return -1;}
+G.tapTile=(tx,ty)=>{if(G.room||P.dead)return false;if(Math.hypot(tx+.5-P.x/TILE,ty+.5-P.y/TILE)>4.6)return false;const f=G.farm.get(fk(tx,ty));if(f){if(f.s>=3)harvest(f);else G.toast(`🌱 ${CROPS[f.c].n} wächst noch (Stufe ${f.s+1}/4)`,'#a5d6a7');return true;}if(seedSlot()>=0&&plantable(tx,ty)){plant(tx,ty);return true;}return false;};
 function plant(tx,ty){const i=seedSlot();if(i<0)return;const it=P.inv[i];const c=STACK[it.id].plant;G.farm.set(fk(tx,ty),{tx,ty,c,s:0,t:rnd(...CROPS[c].grow)});it.count--;if(it.count<=0)P.inv[i]=null;G.invDirty=true;sfx('plant');G.toast(`🌱 ${CROPS[c].n} gepflanzt`,'#a5d6a7');}
 function harvest(f){G.farm.delete(fk(f.tx,f.ty));sfx('pickup');for(const [id,n] of CROPS[f.c].yield())if(n>0)give(mkStack(id,n));}
 // ---- Wegschreine
@@ -1202,7 +1203,7 @@ function target(){let best=null,bd=52;
  for(const w of WAYS){const d=Math.hypot((w.tx+.5)*TILE-P.x,(w.ty+.5)*TILE-P.y);if(d<bd){bd=d;best={k:'way',w};}}
  const ptx=Math.floor(P.x/TILE),pty=Math.floor(P.y/TILE);for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){const f=G.farm.get(fk(ptx+dx,pty+dy));if(!f)continue;const d=Math.hypot((f.tx+.5)*TILE-P.x,(f.ty+.5)*TILE-P.y)-(f.s>=3?6:0);if(d<Math.min(bd,44)){bd=d;best={k:'crop',f};}}
  const mt=G.mouseTile;if(mt&&Math.hypot(mt.x+.5-P.x/TILE,mt.y+.5-P.y/TILE)<3.6){const f=G.farm.get(fk(mt.x,mt.y));if(f)return{k:'crop',f};const hs=P.inv[P.sel];if(hs&&STACK[hs.id]&&STACK[hs.id].plant&&plantable(mt.x,mt.y))return{k:'soil',tx:mt.x,ty:mt.y};}
- if(!best&&seedSlot()>=0&&!G.mouseTile){const ftx=Math.floor((P.x+P.fx*30)/TILE),fty=Math.floor((P.y+P.fy*30)/TILE);const c=[[ftx,fty],[ptx,pty]];for(const [x,y] of c)if(plantable(x,y)&&!(x===ptx&&y===pty&&false)){best={k:'soil',tx:x,ty:y};break;}}
+ if((!best||(best.k==='crop'&&best.f.s<3))&&seedSlot()>=0&&!G.mouseTile){const ftx=Math.floor((P.x+P.fx*30)/TILE),fty=Math.floor((P.y+P.fy*30)/TILE);const c=[[ftx,fty],[ptx,pty]];for(const [x,y] of c)if(plantable(x,y)&&!(x===ptx&&y===pty&&false)){best={k:'soil',tx:x,ty:y};break;}}
  for(const b of BUILD){if(!b.room)continue;const d=Math.hypot((b.door.tx+.5)*TILE-P.x,(b.y+b.h+.25)*TILE-P.y);if(d<Math.min(bd,46)){bd=d;best={k:'door',b};}}return G.extraTarget?G.extraTarget(best,bd):best;}
 G.targetPos=t=>t.k==='npc'?{x:t.n.x,y:t.n.y}:t.k==='crop'?{x:(t.f.tx+.5)*TILE,y:(t.f.ty+.5)*TILE}:t.k==='soil'?{x:(t.tx+.5)*TILE,y:(t.ty+.5)*TILE}:t.k==='way'?{x:(t.w.tx+.5)*TILE,y:(t.w.ty+.5)*TILE}:t.k==='door'?{x:(t.b.door.tx+.5)*TILE,y:(t.b.y+t.b.h+.2)*TILE}:t.k==='chest'?{x:(t.c.tx+.5)*TILE,y:(t.c.ty+.5)*TILE}:{x:(t.r.door.tx+.5)*TILE,y:(t.r.door.ty+.3)*TILE};
 G.targetLabel=t=>t.k==='npc'?['💬','Reden']:t.k==='soil'?['🌱','Pflanzen']:t.k==='crop'?(t.f.s>=3?['🌾','Ernten']:['⏳',`${t.f.s+1}/4`]):t.k==='way'?['✨','Reisen']:t.k==='door'?['🚪','Betreten']:t.k==='chest'?['🧰','Öffnen']:['🚪','Verlassen'];
