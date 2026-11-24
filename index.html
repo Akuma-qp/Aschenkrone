@@ -36,7 +36,7 @@ button{touch-action:manipulation;cursor:pointer}
 #quests .qh{color:#ffd54a;font-weight:bold;font-size:10.5px;letter-spacing:.4px}#quests .qh2{color:#e0c48a;font-weight:bold;font-size:10px;margin-top:4px;border-top:1px solid rgba(138,106,58,.6);padding-top:3px}
 #quests .qd{color:#ffd54a;font-size:10px;white-space:nowrap;opacity:.9}
 #invTabs{display:flex;gap:4px;margin-bottom:6px}#invTabs button{flex:1;font-family:inherit;font-weight:bold;font-size:13px;padding:6px;border:2px solid #5a3d1e;border-radius:6px;background:#c9a86a;color:#3b2410;cursor:pointer}#invTabs button.on{background:#5a3d1e;color:#ffe9b0}
-#qBook{max-height:calc(100vh - 150px);overflow:auto;color:#3b2410;font-size:13px;line-height:1.45}.qbh{font-weight:bold;font-size:14px;margin:8px 0 4px;color:#5a3d1e;border-bottom:2px solid #8a6a3a}.qbc{background:rgba(255,245,215,.55);border:1px solid #a88a5a;border-radius:6px;padding:6px 8px;margin-bottom:6px}.qbt{font-weight:bold;color:#7a4a10}.qbd{color:#8a5a00;font-weight:bold;font-size:12px;margin-top:2px}.qbg{font-size:11.5px;opacity:.8}.qbi{font-style:italic;font-size:11.5px;opacity:.75;margin-top:3px}.qbe{opacity:.8}
+#qBook{max-height:calc(100vh - 150px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y;color:#3b2410;font-size:13px;line-height:1.45}.qbh{font-weight:bold;font-size:14px;margin:8px 0 4px;color:#5a3d1e;border-bottom:2px solid #8a6a3a}.qbc{background:rgba(255,245,215,.55);border:1px solid #a88a5a;border-radius:6px;padding:6px 8px;margin-bottom:6px}.qbt{font-weight:bold;color:#7a4a10}.qbd{color:#8a5a00;font-weight:bold;font-size:12px;margin-top:2px}.qbg{font-size:11.5px;opacity:.8}.qbi{font-style:italic;font-size:11.5px;opacity:.75;margin-top:3px}.qbe{opacity:.8}
 #hudTR{position:fixed;right:calc(8px + env(safe-area-inset-right));top:calc(8px + env(safe-area-inset-top));display:flex;flex-direction:column;align-items:flex-end;gap:6px}
 #hotbar,#hudTL,#ctrls,#inv>.panel,.tbtns{zoom:var(--gui,1)}#inv>.panel{max-height:calc(100% / var(--gui,1))}
 #mini{width:120px;height:120px;border:3px solid #5a3d1e;border-radius:6px;background:#000;box-shadow:0 2px 8px #000}
@@ -71,7 +71,7 @@ button{touch-action:manipulation;cursor:pointer}
 #bbf{background:linear-gradient(#ff5252,#8b0000)}
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:10;padding:calc(8px + env(safe-area-inset-top)) 6px calc(8px + env(safe-area-inset-bottom))}
 .overlay.show{display:flex}
-.panel{width:min(440px,100%);max-height:100%;overflow-y:auto;padding:10px;-webkit-overflow-scrolling:touch}
+.panel{width:min(440px,100%);max-height:100%;overflow-y:auto;padding:10px;-webkit-overflow-scrolling:touch;touch-action:pan-y;overscroll-behavior:contain}
 .ph{display:flex;justify-content:space-between;align-items:center;font-size:18px;font-weight:bold;border-bottom:2px solid #8a6a3a;padding-bottom:5px;margin-bottom:8px;letter-spacing:1px;color:#4a2a10}
 .x{width:34px;height:34px;border-radius:6px;border:2px solid #5a3d1e;background:#c9a86a;font-size:16px;font-weight:bold;color:#3b2612;padding:0;font-family:inherit;flex:none}
 .charRow{display:flex;gap:6px;justify-content:space-between;margin-bottom:8px;align-items:stretch}
@@ -140,7 +140,8 @@ table.dr td,table.dr th{border-bottom:1px solid #c9a86a;padding:3px 4px;text-ali
 #csText{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(60px + env(safe-area-inset-bottom));width:min(560px,92vw);color:#f4e6c4;font-size:clamp(15px,4.3vw,19px);line-height:1.5;text-align:center;text-shadow:0 2px 6px #000,0 0 12px #000;background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.55) 20%,rgba(0,0,0,.55) 80%,rgba(0,0,0,0));padding:14px 10px;font-style:italic}
 #csSkip{position:absolute;right:calc(12px + env(safe-area-inset-right));top:calc(12px + env(safe-area-inset-top));font-family:inherit;font-size:13px;padding:7px 12px;border-radius:6px;border:2px solid rgba(244,230,196,.6);background:rgba(0,0,0,.45);color:#f4e6c4}
 .cwrap{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;justify-content:center}#charCv{background:radial-gradient(#f4e6c4,#c9a86a);border:3px solid #5a3d1e;border-radius:8px;flex:none;width:180px;height:230px;touch-action:none;cursor:grab}.ctabs{display:flex;gap:4px;margin:6px 0 4px;flex-wrap:wrap}.ctab{flex:1;min-width:60px;padding:5px 4px;border:2px solid #5a3d1e;border-radius:6px;background:#e8d5a8;font:bold 12px Georgia;color:#5a3d1e;cursor:pointer}.ctab.on{background:linear-gradient(#ffd77a,#c8901f)}.cop.none{background:#e8d5a8;color:#7a2a20;font:bold 13px Georgia}#charOpts{flex:1;min-width:220px}.crow{display:flex;align-items:center;gap:6px;margin:3px 0}.crow>span{width:74px;font-weight:bold;font-size:13px;color:#5a3d1e;flex:none}.cops{display:flex;flex-wrap:wrap;gap:4px}.krow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:3px 0;font-size:13px}.kbtn{min-width:110px;padding:4px 8px;border:2px solid #5a3d1e;border-radius:6px;background:#f4e6c4;font:bold 13px Georgia;color:#3b2612;cursor:pointer}.kbtn.cap{background:#ffd54a;animation:kb 1s infinite}@keyframes kb{50%{background:#fff3b0}}body:not(.pc) .pcOnly{display:none}
-#skBook{max-height:calc(100vh - 150px);overflow:auto;color:#3b2410;font-size:13px}.skh{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;padding:4px 2px}.skc{display:flex;align-items:center;gap:8px;background:rgba(255,245,215,.55);border:1px solid #a88a5a;border-radius:8px;padding:6px 8px;margin-bottom:6px}.skc.max{border-color:#c9a227;background:rgba(255,230,150,.5)}.skc.lock{opacity:.6}.ski{font-size:24px;width:34px;text-align:center}.skt{flex:1;min-width:0}.skd{font-size:11.5px;line-height:1.35;margin-top:2px}.skbar{height:5px;background:#d8c49a;border-radius:3px;margin-top:3px;overflow:hidden}.skbar i{display:block;height:100%;background:linear-gradient(90deg,#c9a227,#ffd54a)}.skplus{min-width:42px;font-size:20px!important;padding:4px 10px!important}.skplus:disabled{opacity:.35}.skb{display:inline-block;background:#2e7d32;color:#fff;border-radius:10px;padding:0 6px;font-size:11px;margin-left:3px}#lvl.skp{box-shadow:0 0 0 3px #66bb6a,0 0 12px #66bb6a}#invTabs button{font-size:12px;padding:6px 3px}
+#stBook{max-height:calc(100vh - 150px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y;color:#3b2410;font-size:13.5px}.stT{width:100%;border-collapse:collapse}.stT td{padding:5px 6px;border-bottom:1px solid rgba(90,60,30,.25)}.stT td:last-child{text-align:right}.stH{font-weight:bold;margin:10px 0 2px;color:#5a3d1e}
+#skBook{max-height:calc(100vh - 150px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y;color:#3b2410;font-size:13px}.skh{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:6px;padding:4px 2px}.skc{display:flex;align-items:center;gap:8px;background:rgba(255,245,215,.55);border:1px solid #a88a5a;border-radius:8px;padding:6px 8px;margin-bottom:6px}.skc.max{border-color:#c9a227;background:rgba(255,230,150,.5)}.skc.lock{opacity:.6}.ski{font-size:24px;width:34px;text-align:center}.skt{flex:1;min-width:0}.skd{font-size:11.5px;line-height:1.35;margin-top:2px}.skbar{height:5px;background:#d8c49a;border-radius:3px;margin-top:3px;overflow:hidden}.skbar i{display:block;height:100%;background:linear-gradient(90deg,#c9a227,#ffd54a)}.skplus{min-width:42px;font-size:20px!important;padding:4px 10px!important}.skplus:disabled{opacity:.35}.skb{display:inline-block;background:#2e7d32;color:#fff;border-radius:10px;padding:0 6px;font-size:11px;margin-left:3px}#lvl.skp{box-shadow:0 0 0 3px #66bb6a,0 0 12px #66bb6a}#invTabs button{font-size:12px;padding:6px 3px}
 #dialog .btn.qopt{background:linear-gradient(#ffe082,#e0a826);border-color:#8a5a00;color:#3b2410;font-weight:bold;box-shadow:0 0 0 2px rgba(255,213,74,.45)}.dqh{flex-basis:100%;font-size:11px;font-weight:bold;color:#8a5a00;letter-spacing:.5px;margin:2px 0 -2px}.dqh.dqs{color:#6b5233}
 body:not(.pc) #dialog{max-height:46vh;padding:8px 10px;width:min(460px,94vw);flex-direction:column;overflow:hidden}body:not(.pc) #dialog .dt{overflow-y:auto;flex:1 1 auto;min-height:2.6em}body:not(.pc) #dialog .btns{flex:none;max-height:45%;overflow-y:auto}body:not(.pc) #dialog .dn{flex:none}@media (max-aspect-ratio:1/1){body:not(.pc) #dialog{max-height:40vh}}body:not(.pc) #dialog .dt{font-size:13px;line-height:1.35}body:not(.pc) #dialog .btn{padding:5px 9px;font-size:12.5px}
 body:not(.pc) #toasts{width:min(72vw,420px)}body:not(.pc) .toast{font-size:11px;padding:2px 7px}body:not(.pc) .toast.big{font-size:12px;padding:4px 9px}
@@ -213,10 +214,10 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
 <div id="inv" class="overlay">
  <div class="panel parch">
   <div class="ph"><span id="invTitle">⚜ Inventar ⚜</span><button class="x" id="invClose">✕</button></div>
-  <div id="invTabs"><button data-t="inv" class="on">🎒 Inventar</button><button data-t="quest">📜 Quests</button><button data-t="skill">⭐ Fähigkeiten</button></div>
+  <div id="invTabs"><button data-t="inv" class="on">🎒 Inventar</button><button data-t="quest">📜 Quests</button><button data-t="skill">⭐ Fähigkeiten</button><button data-t="stat">📊 Statistik</button></div>
   <div id="shopBar"></div>
   <div id="qBook" style="display:none"></div>
-  <div id="skBook" style="display:none"></div>
+  <div id="skBook" style="display:none"></div><div id="stBook" style="display:none"></div>
   <div class="invWrap"><div class="invL">
   <div class="charRow"><div class="eqCol" id="eqL"></div><div id="statBox"></div><div class="eqCol" id="eqR"></div></div>
   <div class="ilabel">Rucksack</div><div class="grid" id="gMain"></div>
@@ -245,6 +246,8 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
   <p>Oben links siehst du die Hauptquest (mit Himmelsrichtung und Entfernung) und darunter deine Nebenquests. Im Inventar gibt es den Reiter „📜 Quests“ (Taste <span class="kbd">J</span>) mit allen Details. Der Kompass oben zeigt mit einem goldenen ★ immer zum Ziel der Hauptquest, Nebenquests mit einem blauen „!“.</p>
   <h3>Gesetz & Kopfgeld ⚖</h3>
   <p>In fremden Häusern kannst du Fässer, Kisten, Säcke und Regale durchsuchen (🖐 Stehlen). Sieht dich dabei jemand, bekommst du <b>Kopfgeld</b>. Wer Bürger angreift, bekommt ebenfalls Kopfgeld (der erste Schlag ist nur eine Warnung). Wachen verfolgen dich dann: Du kannst das Kopfgeld bezahlen, ins Gefängnis gehen (1 Tag, 10 % Gold) oder fliehen. Auch Truhen in fremden Häusern zählen als Diebstahl, wenn jemand Wache hält – in der Burg steht immer eine Wache. Schlafende Bewohner merken nichts. Wer Katzen angreift, bekommt ebenfalls Kopfgeld. Je höher das Kopfgeld, desto höher die <b>Fahndungsstufe ★</b>: Ab ★★ (oder wenn du fliehst) greifen die Wachen an – und sie sind umso stärker, je höher die Stufe ist. Sprich eine Wache an, um dich zu ergeben. Wichtige Personen können nicht sterben, nur bewusstlos werden. Wenn du schläfst (oder im Kerker sitzt), sind am nächsten Morgen alle bewusstlosen und besiegten Bewohner und Wachen wieder auf den Beinen. Truhen für Quests und Dungeons bleiben frei plünderbar.</p>
+  <h3>Die Hauptquest 📜</h3>
+  <p>Fürst Aldric gibt dir die nächste Hauptquest erst, wenn du stark genug für die Region bist – im Questbuch steht dann „Erreiche Stufe X“. Die ersten Kapitel spielen rund um Eichenhain (Räuberlager, Hütte des Einsiedlers, Räubernest). Danach geht es in den Finsterwald, ins Nebelmoor, ins Kriegslager der Schwarzen Legion in der Steinöde und schließlich zu den Herolden und zu Ignarok. Je später eine Region in der Geschichte drankommt, desto stärker sind die Monster dort.</p>
   <h3>Taverne & Bier 🍺</h3>
   <p>Bei Wirt Bodo in der Taverne gibt's Bier und Honigmet (zählt wie 2 Bier). Im Inventar antippen zum Trinken. Ab 3 Bier bist du <b>betrunken</b>: langsamer, du torkelst im Zickzack und die Welt schwankt – je mehr du trinkst, desto schlimmer. Mit der Zeit wirst du wieder nüchtern. Ab 10 Bier kippst du um und wachst am nächsten Morgen mit Kater in deinem Haus auf.</p>
   <h3>Haus einrichten 🔨</h3>
@@ -404,11 +407,11 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
 </div>
 <div id="cs"><div id="csText"></div><button id="csSkip">Überspringen ⏭</button><div id="csTap">▶ Tippen / Klicken zum Weiterlesen</div></div>
 
-<script src="core.js?v=16.5"></script>
-<script src="sound.js?v=16.5"></script>
-<script src="r2d.js?v=16.5"></script>
-<script src="r3d.js?v=16.5"></script>
-<script src="ui.js?v=16.5"></script>
+<script src="core.js?v=17"></script>
+<script src="sound.js?v=17"></script>
+<script src="r2d.js?v=17"></script>
+<script src="r3d.js?v=17"></script>
+<script src="ui.js?v=17"></script>
 <!-- PWA: Service Worker starten (für Offline-Betrieb) -->
 <script>
 if ('serviceWorker' in navigator) {

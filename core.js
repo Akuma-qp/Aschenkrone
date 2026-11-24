@@ -28,7 +28,7 @@ G.DIFF={
 const DK=['leicht','normal','schwer'];
 G.D=()=>G.DIFF[G.settings.diff]||G.DIFF.normal;
 G.di=()=>Math.max(0,DK.indexOf(G.settings.diff));
-const QD={lvH:[11,12,14],schnitter:[13,14,16],eldtree:[15,16,18],sandking:[16,17,19],prove:[4,6,10],wolves:[6,8,12],ears:[4,6,9],draugr:[6,8,12],lvG:[4,5,7],lvM:[9,10,12],lvD:[18,20,23],grukk:[6,7,9],morvax:[11,12,14],dragon:[22,24,27]};
+const QD={prove:[4,5,8],lvR:[2,3,4],knut:[4,5,6],lvE:[4,5,6],hermit:[6,7,8],lvN:[7,8,9],falk:[9,10,11],lvG:[10,11,12],grukk:[11,12,13],lvW:[12,13,14],grimelda:[14,15,16],lvM:[14,15,16],morvax:[15,16,17],lvL:[16,17,18],legion:[6,8,10],severin:[18,19,20],lvH:[18,19,20],schnitter:[19,20,21],eldtree:[20,21,22],sandking:[21,22,23],lvD:[23,24,25],dragon:[26,27,28],wolves:[6,8,12],ears:[4,6,9],draugr:[6,8,12]};
 const qd=k=>QD[k][G.di()];G.qd=qd;
 
 
@@ -57,14 +57,14 @@ for(let y=0;y<H;y++)for(let x=0;x<WW;x++)BIO[y*WW+x]=BNAMES.indexOf(biomeRaw(x,y
 {const vi=BNAMES.indexOf('village');for(let it=0;it<2;it++){const src=BIO.slice();const cnt=new Int16Array(BNAMES.length);for(let y=0;y<H;y++)for(let x=0;x<WW;x++){const c=src[y*WW+x];if(c===vi)continue;cnt.fill(0);for(let dy=-3;dy<=3;dy++){const yy=y+dy;if(yy<0||yy>=H)continue;for(let dx=-3;dx<=3;dx++){const xx=x+dx;if(xx<0||xx>=WW)continue;const b=src[yy*WW+xx];if(b!==vi)cnt[b]++;}}let bb=c,bn=cnt[c];for(let k=0;k<cnt.length;k++)if(cnt[k]>bn){bn=cnt[k];bb=k;}BIO[y*WW+x]=bb;}}}
 function biome(x,y){x=Math.floor(x);y=Math.floor(y);if(x>=WW)return'interior';if(x<0||y<0||y>=H)return'waste';return BNAMES[BIO[y*WW+x]];}
 const BL={meadow:'m',forest:'f',swamp:'s',waste:'w',winter:'i',ash:'a',village:'v',interior:'x',dark:'d',desert:'e',peaks:'p'};
-const BLV={meadow:[1,10,40,8.5],forest:[7,16,150,10],swamp:[9,18,150,10],waste:[12,21,150,9],winter:[12,22,170,9],ash:[22,32,190,7],dark:[16,25,190,8],desert:[14,23,200,10],peaks:[18,26,170,8]};
+const BLV={meadow:[1,10,40,8.5],forest:[5,14,150,12.5],swamp:[8,18,150,12],waste:[12,21,150,9],winter:[12,22,170,9],ash:[19,29,190,14],dark:[15,24,190,10],desert:[14,23,200,12],peaks:[18,26,170,8]};
 function zoneLevel(x,y){if(x>=WW)return G.room&&G.room.dungeon?G.room.lvl:0;const b=biome(x,y);if(b==='village'||townAt(x,y))return 0;const L=BLV[b];return clamp(Math.floor(L[0]+Math.max(0,dV(x,y)-L[2])/L[3]),L[0],L[1]);}
 const ZN={interior:'Innenraum',village:'Eichenhain',meadow:'Sonnenwiesen',forest:'Finsterwald',swamp:'Nebelmoor',waste:'Steinöde',winter:'Frostlande',ash:'Aschenberge',dark:'Schattenwald',desert:'Sengende Dünen',peaks:'Graukamm-Gebirge'};
 const GC={interior:'#3a2a1a',village:'#64933f',meadow:'#5f9440',forest:'#43742f',swamp:'#4a5e3c',waste:'#8a7b5c',winter:'#e8eef4',ash:'#4a3f3c',dark:'#2e4630',desert:'#d6c086',peaks:'#77786f'};
 const CASTLE={x0:VCX-13,y0:VCY-41,x1:VCX+13,y1:VCY-16};
 const inCastle=(x,y)=>x>=CASTLE.x0&&x<=CASTLE.x1&&y>=CASTLE.y0&&y<=CASTLE.y1;
 const HILL={x:VCX,y:VCY-29,r:21,h:3.2};
-const CAMP={x:522,y:342},CRYPT={x:62,y:398},LAIR={x:500,y:58},BANDITS={x:426,y:228},ASHVALE={x:372,y:206};
+const CAMP={x:522,y:342},CRYPT={x:62,y:398},LAIR={x:500,y:58},BANDITS={x:426,y:228},ASHVALE={x:372,y:206},RAUB={x:330,y:262},LEGION={x:221,y:494};
 const V=(dx,dy)=>[VCX+dx,VCY+dy];
 const BUILD=[
  {id:'bakery',kind:'house',x:-15,y:-10,w:5,h:3,roof:'#a0522d',name:'Bäckerei',sign:'🥖',annex:'oven'},
@@ -190,6 +190,11 @@ function gen(){
  // Goblinlager & Banditenlager
  for(const [C,rr,wall] of [[CAMP,7,false],[BANDITS,8,true]]){for(let dy=-rr-1;dy<=rr+1;dy++)for(let dx=-rr-1;dx<=rr+1;dx++){const dd=Math.hypot(dx,dy);if(dd<rr-.5)set(C.x+dx,C.y+dy,T.DIRT);else if(wall&&dd<rr+.5&&!(Math.abs(dx)<=1&&dy>0))set(C.x+dx,C.y+dy,T.WALL);}
   [[-3,-2],[3,-3],[-3,3],[4,2]].forEach(([a,b])=>set(C.x+a,C.y+b,T.TENT));set(C.x,C.y,T.FIRE);}
+ // Räuberlager (Sonnenwiesen) & Kriegslager der Schwarzen Legion (Steinöde)
+ {const C=RAUB,rr=6;for(let dy=-rr-1;dy<=rr+1;dy++)for(let dx=-rr-1;dx<=rr+1;dx++){const dd=Math.hypot(dx,dy);if(dd<rr-.5)set(C.x+dx,C.y+dy,T.DIRT);else if(dd<rr+.5&&!(Math.abs(dx)<=1&&dy>0))set(C.x+dx,C.y+dy,T.WALL);}
+  [[-3,-2],[3,-2],[-3,2]].forEach(([a,b])=>set(C.x+a,C.y+b,T.TENT));set(C.x,C.y,T.FIRE);}
+ {const C=LEGION,rr=11;for(let dy=-rr-1;dy<=rr+1;dy++)for(let dx=-rr-1;dx<=rr+1;dx++){const dd=Math.hypot(dx,dy);if(dd<rr-.5)set(C.x+dx,C.y+dy,T.DIRT);else if(dd<rr+.5&&!(Math.abs(dx)<=1&&dy>0))set(C.x+dx,C.y+dy,T.CWALL);}
+  [[-6,-4],[-2,-7],[3,-7],[7,-3],[-7,3],[6,4],[-4,7],[4,7]].forEach(([a,b])=>set(C.x+a,C.y+b,T.TENT));[[0,-1],[-4,1],[4,1]].forEach(([a,b])=>set(C.x+a,C.y+b,T.FIRE));set(C.x-2,C.y+rr,T.TOWER);set(C.x+2,C.y+rr,T.TOWER);}
  // Krypta
  for(let dy=-7;dy<=7;dy++)for(let dx=-7;dx<=7;dx++)if(Math.hypot(dx,dy)<6.5)set(CRYPT.x+dx,CRYPT.y+dy,T.SWAMP);
  for(let k=0;k<8;k++){const a=k*Math.PI/4;set(CRYPT.x+Math.round(Math.cos(a)*4.5),CRYPT.y+Math.round(Math.sin(a)*4.5),T.RUIN);}set(CRYPT.x,CRYPT.y-3,T.CRYPT);
@@ -281,7 +286,7 @@ const canMoveP=(x,y,r)=>!solidPP(x-r,y-r)&&!solidPP(x+r,y-r)&&!solidPP(x-r,y+r)&
 const vDist=(px,py)=>Math.hypot(px/TILE-VCX-.5,py/TILE-VCY-.5);
 const inSafe=(px,py)=>{if(px>=WW*TILE)return !(G.room&&G.room.dungeon);const tx=px/TILE,ty=py/TILE;if(vDist(px,py)<RV-.4||inCastle(Math.floor(tx),Math.floor(ty)))return true;return TOWNS.some(t=>Math.hypot(tx-t.x-.5,ty-t.y-.5)<t.r-.4);};
 const monBlocked=(px,py)=>{const tx=px/TILE,ty=py/TILE;if(vDist(px,py)<RV+.6||inCastle(Math.floor(tx),Math.floor(ty)))return true;return TOWNS.some(t=>Math.hypot(tx-t.x-.5,ty-t.y-.5)<t.r+1.2);};
-Object.assign(G,{TILE,WW,W,H,VCX,VCY,RV,CH,T,map,biome,BL,zoneLevel,dV,hgt,CASTLE,inCastle,HILL,CAMP,CRYPT,LAIR,BANDITS,ASHVALE,CANYON,ZN,GC,BUILD,TOWNS,WAYS,tileAt,isSolidT,walkTile,solidPx,canMove,vDist,inSafe,townAt,SOLIDS});
+Object.assign(G,{TILE,WW,W,H,VCX,VCY,RV,CH,T,map,biome,BL,zoneLevel,dV,hgt,CASTLE,inCastle,HILL,CAMP,CRYPT,LAIR,BANDITS,ASHVALE,RAUB,LEGION,CANYON,ZN,GC,BUILD,TOWNS,WAYS,tileAt,isSolidT,walkTile,solidPx,canMove,vDist,inSafe,townAt,SOLIDS});
 
 // ===================== Gegenstände =====================
 const RAR=[{n:'Gewöhnlich',c:'#a6a6a6',d:'#6b6b6b'},{n:'Ungewöhnlich',c:'#41c94a',d:'#23852b'},{n:'Selten',c:'#3d8bff',d:'#1f5fd1'},{n:'Episch',c:'#b14cff',d:'#7d22c9'},{n:'Legendär',c:'#ffb300',d:'#b87500'},{n:'Mythisch',c:'#ff2d55',d:'#c8002a'}];
@@ -407,6 +412,9 @@ const MT={
  wolf:{n:'Wolf',c:'#8d8d99',r:12,spd:140,sk:['leap','howl'],hp:.85,dmg:.95,xp:1,lv:[4,12],shape:'wolf',pack:2,b:'mf',lg:'beast'},
  unicorn:{n:'Einhorn',c:'#f4f4ff',r:16,spd:125,hp:1.6,dmg:1.3,xp:2.4,lv:[20,20],shape:'horse',horn:1,ai:'charge',b:'m',lg:'mythic',passive:1,rare:.08,minD:100},
  slime:{n:'Schleim',c:'#5fcf5f',r:11,spd:55,hp:.7,dmg:.7,xp:.8,lv:[6,9],shape:'blob',b:'f',lg:'slime'},
+ legion:{n:'Legionär der Schwarzen Legion',c:'#3a1f1f',skin:'#e0ac7e',helm:'#4a4a52',r:12,spd:100,human:1,hp:1.15,dmg:1.1,xp:1.4,lv:[12,30],shape:'hum',wpn:'sword',b:'',lg:'knight'},
+ legarch:{n:'Legionsschütze',c:'#2a1a1a',skin:'#e0ac7e',helm:'#4a4a52',r:11,spd:80,human:1,hp:.8,dmg:1,xp:1.4,lv:[12,30],shape:'hum',wpn:'bow',ai:'ranged',shot:{c:'#d8c08a',spd:360,cd:2.1,kind:'arrow'},b:'',lg:'hunter'},
+ blackknight:{wind:.55,n:'Schwarzritter',c:'#1e1e28',skin:'#666',helm:'#18181c',r:13,spd:85,human:1,hp:1.6,dmg:1.3,xp:1.9,lv:[14,30],shape:'hum',wpn:'sword',eye:'#ff5a3b',b:'',lg:'knight'},
  bandit:{n:'Bandit',c:'#6b3a2a',skin:'#e0ac7e',hood:'#3a2a1a',r:11,spd:118,human:1,hp:.95,dmg:1,xp:1.1,lv:[6,12],shape:'hum',wpn:'sword',b:'f',lg:'outlaw'},
  archer:{n:'Banditenschütze',c:'#4a5a2a',skin:'#e0ac7e',hood:'#2a3a1a',r:11,spd:75,hp:.7,dmg:.9,xp:1.2,lv:[7,12],shape:'hum',wpn:'bow',ai:'ranged',shot:{c:'#d8c08a',spd:330,cd:2.2,kind:'arrow'},b:'f',lg:'hunter'},
  spider:{n:'Riesenspinne',c:'#2b2b33',r:13,spd:130,hp:.9,dmg:.8,xp:1.2,lv:[8,15],shape:'spider',poison:1,sk:['web'],b:'fsd',lg:'venom'},
@@ -465,6 +473,8 @@ const BOSSES={
  keiler:{n:'Eisenkeiler Borst',base:'boar',c:'#3a2a1a',r:26,lv:[3,8],b:'m',abil:['leap','slam','sweep','summon'],loot:[{k:'spear',name:'Keilerjäger-Speer',f:'melee'},{set:'waechter',s:'chest',name:'Borstenpanzer',f:'hp'},{t:'ring',name:'Hauerring',f:'crit'}]},
  slimeking:{n:'Schleimkönig Glibbo',base:'slime',c:'#22b573',r:30,lv:[6,10],b:'f',abil:['slam','summon'],loot:[{set:'heiler',s:'helm',name:'Glibbo-Krone',k:'crown',f:'regen'},{t:'ring',name:'Glibberring',f:'regen'},{k:'mace',name:'Klebrige Keule'}]},
  varg:{n:'Banditenhauptmann Varg',base:'bandit',c:'#4a1a1a',r:20,lv:[6,12],b:'f',abil:['slam','volley'],minion:'archer',loot:[{k:'longbow',name:'Vargs Jagdbogen',f:'ranged'},{set:'waldlaeufer',s:'boots',name:'Räuberstiefel',f:'spd'},{t:'ring',name:'Diebesring',f:'luck'}]},
+ knut:{n:'Räuberhauptmann Knut',base:'bandit',c:'#5a2a1a',r:17,lv:[3,8],b:'',fixed:1,lite:1,abil:['slam','summon'],minion:'bandit',loot:[{k:'sword',name:'Knuts Entermesser',f:'melee'},{t:'ring',name:'Knuts Siegelring',f:'luck'},{set:'waldlaeufer',s:'boots',name:'Räuberstiefel',f:'spd'}]},
+ severin:{n:'Feldherr Severin',base:'blackknight',c:'#3a0f0f',r:20,lv:[16,30],b:'',fixed:1,abil:['slam','summon','slam'],minion:'legion',loot:[{k:'greatsword',name:'Severins Kriegsklinge',f:'melee',ufx:{crit:6},d:'+6 % Krit'},{t:'amulet',name:'Siegel der Schwarzen Legion',f:'dmg'},{k:'mace',name:'Legionskolben',f:'melee',ufx:{stun:.12},d:'12 % Betäubung'}]},
  grukk:{n:'Goblinhäuptling Grukk',base:'goblin',c:'#7a3a1a',r:22,lv:[8,12],b:'f',fixed:1,abil:['slam','summon','slam'],loot:[{k:'axe',name:'Grukks Hackbeil',f:'melee',ufx:{stun:.12},d:'12 % Betäubung'},{k:'dagger',name:'Grukks Zahnstocher',f:'melee',ufx:{poison:1,crit:5},d:'vergiftet, +5 % Krit'},{set:'waldlaeufer',s:'helm',name:'Häuptlingskrone',k:'crown',f:'luck'},{t:'ring',name:'Grukks Glücksring',f:'luck'}]},
  ursus:{n:'Ursus der Alte',base:'bear',c:'#4a2a14',r:30,lv:[10,15],b:'f',abil:['combo','leap','sweep','summon'],minion:'wolf',loot:[{k:'halberd',name:'Bärentöter',f:'melee'},{set:'waechter',s:'chest',name:'Bärenfellpanzer',f:'hp'},{t:'amulet',name:'Bärenkralle',f:'melee'}]},
  arachna:{n:'Spinnenkönigin Arachna',base:'spider',c:'#3a1a3a',r:28,lv:[10,15],b:'fs',poison:1,abil:['volley','slam','summon'],loot:[{k:'dagger',name:'Giftzahn',f:'crit'},{set:'heiler',s:'chest',name:'Seidenpanzer',f:'regen'},{t:'amulet',name:'Spinnenauge',f:'luck'}]},
@@ -490,15 +500,15 @@ function mkMonster(key,lvl,x,y){const t=MT[key],D=G.D();const hpS=1+Math.max(0,l
  return m;}
 // Aschenfluch: Chance, dass ein Tier von Ignaroks Asche befallen ist (rote Augen, Ascheglut, aggressiv)
 const CORCH={rabbit:.3,fox:.45,boar:.4,deer:.2,bear:.7};
-function mkBoss(key,lvl,x,y){const B=BOSSES[key];const m=mkMonster(B.base,lvl,x,y);const dr=key==='dragon';m.boss=key;m.B=B;m.name=B.n;m.c=B.c;m.r=B.r;m.cr=Math.min(14,B.r*.5);const roam=!B.fixed;m.maxhp=m.hp=Math.round(m.maxhp*(dr?24:roam?7:15));m.dmg*=dr?1.8:roam?1.25:1.6;m.armor=dr?.3:roam?.05:.2;m.xp=Math.round(m.xp*(dr?15:10));m.spd*=.85;m.home={x,y};m.abT=3;m.abI=0;m.ai='melee';m.passive=false;m.scale=B.r/MT[B.base].r*(MT[B.base].scale||1);m.heads=B.heads||0;if(dr)m.shape='dragon';return m;}
+function mkBoss(key,lvl,x,y){const B=BOSSES[key];const m=mkMonster(B.base,lvl,x,y);const dr=key==='dragon';m.boss=key;m.B=B;m.name=B.n;m.c=B.c;m.r=B.r;m.cr=Math.min(14,B.r*.5);const roam=!B.fixed,lite=!!B.lite;m.maxhp=m.hp=Math.round(m.maxhp*(dr?24:lite?3:roam?7:15));m.dmg*=dr?1.8:lite?1.1:roam?1.25:1.6;m.armor=dr?.3:lite?0:roam?.05:.2;m.xp=Math.round(m.xp*(dr?15:10));m.spd*=.85;m.home={x,y};m.abT=3;m.abI=0;m.ai='melee';m.passive=false;m.scale=B.r/MT[B.base].r*(MT[B.base].scale||1);m.heads=B.heads||0;if(dr)m.shape='dragon';return m;}
 function mkMini(key,lvl,x,y){const t=MT[key];const m=mkMonster(key,lvl,x,y);m.boss='mini';m.B={n:t.n,mini:1,fixed:1,abil:t.ai==='ranged'?['volley','slam']:['slam','summon'],minion:key,lg:t.lg,poison:t.poison};m.name=`${t.n}-${pick(['Champion','Koloss','Anführer','Urahn'])}`;
  m.maxhp=m.hp=Math.round(m.maxhp*4.5);m.dmg*=1.15;m.armor=0;m.xp=Math.round(m.xp*5);m.scale=(t.scale||1)*1.7;m.r=Math.round(t.r*1.7);m.cr=Math.min(14,m.r*.5);m.abT=3;m.abI=0;m.passive=false;return m;}
-G.mkMonster=mkMonster;G.mkBoss=mkBoss;G.mkMini=mkMini;
+G.mkMonster=mkMonster;G.mkBoss=mkBoss;G.mkMini=mkMini;G.hitMonster=(...a)=>hitMonster(...a);
 function pickType(tx,ty,lvl){const bl=BL[biome(tx,ty)],d=dV(tx,ty);let c=Object.keys(MT).filter(k=>{const t=MT[k];if(t.b.indexOf(bl)<0)return false;if(t.rare)return d>=t.minD&&Math.random()<t.rare;return lvl>=t.lv[0]-1&&lvl<=t.lv[1]+1;});
  if(!c.length)c=Object.keys(MT).filter(k=>MT[k].b.indexOf(bl)>=0&&!MT[k].rare);if(!c.length)return 'rat';
  const rare=c.find(k=>MT[k].rare);if(rare)return rare;return pick(c);}
 // ===================== NPCs =====================
-const LORE='Das Spiel spielt im Königreich Eldmar. In der Mitte liegt die Stadt Eichenhain mit der mächtigen Burg Eichenhain auf einem Hügel im Norden der Stadt. Vor drei Nächten griff der Feuerdrache Ignarok das Land an, brannte das Dorf Aschental nieder und entführte Prinzessin Elara, die Tochter von Fürst Aldric. Der Spieler ist ein gefallener Ritter der Silberwacht, der am Aschenpass gegen Ignarok starb. Die Walküren verwehrten ihm den Einzug nach Walhall, weil sein Werk unvollendet ist. Heilerin Mara fand ihn am Flussufer. Orte: Sonnenwiesen rund um Eichenhain (Tiere, Kobolde, Grauzwerge, Riesenwespen, am Rand selten Einhörner), Banditenlager im Osten der Wiesen, das zerstörte Dorf Aschental im Nordosten der Wiesen, der Finsterwald im Osten mit dem Dorf Waldheim (Försterin Liv), dem Goblinlager und der Spinnenhöhle, das Nebelmoor im Westen mit dem Pfahldorf Moorbruck (Vogt Aldwin) und der Krypta des Knochenfürsten Morvax, die Frostlande im Nordwesten mit Frosthafen (Jarl Ragna), das Graukamm-Gebirge im Norden mit der Zwergenbinge, die Aschenberge im Nordosten mit dem Außenposten Glutwacht und der Drachenfestung auf dem Goldberg, im Süden die Steinöde mit einer tiefen Schlucht und der verlassenen Mine, im Südosten die Sengenden Dünen mit Sandfeste (Fürstin Samira) und dem Grab des Sandkönigs, im Südwesten der finstere Schattenwald mit der Ruine der Abtei und einer Hexenkate. Nachts erheben sich Zombies, Skelette, Fledermäuse und Vampire, bei Vollmond Werwölfe.';
+const LORE='Das Spiel spielt im Königreich Eldmar. In der Mitte liegt die Stadt Eichenhain mit der mächtigen Burg Eichenhain auf einem Hügel im Norden der Stadt. Vor drei Nächten griff der Feuerdrache Ignarok das Land an, brannte das Dorf Aschental nieder und entführte Prinzessin Elara, die Tochter von Fürst Aldric. Der Spieler ist ein gefallener Ritter der Silberwacht, der am Aschenpass gegen Ignarok starb. Die Walküren verwehrten ihm den Einzug nach Walhall, weil sein Werk unvollendet ist. Heilerin Mara fand ihn am Flussufer. Feinde: Die Schwarze Legion von Kaiser Valdrik aus dem Süden plant eine Invasion von Eldmar und bezahlt Räuber und Goblins; ihr Feldherr Severin hat ein Kriegslager in der Steinöde. Orte: Räuberlager von Räuberhauptmann Knut nordöstlich des Dorfes, die Hütte des Einsiedlers Bertolt im Südwesten der Wiesen, das Räubernest (Höhle von Räuberfürst Falk) bei Aschental, der alte Wachturm im Nebelmoor (Moorhexe Grimelda), Sonnenwiesen rund um Eichenhain (Tiere, Kobolde, Grauzwerge, Riesenwespen, am Rand selten Einhörner), Banditenlager im Osten der Wiesen, das zerstörte Dorf Aschental im Nordosten der Wiesen, der Finsterwald im Osten mit dem Dorf Waldheim (Försterin Liv), dem Goblinlager und der Spinnenhöhle, das Nebelmoor im Westen mit dem Pfahldorf Moorbruck (Vogt Aldwin) und der Krypta des Knochenfürsten Morvax, die Frostlande im Nordwesten mit Frosthafen (Jarl Ragna), das Graukamm-Gebirge im Norden mit der Zwergenbinge, die Aschenberge im Nordosten mit dem Außenposten Glutwacht und der Drachenfestung auf dem Goldberg, im Süden die Steinöde mit einer tiefen Schlucht und der verlassenen Mine, im Südosten die Sengenden Dünen mit Sandfeste (Fürstin Samira) und dem Grab des Sandkönigs, im Südwesten der finstere Schattenwald mit der Ruine der Abtei und einer Hexenkate. Nachts erheben sich Zombies, Skelette, Fledermäuse und Vampire, bei Vollmond Werwölfe.';
 const OX=VCX-96,OY=VCY-120;
 const NPCS=[
  {id:'mara',name:'Heilerin Mara',short:'Mara',tx:113,ty:118,look:{body:'#5b8c5a',skin:'#f1c27d',hair:'#e8e8e8',dress:1},persona:'Ältere, weise Kräuterheilerin. Sie hat den Spieler bewusstlos am Flussufer gefunden und gesund gepflegt. Mütterlich, ruhig, ein wenig geheimnisvoll. Sie spürt, dass die Götter den Spieler zurückgeschickt haben. Sie braut aus Heilkraut Heiltränke.',greet:['Wie geht es deinen Wunden?','Die Kräuter blühen dieses Jahr spät …']},
@@ -612,7 +622,7 @@ const SPAWN={x:(VCX+15.5)*TILE,y:(VCY-.5)*TILE};
 let P;G.mons=[];G.grounds=[];G.proj=[];G.pproj=[];G.teles=[];G.floats=[];G.parts=[];G.farm=new Map();G.time=0;G.input={x:0,y:0};
 G.fixT={grukk:0,bonelord:0,dragon:0,schnitter:0,eldtree:0,sandking:0};let bossT=300,spawnT=0;G.flashT=0;let fullT=0;
 function newGame(diff){G.room=null;ROOMS.forEach(r=>r.chests.forEach(c=>{c.opened=false;c.at=0;}));if(diff)G.settings.diff=diff;G.saveSettings();
- P={x:SPAWN.x,y:SPAWN.y,fx:0,fy:1,hp:112,level:1,xp:0,gold:15,inv:new Array(36).fill(null),eq:{helm:null,chest:null,legs:null,boots:null,ring:null,amulet:null},sel:0,q:{},main:0,mN:0,macc:false,mflag:0,barrier:false,chat:{},kills:{},ways:{city:1},atkCd:0,swing:0,hurtT:0,dead:false,anim:0,moving:false,dodgeT:0,dodgeCd:0,poison:null,burn:null,slow:0,sta:100,mp:44,staT:0,dayT:60,side:{},z:0,vz:0,home:{bed:1},pet:null,och:{},diff:G.settings.diff,started:Date.now()};
+ P={x:SPAWN.x,y:SPAWN.y,fx:0,fy:1,hp:112,level:1,xp:0,gold:15,inv:new Array(36).fill(null),eq:{helm:null,chest:null,legs:null,boots:null,ring:null,amulet:null},sel:0,q:{},main:0,ms:0,lgN:0,mN:0,macc:false,mflag:0,barrier:false,chat:{},kills:{},ways:{city:1},atkCd:0,swing:0,hurtT:0,dead:false,anim:0,moving:false,dodgeT:0,dodgeCd:0,poison:null,burn:null,slow:0,sta:100,mp:44,staT:0,dayT:60,side:{},z:0,vz:0,home:{bed:1},pet:null,och:{},diff:G.settings.diff,started:Date.now()};
  G.P=P;const sw=genItem('weapon',1,0,{kind:'sword',name:'Rostiges Schwert'});sw.dmg=4;P.inv[0]=sw;P.inv[1]=mkStack('bread',2);P.inv[2]=mkStack('seed',3);
  P.eq.chest=genItem('chest',1,0,{set:'ritter',name:'Leinenhemd'});P.eq.chest.def=1;
  G.slashes=[];G.farm=new Map();G.mons=[];G.grounds=[];G.proj=[];G.pproj=[];G.teles=[];G.fixT={grukk:0,bonelord:0,dragon:0,schnitter:0,eldtree:0,sandking:0};bossT=300;G.flags.barrier=false;placeElara();G.S=calc();}
@@ -663,7 +673,7 @@ const drunkLvl=()=>{const d=P.drunk||0;return d<1?0:d<3?1:d<6?2:d<9?3:4;};G.drun
 const DRUNKN=['Nüchtern','Angeheitert','Betrunken','Sturzbetrunken','Kurz vorm Umkippen'];G.DRUNKN=DRUNKN;
 function drinkBeer(n){const before=drunkLvl();P.drunk=(P.drunk||0)+n;P.drunkTot=(P.drunkTot||0)+n;sfx('drink');G.floats.push({x:P.x,y:P.y-34,t:pick(['Prost! 🍺','Hicks!','Aaah …','Noch eins!']),c:'#ffd54a',life:1});
  if(P.drunk>=10){passOut();return;}const l=drunkLvl();if(l!==before&&l>=2)G.toast(`🍺 ${DRUNKN[l]}! ${l===2?'Du läufst etwas langsamer und schwankst.':'Die Welt dreht sich … du torkelst stark.'}`,'#ffd54a');G.S=calc();}
-function passOut(){P.drunk=0;if(G.ui&&G.ui.closeDialog)G.ui.closeDialog();G.sleepFx=3.2;G.reviveNPCs&&G.reviveNPCs();const n=Math.floor(P.dayT/DAYLEN),t=P.dayT%DAYLEN;P.dayT=(t>=28?n+1:n)*DAYLEN+60;P.poison=null;P.burn=null;G.mons=G.mons.filter(m=>m.boss==='dragon');G.proj=[];G.teles=[];
+function passOut(){P.drunk=0;{const st=P.stats||(P.stats={});st.passOut=(st.passOut||0)+1;}if(G.ui&&G.ui.closeDialog)G.ui.closeDialog();G.sleepFx=3.2;G.reviveNPCs&&G.reviveNPCs();const n=Math.floor(P.dayT/DAYLEN),t=P.dayT%DAYLEN;P.dayT=(t>=28?n+1:n)*DAYLEN+60;P.poison=null;P.burn=null;G.mons=G.mons.filter(m=>m.boss==='dragon');G.proj=[];G.teles=[];
  G.room=HR;let bx=HR.door.tx,by=HR.door.ty-1;const a=(P.home.bed||0)&&G.furnAnchor?G.furnAnchor('bed'):null;if(a){const fp=G.furnFoot('bed',P.home.bed,a[0],a[1]);let best=null;for(const [fx,fy] of fp)for(const [ox,oy] of [[1,0],[-1,0],[0,1],[0,-1]]){const x=HR.x0+fx+ox,y=HR.y0+fy+oy;if(x<=HR.x0||x>=HR.x0+HR.w-1||y<=HR.y0||y>=HR.y0+HR.h-1)continue;if(fp.some(([qx,qy])=>qx===fx+ox&&qy===fy+oy))continue;if(!walkTile(x,y)||SOLIDS[tileAt(x,y)])continue;best=[x,y];break;}if(best){bx=best[0];by=best[1];}}
  P.x=(bx+.5)*TILE;P.y=(by+.5)*TILE;P.prevX=null;const S=calc();G.S=S;P.hp=Math.max(P.hp,Math.round(S.maxhp*.6));P.sta=S.maxSta*.5;P.hangover=P.dayT+300;
  G.toast('😵 Du bist umgekippt …','#ffcc80',true);setTimeout(()=>G.toast('🏠 Du wachst mit dickem Kopf in deinem Haus auf. Kater: weniger Ausdauer für eine Weile.','#ffe9a0',true),1100);G.save();}
@@ -693,11 +703,11 @@ function attack(){if(P.atkCd>0||P.dead||P.dodgeT>0)return;{const hs=P.inv[P.sel]
  else if(S.cls==='magic'){if(P.mp<S.mpCost){warn('Kein Mana!');P.atkCd=.3;return;}P.mp-=S.mpCost;}
  else{const am=WKIND[S.kind].proj==='bolt'?'bolt':'arrow';if(countItem(am)<1){warn(am==='bolt'?'Keine Bolzen!':'Keine Pfeile!');P.atkCd=.4;return;}removeItem(am,1);}
  P.atkCd=S.cd*(weak<1?1.35:1);P.swing=.22;
- if(G.aim){P.fx=G.aim.x;P.fy=G.aim.y;}const FPB=G.settings.cam==='fp'&&G.settings.mode!=='2d'?12:0,RCH=S.reach+FPB;const rng=S.cls==='melee'?RCH+24:S.range;const precise=S.cls!=='melee'&&!!G.aim;const t=pickTarget(rng,S.cls==='melee'?(S.thrust?.9:.55):precise?.972:.86);
+ if(G.aim){P.fx=G.aim.x;P.fy=G.aim.y;}const FPB=G.settings.cam==='fp'&&G.settings.mode!=='2d'?12:0,RCH=S.reach+FPB;const rng=S.cls==='melee'?RCH+6:S.range;const precise=S.cls!=='melee'&&!!G.aim;const t=pickTarget(rng,S.cls==='melee'?(S.thrust?.9:.55):precise?.972:.86);
  if(t){const d=Math.hypot(t.x-P.x,t.y-P.y)||1;const k=S.cls==='melee'?1:precise?.5:.72;let fx=P.fx*(1-k)+(t.x-P.x)/d*k,fy=P.fy*(1-k)+(t.y-P.y)/d*k;const l=Math.hypot(fx,fy)||1;P.fx=fx/l;P.fy=fy/l;}P.atkFx=P.fx;P.atkFy=P.fy;
  if(S.cls==='melee'){const fa=Math.atan2(P.fy,P.fx);let hit=false,anyCrit=false;
-  for(const m of G.mons){if(m.dead)continue;const dx=m.x-P.x,dy=m.y-P.y,d=Math.hypot(dx,dy);if(d>RCH+m.r)continue;let a=Math.atan2(dy,dx)-fa;while(a>Math.PI)a-=6.283;while(a<-Math.PI)a+=6.283;
-   let ok;if(S.thrust){const al=dx*P.fx+dy*P.fy,pe=Math.abs(-dx*P.fy+dy*P.fx);ok=al>-4&&pe<m.r+9;}else ok=Math.abs(a)<S.arc+Math.min(.35,m.r/Math.max(d,1));
+  for(const m of G.mons){if(m.dead)continue;const dx=m.x-P.x,dy=m.y-P.y,d=Math.hypot(dx,dy);if(d>RCH+m.r+6)continue;let a=Math.atan2(dy,dx)-fa;while(a>Math.PI)a-=6.283;while(a<-Math.PI)a+=6.283;
+   let ok;if(S.thrust){const al=dx*P.fx+dy*P.fy,pe=Math.abs(-dx*P.fy+dy*P.fx);ok=al>-4&&pe<m.r+12;}else ok=Math.abs(a)<S.arc+Math.min(.45,(m.r+6)/Math.max(d,1));if(m===t)ok=true;
    if(ok){hit=true;let dmg=S.total*rnd(.85,1.15)*weak;const cr=Math.random()*100<S.crit;if(cr){dmg*=2;anyCrit=true;}const K=WKIND[S.kind];hitMonster(m,dmg,cr,{kb:S.thrust?.6:K.stag?2.2:1,pl:1,stag:K.stag,stun:K.stun});}}
   if(!hit){for(const n of NPCS){if(!G.npcVisible(n)||n.ko>0||n.lie||(G.room?n.loc!==G.room:!!n.loc))continue;const dx=n.x-P.x,dy=n.y-P.y,d=Math.hypot(dx,dy);if(d>RCH+10)continue;let a=Math.atan2(dy,dx)-fa;while(a>Math.PI)a-=6.283;while(a<-Math.PI)a+=6.283;if(Math.abs(a)<S.arc*.8){hitNPC(n,S.total);hit=true;break;}}}
   if(!hit&&!G.room){for(const c of G.CATS||[]){const dx=c.x-P.x,dy=c.y-P.y,d=Math.hypot(dx,dy);if(d>RCH+12)continue;let a=Math.atan2(dy,dx)-fa;while(a>Math.PI)a-=6.283;while(a<-Math.PI)a+=6.283;if(Math.abs(a)<S.arc+.3){hitCat(c);hit=true;break;}}}
@@ -717,7 +727,7 @@ function hitPlayer(dmg,src){if(P.dead||G.god)return;if(P.frost&&src&&(src.burn||
  dmg=Math.max(1,Math.round(dmg*rnd(.9,1.1)));if(P.hp-dmg<=0&&skR('second')&&!(P.secondT>0)){dmg=Math.max(0,P.hp-1);P.secondT=600;P.invT=2;G.toast('🕯 Zweite Chance! Du überlebst mit letzter Kraft.','#ffd54a',true);for(let i=0;i<20;i++)G.parts.push({x:P.x,y:P.y,z:20,vx:rnd(-120,120),vy:rnd(-120,120),life:.8,c:'#ffe082'});}P.hp-=dmg;P.hurtT=.25;sfx('hurt');G.floats.push({x:P.x,y:P.y-30,t:'-'+dmg,c:'#ff5252',life:.8});
  const rf=1-S.res/100;if(src.poison)P.poison={t:3.5,dps:Math.max(1,dmg*.12*rf)};if(src.burn)P.burn={t:3,dps:Math.max(1,dmg*.14*rf)};if(src.chill)P.slow=2*rf;if(src.root&&P.dodgeT<=0){P.rootT=Math.max(P.rootT||0,src.root*rf);G.floats.push({x:P.x,y:P.y-30,t:src.net?'Im Netz gefangen!':'Festgehalten!',c:'#ff8a80',life:.9});}if(src.grab||src.slow)P.slow=Math.max(P.slow||0,(src.slow?2.4:1.4)*rf);if(src.pull&&!src.pull.dead){P.pullFrom=src.pull;P.pullT=.32;G.floats.push({x:P.x,y:P.y-30,t:'Herangezogen!',c:'#ff8a80',life:.8});}if(src.vamp&&!src.vamp.dead){src.vamp.hp=Math.min(src.vamp.maxhp,src.vamp.hp+dmg*.6);}
  if(P.hp<=0){P.hp=0;die();}}
-function die(){sfx('death');P.dead=true;P.poison=null;P.burn=null;const loss=Math.floor(P.gold*G.D().goldLoss);P.gold-=loss;G.lastLoss=loss;G.ui&&G.ui.onDeath&&G.ui.onDeath(loss);}
+function die(){sfx('death');P.dead=true;P.poison=null;P.burn=null;const loss=Math.floor(P.gold*G.D().goldLoss);P.gold-=loss;{const st=P.stats||(P.stats={});st.deaths=(st.deaths||0)+1;st.deathGold=(st.deathGold||0)+loss;}G.lastLoss=loss;G.ui&&G.ui.onDeath&&G.ui.onDeath(loss);}
 G.respawn=()=>{if(G.room){G.mons=G.mons.filter(m=>m.room!==G.room.id);G.room=null;}P.dead=false;P.x=SPAWN.x;P.y=SPAWN.y;G.S=calc();P.hp=G.S.maxhp;P.slow=0;G.teles=[];G.proj=[];G.mons.forEach(m=>m.aggro=false);};
 function gainXP(x){P.xp+=x;let up=false;while(P.xp>=xpNeed(P.level)){P.xp-=xpNeed(P.level);P.level++;up=true;}if(up){sfx('levelup');G.S=calc();P.hp=G.S.maxhp;G.toast(`⭐ Stufe ${P.level} erreicht! Volle Heilung. +1 Skillpunkt (Taste K / ⭐ im Inventar)`,'#ffd54a',true);for(let i=0;i<24;i++)G.parts.push({x:P.x,y:P.y,z:20,vx:rnd(-120,120),vy:rnd(-120,120),life:.8,c:'#ffd54a'});}}
 G.gainXP=gainXP;
@@ -739,14 +749,18 @@ function mkUnique(e,il,src){const o={name:e.name,src,ufx:e.ufx,ud:e.d,uniq:1};co
 function killMonster(m){m.dead=true;if(P.side)for(const k in SQ){const q=SQ[k],st=P.side[k];if(st&&st.st==='active'&&q.kill===m.type&&st.c<q.cnt){st.c++;if(st.c===q.cnt)G.toast(`📜 ${q.n}: erledigt! Zurück zu ${npcById(q.npc).short}.`,'#ffd54a',true);}}sfx(m.boss?'bosskill':'kill',m);if(m.boss==='dragon')sfx('aggro',{type:'dragon'});const D=G.D();const diff=m.lvl-P.level;let xp=m.xp;if(diff<=-7)xp*=.05;else if(diff<=-4)xp*=.3;else if(diff>=2)xp*=1+Math.min(diff,4)*.08;if(m.summoned)xp*=.3;xp=Math.max(1,Math.round(xp));
  gainXP(xp);G.floats.push({x:m.x,y:m.y-m.r-22,t:`+${xp} XP`,c:'#b388ff',life:1.1});
  for(let i=0;i<14;i++)G.parts.push({x:m.x,y:m.y,z:12,vx:rnd(-140,140),vy:rnd(-140,140),life:.55,c:m.c});
- const q=P.q;if(!m.boss&&!m.summoned)P.kills[m.type]=(P.kills[m.type]||0)+1;
+ const q=P.q;if(!m.boss&&!m.summoned)P.kills[m.type]=(P.kills[m.type]||0)+1;{const st=P.stats||(P.stats={});st.kills=(st.kills||0)+1;if(m.boss&&m.boss!=='mini')st.bosses=(st.bosses||0)+1;else if(m.boss==='mini')st.minis=(st.minis||0)+1;}
  if(P.main===2&&P.mN<qd('prove')){P.mN++;if(P.mN===qd('prove'))G.toast('⚔ Bewährt! Kehre zu Fürst Aldric zurück.','#ffd54a',true);}
  if((m.type==='wolf'||m.type==='icewolf')&&q.wolves==='active'&&q.wolfN<qd('wolves')){q.wolfN++;if(q.wolfN===qd('wolves'))G.toast('🐺 Genug Wölfe erlegt! Zurück zu Schmiedin Hilda.','#ffd54a',true);}
  if(m.type==='draugr'&&q.draugr==='active'&&q.draugrN<qd('draugr')){q.draugrN++;if(q.draugrN===qd('draugr'))G.toast('⚔ Die Draugr sind zurückgeschlagen! Zurück zu Jarl Ragna.','#ffd54a',true);}
  if(m.type==='goblin'&&q.ears==='active'&&countItem('ear')+G.grounds.filter(g=>g.it.id==='ear').length<qd('ears')&&Math.random()<.5)dropGround(mkStack('ear',1),m.x,m.y);
+ if(m.legion&&P.main===4&&P.ms===2&&P.macc&&!P.mflag&&(P.lgN||0)<qd('legion')){P.lgN=(P.lgN||0)+1;if(P.lgN>=qd('legion'))G.toast('⚔ Die Wachen sind gefallen! Feldherr Severin stellt sich dir im Kriegslager!','#ffd54a',true);}
+ if(m.qkey&&DQ[m.qkey]){const dq=DQ[m.qkey];if(P.main===dq.main&&P.ms===dq.ms&&P.macc&&!P.mflag){P.mflag=1;G.flashT=.6;G.toast(dq.found,'#ffd54a',true);}}
+ if(m.boss==='knut'&&P.main===3&&P.ms===0&&P.macc&&!P.mflag){P.mflag=1;G.toast('📜 Die gestohlene Karte ist zurück! Knut trug außerdem einen Brief mit schwarzem Siegel bei sich. Zurück zu Fürst Aldric!','#ffd54a',true);}
+ if(m.boss==='severin'&&P.main===4&&P.ms===2&&P.macc&&!P.mflag){P.mflag=1;G.flashT=1;G.toast('⚔ Feldherr Severin ist besiegt! Du erbeutest die Kriegspläne der Legion. Zurück zu Fürst Aldric!','#ffd54a',true);}
  if(m.boss){if(m.B.fixed&&BOSSES[m.boss]&&!m.B.mini)G.fixT[m.boss]=m.boss==='dragon'?180:240;
-  if(m.boss==='grukk'&&P.main===3&&P.macc&&!P.mflag){P.mflag=1;G.toast('📜 Du hast die Karte des Spähers gefunden! Bring sie zu Fürst Aldric.','#ffd54a',true);}
-  else if(m.boss==='bonelord'&&P.main===4&&P.macc&&!P.mflag){P.mflag=1;G.toast('💠 Der Siegelstein ist dein! Bring ihn zu Fürst Aldric.','#ffd54a',true);}
+  if(m.boss==='grukk'&&P.main===3&&P.ms===3&&P.macc&&!P.mflag){P.mflag=1;G.toast('📜 Du hast die Karte des Spähers gefunden! Bring sie zu Fürst Aldric.','#ffd54a',true);}
+  else if(m.boss==='bonelord'&&P.main===4&&P.ms===1&&P.macc&&!P.mflag){P.mflag=1;G.toast('💠 Der Siegelstein ist dein! Bring ihn zu Fürst Aldric.','#ffd54a',true);}
   else if(m.B.herald&&P.main===5&&P.macc&&!(P.shards||{})[m.boss]){P.shards=P.shards||{};P.shards[m.boss]=1;const n=Object.keys(P.shards).length;G.flashT=1;G.toast(`🔥 Glutsiegel-Splitter erbeutet! (${n}/3)`+(n>=3?' Bring sie zu Gunnar!':''),'#ffd54a',true);}
   else if(m.boss==='dragon'&&P.main===6){P.main=7;placeElara();G.toast('🐉 IGNAROK IST GEFALLEN! Sprich mit Prinzessin Elara.','#ffd54a',true);G.flashT=1.2;}
   else G.toast(`🏆 ${m.name} besiegt!`,'#ffd54a',true);}
@@ -806,23 +820,71 @@ function spawnBoss(){const ptx=P.x/TILE,pty=P.y/TILE,zl=zoneLevel(Math.floor(ptx
  for(let i=0;i<25;i++){const a=Math.random()*6.283,d=rnd(7,11);const tx=Math.floor(ptx+Math.cos(a)*d),ty=Math.floor(pty+Math.sin(a)*d);
   if(tx>=WW-2||!walkTile(tx,ty)||dV(tx,ty)<RV+14||townAt(tx,ty)||TOWNS.some(t=>Math.hypot(tx-t.x,ty-t.y)<t.r+12))continue;const m=mkBoss(key,clamp(Math.min(zl+1,P.level+2),1,BOSSES[key].lv[1]),(tx+.5)*TILE,(ty+.5)*TILE);G.mons.push(m);sfx('horn');sfx('aggro',{type:'boss'});G.toast(`⚠ Ein Boss ist erschienen: ${m.name} (Stufe ${m.lvl})`,'#ff6e6e',true);return true;}return false;}
 G.spawnBoss=spawnBoss;
-const FIX=[{key:'grukk',at:CAMP,lv:()=>qd('grukk'),cond:()=>P.main>3||(P.main===3&&P.macc)},{key:'bonelord',at:CRYPT,lv:()=>qd('morvax'),cond:()=>P.main>4||(P.main===4&&P.macc)},{key:'dragon',at:LAIR,lv:()=>qd('dragon'),cond:()=>P.main>=6&&(P.frost||P.main>6)},{key:'schnitter',at:{x:ASHVALE.x,y:ASHVALE.y-4},lv:()=>qd('schnitter'),cond:()=>P.main>5||(P.main===5&&P.macc)},{key:'eldtree',at:{x:151,y:510},lv:()=>qd('eldtree'),cond:()=>P.main>5||(P.main===5&&P.macc)},{key:'sandking',at:{x:529,y:546},lv:()=>qd('sandking'),cond:()=>P.main>5||(P.main===5&&P.macc)}];
-function fixedTick(dt){for(const f of FIX){G.fixT[f.key]-=dt;if(G.fixT[f.key]>0||!f.cond())continue;if(G.mons.some(m=>m.boss===f.key&&!m.dead))continue;const px=(f.at.x+.5)*TILE,py=(f.at.y+.5)*TILE;if(Math.hypot(P.x-px,P.y-py)>TILE*40)continue;
- const m=mkBoss(f.key,f.lv(),px,f.key==='dragon'?py-TILE*1:py+TILE*1.5);G.mons.push(m);if(BOSSES[f.key].herald)G.toast(`☠ ${m.name} erwartet dich! (Stufe ${m.lvl})`,'#ff8a65',true);if(f.key==='dragon')sfx('aggro',{type:'dragon'});else{for(let i=0;i<3;i++){const k=mkMonster(f.key==='grukk'?pick(['goblin','goblin','shaman']):f.key==='eldtree'?pick(['pilzling','treant','thornvine']):f.key==='sandking'?pick(['mummy','scorpion']):pick(['skeleton','skarcher']),Math.max(1,m.lvl-2),m.x+rnd(-90,90),m.y+rnd(-90,90));if(canMove(k.x,k.y,k.cr))G.mons.push(k);}}}}
+const FIX=[{key:'knut',at:RAUB,lv:()=>qd('knut'),cond:()=>P.main===3&&P.ms===0&&P.macc&&!P.mflag},{key:'severin',at:LEGION,lv:()=>qd('severin'),cond:()=>P.main===4&&P.ms===2&&P.macc&&!P.mflag&&(P.lgN||0)>=qd('legion')},{key:'grukk',at:CAMP,lv:()=>qd('grukk'),cond:()=>P.main>3||(P.main===3&&P.ms>=3&&P.macc)},{key:'bonelord',at:CRYPT,lv:()=>qd('morvax'),cond:()=>P.main>4||(P.main===4&&P.ms>=1&&P.macc)},{key:'dragon',at:LAIR,lv:()=>qd('dragon'),cond:()=>P.main>=6&&(P.frost||P.main>6)},{key:'schnitter',at:{x:ASHVALE.x,y:ASHVALE.y-4},lv:()=>qd('schnitter'),cond:()=>P.main>5||(P.main===5&&P.macc)},{key:'eldtree',at:{x:151,y:510},lv:()=>qd('eldtree'),cond:()=>P.main>5||(P.main===5&&P.macc)},{key:'sandking',at:{x:529,y:546},lv:()=>qd('sandking'),cond:()=>P.main>5||(P.main===5&&P.macc)}];
+function legionTick(dt){if(!(P.main===4&&P.ms===2&&P.macc&&!P.mflag)||G.room)return;const cx=(LEGION.x+.5)*TILE,cy=(LEGION.y+.5)*TILE;if(Math.hypot(P.x-cx,P.y-cy)>TILE*34)return;G._lgT=(G._lgT||0)-dt;if(G._lgT>0)return;G._lgT=5;if((P.lgN||0)>=qd('legion'))return;
+ const alive=G.mons.filter(m=>m.legion&&!m.dead).length;if(alive>=6)return;for(let n=alive;n<Math.min(6,alive+3);n++){for(let i=0;i<12;i++){const a=Math.random()*6.283,d=rnd(2,8);const tx=Math.floor(LEGION.x+Math.cos(a)*d),ty=Math.floor(LEGION.y+Math.sin(a)*d);if(!walkTile(tx,ty)||SOLIDS[tileAt(tx,ty)])continue;const x=(tx+.5)*TILE,y=(ty+.5)*TILE;if(Math.hypot(P.x-x,P.y-y)<TILE*6)continue;const m=mkMonster(pick(['legion','legion','legarch','blackknight']),qd('severin')-rint(1,2),x,y);m.legion=1;m.passive=false;m.home={x,y};G.mons.push(m);break;}}}
+function fixedTick(dt){legionTick(dt);for(const f of FIX){G.fixT[f.key]-=dt;if(G.fixT[f.key]>0||!f.cond())continue;if(G.mons.some(m=>m.boss===f.key&&!m.dead))continue;const px=(f.at.x+.5)*TILE,py=(f.at.y+.5)*TILE;if(Math.hypot(P.x-px,P.y-py)>TILE*40)continue;
+ const m=mkBoss(f.key,f.lv(),px,f.key==='dragon'?py-TILE*1:py+TILE*1.5);G.mons.push(m);if(BOSSES[f.key].herald)G.toast(`☠ ${m.name} erwartet dich! (Stufe ${m.lvl})`,'#ff8a65',true);if(f.key==='dragon')sfx('aggro',{type:'dragon'});else{for(let i=0;i<3;i++){const FM={grukk:['goblin','goblin','shaman'],eldtree:['pilzling','treant','thornvine'],sandking:['mummy','scorpion'],knut:['bandit','bandit','archer'],severin:['legion','legarch','blackknight']};const k=mkMonster(pick(FM[f.key]||['skeleton','skarcher']),Math.max(1,m.lvl-2),m.x+rnd(-90,90),m.y+rnd(-90,90));if(canMove(k.x,k.y,k.cr))G.mons.push(k);}}}}
 
 // ===================== Quests & Story =====================
 const npcById=id=>NPCS.find(n=>n.id===id);G.npcById=npcById;
-const CHAP=['Kapitel 1: Erwachen','Kapitel 1: Audienz','Kapitel 2: Bewährung','Kapitel 3: Spuren im Finsterwald','Kapitel 4: Der Siegelstein','Kapitel 5: Die drei Herolde','Kapitel 6: Ignarok','Kapitel 6: Die Prinzessin','Kapitel 7: Heimkehr','Epilog'];
-G.chapter=()=>CHAP[Math.min(P.main,9)];
+const CHAP=['Kapitel 1: Erwachen','Kapitel 1: Audienz','Kapitel 1: Bewährung','','','Kapitel 9: Die drei Herolde','Kapitel 10: Ignarok','Kapitel 10: Die Prinzessin','Kapitel 11: Heimkehr','Epilog'];
+// Hauptquest-Schritte für Kapitel 2–8 (P.main 3 und 4, Unterschritt P.ms)
+const tpT=(x,y)=>({x:(x+.5)*TILE,y:(y+.5)*TILE});const roomTo=id=>{const r=ROOMS.find(q=>q.id===id);return r?{x:r.ent.x,y:r.ent.y}:null;};
+const MSQ={3:[
+ {ch:'Kapitel 2: Die gestohlene Karte',gate:'lvR',
+  low:L=>`Du bist noch zu schwach, Ritter. Werde stärker, mindestens Stufe ${qd('lvR')} – die Sonnenwiesen vor den Toren sind ein guter Ort dafür. Du bist Stufe ${L}.`,
+  give:'Schlechte Nachrichten: Heute Nacht sind Räuber in die Burg eingestiegen und haben die Karte des Reiches gestohlen – mit allen Wegen, Furten und Festungen von Eldmar! Ihr Lager liegt nordöstlich des Dorfes in den Sonnenwiesen. Ihr Anführer heißt Knut. Hol mir die Karte zurück!',
+  acc:'Ich hole die Karte zurück',goal:()=>'Besiege Räuberhauptmann Knut im Räuberlager (Sonnenwiesen, nordöstlich)',to:()=>tpT(RAUB.x,RAUB.y),
+  wait:'Das Räuberlager liegt nordöstlich des Dorfes. Folge dem goldenen ★ im Kompass.',ret:'Bring die Karte zu Fürst Aldric',
+  done:'Meine Karte! Gut gemacht. Aber dieser Brief … ein schwarzes Siegel mit einer eisernen Krone. Das Zeichen der Schwarzen Legion aus dem Süden! „Die Ware zur Hütte des Einsiedlers“ steht darin. Was haben Räuber mit dem Einsiedler zu schaffen?',btn:'Karte übergeben',rw:L=>{gainXP(220);P.gold+=40;give(mkStack('potion',2));G.toast('+40 Gold','#ffd54a');}},
+ {ch:'Kapitel 3: Die Hütte des Einsiedlers',gate:'lvE',
+  low:L=>`Die Hütte des Einsiedlers liegt weit draußen in den Wiesen. Dort ist es gefährlich – komm mit Stufe ${qd('lvE')} wieder. Du bist Stufe ${L}.`,
+  give:'Der alte Einsiedler Bertolt lebt allein in seiner Hütte südwestlich von hier, am Rand der Wiesen. Seit Wochen hat ihn niemand gesehen. Geh hin und finde heraus, was dort vor sich geht.',
+  acc:'Ich sehe nach',goal:()=>'Erkunde die Hütte des Einsiedlers (Sonnenwiesen, Südwesten)',to:()=>roomTo('hut'),
+  wait:'Die Hütte liegt südwestlich in den Sonnenwiesen. Folge dem goldenen ★.',ret:'Bring die Zeichnungen zu Fürst Aldric',
+  done:'Bertolt … verflucht und untot. Möge er Frieden finden. Und diese Zeichnungen: Soldaten, Banner, Marschwege – er hat die Schwarze Legion beobachtet, und dafür musste er sterben. Die Räuber stecken mit drin. Ihr Hauptversteck ist das Räubernest bei Aschental.',btn:'Zeichnungen übergeben',rw:L=>{gainXP(380);P.gold+=60;give(genItem('chest',Math.max(3,L),1));G.toast('+60 Gold','#ffd54a');}},
+ {ch:'Kapitel 4: Das Räubernest',gate:'lvN',
+  low:L=>`Im Räubernest hausen Dutzende Halsabschneider. Werde stärker, mindestens Stufe ${qd('lvN')}. Du bist Stufe ${L}.`,
+  give:'Das Räubernest ist eine Höhle östlich der Ruinen von Aschental. Dort sitzt Räuberfürst Falk. Bring mir Beweise, für wen er arbeitet!',
+  acc:'Auf ins Räubernest',goal:()=>'Besiege Räuberfürst Falk im Räubernest (Höhle östlich von Aschental)',to:()=>roomTo('banditcave'),
+  wait:'Das Räubernest liegt östlich von Aschental. Folge dem goldenen ★.',ret:'Bring Falks Brief zu Fürst Aldric',
+  done:'Ein Sold-Brief der Schwarzen Legion … unterschrieben von Feldherr Severin! Die Legion bezahlt Räuber UND Goblins. Und hier steht: Goblinhäuptling Grukk hat die Karte meines Spähers – die einzige Karte mit dem Weg zum Drachenhort, wo Elara gefangen ist.',btn:'Brief übergeben',rw:L=>{gainXP(560);P.gold+=90;give(genItem('weapon',Math.max(4,L),2,{kind:'sword'}));G.toast('+90 Gold','#ffd54a');}},
+ {ch:'Kapitel 5: Spuren im Finsterwald',gate:'lvG',
+  low:L=>`Grukk ist kein gewöhnlicher Gegner. Werde stärker, mindestens Stufe ${qd('lvG')}. Du bist Stufe ${L}.`,
+  give:'Grukk, der Goblinhäuptling, haust in einem Lager tief im Finsterwald, im Osten. Er hat die Karte meines Spähers. Hol sie mir!',
+  acc:'Ich hole die Karte',goal:()=>'Besiege Goblinhäuptling Grukk im Goblinlager (Finsterwald, Osten)',to:()=>tpT(CAMP.x,CAMP.y),
+  wait:'Das Goblinlager liegt im Osten, im Finsterwald. Folge dem goldenen ★ im Kompass.',ret:'Bring die Karte des Spähers zu Fürst Aldric',
+  done:'Die Karte! Bei allen Göttern … Der Weg zum Hort ist durch ein Aschensiegel versperrt. Nur der Siegelstein öffnet es – und den hütet der Knochenfürst Morvax in seiner Krypta im Nebelmoor.',btn:'Karte übergeben',rw:L=>{gainXP(800);give(genItem('amulet',L+1,2));P.gold+=120;G.toast('+120 Gold','#ffd54a');}}],
+ 4:[
+ {ch:'Kapitel 6: Der Wachturm im Moor',gate:'lvW',
+  low:L=>`Das Nebelmoor verschlingt Unvorsichtige. Werde stärker, mindestens Stufe ${qd('lvW')}. Du bist Stufe ${L}.`,
+  give:'Die Krypta des Morvax ist mit einem Schloss aus Knochen versiegelt. Den Schlüssel hat die Moorhexe Grimelda gestohlen – sie haust im alten Wachturm im Nebelmoor, westlich von hier. Hol den Schlüssel!',
+  acc:'Auf zum Wachturm',goal:()=>'Besiege Moorhexe Grimelda im alten Wachturm (Nebelmoor)',to:()=>roomTo('wtower'),
+  wait:'Der alte Wachturm steht im Nebelmoor im Westen. Folge dem goldenen ★.',ret:'Bring den Kryptaschlüssel zu Fürst Aldric',
+  done:'Der Kryptaschlüssel! Jetzt steht dir der Weg zu Morvax offen. Doch sei gewarnt – der Knochenfürst ist älter als dieses Königreich.',btn:'Schlüssel übergeben',rw:L=>{gainXP(950);P.gold+=140;give(mkStack('potion2',1));G.toast('+140 Gold','#ffd54a');}},
+ {ch:'Kapitel 7: Der Siegelstein',gate:'lvM',
+  low:L=>`Morvax hat ganze Heere ins Grab gebracht. Werde stärker, mindestens Stufe ${qd('lvM')}. Du bist Stufe ${L}.`,
+  give:'Mit dem Schlüssel kommst du in die Krypta des Knochenfürsten, weit im Westen des Nebelmoors. Bring mir den Siegelstein!',
+  acc:'Auf ins Nebelmoor',goal:()=>'Besiege Knochenfürst Morvax in der Krypta (Nebelmoor, Westen)',to:()=>tpT(CRYPT.x,CRYPT.y),
+  wait:'Die Krypta liegt im Nebelmoor im Westen. Folge dem goldenen ★ im Kompass.',ret:'Bring den Siegelstein zu Fürst Aldric',
+  done:'Der Siegelstein … er glüht wie Kohle. Doch meine Späher melden Schreckliches: Die Schwarze Legion hat in der Steinöde ein Kriegslager errichtet. Sie will Eldmar überfallen, sobald Ignarok das Land in Brand setzt!',btn:'Siegelstein übergeben',rw:L=>{gainXP(1300);P.gold+=180;give(genItem('ring',L+1,2));G.toast('+180 Gold','#ffd54a');}},
+ {ch:'Kapitel 8: Die Schwarze Legion',gate:'lvL',
+  low:L=>`Das Kriegslager wird von Legionären und Schwarzrittern bewacht. Werde stärker, mindestens Stufe ${qd('lvL')}. Du bist Stufe ${L}.`,
+  give:'Das Kriegslager der Schwarzen Legion liegt im Süden, in der Steinöde. Dring ein, schalte die Wachen und Ritter aus und besiege Feldherr Severin. Bring mir seine Kriegspläne – wir müssen wissen, was sie vorhaben!',
+  acc:'Ich dringe ins Lager ein',goal:()=>(P.lgN||0)<qd('legion')?`Dring ins Kriegslager der Legion ein (Steinöde, Süden): Wachen & Ritter ${P.lgN||0}/${qd('legion')}`:'Besiege Feldherr Severin im Kriegslager',to:()=>tpT(LEGION.x,LEGION.y),
+  wait:'Das Kriegslager liegt im Süden in der Steinöde. Folge dem goldenen ★.',ret:'Bring Severins Kriegspläne zu Fürst Aldric',
+  done:'Diese Pläne … Die Legion wartet nur darauf, dass Ignarok Eldmar niederbrennt – dann marschiert sie ein. Wir müssen den Drachen vorher töten! Geh zu Gunnar, dem Drachenjäger in der Taverne. Er weiß, wie man das Aschensiegel mit dem Siegelstein bricht.',btn:'Pläne übergeben',rw:L=>{gainXP(1700);P.gold+=250;give(genItem('weapon',L+1,3));G.toast('+250 Gold','#ffd54a');}}]};
+G.MSQ=MSQ;
+const curStep=()=>MSQ[P.main]?MSQ[P.main][Math.min(P.ms||0,MSQ[P.main].length-1)]:null;
+G.chapter=()=>{const st=curStep();return st?st.ch:CHAP[Math.min(P.main,9)];};
 G.objective=function(){const L=P.level;const tp=(x,y)=>({x:(x+.5)*TILE,y:(y+.5)*TILE});const N=id=>{const n=npcById(id);if(n.loc&&G.room!==n.loc)return{x:n.loc.ent.x,y:n.loc.ent.y-10};return{x:n.x,y:n.y};};
  switch(P.main){
  case 0:return{t:'Sprich mit Heilerin Mara',to:N('mara')};
  case 1:return{t:'Geh zur Burg und sprich mit Fürst Aldric',to:N('aldric')};
  case 2:return P.mN>=qd('prove')?{t:'Kehre zu Fürst Aldric zurück',to:N('aldric')}:{t:`Besiege Monster vor den Mauern: ${P.mN}/${qd('prove')}`,to:null};
- case 3:if(!P.macc)return L<qd('lvG')?{t:`Erreiche Stufe ${qd('lvG')}, dann zu Fürst Aldric`,to:null}:{t:'Sprich mit Fürst Aldric',to:N('aldric')};
-  return P.mflag?{t:'Bring die Karte zu Fürst Aldric',to:N('aldric')}:{t:'Besiege Goblinhäuptling Grukk im Goblinlager (Finsterwald, Osten)',to:tp(CAMP.x,CAMP.y)};
- case 4:if(!P.macc)return L<qd('lvM')?{t:`Erreiche Stufe ${qd('lvM')}, dann zu Fürst Aldric`,to:null}:{t:'Sprich mit Fürst Aldric',to:N('aldric')};
-  return P.mflag?{t:'Bring den Siegelstein zu Fürst Aldric',to:N('aldric')}:{t:'Besiege Knochenfürst Morvax in der Krypta (Nebelmoor, Westen)',to:tp(CRYPT.x,CRYPT.y)};
+ case 3:case 4:{const st=curStep();if(!P.macc)return L<qd(st.gate)?{t:`Erreiche Stufe ${qd(st.gate)}, dann zu Fürst Aldric`,to:null}:{t:'Sprich mit Fürst Aldric',to:N('aldric')};
+  return P.mflag?{t:st.ret,to:N('aldric')}:{t:st.goal(),to:st.to()};}
  case 5:{if(!P.macc)return L<qd('lvH')?{t:`Erreiche Stufe ${qd('lvH')} und sprich mit Gunnar in der Taverne`,to:N('gunnar')}:{t:'Sprich mit Drachenjäger Gunnar in der Taverne',to:N('gunnar')};
   const sh=P.shards||{},n=Object.keys(sh).length;if(n>=3)return L<qd('lvD')?{t:`Alle Splitter! Erreiche Stufe ${qd('lvD')} und bring sie Gunnar`,to:N('gunnar')}:{t:'Bring die drei Glutsiegel-Splitter zu Gunnar',to:N('gunnar')};
   const H=[['schnitter','Vael, den Schnitter, in den Ruinen von Aschental',ASHVALE.x,ASHVALE.y-4],['eldtree','Mortholz, den Baumhirten, an der Abtei im Schattenwald',151,510],['sandking','Khepri, den Sandkönig, am Grab in den Dünen',529,546]].filter(h=>!sh[h[0]]);
@@ -831,12 +893,12 @@ G.objective=function(){const L=P.level;const tp=(x,y)=>({x:(x+.5)*TILE,y:(y+.5)*
  case 7:return{t:'Sprich mit Prinzessin Elara im Drachenhort',to:N('elara')};
  case 8:return{t:'Kehre zu Fürst Aldric in die Burg zurück',to:N('aldric')};
  default:return{t:'Die Geschichte ist erzählt. Jage Bosse und mythische Beute!',to:null};}};
-G.storyContext=function(){const o=G.objective();const q=P.q;return `${G.chapter()}. Aktuelles Ziel des Spielers: ${o.t}. Spielerstufe ${P.level}, Schwierigkeit ${G.D().n}. `+(P.main>=4?'Grukk ist besiegt und die Karte gefunden. ':'')+(P.main>=5?'Morvax ist besiegt und der Siegelstein gefunden. ':'')+(P.main>=6?'Gunnar hat das Aschensiegel gebrochen. ':'')+(P.main>=7?'Ignarok ist tot! ':'')+(P.main>=8?'Elara ist wieder in der Burg. ':'')+(q.bread==='done'?'Der Spieler hat Bernd mit Weizen geholfen. ':'')+(q.wolves==='done'?'Der Spieler hat Hildas Wolfsplage beendet. ':'');};
+G.storyContext=function(){const o=G.objective();const q=P.q;return `${G.chapter()}. Aktuelles Ziel des Spielers: ${o.t}. Spielerstufe ${P.level}, Schwierigkeit ${G.D().n}. `+(P.main===3&&P.ms>=1?'Der Spieler hat die gestohlene Karte von Räuberhauptmann Knut zurückgeholt; die Räuber arbeiten für die Schwarze Legion. ':'')+(P.main===3&&P.ms>=2?'Der Einsiedler Bertolt wurde verflucht aufgefunden. ':'')+(P.main===3&&P.ms>=3?'Räuberfürst Falk ist besiegt; Feldherr Severin der Schwarzen Legion bezahlt Räuber und Goblins. ':'')+(P.main>=4?'Grukk ist besiegt und die Karte gefunden. ':'')+(P.main===4&&P.ms>=1?'Moorhexe Grimelda ist besiegt, der Kryptaschlüssel gefunden. ':'')+(P.main>=5||P.main===4&&P.ms>=2?'Morvax ist besiegt. ':'')+(P.main>=5?'Feldherr Severin der Schwarzen Legion ist besiegt, seine Kriegspläne erbeutet. ':'')+(P.main>=5?'Morvax ist besiegt und der Siegelstein gefunden. ':'')+(P.main>=6?'Gunnar hat das Aschensiegel gebrochen. ':'')+(P.main>=7?'Ignarok ist tot! ':'')+(P.main>=8?'Elara ist wieder in der Burg. ':'')+(q.bread==='done'?'Der Spieler hat Bernd mit Weizen geholfen. ':'')+(q.wolves==='done'?'Der Spieler hat Hildas Wolfsplage beendet. ':'');};
 G.npcMark=function(n){{const em=G.extraMark&&G.extraMark(n);if(em)return em;if(n.lie)return '';}const sm0=G.sqMark(n);if(sm0==='?')return '?';const r0=npcMark0(n);return r0||sm0;};
 const npcMark0=function(n){const q=P.q,L=P.level;switch(n.id){
  case'mara':return P.main===0?'!':'';
  case'ragna':return !q.draugr?(L>=15?'!':'.'):(q.draugr==='active'&&q.draugrN>=qd('draugr')?'?':'');
- case'aldric':return(P.main===1||(P.main===2&&P.mN>=qd('prove'))||(P.main===3&&(!P.macc&&L>=qd('lvG')||P.mflag))||(P.main===4&&(!P.macc&&L>=qd('lvM')||P.mflag))||P.main===8)?'?':(P.main===3||P.main===4)&&!P.macc?'.':'';
+ case'aldric':{if(P.main===1||(P.main===2&&P.mN>=qd('prove'))||P.main===8)return'?';const st=curStep();if(!st)return'';if(!P.macc)return L>=qd(st.gate)?'?':'.';return P.mflag?'?':'';}
  case'gunnar':return P.main===5?(!P.macc?(L>=qd('lvH')?'!':'.'):(Object.keys(P.shards||{}).length>=3?(L>=qd('lvD')?'?':'.'):'')):'';
  case'elara':return P.main===7?'?':'';
  case'bernd':return !q.bread?'!':(q.bread==='active'&&countItem('wheat')>=5?'?':'');
@@ -884,16 +946,12 @@ const npcDialog0=function(n){const q=P.q,L=P.level,B=(l,f,c)=>({l,f,c});
  case'aldric':{
   if(P.main===0)return{t:'Ein Fremder in meiner Burg? Die Heilerin Mara hat von dir erzählt. Ruh dich erst aus und sprich mit ihr.',b:[]};
   if(P.main===1)return{t:`Man nennt dich einen gefallenen Ritter? Mir ist gleich, woher du kommst, solange du ein Schwert führen kannst. Ignarok hat meine Tochter Elara geraubt. Bevor ich dir ihr Leben anvertraue, beweise dich: Erschlage ${qd('prove')} Kreaturen vor unseren Mauern.`,b:[B('Ich werde mich beweisen',()=>{P.main=2;P.mN=0;G.toast('📜 Hauptquest: Bewährung','#ffd54a',true);},1)]};
-  if(P.main===2){if(P.mN>=qd('prove'))return{t:'Du kämpfst wie ein Ritter der alten Zeit. Nimm diese Klinge aus meiner Waffenkammer. Und höre: Mein Späher wurde im Finsterwald von Goblins überfallen. Er trug eine Karte zum Drachenhort bei sich.',b:[B('Bericht erstatten',()=>{P.main=3;P.macc=false;P.mflag=0;gainXP(250);give(genItem('weapon',Math.max(3,L+1),1,{kind:'sword'}));},0)]};
+  if(P.main===2){if(P.mN>=qd('prove'))return{t:'Du kämpfst wie ein Ritter der alten Zeit. Nimm diese Klinge aus meiner Waffenkammer – du wirst sie brauchen.',b:[B('Bericht erstatten',()=>{P.main=3;P.ms=0;P.macc=false;P.mflag=0;gainXP(150);give(genItem('weapon',Math.max(2,L+1),1,{kind:'sword'}));},0)]};
    return{t:`Du hast erst ${P.mN} von ${qd('prove')} Kreaturen erschlagen. Die Wildnis vor den Toren wartet.`,b:[]};}
-  if(P.main===3){if(!P.macc){if(L<qd('lvG'))return{t:`Der Goblinhäuptling Grukk ist kein gewöhnlicher Gegner. Werde stärker, mindestens Stufe ${qd('lvG')}, dann sprechen wir weiter. Du bist Stufe ${L}.`,b:[]};
-    return{t:'Grukk, der Goblinhäuptling, haust in einem Lager tief im Finsterwald, im Osten. Er hat die Karte meines Spähers. Hol sie mir!',b:[B('Ich hole die Karte',()=>{P.macc=true;P.mflag=0;G.toast('📜 Hauptquest: Spuren im Finsterwald','#ffd54a',true);},1)]};}
-   if(P.mflag)return{t:'Die Karte! Bei allen Göttern … Der Weg zum Hort ist durch ein Aschensiegel versperrt. Nur der Siegelstein öffnet es. Und den hütet der Knochenfürst Morvax in seiner Krypta im Nebelmoor, westlich von hier.',b:[B('Karte übergeben',()=>{P.main=4;P.macc=false;P.mflag=0;gainXP(600);give(genItem('amulet',L+1,2));P.gold+=80;G.toast('+80 Gold','#ffd54a');},0)]};
-   return{t:'Das Goblinlager liegt im Osten, im Finsterwald. Folge dem goldenen ★ im Kompass.',b:[]};}
-  if(P.main===4){if(!P.macc){if(L<qd('lvM'))return{t:`Morvax hat ganze Heere ins Grab gebracht. Werde stärker, mindestens Stufe ${qd('lvM')}. Du bist Stufe ${L}.`,b:[]};
-    return{t:'Die Krypta des Knochenfürsten liegt im Nebelmoor, weit im Westen. Bring mir den Siegelstein!',b:[B('Auf ins Nebelmoor',()=>{P.macc=true;P.mflag=0;G.toast('📜 Hauptquest: Der Siegelstein','#ffd54a',true);},1)]};}
-   if(P.mflag)return{t:'Der Siegelstein … er glüht wie Kohle. Nur einer weiß, wie man ihn gegen das Aschensiegel einsetzt: Gunnar, der Drachenjäger. Er sitzt in der Taverne.',b:[B('Zu Gunnar',()=>{P.main=5;P.macc=false;P.mflag=0;gainXP(1000);P.gold+=150;G.toast('+150 Gold','#ffd54a');},1)]};
-   return{t:'Die Krypta liegt im Nebelmoor im Westen. Folge dem goldenen ★ im Kompass.',b:[]};}
+  if(P.main===3||P.main===4){const st=curStep();
+   if(!P.macc){if(L<qd(st.gate))return{t:st.low(L),b:[]};return{t:st.give,b:[B(st.acc,()=>{P.macc=true;P.mflag=0;P.lgN=0;G.toast(`📜 ${st.ch}`,'#ffd54a',true);},1)]};}
+   if(P.mflag)return{t:st.done,b:[B(st.btn,()=>{st.rw(L);const last=P.ms>=MSQ[P.main].length-1;P.macc=false;P.mflag=0;P.lgN=0;if(last){P.main++;P.ms=0;}else P.ms++;G.toast(`📜 Weiter: ${G.chapter()}`,'#ffd54a',true);G.save();},1)]};
+   return{t:st.wait,b:[]};}
   if(P.main<8)return{t:P.main===5?'Gunnar wartet in der Taverne „Zum Goldenen Krug“.':'Bring mir meine Tochter zurück, Ritter. Ich flehe dich an.',b:[]};
   if(P.main===8)return{t:'Elara ist zurück … Du hast mir alles zurückgegeben, was ich verloren glaubte. Ganz Eldmar wird deinen Namen kennen. Nimm diese Klinge meiner Ahnen und den Dank eines Vaters.',b:[B('Es war mir eine Ehre',()=>{P.main=9;gainXP(3000);P.gold+=1000;give(genItem('weapon',qd('dragon')+2,4,{name:'Eichenhains Erbe',kind:'sword',boss:'dragon',f:'melee'}));G.toast('+1000 Gold','#ffd54a');G.ui&&G.ui.cutscene&&G.ui.cutscene('outro');},1)]};
   return{t:'Eichenhain steht für immer in deiner Schuld, Held. Die Tore meiner Burg stehen dir offen.',b:[]};}
@@ -942,8 +1000,12 @@ G.npcDialog=function(n){const d=(G.extraDialog&&G.extraDialog(n))||npcDialog0(n)
 
 
 // ===================== Update =====================
+const DQ={hut:{main:3,ms:1,base:'ghoul',add:'spider',lv:'hermit',name:'Der verfluchte Einsiedler',enter:'☠ Ein fauliger Gestank … Etwas Untotes haust in der Hütte!',found:'📜 Du findest beim Einsiedler Zeichnungen von Soldaten mit schwarzen Bannern! Bring sie zu Fürst Aldric.'},
+ banditcave:{main:3,ms:2,base:'bandit',add:'archer',lv:'falk',name:'Räuberfürst Falk',enter:'⚔ „Wer wagt es, in mein Nest einzudringen?!“',found:'📜 Falk trug einen Sold-Brief der Schwarzen Legion bei sich! Bring ihn zu Fürst Aldric.'},
+ wtower:{main:4,ms:0,base:'witch',add:'ghoul',lv:'grimelda',name:'Moorhexe Grimelda',enter:'🌫 Kichern hallt durch den Turm … die Moorhexe erwartet dich!',found:'🗝 Du hast den Kryptaschlüssel! Bring ihn zu Fürst Aldric.'}};
+G.DQ=DQ;
 function enterRoom(r){G.mons=G.mons.filter(m=>m.boss==='dragon');G.proj=[];G.teles=[];G.room=r;P.x=(r.door.tx+.5)*TILE;P.y=(r.door.ty-.5)*TILE;P.prevX=null;P.fx=0;P.fy=-1;G.enterT=.7;sfx('door');
- if(r.dungeon){for(const c of r.chests)if(c.opened&&Date.now()-c.at>240000)c.opened=false;const b=r.b;const ks=Object.keys(P.kills||{}).filter(k=>MT[k]&&!MT[k].passive);const key=ks.length?pick(ks):b.def;const m=mkMini(key,r.lvl+1,(r.x0+r.w/2)*TILE,(r.y0+2.5)*TILE);m.room=r.id;G.mons.push(m);
+ if(r.dungeon){for(const c of r.chests)if(c.opened&&Date.now()-c.at>240000)c.opened=false;const b=r.b;const ks=Object.keys(P.kills||{}).filter(k=>MT[k]&&!MT[k].passive);let key=ks.length?pick(ks):b.def;const dq=DQ[r.id],qa=dq&&P.main===dq.main&&P.ms===dq.ms&&P.macc&&!P.mflag;let m;if(qa){key=dq.add;m=mkMini(dq.base,qd(dq.lv),(r.x0+r.w/2)*TILE,(r.y0+2.5)*TILE);m.name=dq.name;m.qkey=r.id;G.toast(dq.enter,'#ff8a65',true);}else m=mkMini(key,r.lvl+1,(r.x0+r.w/2)*TILE,(r.y0+2.5)*TILE);m.room=r.id;G.mons.push(m);
   [[3,5],[r.w-4,5],[Math.floor(r.w/2),7]].forEach(([x,y])=>{const k=mkMonster(key,r.lvl,(r.x0+x+.5)*TILE,(r.y0+y+.5)*TILE);k.room=r.id;k.passive=false;G.mons.push(k);});
   G.toast(`☠ ${r.name}: ${m.name} lauert hier!`,'#ff8a80',true);sfx('aggro',{type:'boss'});}
  else G.toast('🚪 '+r.name,'#ffe9b0');}
@@ -992,7 +1054,7 @@ Object.assign(G,{act,target});
 const DAYLEN=720;
 G.dayInfo=()=>{const t=((G.P&&G.P.dayT)||0)%DAYLEN,n=Math.floor(((G.P&&G.P.dayT)||0)/DAYLEN);let L;if(t<470)L=1;else if(t<530)L=1-(t-470)/60*.78;else if(t<680)L=.22;else L=.22+(t-680)/40*.78;
  return{t,n,light:clamp(L,.22,1),night:t>=505&&t<700,dusk:t>=440&&t<540,full:h2(n,7,777)<.1,sunA:(t/DAYLEN)};};
-G.update=function(dt){P=G.P;G.time+=dt;P.dayT=(P.dayT||0)+dt;{const di=G.dayInfo();if(di.night!==G._wasNight){if(di.night){G.toast(di.full?'🌕 Vollmond! Werwölfe streifen umher …':'🌙 Die Nacht bricht herein. Untote erheben sich.','#b3c7ff',true);sfx('horn');}else if(G._wasNight!=null)G.toast('🌅 Der Morgen graut.','#ffe0a0');G._wasNight=di.night;}}const S=G.S=calc();if(P.hp>S.maxhp)P.hp=S.maxhp;
+G.update=function(dt){if(P&&!P.dead){const st=P.stats||(P.stats={});st.time=(st.time||0)+dt;}P=G.P;G.time+=dt;P.dayT=(P.dayT||0)+dt;{const di=G.dayInfo();if(di.night!==G._wasNight){if(di.night){G.toast(di.full?'🌕 Vollmond! Werwölfe streifen umher …':'🌙 Die Nacht bricht herein. Untote erheben sich.','#b3c7ff',true);sfx('horn');}else if(G._wasNight!=null)G.toast('🌅 Der Morgen graut.','#ffe0a0');G._wasNight=di.night;}}const S=G.S=calc();if(P.hp>S.maxhp)P.hp=S.maxhp;
  let mx=G.input.x,my=G.input.y;
  if(P.drunk>0){const d0=P.drunk;P.drunk=Math.max(0,P.drunk-dt/70);if(d0>=3&&P.drunk<3){G.toast('🙂 Du bist wieder einigermaßen nüchtern.','#c8e6c9');G.S=calc();}else if(Math.floor(d0)!==Math.floor(P.drunk))G.S=calc();
   if(P.drunk>=3){const amp=Math.min(1.05,.38+(P.drunk-3)*.1),a=Math.sin(G.time*1.6)*amp+Math.sin(G.time*3.7+1)*amp*.35;if(Math.hypot(mx,my)>.05){const c=Math.cos(a),s2=Math.sin(a);const nx=mx*c-my*s2,ny=mx*s2+my*c;mx=nx;my=ny;}else if(P.drunk>=6&&!P.dead){const w=Math.sin(G.time*.9)*.22;mx=Math.cos(G.time*.7)*w;my=Math.sin(G.time*1.1)*w;}}}
@@ -1085,7 +1147,7 @@ G.wipeSlot=n=>{try{localStorage.removeItem(SK(n));if(n===1)localStorage.removeIt
 G.hasSave=()=>{try{return !!(localStorage.getItem(SK(G.slot))||(G.slot===1&&localStorage.getItem(SAVEK4)));}catch(e){return false;}};
 G.save=function(){if(!G.P)return;try{const p=Object.assign({},G.P);delete p.dead;p.roomId=G.room?G.room.id:null;p.savedAt=Date.now();localStorage.setItem(SK(G.slot),JSON.stringify({P:p,farm:[...G.farm.values()],fixT:G.fixT,chests:ROOMS.map(r=>r.chests.map(c=>[c.opened?1:0,c.at]))}));}catch(e){}};
 G.load=function(){try{let raw=localStorage.getItem(SK(G.slot)),mig=false;if(!raw&&G.slot===1){raw=localStorage.getItem(SAVEK4);mig=!!raw;}const s=JSON.parse(raw||'null');if(!s||!s.P)return false;if(mig){delete s.farm;delete s.chests;s.P.roomId=null;s.P.x=SPAWN.x;s.P.y=SPAWN.y;}newGame(s.P.diff||G.settings.diff);Object.assign(P,s.P);if(P.sta==null)P.sta=100;if(P.mp==null)P.mp=40;P.staT=0;P.dead=false;P.poison=null;P.dodgeT=0;
- if(!Array.isArray(P.inv)||P.inv.length!==36)return false;if(!P.chat)P.chat={};if(Array.isArray(s.farm))s.farm.forEach(f=>{if(f&&CROPS[f.c])G.farm.set(fk(f.tx,f.ty),f);});if(!P.kills)P.kills={};if(!P.ways)P.ways={city:1};P.burn=null;P.slow=0;if(s.fixT)G.fixT=Object.assign({grukk:0,bonelord:0,dragon:0},s.fixT);
+ if(!Array.isArray(P.inv)||P.inv.length!==36)return false;if(!P.chat)P.chat={};if(Array.isArray(s.farm))s.farm.forEach(f=>{if(f&&CROPS[f.c])G.farm.set(fk(f.tx,f.ty),f);});if(!P.kills)P.kills={};if(P.ms==null){P.ms=P.main===3?((P.macc||P.level>=qd('lvG'))?3:0):P.main===4?(P.macc?1:0):0;P.lgN=0;}if(!P.ways)P.ways={city:1};P.burn=null;P.slow=0;if(s.fixT)G.fixT=Object.assign({grukk:0,bonelord:0,dragon:0},s.fixT);
  G.flags.barrier=!!P.barrier;if(Array.isArray(s.chests))s.chests.forEach((a,i)=>{const r=ROOMS[i];if(r&&Array.isArray(a))a.forEach((v,j)=>{if(r.chests[j]){r.chests[j].opened=!!v[0];r.chests[j].at=v[1]||0;}});});G.room=null;if(P.roomId){const r=ROOMS.find(q=>q.id===P.roomId);if(r){P.x=r.ent.x;P.y=r.ent.y;}}if(P.diff){G.settings.diff=P.diff;}if(!P.side)P.side={};if(P.dayT==null)P.dayT=60;if(mig){P.x=SPAWN.x;P.y=SPAWN.y;G.toast('🗺 Die Welt ist gewachsen! Du startest wieder in Eichenhain. Deine Ausrüstung und Stufe bleiben.','#ffd54a',true);}placeElara();P.furn=P.furn||{};P.inv.forEach((it,i)=>{if(it&&it.stack&&STACK[it.id]&&STACK[it.id].type==='furn'){P.furn[it.id]=(P.furn[it.id]||0)+it.count;P.inv[i]=null;}});{let nb=0;const fixIt=it=>{if(!it||it.stack||it.v13||it.rarity==null)return;const k=RMULT[it.rarity]/RMULT_OLD[it.rarity];if(it.dmg!=null)it.dmg=Math.max(1,Math.round(it.dmg*k));if(it.def!=null)it.def=Math.max(1,Math.round(it.def*k));it.v13=1;if(it.rarity>0)nb++;};(P.inv||[]).forEach(fixIt);for(const k in P.eq||{})fixIt(P.eq[k]);if(P.chest)(P.chest||[]).forEach(fixIt);if(nb)setTimeout(()=>G.toast('⚖ Update 13: Seltene Waffen & Rüstungen wurden neu ausbalanciert.','#ffd54a',true),3500);}if(!canMove(P.x,P.y,10)){P.x=SPAWN.x;P.y=SPAWN.y;}G.S=calc();if(P.hp<=0)P.hp=G.S.maxhp;return true;}catch(e){console.error(e);return false;}};
 G.wipe=()=>G.wipeSlot(G.slot);
 // ===================== v8: Zuhause, Möbel, Angeln, Katzen, Schätze, Tagesablauf =====================
@@ -1196,6 +1258,7 @@ function feedCat(c){const fid=['trout','carp','salmon','pike','cfish','goldfish'
  if(c.trust>=3){const nm=pick(CATN);P.pet={c:c.c,name:nm};G.CATS=G.CATS.filter(q=>q!==c);G.PET={x:c.x,y:c.y,fx:0,fy:1,c:c.c,anim:0,room:G.room,pet:1};sfx('quest');G.flashT=.6;G.toast(`😻 Die Katze folgt dir jetzt! Du nennst sie „${nm}“. (+5 % Glück)`,'#ff8fb0',true);G.save();}
  else{G.toast(`🐟 Die Katze frisst und schnurrt … (${c.trust}/3 Vertrauen)`,'#ffd0e0');sfx('pickup');}}
 // Tagesablauf der Dorfbewohner
+{const DLV={hut:6,banditcave:9,wtower:14,cellar:10};for(const r of ROOMS)if(r.dungeon&&DLV[r.id])r.lvl=DLV[r.id];}
 for(const r of ROOMS){if(r.dungeon||r.player||r.kind==='barn')continue;let beds=0;for(let y=r.y0;y<r.y0+r.h;y++)for(let x=r.x0;x<r.x0+r.w;x++)if(tileAt(x,y)===T.BED)beds++;if(beds)continue;const want=r.b&&(r.b.id==='tavern'||r.b.id==='jarl')?3:r.b&&r.b.kind==='keep'?1:1;let placed=0;const fl=t=>t===T.WOOD||t===T.STONEF;
  for(let k=0;k<r.w&&placed<want;k++){const x=k%2?r.x0+r.w-1-Math.floor(k/2):r.x0+Math.floor(k/2);if(Math.abs(x-r.door.tx)<1)continue;const y=r.y0+r.h-2;if(fl(tileAt(x,y))&&fl(tileAt(x,y+1))&&tileAt(x,y+2)!==T.DOOR){map[y*W+x]=T.BED;map[(y+1)*W+x]=T.BED;placed++;}}}
 const TAVS=BUILD.filter(b=>b.room&&(b.id==='tavern'||b.id==='jarl'||/taverne|schenke|gasthaus/i.test(b.name||'')));
@@ -1244,7 +1307,7 @@ function witnesses(){const out=[];for(const n of NPCS){if(n.dead||n.ko>0||n.lie|
 const wanted=()=>{const b=P.bounty||0;return b<=0?0:b<100?1:b<250?2:b<500?3:b<900?4:5;};G.wanted=wanted;
 const guardLvl=()=>Math.max(2,P.level+wanted());G.guardLvl=guardLvl;
 const hostile=()=>P.bounty>0&&(wanted()>=2||!!P.guardHostile);G.guardHostile=hostile;
-function jail(why){G.reviveNPCs();const fine=Math.floor(P.gold*.1);P.gold-=fine;P.bounty=0;P.guardHostile=0;P.dayT+=720;if(G.room){G.room=null;}P.x=SPAWN.x;P.y=SPAWN.y;P.prevX=null;G.mons.length=0;P.hp=Math.max(P.hp,Math.round((G.S||calc()).maxhp*.5));for(const n of NPCS)if(isGuard(n)){n.ghp=0;}G.toast(`⛓ ${why||''}Du hast einen Tag im Kerker verbracht${fine?` und ${fine} Gold Strafe gezahlt`:''}. Das Kopfgeld ist erlassen.`,'#ffcc80',true);G.save();}
+function jail(why){G.reviveNPCs();const fine=Math.floor(P.gold*.1);P.gold-=fine;{const st=P.stats||(P.stats={});st.jail=(st.jail||0)+1;st.bountyPaid=(st.bountyPaid||0)+fine;}P.bounty=0;P.guardHostile=0;P.dayT+=720;if(G.room){G.room=null;}P.x=SPAWN.x;P.y=SPAWN.y;P.prevX=null;G.mons.length=0;P.hp=Math.max(P.hp,Math.round((G.S||calc()).maxhp*.5));for(const n of NPCS)if(isGuard(n)){n.ghp=0;}G.toast(`⛓ ${why||''}Du hast einen Tag im Kerker verbracht${fine?` und ${fine} Gold Strafe gezahlt`:''}. Das Kopfgeld ist erlassen.`,'#ffcc80',true);G.save();}
 G.jail=jail;
 // Wirt in der Taverne
 {const tv=ROOMS.find(r=>r.b&&r.b.id==='tavern');if(tv&&!NPCS.find(n=>n.id==='wirt')){let bx=0,by=0;for(const [rx,ry] of [[6,1],[6,0],[6,2],[7,1],[0,1],[0,2]]){const x=tv.x0+rx,y=tv.y0+ry;if(walkTile(x,y)&&!SOLIDS[tileAt(x,y)]){bx=x;by=y;break;}}
@@ -1252,7 +1315,7 @@ G.jail=jail;
 // Burgwache: steht immer in der Burg
 {const keep=ROOMS.find(r=>r.id==='keep');if(keep&&!NPCS.find(n=>n.id==='wache_burg')){let bx=keep.x0+Math.floor(keep.w/2),by=keep.y0+Math.floor(keep.h/2),bd=1e9;const cx=keep.chests.length?keep.chests.reduce((a,c)=>a+c.tx,0)/keep.chests.length:bx,cy=keep.chests.length?keep.chests.reduce((a,c)=>a+c.ty,0)/keep.chests.length:by;const tx0=(cx+keep.door.tx)/2,ty0=(cy+keep.door.ty)/2;for(let y=keep.y0+1;y<keep.y0+keep.h-1;y++)for(let x=keep.x0+1;x<keep.x0+keep.w-1;x++){if(!walkTile(x,y)||SOLIDS[tileAt(x,y)])continue;if(x===keep.door.tx&&Math.abs(y-keep.door.ty)<2)continue;const d=Math.hypot(x-tx0,y-ty0);if(d<bd){bd=d;bx=x;by=y;}}
  NPCS.push({id:'wache_burg',name:'Burgwache Bertram',short:'Bertram',abs:1,tx:bx,ty:by,guard:1,lord:1,post:keep,look:{body:'#7a1b1b',skin:'#e8c0a0',helm:'#b0b6bc'},persona:'Burgwache in der Burg von Eichenhain. Pflichtbewusst, misstrauisch, lässt niemanden aus den Augen. Bewacht die Schatztruhen des Fürsten.',greet:['Ich behalte dich im Auge, Fremder.','Finger weg von den Truhen des Fürsten!','Die Burg steht unter dem Schutz des Fürsten.'],hx:(bx+.5)*TILE,hy:(by+.5)*TILE,x:(bx+.5)*TILE,y:(by+.5)*TILE,fx:0,fy:1,wt:0,vx:0,vy:0,anim:0,loc:keep});GUARDS.add('wache_burg');}}
-function addBounty(v,why){P.bounty=Math.round((P.bounty||0)+v);G.toast(`🚨 ${why} Kopfgeld +${v} (gesamt ${P.bounty} Gold). Zahle es bei einer Wache.`,'#ff6b5a',true);sfx('horn');}
+function addBounty(v,why){P.bounty=Math.round((P.bounty||0)+v);{const st=P.stats||(P.stats={});st.bountyTot=(st.bountyTot||0)+v;st.crimes=(st.crimes||0)+1;}G.toast(`🚨 ${why} Kopfgeld +${v} (gesamt ${P.bounty} Gold). Zahle es bei einer Wache.`,'#ff6b5a',true);sfx('horn');}
 G.addBounty=addBounty;
 function stealAt(t){const key=t.rid+':'+t.x+','+t.y;P.searched=P.searched||{};P.searched[key]=dayNo();sfx('pickup');
  const r=Math.random();let val=0;if(r<.42){const g=rint(2,12);P.gold+=g;val=g;G.floats.push({x:P.x,y:P.y-40,t:`+${g} Gold`,c:'#ffd54a',life:.9});}else if(r<.67){give(mkStack(pick(['bread','carrot','bread']),rint(1,2)));val=6;}else if(r<.77){give(mkStack('potion',1));val=15;}else if(r<.88){give(mkStack('arrow',rint(3,8)));val=6;}else{G.toast('Nichts Brauchbares gefunden.','#ccc');}
@@ -1280,7 +1343,7 @@ G.crimeTick=(n,dt,dn)=>{if(n.dead){if((P.dayT||0)>=(n.deadUntil||0)){n.dead=0;n.
  if(n.scared>0){n.scared-=dt;if(!same||n.lie)return false;const dx=n.x-P.x,dy=n.y-P.y,d=Math.hypot(dx,dy)||1;if(d<TILE*6){const sp=120*dt;const nx=n.x+dx/d*sp,ny=n.y+dy/d*sp;if(canMove(nx,ny,10)){n.x=nx;n.y=ny;n.moving=true;n.fx=dx/d;n.fy=dy/d;n.anim+=dt;}}return true;}
  return !!n.post;};
 function guardDialog(n){const b=P.bounty,B=(l,f,c)=>({l,f,c}),st=wanted();return{t:`Halt, im Namen des Gesetzes! Auf deinen Kopf sind ${b} Gold ausgesetzt (Fahndungsstufe ${'★'.repeat(st)}). Bezahl, oder du wanderst in den Kerker.`,b:[
- B(`⚖ Kopfgeld bezahlen (${b} Gold)`,()=>{if(P.gold<b){G.toast(`Du hast nur ${P.gold} Gold.`,'#ff8a80');return;}P.gold-=b;P.bounty=0;P.guardHostile=0;for(const q of NPCS)if(isGuard(q))q.ghp=0;sfx('coin');G.toast('⚖ Kopfgeld bezahlt. Du bist wieder ein freier Bürger.','#a5d6a7',true);},1),
+ B(`⚖ Kopfgeld bezahlen (${b} Gold)`,()=>{if(P.gold<b){G.toast(`Du hast nur ${P.gold} Gold.`,'#ff8a80');return;}P.gold-=b;{const st=P.stats||(P.stats={});st.bountyPaid=(st.bountyPaid||0)+b;}P.bounty=0;P.guardHostile=0;for(const q of NPCS)if(isGuard(q))q.ghp=0;sfx('coin');G.toast('⚖ Kopfgeld bezahlt. Du bist wieder ein freier Bürger.','#a5d6a7',true);},1),
  B('⛓ Ins Gefängnis (Kopfgeld wird erlassen)',()=>jail(''),1),
  B('🏃 Fliehen',()=>{P.guardCd=G.time+12;P.bounty+=10;P.guardHostile=1;G.toast('🏃 Widerstand! Die Wachen greifen dich jetzt an.','#ff8a80');},1)]};}
 // Ziel-Erweiterung: Truhen, Gipfel, Bett, Katzen
