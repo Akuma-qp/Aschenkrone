@@ -1129,7 +1129,8 @@ G.HR=HR;
 const hasHammerHeld=()=>{const h=P.inv[P.sel];return h&&h.id==='hammer';};G.hasHammer=()=>hasHammerHeld();
 function furnAt(){let best=null,bd=60;for(const k in FURN){const t=P.home[k]||0;if(!t)continue;let tiles=G.homeFoot(k);if(!tiles.length){const p=G.homePos(k,k==='lamp'?(t===2?[5,0]:t>=3?[4,2]:[2,0]):k==='deco'?[5,0]:null);tiles=[p];}for(const [x,y] of tiles){const d=Math.hypot((x+.5)*TILE-P.x,(y+.5)*TILE-P.y);if(d<bd){bd=d;best={k:'furnpick',fk:k,x,y};}}}return best;}
 G.pickFurn=function(fk){const t=P.home[fk]||0;if(!t)return;furnAdd('f_'+fk+t);P.home[fk]=0;if(P.home.pos)delete P.home.pos[fk];applyHome();G.invDirty=true;sfx('hit');G.toast(`🔨 ${FURN[fk].t[t][0]} abgebaut – liegt im Möbellager.`,'#ffd54a');G.save();};
-function sleep(){const di=G.dayInfo();if(!(di.t>=430||di.t<40)){G.toast('😴 Du bist noch nicht müde. Ab dem Abend kannst du schlafen.','#ccc');return;}const n=Math.floor(P.dayT/DAYLEN);P.dayT=(di.t>=430?(n+1):n)*DAYLEN+28;const S=calc();P.hp=S.maxhp;P.sta=S.maxSta;P.mp=S.maxMp;P.poison=null;P.burn=null;const c=comfort();P.rested={until:P.dayT+680,b:Math.min(30,c)};G.sleepFx=2.6;G.mons=G.mons.filter(m=>m.room===undefined&&false);sfx('quest');
+G.sleepNow=()=>sleep();
+function sleep(){const di=G.dayInfo();if(!(di.t>=430||di.t<40)){G.toast('😴 Du bist noch nicht müde. Ab dem Abend kannst du schlafen.','#ccc');return;}if(G.reviveNPCs)G.reviveNPCs();const n=Math.floor(P.dayT/DAYLEN);P.dayT=(di.t>=430?(n+1):n)*DAYLEN+28;const S=calc();P.hp=S.maxhp;P.sta=S.maxSta;P.mp=S.maxMp;P.poison=null;P.burn=null;const c=comfort();P.rested={until:P.dayT+680,b:Math.min(30,c)};G.sleepFx=2.6;G.mons=G.mons.filter(m=>m.room===undefined&&false);sfx('quest');
  setTimeout(()=>{G.toast(`☀ Guten Morgen! Ausgeruht: +${Math.min(30,c)} % Leben & Regeneration (Gemütlichkeit ${c})`,'#ffe9a0',true);if(P.pet&&(P.home.bed||0)>=5)G.toast(`😺 ${P.pet.name} hat sich die ganze Nacht neben dich gekuschelt.`,'#ffd0e0');else if(P.pet)G.toast(`🐱 ${P.pet.name} hat im ${P.home.basket?'Körbchen':'Eck'} geschlafen.`,'#ffd0e0');},900);G.save();}
 // Schreiner & Angler
 const mkN=(o)=>{o.x=o.hx=(o.tx+.5)*TILE;o.y=o.hy=(o.ty+.5)*TILE;o.fx=0;o.fy=1;o.wt=0;o.vx=0;o.vy=0;o.anim=0;NPCS.push(o);return o;};
@@ -1230,7 +1231,7 @@ function witnesses(){const out=[];for(const n of NPCS){if(n.dead||n.ko>0||n.lie|
 const wanted=()=>{const b=P.bounty||0;return b<=0?0:b<100?1:b<250?2:b<500?3:b<900?4:5;};G.wanted=wanted;
 const guardLvl=()=>Math.max(2,P.level+wanted());G.guardLvl=guardLvl;
 const hostile=()=>P.bounty>0&&(wanted()>=2||!!P.guardHostile);G.guardHostile=hostile;
-function jail(why){const fine=Math.floor(P.gold*.1);P.gold-=fine;P.bounty=0;P.guardHostile=0;P.dayT+=720;if(G.room){G.room=null;}P.x=SPAWN.x;P.y=SPAWN.y;P.prevX=null;G.mons.length=0;P.hp=Math.max(P.hp,Math.round((G.S||calc()).maxhp*.5));for(const n of NPCS)if(isGuard(n)){n.ghp=0;}G.toast(`⛓ ${why||''}Du hast einen Tag im Kerker verbracht${fine?` und ${fine} Gold Strafe gezahlt`:''}. Das Kopfgeld ist erlassen.`,'#ffcc80',true);G.save();}
+function jail(why){G.reviveNPCs();const fine=Math.floor(P.gold*.1);P.gold-=fine;P.bounty=0;P.guardHostile=0;P.dayT+=720;if(G.room){G.room=null;}P.x=SPAWN.x;P.y=SPAWN.y;P.prevX=null;G.mons.length=0;P.hp=Math.max(P.hp,Math.round((G.S||calc()).maxhp*.5));for(const n of NPCS)if(isGuard(n)){n.ghp=0;}G.toast(`⛓ ${why||''}Du hast einen Tag im Kerker verbracht${fine?` und ${fine} Gold Strafe gezahlt`:''}. Das Kopfgeld ist erlassen.`,'#ffcc80',true);G.save();}
 G.jail=jail;
 // Burgwache: steht immer in der Burg
 {const keep=ROOMS.find(r=>r.id==='keep');if(keep&&!NPCS.find(n=>n.id==='wache_burg')){let bx=keep.x0+Math.floor(keep.w/2),by=keep.y0+Math.floor(keep.h/2),bd=1e9;const cx=keep.chests.length?keep.chests.reduce((a,c)=>a+c.tx,0)/keep.chests.length:bx,cy=keep.chests.length?keep.chests.reduce((a,c)=>a+c.ty,0)/keep.chests.length:by;const tx0=(cx+keep.door.tx)/2,ty0=(cy+keep.door.ty)/2;for(let y=keep.y0+1;y<keep.y0+keep.h-1;y++)for(let x=keep.x0+1;x<keep.x0+keep.w-1;x++){if(!walkTile(x,y)||SOLIDS[tileAt(x,y)])continue;if(x===keep.door.tx&&Math.abs(y-keep.door.ty)<2)continue;const d=Math.hypot(x-tx0,y-ty0);if(d<bd){bd=d;bx=x;by=y;}}
@@ -1250,6 +1251,7 @@ G.hitNPC=hitNPC;
 G.chestTheft=r=>{const w=witnesses();if(w.length){const n=w[0];G.floats.push({x:n.x,y:n.y-46,t:isGuard(n)?'Halt! Dieb!':'Dieb! Wachen!',c:'#ff5252',life:1.4});addBounty(r.id==='keep'?120:50,`Truhe geplündert – ${n.short||n.name} hat dich gesehen!`);}else G.toast('🤫 Niemand hat dich gesehen …','#b0bec5');};
 function hitCat(c){sfx('hit');c.trust=0;c.scared=5;c.path=null;c.sit=0;G.floats.push({x:c.x,y:c.y-24,t:pick(['Miau!!','Fauch!','Mrrrau!']),c:'#ff8a80',life:.9});for(let i=0;i<5;i++)G.parts.push({x:c.x,y:c.y,z:6,vx:rnd(-60,60),vy:rnd(-60,60),life:.3,c:'#ddd'});addBounty(30,'Tierquälerei – du hast eine Katze angegriffen!');}
 G.hitCat=hitCat;
+G.reviveNPCs=()=>{for(const n of NPCS){if(n.dead){n.dead=0;n.x=n.hx;n.y=n.hy;n.loc=null;n.path=[];}if(n.ko>0||n.dead===0){n.ko=0;n.lie=0;}n.ghp=0;n.hitCnt=0;n.scared=0;}};
 G.crimeTick=(n,dt,dn)=>{if(n.dead){if((P.dayT||0)>=(n.deadUntil||0)){n.dead=0;n.x=n.hx;n.y=n.hy;n.loc=null;n.lie=0;}return true;}
  if(n.ko>0){n.ko-=dt;n.moving=false;if(n.ko<=0){n.ko=0;n.lie=0;}return true;}
  const same=G.room?n.loc===G.room:!n.loc;
