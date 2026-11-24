@@ -162,7 +162,31 @@ function closeInv(){invOpen=false;invSel=null;shopId=null;marked.clear();markMod
 ui.openInv=openInv;
 $('invClose').addEventListener('click',closeInv);document.querySelectorAll('#invTabs button').forEach(b=>b.addEventListener('click',()=>setInvTab(b.dataset.t)));$('inv').addEventListener('click',e=>{if(e.target.id==='inv')closeInv();});
 // ===================== Dialog =====================
-function openDialog(n){ui.dlgNpc=n;G.attackHeld=false;renderDialog();}
+function openDialog(n){ui.dlgNpc=n;G.attackHeld=false;renderDialog();const t=NPCTIP[n.id];if(t)showTip(t[0],t[1]);}
+// ===== Dezente Tipps (einmalig, links unter der Quest-Anzeige) =====
+const NPCTIP={hilda:['smith','💡 Bei Hilda kannst du Waffen & Rüstungen kaufen, Beute verkaufen und unter „Schmiede“ Ausrüstung umschmieden.'],holger:['carp','💡 Bei Holger kaufst du Möbel und den Schreinerhammer. Mit dem Hammer in der Hand öffnest du in deinem Haus den Bauplan und richtest alles frei ein.'],wirt:['beer','💡 Bier hebt die Stimmung – ab 3 Krügen torkelst du, ab 10 kippst du um.'],greta:['sell','💡 Jeder Händler kauft dir Beute ab: Tippe im Shop auf einen Gegenstand in deiner Tasche und dann auf „Verkaufen“.']};
+const TIPS=[
+ {k:'skill',c:P=>G.skillPts&&G.skillPts()>0,t:()=>`💡 Du hast ${G.skillPts()} freie Fähigkeitspunkte – Inventar → ⭐ Fähigkeiten.`},
+ {k:'carp',c:P=>P.main>=2,t:()=>NPCTIP.holger[1].replace('Bei Holger','Beim Schreiner Holger in Eichenhain')},
+ {k:'smith',c:P=>P.level>=3,t:()=>NPCTIP.hilda[1].replace('Bei Hilda','Bei Schmiedin Hilda')},
+ {k:'sell',c:P=>P.level>=2,t:()=>NPCTIP.greta[1]},
+ {k:'sleep',c:P=>P.level>=2,t:()=>'💡 Schlafe nachts im Bett deines Hauses: volle LP und ein Ausgeruht-Bonus für den nächsten Tag.'},
+ {k:'dodge',c:P=>P.level>=3,t:()=>pcMode?'💡 Mit Leertaste springst du, mit Shift (gedrückt) sprintest du. Ausweichen macht dich kurz unverwundbar.':'💡 Doppeltippe rechts auf den Bildschirm, um auszuweichen – das macht dich kurz unverwundbar.'},
+ {k:'farm',c:P=>P.level>=4,t:()=>'💡 Saat von Greta kannst du nahe Wasser pflanzen und später ernten.'},
+ {k:'beer',c:P=>P.level>=5,t:()=>'💡 In der Taverne schenkt Wirt Bodo Bier aus – aber Vorsicht, zu viel davon haut dich um.'},
+ {k:'law',c:P=>P.level>=4,t:()=>'💡 Stehlen und Angriffe auf Bürger geben Kopfgeld. Die Wachen verstehen da keinen Spaß!'},
+ {k:'mapzoom',c:P=>P.level>=2,t:()=>'💡 Die Karte (M oder Minikarte antippen) lässt sich zoomen und verschieben – praktisch in der riesigen Welt.'},
+ {k:'secret',c:P=>P.level>=5,t:()=>'💡 Abseits der Wege führen schmale Pfade durch die Wälder. Manchmal endet einer an einer versteckten Truhe …'},
+ {k:'side',c:P=>P.level>=3,t:()=>'💡 Wartest du auf die nächste Hauptquest? Bewohner mit gelbem ! haben Nebenquests für dich.'},
+ {k:'stats',c:P=>P.level>=6,t:()=>'💡 Im Inventar unter 📊 Statistik siehst du deine Spielzeit, Siege, Tode und Kopfgelder.'}];
+let tipEl=null,tipT=0,tipNext=150;
+function showTip(k,txt){const P=G.P;if(!P)return false;P.tips=P.tips||{};if(k&&P.tips[k])return false;if(k)P.tips[k]=1;
+ if(!tipEl){tipEl=document.createElement('div');tipEl.id='tipBox';document.body.appendChild(tipEl);tipEl.onclick=()=>{tipEl.classList.remove('on');};}
+ const q=$('quests'),r=q&&q.getBoundingClientRect();if(r&&r.width){tipEl.style.left=r.left+'px';tipEl.style.top=(r.bottom+6)+'px';tipEl.style.width=Math.max(200,r.width)+'px';}
+ tipEl.textContent=txt;tipEl.classList.add('on');clearTimeout(tipEl._t);tipEl._t=setTimeout(()=>tipEl.classList.remove('on'),9000);tipT=0;return true;}
+ui.tip=showTip;ui.isPc=()=>pcMode;G.tip=(t,k)=>showTip(k||null,t);
+function tipTick(dt){const P=G.P;if(!P||state!=='game'||G.paused()||ui.dlgNpc||P.dead||(P.tut!=null&&P.tut<99&&P.tut<6))return;tipT+=dt;if(tipT<tipNext)return;if(G.mons.some(m=>!m.dead&&m.aggro&&Math.hypot(m.x-P.x,m.y-P.y)<400))return;tipNext=240;P.tips=P.tips||{};const t=TIPS.find(x=>!P.tips[x.k]&&x.c(P));if(t)showTip(t.k,t.t());else tipT=0;}
+ui.tipTick=tipTick;
 ui.openDialog=openDialog;
 let lastSpoken='';
 ui.showText=(n,t,b)=>{ui.dlgNpc=n;ui._custom={t,b:b||[]};};
@@ -395,7 +419,7 @@ function drawSkyClock(){const d=Math.min(window.devicePixelRatio||1,2);if(skc.wi
  const sunA=(hr-5.5)/16*Math.PI;if(sunA>0&&sunA<Math.PI){const x=60-Math.cos(sunA)*48,y=31-Math.sin(sunA)*24;const sg=skx.createRadialGradient(x,y,1,x,y,10);sg.addColorStop(0,'#fffbe0');sg.addColorStop(.4,'#ffd54a');sg.addColorStop(1,'rgba(255,180,40,0)');skx.fillStyle=sg;skx.beginPath();skx.arc(x,y,10,0,7);skx.fill();}
  const mh=(hr-20.5+24)%24,moA=mh/9.5*Math.PI;if(moA>0&&moA<Math.PI){const x=60-Math.cos(moA)*48,y=31-Math.sin(moA)*24;skx.fillStyle='#eef2ff';skx.beginPath();skx.arc(x,y,5.5,0,7);skx.fill();if(!di.full){skx.fillStyle=g;skx.fillStyle='rgba(30,40,80,.95)';skx.beginPath();skx.arc(x+2.6,y-1.2,4.8,0,7);skx.fill();}}
  skx.restore();skx.fillStyle='rgba(60,45,25,.85)';skx.fillRect(2,32,116,10);skx.fillStyle='#ffe9b0';skx.font='bold 10px Georgia';skx.textAlign='center';const ph=t>=505||t<22?'Nacht':t<75?'Morgen':t<370?'Tag':t<465?'Abend':'Spätabend';skx.fillText(`${String(hh).padStart(2,'0')}:${String(mm).padStart(2,'0')} · ${ph}${di.full&&di.night?' 🌕':''}`,60,41);skx.textAlign='left';}
-const FG=4,FW=Math.ceil(576/FG),FH=Math.ceil(576/FG);let fog=new Uint8Array(FW*FH),fogC=document.createElement('canvas'),fogX,fogDirty=true,fogSaveT=0;fogC.width=FW;fogC.height=FH;fogX=fogC.getContext('2d');
+const FG=4,FW=Math.ceil(G.WW/FG),FH=Math.ceil(G.H/FG);let fog=new Uint8Array(FW*FH),fogC=document.createElement('canvas'),fogX,fogDirty=true,fogSaveT=0;fogC.width=FW;fogC.height=FH;fogX=fogC.getContext('2d');
 function fogRedraw(){const im=fogX.createImageData(FW,FH);for(let i=0;i<fog.length;i++){const o=i*4;im.data[o]=26;im.data[o+1]=20;im.data[o+2]=14;im.data[o+3]=fog[i]?0:255;}fogX.putImageData(im,0,0);fogDirty=false;}
 function fogLoad(){fog=new Uint8Array(FW*FH);const P=G.P;if(P&&P.fog){try{const b=atob(P.fog);for(let i=0;i<fog.length;i++)fog[i]=(b.charCodeAt(i>>3)>>(i&7))&1;}catch(e){}}else fogReveal(G.VCX,G.VCY,26);fogDirty=true;}
 function fogStore(){const by=new Uint8Array(Math.ceil(fog.length/8));for(let i=0;i<fog.length;i++)if(fog[i])by[i>>3]|=1<<(i&7);let s='';for(let i=0;i<by.length;i++)s+=String.fromCharCode(by[i]);G.P.fog=btoa(s);}
@@ -428,7 +452,7 @@ function tutTick(){const P=G.P;if(!P)return;if(P.tut==null){P.tut=(P.level>1||P.
  if(!tutS||tutS.i!==P.tut){tutS={i:P.tut,t:0,x:P.x,y:P.y,dist:0};e.innerHTML=`<div class="tutn">Tipp ${P.tut+1}/${TUT.length}</div><div class="tutt">${TUT[P.tut].t()}</div><button class="tutx">Überspringen</button>`;e.querySelector('.tutx').onclick=ev=>{ev.stopPropagation();P.tut=99;e.remove();G.save();};}
  if(!G.paused()||invOpen||ui.dlgNpc){tutS.t+=1/60;tutS.dist+=Math.hypot(P.x-tutS.x,P.y-tutS.y);tutS.x=P.x;tutS.y=P.y;}
  if(TUT[P.tut].ok(tutS)){P.tut++;tutS=null;if(P.tut>=TUT.length){e.remove();G.save();}}}
-function hud(){tutTick();const P=G.P,S=G.S||G.calc(),tx=Math.floor(P.x/TILE),ty=Math.floor(P.y/TILE);
+function hud(){{const now=performance.now(),dt=Math.min(.5,(now-(hud._t||now))/1000);hud._t=now;tipTick(dt);}tutTick();const P=G.P,S=G.S||G.calc(),tx=Math.floor(P.x/TILE),ty=Math.floor(P.y/TILE);
  {const dk=P.drunk||0,st=dk>=3?`rotate(${(Math.sin(G.time*.8)*Math.min(1.6,(dk-2)*.3)).toFixed(2)}deg) scale(${(1+Math.min(.05,(dk-2)*.008)).toFixed(3)})`:'';if(st!==ui._dst){ui._dst=st;$('c3d').style.transform=st;$('c2d').style.transform=st;}}$('lvl').textContent=P.level;$('hpf').style.width=(100*Math.max(0,P.hp)/S.maxhp)+'%';$('hpf').classList.toggle('poison',!!P.poison);$('hpt').textContent=`${Math.ceil(Math.max(0,P.hp))} / ${S.maxhp} LP${P.poison?' · vergiftet':''}${(P.drunk||0)>=1?' · 🍺 '+G.DRUNKN[G.drunkLvl()]:''}${P.hangover&&P.dayT<P.hangover?' · 🤕 Kater':''}`;
  $('stf').style.width=(100*Math.max(0,P.sta)/S.maxSta)+'%';$('stt').textContent=`⚡ ${Math.floor(P.sta)}`;$('mpf').style.width=(100*Math.max(0,P.mp)/S.maxMp)+'%';$('mpt').textContent=`🔷 ${Math.floor(P.mp)}`;const am=S.cls==='ranged'?(G.WKIND[S.kind].proj==='bolt'?'bolt':'arrow'):null;$('ammo').style.display=am?'block':'none';if(am)$('ammo').textContent=`${am==='bolt'?'Bolzen':'Pfeile'}: ${G.countItem(am)}`;
  const xn=G.xpNeed(P.level);$('xpf').style.width=(100*P.xp/xn)+'%';$('xpt').textContent=`XP ${Math.floor(P.xp)} / ${xn}`;$('gold').innerHTML=`🪙 ${P.gold} Gold · ${G.D().n}`+(P.bounty>0?` · <span style="color:#ff6b5a">⚖ ${P.bounty} <span style="color:#ffd54a">${'★'.repeat(G.wanted())}</span>${G.guardHostile()?' ⚔':''}</span>`:'');
@@ -646,20 +670,36 @@ let fpsAcc=0;function loop(now){{const lim=+(G.settings.fps||60);if(lim>0&&last)
  requestAnimationFrame(loop);}
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&state==='game')G.save();});
 resize();toMenu();requestAnimationFrame(loop);
-let mapOpen=false;const mapEl=document.createElement('div');mapEl.className='overlay';mapEl.id='bigmap';mapEl.innerHTML='<div class="panel parch mapP"><div class="ph"><span>🗺 Karte von Eldmar</span><button class="x">✕</button></div><canvas id="mapC"></canvas><div class="hint" style="text-align:center">M oder ✕ schließt · ✨ Wegschrein · ⛺ Lager · ☠ Gruft · 🐉 Drachenhort</div></div>';document.body.appendChild(mapEl);
+let mapOpen=false;const mapEl=document.createElement('div');mapEl.className='overlay';mapEl.id='bigmap';mapEl.innerHTML='<div class="panel parch mapP"><div class="ph"><span>🗺 Karte von Eldmar</span><button class="x">✕</button></div><canvas id="mapC"></canvas><div class="hint" style="text-align:center">Ziehen = verschieben · Mausrad / zwei Finger / +− = zoomen · ✨ Wegschrein · ⚔ Dungeon</div></div>';document.body.appendChild(mapEl);
 mapEl.querySelector('.x').onclick=()=>closeMap();mapEl.addEventListener('click',e=>{if(e.target===mapEl)closeMap();});$('mini').addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();if(state==='game'&&!G.paused())openMap();});
-function openMap(){if(state!=='game')return;mapOpen=true;G.attackHeld=false;mapEl.classList.add('show');drawBig();}
+let mz=1,mcx=0,mcy=0;const mptr=new Map();let mpinch=null;
+function openMap(){if(state!=='game')return;mapOpen=true;G.attackHeld=false;mapEl.classList.add('show');const P=G.P,pp=G.room?G.room.ent:P;mz=Math.max(mz,2.5);mcx=pp.x/TILE;mcy=pp.y/TILE;drawBig();}
 function closeMap(){mapOpen=false;mapEl.classList.remove('show');}
-function drawBig(){const c=$('mapC'),P=G.P;const sz=Math.min(innerWidth-40,innerHeight-120,720);const d=Math.min(window.devicePixelRatio||1,2);c.style.width=c.style.height=sz+'px';c.width=c.height=sz*d;const g=c.getContext('2d');g.setTransform(d,0,0,d,0,0);g.imageSmoothingEnabled=false;
- const sc=sz/G.WW;g.drawImage(mmBase,0,0,G.WW,G.H,0,0,sz,sz*G.H/G.WW);if(fogDirty)fogRedraw();if(!G.devReveal){g.imageSmoothingEnabled=true;g.drawImage(fogC,0,0,FW,FH,0,0,FW*FG*sc,FH*FG*sc);g.imageSmoothingEnabled=false;}const X=x=>x*sc;
+const MV=()=>Math.max(G.WW,G.H)/mz;
+function mClamp(){const V=MV();mcx=Math.max(V/2-40,Math.min(G.WW-V/2+40,mcx));mcy=Math.max(V/2-40,Math.min(G.H-V/2+40,mcy));if(mz<=1.01){mcx=G.WW/2;mcy=G.H/2;}}
+function mZoom(f,sx,sy){const c=$('mapC'),sz=parseFloat(c.style.width)||600,V=MV(),k=sz/V;const wx=mcx-V/2+(sx==null?sz/2:sx)/k,wy=mcy-V/2+(sy==null?sz/2:sy)/k;mz=Math.max(1,Math.min(12,mz*f));const V2=MV(),k2=sz/V2;mcx=wx-(sx==null?sz/2:sx)/k2+V2/2;mcy=wy-(sy==null?sz/2:sy)/k2+V2/2;mClamp();drawBig();}
+{const bar=document.createElement('div');bar.className='mapBar';bar.innerHTML='<button class="btn" data-z="out">−</button><button class="btn" data-z="in">+</button><button class="btn" data-z="me">📍 Ich</button><button class="btn" data-z="all">🗺 Ganz</button>';mapEl.querySelector('.panel').insertBefore(bar,$('mapC'));
+ bar.querySelectorAll('button').forEach(b=>b.onclick=()=>{const z=b.dataset.z;if(z==='in')mZoom(1.6);else if(z==='out')mZoom(1/1.6);else if(z==='me'){const P=G.P,pp=G.room?G.room.ent:P;mz=Math.max(mz,3);mcx=pp.x/TILE;mcy=pp.y/TILE;mClamp();drawBig();}else{mz=1;mClamp();drawBig();}});
+ const c=$('mapC');c.style.touchAction='none';
+ c.addEventListener('wheel',e=>{e.preventDefault();const r=c.getBoundingClientRect();mZoom(e.deltaY<0?1.25:1/1.25,e.clientX-r.left,e.clientY-r.top);},{passive:false});
+ c.addEventListener('pointerdown',e=>{c.setPointerCapture(e.pointerId);mptr.set(e.pointerId,{x:e.clientX,y:e.clientY});if(mptr.size===2){const [a,b]=[...mptr.values()];mpinch={d:Math.hypot(a.x-b.x,a.y-b.y)};}});
+ c.addEventListener('pointermove',e=>{if(!mptr.has(e.pointerId))return;const o=mptr.get(e.pointerId),n={x:e.clientX,y:e.clientY};mptr.set(e.pointerId,n);const r=c.getBoundingClientRect(),sz=r.width,k=sz/MV();
+  if(mptr.size===2&&mpinch){const [a,b]=[...mptr.values()],d=Math.hypot(a.x-b.x,a.y-b.y);if(d>10&&mpinch.d>10){mZoom(d/mpinch.d,(a.x+b.x)/2-r.left,(a.y+b.y)/2-r.top);}mpinch.d=d;return;}
+  if(mptr.size===1){mcx-=(n.x-o.x)/k;mcy-=(n.y-o.y)/k;mClamp();drawBig();}});
+ const up=e=>{mptr.delete(e.pointerId);if(mptr.size<2)mpinch=null;};c.addEventListener('pointerup',up);c.addEventListener('pointercancel',up);}
+function drawBig(){const c=$('mapC'),P=G.P;const sz=Math.min(innerWidth-40,innerHeight-150,720);const d=Math.min(window.devicePixelRatio||1,2);c.style.width=c.style.height=sz+'px';if(c.width!==Math.round(sz*d)){c.width=c.height=Math.round(sz*d);}const g=c.getContext('2d');g.setTransform(d,0,0,d,0,0);g.fillStyle='#1a120a';g.fillRect(0,0,sz,sz);
+ mClamp();const V=MV(),k=sz/V,ox=mcx-V/2,oy=mcy-V/2;
+ g.save();g.translate(-ox*k,-oy*k);g.scale(k,k);g.imageSmoothingEnabled=mz<3;g.drawImage(mmBase,0,0);if(fogDirty)fogRedraw();if(!G.devReveal){g.imageSmoothingEnabled=true;g.drawImage(fogC,0,0,FW,FH,0,0,FW*FG,FH*FG);}g.restore();
+ const X=x=>(x-ox)*k,Y=y=>(y-oy)*k;
  g.textAlign='center';g.font='bold 12px Georgia';g.lineWidth=3;
- const lab=(t,x,y,col)=>{if(!fogSeen(x,y))return;g.strokeStyle='rgba(0,0,0,.8)';g.strokeText(t,X(x),X(y));g.fillStyle=col||'#ffe9b0';g.fillText(t,X(x),X(y));};
- const bn={meadow:[215,380,'Sonnenwiesen'],forest:[530,220,'Finsterwald'],swamp:[50,245,'Nebelmoor'],waste:[300,525,'Steinöde'],winter:[80,25,'Frostlande'],ash:[450,30,'Aschenberge'],dark:[80,545,'Schattenwald'],desert:[510,450,'Sengende Dünen'],peaks:[268,45,'Graukamm'],ashvale:[372,192,'Aschental (zerstört)']};g.font='italic 11px Georgia';for(const k in bn)lab(bn[k][2],bn[k][0],bn[k][1],'rgba(255,240,200,.75)');
+ const lab=(t,x,y,col)=>{if(!fogSeen(x,y))return;const sx=X(x),sy=Y(y);if(sx<-60||sy<-20||sx>sz+60||sy>sz+20)return;g.strokeStyle='rgba(0,0,0,.8)';g.strokeText(t,sx,sy);g.fillStyle=col||'#ffe9b0';g.fillText(t,sx,sy);};
+ const bn={meadow:[430,760,'Sonnenwiesen'],forest:[1060,440,'Finsterwald'],swamp:[100,490,'Nebelmoor'],waste:[600,1050,'Steinöde'],winter:[160,50,'Frostlande'],ash:[900,60,'Aschenberge'],dark:[160,1090,'Schattenwald'],desert:[1020,900,'Sengende Dünen'],peaks:[536,90,'Graukamm'],mist:[1250,620,'Nebellande'],ashvale:[744,384,'Aschental (zerstört)']};g.font='italic '+Math.round(11+Math.min(4,mz))+'px Georgia';for(const kk in bn)lab(bn[kk][2],bn[kk][0],bn[kk][1],'rgba(255,240,200,.75)');
  g.font='bold 12px Georgia';lab('Eichenhain',G.VCX,G.VCY-12);for(const t of G.TOWNS)lab(t.name,t.x,t.y-t.r-1);
- g.font='15px serif';for(const w of G.WAYS){if(!fogSeen(w.tx,w.ty))continue;g.fillText(P.ways[w.id]?'✨':'·',X(w.tx+.5),X(w.ty+.5)+5);}
- 
- const ob=G.objective();if(ob.to){g.strokeStyle='#ffd54a';g.lineWidth=2;g.beginPath();g.arc(X(ob.to.x/TILE),X(ob.to.y/TILE),7,0,7);g.stroke();}
- const pp=G.room?G.room.ent:P;g.fillStyle='#fff';g.strokeStyle='#000';g.lineWidth=1.5;g.beginPath();g.arc(X(pp.x/TILE),X(pp.y/TILE),5,0,7);g.fill();g.stroke();}
+ g.font=Math.round(13+Math.min(6,mz))+'px serif';for(const w of G.WAYS){if(!fogSeen(w.tx,w.ty))continue;g.fillText(P.ways[w.id]?'✨':'·',X(w.tx+.5),Y(w.ty+.5)+5);}
+ if(mz>=3){g.font='bold 11px Georgia';for(const b of G.BUILD){if(!b.wild||!b.room||!fogSeen(b.x,b.y))continue;lab((b.room.dungeon?'⚔ ':'🏠 ')+(b.name||''),b.x+b.w/2,b.y-1,'#f4d08a');}}
+ const ob=G.objective();if(ob.to){g.strokeStyle='#ffd54a';g.lineWidth=2;g.beginPath();g.arc(X(ob.to.x/TILE),Y(ob.to.y/TILE),7+Math.min(5,mz),0,7);g.stroke();}
+ const pp=G.room?G.room.ent:P;g.fillStyle='#fff';g.strokeStyle='#000';g.lineWidth=1.5;g.beginPath();g.arc(X(pp.x/TILE),Y(pp.y/TILE),5,0,7);g.fill();g.stroke();
+ g.font='bold 11px Georgia';g.textAlign='right';g.fillStyle='rgba(255,240,200,.8)';g.fillText('Zoom ×'+mz.toFixed(1),sz-6,sz-6);g.textAlign='left';}
 // ===== Einrichtungsmodus: Rasterplan von oben, frei platzieren mit Vorschau =====
 let buildOpen=false;
 ui.openBuild=function(){const P=G.P,HR=G.HR;if(!(G.room&&G.room.player)){ui.openFurnBox();return;}if(buildOpen)return;buildOpen=true;G.attackHeld=false;

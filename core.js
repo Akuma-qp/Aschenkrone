@@ -28,43 +28,46 @@ G.DIFF={
 const DK=['leicht','normal','schwer'];
 G.D=()=>G.DIFF[G.settings.diff]||G.DIFF.normal;
 G.di=()=>Math.max(0,DK.indexOf(G.settings.diff));
-const QD={prove:[4,5,8],lvR:[2,3,4],knut:[4,5,6],lvE:[4,5,6],hermit:[6,7,8],lvN:[7,8,9],falk:[9,10,11],lvG:[10,11,12],grukk:[11,12,13],lvW:[12,13,14],grimelda:[14,15,16],lvM:[14,15,16],morvax:[15,16,17],lvL:[16,17,18],legion:[6,8,10],severin:[18,19,20],lvH:[18,19,20],schnitter:[19,20,21],eldtree:[20,21,22],sandking:[21,22,23],lvD:[23,24,25],dragon:[26,27,28],wolves:[6,8,12],ears:[4,6,9],draugr:[6,8,12]};
+const QD={prove:[4,6,8],lvR:[2,3,4],knut:[4,5,6],lvE:[4,5,6],hermit:[6,7,8],lvWo:[6,7,8],wolfmom:[8,9,10],lvA:[8,9,10],malrik:[10,11,12],lvN:[10,11,12],falk:[12,13,14],lvW:[13,14,15],grimelda:[15,16,17],lvO:[16,17,18],brakka:[18,19,20],lvMo:[18,19,20],moorkill:[8,10,12],lvWa:[20,21,22],gobkill:[10,14,16],lvG:[22,23,24],grukk:[23,24,25],lvM:[24,25,26],morvax:[25,26,27],lvL:[26,27,28],legion:[6,8,10],severin:[28,29,30],lvZ:[28,29,30],grimbart:[29,30,31],lvH:[29,30,31],schnitter:[30,31,32],eldtree:[31,32,33],sandking:[32,33,34],lvD:[33,34,35],dragon:[36,37,38],lvN1:[36,37,38],lvN2:[36,37,38],sucherkill:[10,12,14],lvN3:[37,38,39],queen:[38,40,41],lvN4:[39,40,40],garde:[8,10,12],valdrik:[41,42,43],wolves:[6,8,12],ears:[4,6,9],draugr:[6,8,12]};
 const qd=k=>QD[k][G.di()];G.qd=qd;
 
 
 // ===================== Welt =====================
-const TILE=32,WW=576,H=576,W=WW+120,VCX=288,VCY=300,RV=36,CH=16,SEED=4242;
+const TILE=32,WW=1312,H=1152,W=WW+120,VCX=576,VCY=600,RV=36,CH=16,SEED=4242;
 const T={GRASS:0,GRASS2:1,PATH:2,WATER:3,TREE:4,ROCK:5,SAND:6,COBBLE:7,HOUSE:8,FIELD:9,ASH:10,WALL:11,FLOWER:12,DEAD:13,SWAMP:14,LAVA:15,DIRT:16,WELL:17,CWALL:18,TOWER:19,TENT:20,FIRE:21,RUIN:22,BARRIER:23,CRYPT:24,CROP:25,VOID:26,WOOD:27,STONEF:28,IWALL:29,SWALL:30,DOOR:31,TABLE:32,BED:33,BARREL:34,SHELF:35,HEARTH:36,ANVIL:37,ALTAR:38,PEW:39,CARPET:40,CHEST:41,PILLAR:42,CRATE:43,THRONE:44,SNOW:45,ICE:46,GOLD:47,FWALL:48,WAYSTONE:49,CLIFF:50,CACTUS:51,MUSH:52,DGRASS:53,BONES:54,BURNT:55,STUMP:56,HERBS:57,BRIDGE:58,LEDGE:59,CLIMB:60,PFURN:61,HAY:62,STALL:63,STRAW:64,TROUGH:65,CART:66,SACK:67,PFENCE:68,OVEN:69,RACK:70,DUMMY:71,COUNTER:72,LOOM:73,CAULDRON:74,BENCH:75,ARMOR:76,DESK:77,GRIND:78,WHEEL:79,DIVAN:80,FUR:81};
 const SOLIDS=new Uint8Array(96);[T.WATER,T.TREE,T.ROCK,T.HOUSE,T.WALL,T.DEAD,T.LAVA,T.WELL,T.CWALL,T.TOWER,T.TENT,T.FIRE,T.RUIN,T.CRYPT,T.VOID,T.IWALL,T.SWALL,T.TABLE,T.BED,T.BARREL,T.SHELF,T.HEARTH,T.ANVIL,T.ALTAR,T.PEW,T.CHEST,T.PILLAR,T.CRATE,T.THRONE,T.FWALL,T.WAYSTONE,T.CLIFF,T.CACTUS,T.MUSH,T.STUMP,T.CLIMB,T.PFURN,T.HAY,T.STALL,T.TROUGH,T.CART,T.SACK,T.PFENCE,T.OVEN,T.RACK,T.DUMMY,T.COUNTER,T.LOOM,T.CAULDRON,T.BENCH,T.ARMOR,T.DESK,T.GRIND,T.WHEEL,T.DIVAN].forEach(t=>SOLIDS[t]=1);
 const map=new Uint8Array(W*H),BIO=new Uint8Array(WW*H);
-const BNAMES=['village','meadow','forest','swamp','waste','winter','ash','dark','desert','peaks'];
+const BNAMES=['village','meadow','forest','swamp','waste','winter','ash','dark','desert','peaks','mist'];
 const dV=(x,y)=>Math.hypot(x-VCX,y-VCY);
-const TOWNS=[{id:'frost',name:'Frosthafen',x:150,y:95,r:18,gnd:'snow',wall:'wood',gates:[Math.PI/2,0]},
- {id:'glut',name:'Glutwacht',x:350,y:140,r:17,gnd:'ash',wall:'stone',gates:[Math.PI/2,-Math.PI/4]},
- {id:'moor',name:'Moorbruck',x:84,y:318,r:16,gnd:'swamp',wall:'wood',gates:[0,Math.PI/2]},
- {id:'wald',name:'Waldheim',x:500,y:270,r:16,gnd:'forest',wall:'wood',gates:[Math.PI,Math.PI/2]},
- {id:'sand',name:'Sandfeste',x:470,y:505,r:17,gnd:'sand',wall:'stone',gates:[-Math.PI*0.8,Math.PI/4]}];
+const TOWNS=[{id:'frost',name:'Frosthafen',x:300,y:190,r:18,gnd:'snow',wall:'wood',gates:[Math.PI/2,0]},
+ {id:'glut',name:'Glutwacht',x:700,y:280,r:17,gnd:'ash',wall:'stone',gates:[Math.PI/2,-Math.PI/4]},
+ {id:'moor',name:'Moorbruck',x:168,y:636,r:16,gnd:'swamp',wall:'wood',gates:[0,Math.PI/2]},
+ {id:'wald',name:'Waldheim',x:1000,y:540,r:16,gnd:'forest',wall:'wood',gates:[Math.PI,Math.PI/2]},
+ {id:'nebel',name:'Nebelwacht',x:1220,y:556,r:15,gnd:'mist',wall:'stone',gates:[Math.PI,Math.PI/2]},
+ {id:'sand',name:'Sandfeste',x:940,y:1010,r:17,gnd:'sand',wall:'stone',gates:[-Math.PI*0.8,Math.PI/4]}];
 const townAt=(x,y)=>TOWNS.find(t=>Math.hypot(x-t.x,y-t.y)<t.r+.5);
-G.SUMMIT={x:58,y:38,r:10};
-const CANYON=[[214,452],[245,466],[278,470],[310,467],[345,478],[384,470]];
+G.SUMMIT={x:116,y:76,r:10};
+const CANYON=[[428,904],[490,932],[556,940],[620,934],[690,956],[768,940]];
 function segD(px,py,P){let best=1e9,bu=0,bi=0;for(let i=0;i<P.length-1;i++){const [ax,ay]=P[i],[bx,by]=P[i+1];const dx=bx-ax,dy=by-ay,L2=dx*dx+dy*dy;let u=((px-ax)*dx+(py-ay)*dy)/L2;u=clamp(u,0,1);const d=Math.hypot(px-ax-dx*u,py-ay-dy*u);if(d<best){best=d;bu=u;bi=i;}}return [best,bi+bu];}
 const canyonW=(x,y)=>{const n=noise(x/9,y/9,611);return 3.2+n*1.6;};
-function biomeRaw(x,y){const d=dV(x,y);if(d<RV+1)return'village';const wx=x+(noise(x/55,y/55,401)-.5)*80+(noise(x/14,y/14,403)-.5)*18,wy=y+(noise(x/55,y/55,402)-.5)*80+(noise(x/14,y/14,404)-.5)*18;
- if(wy<150||y<132){if(wx<236)return'winter';if(wx<300)return'peaks';return'ash';}
- if(wy>442||y>462){if(wx<222)return'dark';if(wx<372)return'waste';return'desert';}
- if(wx<152)return'swamp';if(wx>432)return'forest';return'meadow';}
+function biomeRaw(x,y){const d=dV(x,y);if(d<RV+1)return'village';const mx=x+(noise(x/70,y/70,405)-.5)*70;if(mx>1180)return'mist';
+ const wx=x+(noise(x/110,y/110,401)-.5)*160+(noise(x/28,y/28,403)-.5)*36,wy=y+(noise(x/110,y/110,402)-.5)*160+(noise(x/28,y/28,404)-.5)*36;
+ if(wy<300||y<264){if(wx<472)return'winter';if(wx<600)return'peaks';return'ash';}
+ if(wy>884||y>924){if(wx<444)return'dark';if(wx<744)return'waste';return'desert';}
+ if(wx<304)return'swamp';if(wx>864)return'forest';return'meadow';}
 for(let y=0;y<H;y++)for(let x=0;x<WW;x++)BIO[y*WW+x]=BNAMES.indexOf(biomeRaw(x,y));
 {const vi=BNAMES.indexOf('village');for(let it=0;it<2;it++){const src=BIO.slice();const cnt=new Int16Array(BNAMES.length);for(let y=0;y<H;y++)for(let x=0;x<WW;x++){const c=src[y*WW+x];if(c===vi)continue;cnt.fill(0);for(let dy=-3;dy<=3;dy++){const yy=y+dy;if(yy<0||yy>=H)continue;for(let dx=-3;dx<=3;dx++){const xx=x+dx;if(xx<0||xx>=WW)continue;const b=src[yy*WW+xx];if(b!==vi)cnt[b]++;}}let bb=c,bn=cnt[c];for(let k=0;k<cnt.length;k++)if(cnt[k]>bn){bn=cnt[k];bb=k;}BIO[y*WW+x]=bb;}}}
 function biome(x,y){x=Math.floor(x);y=Math.floor(y);if(x>=WW)return'interior';if(x<0||y<0||y>=H)return'waste';return BNAMES[BIO[y*WW+x]];}
-const BL={meadow:'m',forest:'f',swamp:'s',waste:'w',winter:'i',ash:'a',village:'v',interior:'x',dark:'d',desert:'e',peaks:'p'};
-const BLV={meadow:[1,10,40,8.5],forest:[5,14,150,12.5],swamp:[8,18,150,12],waste:[12,21,150,9],winter:[12,22,170,9],ash:[19,29,190,14],dark:[15,24,190,10],desert:[14,23,200,12],peaks:[18,26,170,8]};
-function zoneLevel(x,y){if(x>=WW)return G.room&&G.room.dungeon?G.room.lvl:0;const b=biome(x,y);if(b==='village'||townAt(x,y))return 0;const L=BLV[b];return clamp(Math.floor(L[0]+Math.max(0,dV(x,y)-L[2])/L[3]),L[0],L[1]);}
-const ZN={interior:'Innenraum',village:'Eichenhain',meadow:'Sonnenwiesen',forest:'Finsterwald',swamp:'Nebelmoor',waste:'Steinöde',winter:'Frostlande',ash:'Aschenberge',dark:'Schattenwald',desert:'Sengende Dünen',peaks:'Graukamm-Gebirge'};
-const GC={interior:'#3a2a1a',village:'#64933f',meadow:'#5f9440',forest:'#43742f',swamp:'#4a5e3c',waste:'#8a7b5c',winter:'#e8eef4',ash:'#4a3f3c',dark:'#2e4630',desert:'#d6c086',peaks:'#77786f'};
+const BL={meadow:'m',forest:'f',swamp:'s',waste:'w',winter:'i',ash:'a',village:'v',interior:'x',dark:'d',desert:'e',peaks:'p',mist:'n'};
+// Gegnerstufe: wächst mit der Entfernung zum Dorf (Stufe 1 bis 40), je Region etwas verschoben
+const ZOFF={meadow:-1,forest:0,swamp:0,waste:1,winter:1,peaks:2,dark:1,desert:-4,ash:0,mist:0},ZMIN={meadow:1,forest:6,swamp:8,waste:12,winter:14,peaks:18,dark:16,desert:16,ash:20,mist:30},ZMAX={meadow:16,forest:30,swamp:28,waste:30,winter:36,peaks:38,dark:32,desert:36,ash:39,mist:40};
+function zoneLevel(x,y){if(x>=WW)return G.room&&G.room.dungeon?G.room.lvl:0;const b=biome(x,y);if(b==='village'||townAt(x,y))return 0;const base=1+Math.max(0,dV(x,y)-70)/16.5;return clamp(Math.round(base+ZOFF[b]),ZMIN[b],ZMAX[b]);}
+const ZN={mist:'Nebellande',interior:'Innenraum',village:'Eichenhain',meadow:'Sonnenwiesen',forest:'Finsterwald',swamp:'Nebelmoor',waste:'Steinöde',winter:'Frostlande',ash:'Aschenberge',dark:'Schattenwald',desert:'Sengende Dünen',peaks:'Graukamm-Gebirge'};
+const GC={mist:'#4f4a63',interior:'#3a2a1a',village:'#64933f',meadow:'#5f9440',forest:'#43742f',swamp:'#4a5e3c',waste:'#8a7b5c',winter:'#e8eef4',ash:'#4a3f3c',dark:'#2e4630',desert:'#d6c086',peaks:'#77786f'};
 const CASTLE={x0:VCX-13,y0:VCY-41,x1:VCX+13,y1:VCY-16};
 const inCastle=(x,y)=>x>=CASTLE.x0&&x<=CASTLE.x1&&y>=CASTLE.y0&&y<=CASTLE.y1;
 const HILL={x:VCX,y:VCY-29,r:21,h:3.2};
-const CAMP={x:522,y:342},CRYPT={x:62,y:398},LAIR={x:500,y:58},BANDITS={x:426,y:228},ASHVALE={x:372,y:206},RAUB={x:330,y:262},LEGION={x:221,y:494};
+const CAMP={x:1044,y:684},CRYPT={x:124,y:796},LAIR={x:1000,y:116},BANDITS={x:814,y:448},ASHVALE={x:744,y:412},RAUB={x:660,y:524},LEGION={x:442,y:988},CITADEL={x:1226,y:758};
 const V=(dx,dy)=>[VCX+dx,VCY+dy];
 const BUILD=[
  {id:'bakery',kind:'house',x:-15,y:-10,w:5,h:3,roof:'#a0522d',name:'Bäckerei',sign:'🥖',annex:'oven'},
@@ -106,6 +109,7 @@ tb('mhall','moor',-3,-7,6,3,{roof:'#4a5a3a',name:'Vogtshaus',sign:'⚖️',stilt
 tb('m1','moor',-8,0,3,3,{roof:'#5a5a3a',stilt:1,annex:'barrels'});tb('m2','moor',4,1,3,3,{roof:'#4a4a2a',stilt:1,name:'Kräuterkate',annex:'garden'});
 tb('whall','wald',-3,-7,6,3,{roof:'#5a3a1a',name:'Försterhalle',sign:'🌲',annex:'woodpile'});
 tb('w1','wald',-8,1,3,3,{roof:'#6a4a2a',annex:'woodpile'});tb('w2','wald',4,1,4,3,{roof:'#5a3a2a',name:'Bogenmacher',annex:'rack'});
+tb('nhall','nebel',-3,-8,6,3,{roof:'#3a3448',name:'Halle der Nebelwacht',sign:'🛡️',stone:1,annex:'rack'});tb('n1','nebel',-9,0,3,3,{roof:'#4a4458',name:'Runenhaus',annex:'barrels'});tb('n2','nebel',5,0,4,3,{roof:'#3a3448',name:'Odos Lager',sign:'⚖️',annex:'barrels'});tb('n3','nebel',-4,6,4,3,{roof:'#4a4458',name:'Späherhaus',annex:'woodpile'});
 tb('spal','sand',-4,-8,8,3,{roof:'#c9a060',name:'Palast der Fürstin',sign:'🌙',flat:1});
 tb('s1','sand',-9,0,3,3,{roof:'#b89050',flat:1,annex:'barrels'});tb('s2','sand',5,0,4,3,{roof:'#c0a070',flat:1,name:'Basar',sign:'⚖️'});
 // Update 13: Jede Stadt bekommt Markt, Bauernhof mit Feld und mehr Wohnhäuser
@@ -121,41 +125,47 @@ for(const tid in TADD){const a=TADD[tid],ex={};for(const k of ['snow','stone','s
  tb(tid+'_farm',tid,a.farm[0],a.farm[1],4,3,Object.assign({roof:a.roof,name:'Bauernhof',sign:'🌾',annex:'pen'},ex));
  a.houses.forEach((h,i)=>tb(tid+'_h'+i,tid,h[0],h[1],h[2],h[3],Object.assign({roof:a.roof,name:h[4],annex:['woodpile','barrels','garden',null][i],chimney:i%2},ex)));
  const fp=TP(tid,a.field[0],a.field[1]);for(let y=0;y<3;y++)for(let x=0;x<5;x++)TFIELDS.push([fp.x+x,fp.y+y]);}
-const WILD=[{id:'hut',kind:'hut',x:228,y:358,w:4,h:3,roof:'#3a2a1a',name:'Verlassene Jägerhütte',def:'boar'},
- {id:'cave',kind:'cave',x:520,y:196,w:4,h:3,name:'Spinnenhöhle',def:'spider'},
- {id:'wtower',kind:'wtower',x:148,y:246,w:3,h:3,name:'Alter Wachturm',def:'skeleton'},
- {id:'mine',kind:'cave',x:296,y:540,w:4,h:3,name:'Verlassene Mine',def:'golem'},
- {id:'icecave',kind:'cave',x:104,y:52,w:4,h:3,snow:1,name:'Eishöhle',def:'frostslime'},
- {id:'shrine',kind:'shrine',x:420,y:112,w:5,h:3,name:'Feuerschrein',def:'imp'},
- {id:'grotto',kind:'cave',x:276,y:468,w:4,h:3,name:'Schluchtgrotte',def:'orc',canyon:1},
- {id:'pyramid',kind:'pyramid',x:526,y:536,w:6,h:4,name:'Grab des Sandkönigs',def:'mummy'},
- {id:'abbey',kind:'wtower',x:150,y:500,w:3,h:3,name:'Ruine der Abtei',def:'wraith',ruin:1},
- {id:'witchhut',kind:'hut',x:96,y:470,w:4,h:3,roof:'#2a2a1a',name:'Hexenkate',def:'witch'},
- {id:'dwarf',kind:'cave',x:262,y:92,w:4,h:3,name:'Zwergenbinge',def:'greydwarf',snow:1},
- {id:'banditcave',kind:'cave',x:428,y:220,w:4,h:3,name:'Räuberhöhle',def:'bandit'},
- {id:'cellar',kind:'hut',x:374,y:200,w:4,h:3,roof:'#2a2420',name:'Verkohlter Keller',def:'ghoul',burnt:1},
- {id:'angler',kind:'hut',x:104,y:522,w:4,h:3,roof:'#4a3a24',name:'Anglerhütte',peace:1}];
+const WILD=[{id:'hut',kind:'hut',x:456,y:716,w:4,h:3,roof:'#3a2a1a',name:'Verlassene Jägerhütte',def:'boar'},
+ {id:'cave',kind:'cave',x:1040,y:392,w:4,h:3,name:'Spinnenhöhle',def:'spider'},
+ {id:'wtower',kind:'wtower',x:296,y:492,w:3,h:3,name:'Alter Wachturm',def:'skeleton'},
+ {id:'mine',kind:'cave',x:592,y:1080,w:4,h:3,name:'Verlassene Mine',def:'golem'},
+ {id:'icecave',kind:'cave',x:208,y:104,w:4,h:3,snow:1,name:'Eishöhle',def:'frostslime'},
+ {id:'shrine',kind:'shrine',x:840,y:224,w:5,h:3,name:'Feuerschrein',def:'imp'},
+ {id:'grotto',kind:'cave',x:552,y:936,w:4,h:3,name:'Schluchtgrotte',def:'orc',canyon:1},
+ {id:'pyramid',kind:'pyramid',x:1052,y:1072,w:6,h:4,name:'Grab des Sandkönigs',def:'mummy'},
+ {id:'abbey',kind:'wtower',x:300,y:1000,w:3,h:3,name:'Ruine der Abtei',def:'wraith',ruin:1},
+ {id:'witchhut',kind:'hut',x:192,y:940,w:4,h:3,roof:'#2a2a1a',name:'Hexenkate',def:'witch'},
+ {id:'dwarf',kind:'cave',x:524,y:184,w:4,h:3,name:'Zwergenbinge',def:'greydwarf',snow:1},
+ {id:'banditcave',kind:'cave',x:806,y:418,w:4,h:3,name:'Räuberhöhle',def:'bandit'},
+ {id:'cellar',kind:'hut',x:748,y:400,w:4,h:3,roof:'#2a2420',name:'Verkohlter Keller',def:'ghoul',burnt:1},
+ {id:'wolfden',kind:'cave',x:460,y:448,w:4,h:3,name:'Wolfsbau',def:'wolf'},
+ {id:'mistgate',kind:'shrine',x:1214,y:410,w:5,h:3,name:'Wurzeltor',def:'sucher'},
+ {id:'angler',kind:'hut',x:466,y:558,w:4,h:3,roof:'#4a3a24',name:'Anglerhütte',peace:1}];
 WILD.forEach(s=>{s.wild=1;BUILD.push(s);});
 BUILD.forEach(b=>{b.door={tx:b.x+Math.floor(b.w/2),ty:b.y+b.h-1};});
 const FIELD_POS=TFIELDS.slice();for(let y=-6;y<=-5;y++)for(let x=-14;x<=-12;x++)FIELD_POS.push([VCX+x,VCY+y]);for(let y=12;y<=16;y++)for(let x=-25;x<=-21;x++)FIELD_POS.push([VCX+x,VCY+y]);
 const WAYS=[{id:'city',name:'Eichenhain',tx:VCX+3,ty:VCY+3}];TOWNS.forEach(t=>WAYS.push({id:t.id,name:t.name,tx:t.x+2,ty:t.y+2}));
+WAYS.push({id:'w_ash',name:'Ruinen von Aschental',tx:ASHVALE.x+4,ty:ASHVALE.y+17,wild:1},{id:'w_gob',name:'Goblinlager',tx:CAMP.x-14,ty:CAMP.y+3,wild:1},{id:'w_cry',name:'Krypta im Nebelmoor',tx:CRYPT.x+12,ty:CRYPT.y-4,wild:1},{id:'w_leg',name:'Kriegslager',tx:LEGION.x+3,ty:LEGION.y+18,wild:1},{id:'w_lair',name:'Fuß des Goldbergs',tx:LAIR.x+3,ty:LAIR.y+22,wild:1},{id:'w_cit',name:'Vor der Nebelzitadelle',tx:CITADEL.x+3,ty:CITADEL.y+19,wild:1});
 const ROADS=[
- [V(-37,0),[200,302],[150,306],[100,316],[96,318]],
- [[200,302],[188,240],[168,172],[152,110]],
- [V(37,0),[380,296],[440,286],[487,272]],
- [[380,296],[372,232],[372,214],[362,176],[351,154]],[[372,214],[376,204]],
- [[360,129],[400,108],[422,116]],[[424,117],[460,84],[500,74]],
- [V(0,37),[290,400],[294,452],[292,470],[296,488],[306,530],[306,546],[298,546]],[[292,470],[279,472]],
- [[290,400],[380,440],[440,486],[458,496]],
- [[290,400],[230,448],[176,486],[151,505]],
- [[150,83],[118,62],[106,56]],[[165,95],[220,100],[264,97]],
- [[84,329],[72,370],[63,390]],[[500,282],[512,320],[521,334]],[[500,286],[515,260],[522,201]],
- [[440,286],[432,252],[426,237]],[[150,306],[149,251]],[[200,302],[220,345],[230,362]],[[100,316],[98,400],[98,474]],[[480,516],[510,530],[529,541]]];
+ [V(-37,0),[400,604],[300,612],[200,632],[192,636]],
+ [[400,604],[376,480],[336,344],[304,220]],
+ [V(37,0),[760,592],[880,572],[974,544]],
+ [[760,592],[744,464],[744,428],[724,352],[702,308]],[[744,428],[752,408]],
+ [[720,258],[800,216],[844,232]],[[848,234],[920,168],[1000,148]],
+ [V(0,37),[580,800],[588,904],[584,940],[592,976],[612,1060],[612,1092],[596,1092]],[[584,940],[558,944]],
+ [[580,800],[760,880],[880,972],[916,992]],
+ [[580,800],[460,896],[352,972],[302,1010]],
+ [[300,166],[236,124],[212,112]],[[330,190],[440,200],[528,194]],
+ [[168,658],[144,740],[126,780]],[[1000,564],[1024,640],[1042,668]],[[1000,572],[1030,520],[1044,402]],
+ [[880,572],[840,500],[814,462]],[[300,612],[298,502]],[[400,604],[440,690],[460,724]],[[200,632],[196,800],[196,948]],[[960,1032],[1020,1060],[1058,1082]]];
+ROADS.push([[1000,562],[1060,578],[1140,566],[1204,557]]);
 const RLIST=[];
+const HERALDRING=()=>{const ab=BUILD.find(b=>b.id==='abbey'),py=BUILD.find(b=>b.id==='pyramid');return[[ab.x+1,ab.y+5,9.2],[py.x+3,py.y+5,9.6]];};
+const HERALDPOS=()=>{const ab=BUILD.find(b=>b.id==='abbey'),py=BUILD.find(b=>b.id==='pyramid');return{eldtree:{x:ab.x+1,y:ab.y+10},sandking:{x:py.x+3,y:py.y+10}};};G.HERALDPOS=HERALDPOS;
 function gen(){
  map.fill(T.VOID);
  for(let y=0;y<H;y++)for(let x=0;x<WW;x++){
-  const d=dV(x,y),b=biome(x,y),n=fbm(x*1.15,y*1.15,SEED),m=noise(x/3.2,y/3.2,SEED+50),r=h2(x,y,SEED+99),o=noise(x/30,y/30,SEED+7);let t=T.GRASS;
+  const d=dV(x,y),b=biome(x,y),n=fbm(x*.62,y*.62,SEED),m=noise(x/3.2,y/3.2,SEED+50),r=h2(x,y,SEED+99),o=noise(x/30,y/30,SEED+7);let t=T.GRASS;
   if(b==='village'){t=r<.5?T.GRASS:T.GRASS2;if(r>.95)t=T.FLOWER;const cross=Math.abs(x-VCX)<=1||Math.abs(y-VCY)<=1;if(d<5||(cross&&d<RV-.4))t=T.COBBLE;}
   else if(b==='meadow'){if(n<.26)t=T.WATER;else if(n<.29)t=T.SAND;else if(m>.78&&o>.35)t=T.TREE;else if(r<.004)t=T.ROCK;else t=r<.05?T.FLOWER:(r<.5?T.GRASS:T.GRASS2);}
   else if(b==='forest'){if(n<.25)t=T.WATER;else if(n<.28)t=T.SAND;else if(m>.52||r<.05)t=T.TREE;else if(r>.992)t=T.STUMP;else t=r<.5?T.GRASS:T.GRASS2;}
@@ -164,7 +174,8 @@ function gen(){
   else if(b==='winter'){if(n<.3)t=T.ICE;else if(m>.6||r<.03)t=T.TREE;else if(r>.985)t=T.ROCK;else t=T.SNOW;}
   else if(b==='dark'){if(n<.24)t=T.WATER;else if(m>.48||r<.06)t=T.TREE;else if(r>.975)t=T.MUSH;else if(r>.965)t=T.BONES;else t=T.DGRASS;}
   else if(b==='desert'){if(n<.2&&o>.55)t=T.WATER;else if(r<.012)t=T.CACTUS;else if(m>.8&&r<.3)t=T.ROCK;else if(r>.994)t=T.BONES;else t=T.SAND;}
-  else if(b==='peaks'){const rg=noise(x/6,y/6,SEED+31);if(rg>.62)t=T.CLIFF;else if(m>.6||r<.05)t=T.ROCK;else t=(y<90||rg>.5)?T.SNOW:T.DIRT;}
+  else if(b==='mist'){const big=noise(x/9,y/9,SEED+61);if(n<.2)t=T.WATER;else if(big>.78||m>.7||r<.025)t=T.TREE;else if(r>.982)t=T.MUSH;else if(r>.976)t=T.BONES;else if(r>.972)t=T.ROCK;else t=T.DGRASS;}
+  else if(b==='peaks'){const rg=noise(x/6,y/6,SEED+31);if(rg>.62)t=T.CLIFF;else if(m>.6||r<.05)t=T.ROCK;else t=(y<180||rg>.5)?T.SNOW:T.DIRT;}
   else{if(n<.3)t=T.LAVA;else if(m>.66||r<.03)t=T.ROCK;else if(r>.99)t=T.BONES;else t=T.ASH;}
   // Schlucht
   if(b==='waste'||b==='dark'||b==='desert'){const [dc]=segD(x,y,CANYON);const cw=canyonW(x,y);if(dc<cw)t=(r<.02)?T.ROCK:(r>.99?T.BONES:T.DIRT);else if(dc<cw+1.6)t=T.CLIFF;}
@@ -179,7 +190,7 @@ function gen(){
   set(x,y,t===T.WATER||t===T.ICE||t===T.LAVA?T.BRIDGE:(b==='desert'?T.PATH:T.PATH));};
  for(const R of ROADS)for(let i=0;i<R.length-1;i++){const [ax,ay]=R[i],[bx,by]=R[i+1];const L=Math.hypot(bx-ax,by-ay),nx=-(by-ay)/L,ny=(bx-ax)/L;for(let s=0;s<=L*2;s++){const u=s/(L*2),wb=Math.round(Math.sin((ax+ay+s*.5)*.12)*1.6*Math.min(1,s/6,(L*2-s)/6));const x=Math.round(ax+(bx-ax)*u+nx*wb),y=Math.round(ay+(by-ay)*u+ny*wb);road(x,y);road(x+1,y);road(x,y+1);road(x+1,y+1);RLIST.push(x,y);}}
  // Städte
- for(const tw of TOWNS){const gt={snow:T.SNOW,ash:T.ASH,swamp:T.SWAMP,forest:T.GRASS,sand:T.SAND}[tw.gnd];
+ for(const tw of TOWNS){const gt={snow:T.SNOW,ash:T.ASH,swamp:T.SWAMP,forest:T.GRASS,sand:T.SAND,mist:T.DGRASS}[tw.gnd];
   for(let dy=-tw.r-3;dy<=tw.r+3;dy++)for(let dx=-tw.r-3;dx<=tw.r+3;dx++){const dd=Math.hypot(dx,dy),x=tw.x+dx,y=tw.y+dy;if(dd>=tw.r+2.6)continue;let t=gt;const a=Math.atan2(dy,dx);
    const nearGate=tw.gates.some(g=>{let da=Math.abs(((a-g)+Math.PI*3)%(Math.PI*2)-Math.PI);return da*dd<1.6;});const cross=Math.abs(dx)<=1||Math.abs(dy)<=1;
    if(dd<tw.r-1.2){if(cross)t=tw.gnd==='sand'?T.SAND:T.COBBLE;if(dd<3)t=T.COBBLE;if(tw.gnd==='forest'&&h2(x,y,3)<.06)t=T.FLOWER;}
@@ -195,6 +206,8 @@ function gen(){
   [[-3,-2],[3,-2],[-3,2]].forEach(([a,b])=>set(C.x+a,C.y+b,T.TENT));set(C.x,C.y,T.FIRE);}
  {const C=LEGION,rr=11;for(let dy=-rr-1;dy<=rr+1;dy++)for(let dx=-rr-1;dx<=rr+1;dx++){const dd=Math.hypot(dx,dy);if(dd<rr-.5)set(C.x+dx,C.y+dy,T.DIRT);else if(dd<rr+.5&&!(Math.abs(dx)<=1&&dy>0))set(C.x+dx,C.y+dy,T.CWALL);}
   [[-6,-4],[-2,-7],[3,-7],[7,-3],[-7,3],[6,4],[-4,7],[4,7]].forEach(([a,b])=>set(C.x+a,C.y+b,T.TENT));[[0,-1],[-4,1],[4,1]].forEach(([a,b])=>set(C.x+a,C.y+b,T.FIRE));set(C.x-2,C.y+rr,T.TOWER);set(C.x+2,C.y+rr,T.TOWER);}
+ {const C=CITADEL,rr=12;for(let dy=-rr-1;dy<=rr+1;dy++)for(let dx=-rr-1;dx<=rr+1;dx++){const dd=Math.hypot(dx,dy);if(dd<rr-.5)set(C.x+dx,C.y+dy,(h2(C.x+dx,C.y+dy,77)<.18)?T.DIRT:T.COBBLE);else if(dd<rr+.5&&!(Math.abs(dx)<=1&&dy>0))set(C.x+dx,C.y+dy,T.CWALL);}
+  [[-7,-6],[7,-6],[-8,4],[8,4]].forEach(([a,b])=>set(C.x+a,C.y+b,T.TOWER));[[-3,-4],[3,-4],[0,3]].forEach(([a,b])=>set(C.x+a,C.y+b,T.PILLAR));set(C.x-2,C.y+rr,T.TOWER);set(C.x+2,C.y+rr,T.TOWER);}
  // Krypta
  for(let dy=-7;dy<=7;dy++)for(let dx=-7;dx<=7;dx++)if(Math.hypot(dx,dy)<6.5)set(CRYPT.x+dx,CRYPT.y+dy,T.SWAMP);
  for(let k=0;k<8;k++){const a=k*Math.PI/4;set(CRYPT.x+Math.round(Math.cos(a)*4.5),CRYPT.y+Math.round(Math.sin(a)*4.5),T.RUIN);}set(CRYPT.x,CRYPT.y-3,T.CRYPT);
@@ -206,20 +219,20 @@ function gen(){
  for(let dy=-15;dy<=15;dy++)for(let dx=-15;dx<=15;dx++){const dd=Math.hypot(dx,dy),x=LAIR.x+dx,y=LAIR.y+dy;const gate=Math.abs(dx)<=1&&dy>0;
   if(dd<6)set(x,y,T.GOLD);else if(dd<9.6)set(x,y,(h2(x,y,5)<.25)?T.GOLD:T.ASH);else if(dd<10.6)set(x,y,T.BARRIER);else if(dd<12)set(x,y,gate?T.PATH:T.ASH);else if(dd<13.4)set(x,y,gate?T.PATH:T.FWALL);else if(dd<15)set(x,y,gate?T.PATH:T.ASH);}
  // verstreute Ruinen & Steinkreise
- const ruinBi=['meadow','forest','swamp','waste','winter','dark','desert','peaks','ash'];G.RUINS=[];
- for(let i=0;i<70;i++){const x=6+Math.floor(h2(i,1,901)*(WW-12)),y=6+Math.floor(h2(i,2,901)*(H-12));const b=biome(x,y);if(ruinBi.indexOf(b)<0||dV(x,y)<RV+12||townAt(x,y)||TOWNS.some(t=>Math.hypot(x-t.x,y-t.y)<t.r+8))continue;
+ const ruinBi=['meadow','forest','swamp','waste','winter','dark','desert','peaks','ash','mist'];G.RUINS=[];
+ for(let i=0;i<300;i++){const x=6+Math.floor(h2(i,1,901)*(WW-12)),y=6+Math.floor(h2(i,2,901)*(H-12));const b=biome(x,y);if(ruinBi.indexOf(b)<0||dV(x,y)<RV+12||townAt(x,y)||TOWNS.some(t=>Math.hypot(x-t.x,y-t.y)<t.r+8))continue;
   let near=false;for(let k=0;k<RLIST.length;k+=2*25)if(Math.abs(RLIST[k]-x)<4&&Math.abs(RLIST[k+1]-y)<4){near=true;break;}if(near)continue;
   const kind=h2(i,3,901)<.35?'circle':'house';G.RUINS.push({x,y,kind,b});
-  const gt=get(x,y);const ground=SOLIDS[gt]||gt===T.WATER?({desert:T.SAND,winter:T.SNOW,waste:T.DIRT,ash:T.ASH,dark:T.DGRASS,swamp:T.SWAMP,peaks:T.DIRT}[b]||T.GRASS):gt;
+  const gt=get(x,y);const ground=SOLIDS[gt]||gt===T.WATER?({desert:T.SAND,winter:T.SNOW,waste:T.DIRT,ash:T.ASH,dark:T.DGRASS,mist:T.DGRASS,swamp:T.SWAMP,peaks:T.DIRT}[b]||T.GRASS):gt;
   for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++)if(Math.hypot(dx,dy)<4.5)set(x+dx,y+dy,ground);
   if(kind==='circle'){for(let k=0;k<9;k++){const a=k/9*6.283;if(h2(i,k,902)<.8)set(x+Math.round(Math.cos(a)*3.2),y+Math.round(Math.sin(a)*3.2),T.RUIN);}set(x,y,T.BONES);}
   else{const w=4+Math.floor(h2(i,4,901)*3),h=3+Math.floor(h2(i,5,901)*2);for(let yy=0;yy<h;yy++)for(let xx=0;xx<w;xx++){if(!(xx===0||yy===0||xx===w-1||yy===h-1))continue;if(h2(x+xx,y+yy,903)<.62)set(x-2+xx,y-2+yy,T.RUIN);}}}
  // Wildnis-Strukturen freiräumen
- for(const b of BUILD){if(!b.wild)continue;const bi=biome(b.x,b.y),gt={meadow:T.GRASS,forest:T.GRASS2,swamp:T.SWAMP,waste:T.DIRT,ash:T.ASH,winter:T.SNOW,dark:T.DGRASS,desert:T.SAND,peaks:T.DIRT}[bi]||T.GRASS;for(let y=b.y-3;y<=b.y+b.h+3;y++)for(let x=b.x-3;x<=b.x+b.w+2;x++){const tt=get(x,y);if(SOLIDS[tt]||tt===T.WATER||tt===T.ICE||tt===T.LAVA)set(x,y,b.canyon?T.DIRT:gt);}}
+ for(const b of BUILD){if(!b.wild)continue;const bi=biome(b.x,b.y),gt={meadow:T.GRASS,forest:T.GRASS2,swamp:T.SWAMP,waste:T.DIRT,ash:T.ASH,winter:T.SNOW,dark:T.DGRASS,mist:T.DGRASS,desert:T.SAND,peaks:T.DIRT}[bi]||T.GRASS;for(let y=b.y-3;y<=b.y+b.h+3;y++)for(let x=b.x-3;x<=b.x+b.w+2;x++){const tt=get(x,y);if(SOLIDS[tt]||tt===T.WATER||tt===T.ICE||tt===T.LAVA)set(x,y,b.canyon?T.DIRT:gt);}}
  // ---- Sprung- & Kletterorte, Weiher, Gipfel ----
- {const P0={x:106,y:533};for(let dy=-6;dy<=6;dy++)for(let dx=-8;dx<=8;dx++){const d=Math.hypot(dx/1.3,dy)+noise((P0.x+dx)/3,(P0.y+dy)/3,77)*1.2;const x=P0.x+dx,y=P0.y+dy;if(d<4.2)set(x,y,T.WATER);else if(d<5.6)set(x,y,(h2(x,y,4)<.12)?T.FLOWER:T.DGRASS);}
-  for(let y=520;y<=528;y++)for(let x=100;x<=110;x++){const t=get(x,y);if(SOLIDS[t]||t===T.WATER)set(x,y,T.DGRASS);}for(let x=99;x<=112;x++)if(!SOLIDS[get(x,529)])set(x,529,T.PATH);}
- for(const [cx,cy,rr] of [[151,505,9.2],[529,541,9.6]])for(let dy=-11;dy<=11;dy++)for(let dx=-11;dx<=11;dx++){const d=Math.hypot(dx,dy);if(d<rr-.5||d>rr+.5)continue;const x=cx+dx,y=cy+dy,t=get(x,y);if(t===T.WATER||t===T.LAVA)continue;if(!SOLIDS[t]||t===T.TREE||t===T.ROCK||t===T.CACTUS||t===T.STUMP||t===T.DEAD)set(x,y,T.LEDGE);}
+ {const AH=BUILD.find(b=>b.id==='angler'),P0={x:AH.x+2,y:AH.y+11};for(let dy=-6;dy<=6;dy++)for(let dx=-8;dx<=8;dx++){const d=Math.hypot(dx/1.3,dy)+noise((P0.x+dx)/3,(P0.y+dy)/3,77)*1.2;const x=P0.x+dx,y=P0.y+dy;if(d<4.2)set(x,y,T.WATER);else if(d<5.6)set(x,y,(h2(x,y,4)<.12)?T.FLOWER:T.DGRASS);}
+  for(let y=P0.y-13;y<=P0.y-5;y++)for(let x=P0.x-6;x<=P0.x+4;x++){const t=get(x,y);if(SOLIDS[t]||t===T.WATER)set(x,y,T.DGRASS);}for(let x=P0.x-7;x<=P0.x+6;x++)if(!SOLIDS[get(x,P0.y-4)])set(x,P0.y-4,T.PATH);}
+ for(const [cx,cy,rr] of HERALDRING())for(let dy=-11;dy<=11;dy++)for(let dx=-11;dx<=11;dx++){const d=Math.hypot(dx,dy);if(d<rr-.5||d>rr+.5)continue;const x=cx+dx,y=cy+dy,t=get(x,y);if(t===T.WATER||t===T.LAVA)continue;if(!SOLIDS[t]||t===T.TREE||t===T.ROCK||t===T.CACTUS||t===T.STUMP||t===T.DEAD)set(x,y,T.LEDGE);}
  {const S0=G.SUMMIT;for(let dy=-16;dy<=16;dy++)for(let dx=-16;dx<=16;dx++){const d=Math.hypot(dx,dy),x=S0.x+dx,y=S0.y+dy;if(d>15.5)continue;if(d<6.4)set(x,y,d<1.2?T.SNOW:(h2(x,y,6)<.08?T.ROCK:T.SNOW));else if(d<10.5){const climb=Math.abs(dx)<=1&&dy>0;set(x,y,climb?T.CLIMB:T.CLIFF);}else if(d<12)set(x,y,T.SNOW);}}
  for(let i=0;i<CANYON.length-1;i++){const [ax,ay]=CANYON[i],[bx,by]=CANYON[i+1];for(const u of [.3,.72]){const mx=ax+(bx-ax)*u,my=ay+(by-ay)*u,L=Math.hypot(bx-ax,by-ay),nx=-(by-ay)/L,ny=(bx-ax)/L;for(const sd of [-1,1])for(let k=0;k<=9;k++)for(const w of [-1,0,1]){const x=Math.round(mx+nx*sd*k+(bx-ax)/L*w),y=Math.round(my+ny*sd*k+(by-ay)/L*w);if(get(x,y)===T.CLIFF)set(x,y,T.CLIMB);}}}
  {const tx=VCX+44,ty=VCY+6;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)set(tx+dx,ty+dy,T.LEDGE);for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++){if(Math.abs(dx)<=1&&Math.abs(dy)<=1)continue;const t=get(tx+dx,ty+dy);if(SOLIDS[t]||t===T.WATER)set(tx+dx,ty+dy,T.GRASS);}}
@@ -270,9 +283,9 @@ function hgt(x,y){if(x>WW+1)return 0;let h=0;{const sd=Math.hypot(x-G.SUMMIT.x-.
  const b=biome(x,y);
  if(out>0){h+=(noise(x/13,y/13,77)-.5)*1.7*out;h+=(noise(x/40,y/40,78)-.5)*2.2*out;
   if(b==='peaks'){const rg=noise(x/6,y/6,SEED+31);h+=(1.5+noise(x/9,y/9,91)*4.5+Math.max(0,rg-.45)*9)*out;}
-  else if(y<160){h+=noise(x/7,y/7,88)*(x>300?2.4:1.6)*sm(165,140,y)*out;}
+  else if(y<320){h+=noise(x/7,y/7,88)*(x>600?2.4:1.6)*sm(330,280,y)*out;}
   if(b==='desert')h+=Math.sin(x*.21+noise(x/8,y/8,92)*4)*.45*out;}
- if(y>420){const [dcn]=segD(x,y,CANYON);const cw=canyonW(x,y);if(dcn<cw+3){const k=sm(cw+2.2,cw-.3,dcn);let ramp=0;for(let i=0;i<RLIST.length;i+=6){if(Math.abs(RLIST[i]-x)<3&&Math.abs(RLIST[i+1]-y)<3){ramp=1;break;}}h-=k*(ramp?2.2:3.6);}}
+ if(y>840){const [dcn]=segD(x,y,CANYON);const cw=canyonW(x,y);if(dcn<cw+3){const k=sm(cw+2.2,cw-.3,dcn);let ramp=0;for(let i=0;i<RLIST.length;i+=6){if(Math.abs(RLIST[i]-x)<3&&Math.abs(RLIST[i+1]-y)<3){ramp=1;break;}}h-=k*(ramp?2.2:3.6);}}
  const dl=Math.hypot(x-LAIR.x,y-LAIR.y);if(dl<24)h+=4.5*.5*(1+Math.cos(Math.PI*dl/24));
  return h;}
 G.flags={barrier:false};
@@ -286,7 +299,7 @@ const canMoveP=(x,y,r)=>!solidPP(x-r,y-r)&&!solidPP(x+r,y-r)&&!solidPP(x-r,y+r)&
 const vDist=(px,py)=>Math.hypot(px/TILE-VCX-.5,py/TILE-VCY-.5);
 const inSafe=(px,py)=>{if(px>=WW*TILE)return !(G.room&&G.room.dungeon);const tx=px/TILE,ty=py/TILE;if(vDist(px,py)<RV-.4||inCastle(Math.floor(tx),Math.floor(ty)))return true;return TOWNS.some(t=>Math.hypot(tx-t.x-.5,ty-t.y-.5)<t.r-.4);};
 const monBlocked=(px,py)=>{const tx=px/TILE,ty=py/TILE;if(vDist(px,py)<RV+.6||inCastle(Math.floor(tx),Math.floor(ty)))return true;return TOWNS.some(t=>Math.hypot(tx-t.x-.5,ty-t.y-.5)<t.r+1.2);};
-Object.assign(G,{TILE,WW,W,H,VCX,VCY,RV,CH,T,map,biome,BL,zoneLevel,dV,hgt,CASTLE,inCastle,HILL,CAMP,CRYPT,LAIR,BANDITS,ASHVALE,RAUB,LEGION,CANYON,ZN,GC,BUILD,TOWNS,WAYS,tileAt,isSolidT,walkTile,solidPx,canMove,vDist,inSafe,townAt,SOLIDS});
+Object.assign(G,{TILE,WW,W,H,VCX,VCY,RV,CH,T,map,biome,BL,zoneLevel,dV,hgt,CASTLE,inCastle,HILL,CAMP,CRYPT,LAIR,BANDITS,ASHVALE,RAUB,LEGION,CITADEL,CANYON,ZN,GC,BUILD,TOWNS,WAYS,tileAt,isSolidT,walkTile,solidPx,canMove,vDist,inSafe,townAt,SOLIDS});
 
 // ===================== Gegenstände =====================
 const RAR=[{n:'Gewöhnlich',c:'#a6a6a6',d:'#6b6b6b'},{n:'Ungewöhnlich',c:'#41c94a',d:'#23852b'},{n:'Selten',c:'#3d8bff',d:'#1f5fd1'},{n:'Episch',c:'#b14cff',d:'#7d22c9'},{n:'Legendär',c:'#ffb300',d:'#b87500'},{n:'Mythisch',c:'#ff2d55',d:'#c8002a'}];
@@ -410,8 +423,14 @@ const MT={
  boar:{n:'Wildschwein',c:'#6b4a33',r:13,spd:70,hp:1,dmg:1.1,xp:1.1,lv:[2,8],shape:'boar',ai:'charge',b:'m',lg:'beast'},
  fox:{n:'Rotfuchs',c:'#d2691e',r:10,spd:150,sk:['leap'],hp:.7,dmg:.85,xp:.9,lv:[3,8],shape:'wolf',scale:.8,b:'m',lg:'beast'},
  wolf:{n:'Wolf',c:'#8d8d99',r:12,spd:140,sk:['leap','howl'],hp:.85,dmg:.95,xp:1,lv:[4,12],shape:'wolf',pack:2,b:'mf',lg:'beast'},
- unicorn:{n:'Einhorn',c:'#f4f4ff',r:16,spd:125,hp:1.6,dmg:1.3,xp:2.4,lv:[20,20],shape:'horse',horn:1,ai:'charge',b:'m',lg:'mythic',passive:1,rare:.08,minD:100},
+ unicorn:{n:'Einhorn',c:'#f4f4ff',r:16,spd:125,hp:1.6,dmg:1.3,xp:2.4,lv:[20,20],shape:'horse',horn:1,ai:'charge',b:'m',lg:'mythic',passive:1,rare:.08,minD:200},
  slime:{n:'Schleim',c:'#5fcf5f',r:11,spd:55,hp:.7,dmg:.7,xp:.8,lv:[6,9],shape:'blob',b:'f',lg:'slime'},
+ sucher:{n:'Sucher',c:'#5a3a7a',r:13,spd:135,hp:1.25,dmg:1.3,xp:2.1,lv:[30,40],shape:'spider',scale:1.25,poison:1,sk:['leap'],b:'n',lg:'venom'},
+ sucherkrieger:{n:'Sucher-Krieger',c:'#3a2050',r:16,spd:110,wind:.5,hp:2.2,dmg:1.55,xp:2.8,lv:[32,40],shape:'spider',scale:1.7,b:'n',lg:'venom'},
+ zecke:{n:'Blutzecke',c:'#7a2030',r:8,spd:165,hp:.6,dmg:.9,xp:1.4,lv:[30,40],shape:'spider',scale:.55,poison:1,b:'n',lg:'venom'},
+ runenwirker:{n:'Nebelzwerg-Runenwirker',c:'#3a4a6a',skin:'#d0b090',hood:'#2a2a4a',r:10,spd:80,hp:1,dmg:1.25,xp:2.2,lv:[30,40],shape:'hum',wpn:'staff',scale:.85,ai:'ranged',shot:{c:'#c07bff',spd:300,cd:2.2,kind:'orb'},b:'n',lg:'mythic'},
+ gjall:{n:'Gjall',c:'#c9a6d8',r:16,spd:70,hp:1.8,dmg:1.4,xp:2.6,lv:[33,40],shape:'ghost',scale:1.7,ai:'ranged',shot:{c:'#ff7a3b',spd:260,cd:2.6,kind:'fire'},b:'n',lg:'spirit'},
+ nebelgarde:{wind:.55,n:'Nebelgardist',c:'#2a2238',skin:'#777',helm:'#3a3048',r:13,spd:90,human:1,hp:1.8,dmg:1.45,xp:2.4,lv:[30,42],shape:'hum',wpn:'sword',eye:'#b77bff',b:'',lg:'knight'},
  legion:{n:'Legionär der Schwarzen Legion',c:'#3a1f1f',skin:'#e0ac7e',helm:'#4a4a52',r:12,spd:100,human:1,hp:1.15,dmg:1.1,xp:1.4,lv:[12,30],shape:'hum',wpn:'sword',b:'',lg:'knight'},
  legarch:{n:'Legionsschütze',c:'#2a1a1a',skin:'#e0ac7e',helm:'#4a4a52',r:11,spd:80,human:1,hp:.8,dmg:1,xp:1.4,lv:[12,30],shape:'hum',wpn:'bow',ai:'ranged',shot:{c:'#d8c08a',spd:360,cd:2.1,kind:'arrow'},b:'',lg:'hunter'},
  blackknight:{wind:.55,n:'Schwarzritter',c:'#1e1e28',skin:'#666',helm:'#18181c',r:13,spd:85,human:1,hp:1.6,dmg:1.3,xp:1.9,lv:[14,30],shape:'hum',wpn:'sword',eye:'#ff5a3b',b:'',lg:'knight'},
@@ -474,6 +493,7 @@ const BOSSES={
  slimeking:{n:'Schleimkönig Glibbo',base:'slime',c:'#22b573',r:30,lv:[6,10],b:'f',abil:['slam','summon'],loot:[{set:'heiler',s:'helm',name:'Glibbo-Krone',k:'crown',f:'regen'},{t:'ring',name:'Glibberring',f:'regen'},{k:'mace',name:'Klebrige Keule'}]},
  varg:{n:'Banditenhauptmann Varg',base:'bandit',c:'#4a1a1a',r:20,lv:[6,12],b:'f',abil:['slam','volley'],minion:'archer',loot:[{k:'longbow',name:'Vargs Jagdbogen',f:'ranged'},{set:'waldlaeufer',s:'boots',name:'Räuberstiefel',f:'spd'},{t:'ring',name:'Diebesring',f:'luck'}]},
  knut:{n:'Räuberhauptmann Knut',base:'bandit',c:'#5a2a1a',r:17,lv:[3,8],b:'',fixed:1,lite:1,abil:['slam','summon'],minion:'bandit',loot:[{k:'sword',name:'Knuts Entermesser',f:'melee'},{t:'ring',name:'Knuts Siegelring',f:'luck'},{set:'waldlaeufer',s:'boots',name:'Räuberstiefel',f:'spd'}]},
+ valdrik:{n:'Kaiser Valdrik, der Nebelfürst',base:'nebelgarde',c:'#2a1240',r:22,lv:[30,45],b:'',fixed:1,abil:['slam','summon','volley','slam'],minion:'nebelgarde',loot:[{k:'greatsword',name:'Valdriks Kaiserklinge',f:'melee',ufx:{crit:10},d:'+10 % Krit'},{t:'amulet',name:'Herz des Nebels',f:'dmg'},{set:'ritter',s:'chest',name:'Nebelkaiser-Harnisch',f:'armor'}]},
  severin:{n:'Feldherr Severin',base:'blackknight',c:'#3a0f0f',r:20,lv:[16,30],b:'',fixed:1,abil:['slam','summon','slam'],minion:'legion',loot:[{k:'greatsword',name:'Severins Kriegsklinge',f:'melee',ufx:{crit:6},d:'+6 % Krit'},{t:'amulet',name:'Siegel der Schwarzen Legion',f:'dmg'},{k:'mace',name:'Legionskolben',f:'melee',ufx:{stun:.12},d:'12 % Betäubung'}]},
  grukk:{n:'Goblinhäuptling Grukk',base:'goblin',c:'#7a3a1a',r:22,lv:[8,12],b:'f',fixed:1,abil:['slam','summon','slam'],loot:[{k:'axe',name:'Grukks Hackbeil',f:'melee',ufx:{stun:.12},d:'12 % Betäubung'},{k:'dagger',name:'Grukks Zahnstocher',f:'melee',ufx:{poison:1,crit:5},d:'vergiftet, +5 % Krit'},{set:'waldlaeufer',s:'helm',name:'Häuptlingskrone',k:'crown',f:'luck'},{t:'ring',name:'Grukks Glücksring',f:'luck'}]},
  ursus:{n:'Ursus der Alte',base:'bear',c:'#4a2a14',r:30,lv:[10,15],b:'f',abil:['combo','leap','sweep','summon'],minion:'wolf',loot:[{k:'halberd',name:'Bärentöter',f:'melee'},{set:'waechter',s:'chest',name:'Bärenfellpanzer',f:'hp'},{t:'amulet',name:'Bärenkralle',f:'melee'}]},
@@ -493,6 +513,8 @@ const BOSSES={
  dragon:{n:'Drache Ignarok',base:'imp',c:'#b3261e',r:40,lv:[28,33],b:'a',fixed:1,abil:['fire','volley','slam','summon'],minion:'wyrmling',loot:[{k:'sword',name:'Drachenzahn-Klinge',f:'melee'},{set:'ritter',s:'chest',name:'Drachenschuppen-Harnisch',f:'hp'},{set:'waldlaeufer',s:'helm',name:'Drachenhorn-Helm',f:'crit'},{k:'longbow',name:'Ignaroks Schwinge',f:'ranged'},{k:'tome_fire',name:'Herz des Drachen',f:'spell'},{t:'amulet',name:'Drachenherz-Amulett',f:'regen'}]},
  mini:{n:'Champion',fixed:1,mini:1,b:'',lv:[1,40],abil:['slam'],loot:[]},
 };
+BOSSES.nebelalter={n:'Der Alte im Nebel',base:'sucherkrieger',c:'#4a2a6a',r:26,lv:[32,45],b:'n',abil:['slam','summon','leap'],minion:'sucher',loot:[{k:'scythe',name:'Sichel des Alten',f:'melee',ufx:{poison:1},d:'vergiftet'},{t:'ring',name:'Ring der tausend Augen',f:'crit'}]};
+for(const k in BOSSES){const B=BOSSES[k];if(!B.fixed&&B.lv)B.lv[1]=Math.max(B.lv[1],Math.min(45,Math.round(B.lv[1]*1.5)));}
 G.MT=MT;G.BOSSES=BOSSES;G.LG=LG;
 function mkMonster(key,lvl,x,y){const t=MT[key],D=G.D();const hpS=1+Math.max(0,lvl-10)*.04,dmS=1+Math.max(0,lvl-15)*.02;
  const m={x,y,type:key,lvl,t,r:t.r,cr:Math.min(t.r,11),maxhp:Math.round((34+lvl*15)*hpS*t.hp*D.mhp),dmg:(5+lvl*2.8)*dmS*t.dmg*D.mdmg,spd:t.spd*rnd(.92,1.08),xp:Math.round((8+lvl*6)*t.xp),name:t.n,c:t.c,shape:t.shape,ai:t.ai||'melee',atkCd:.6,wd:{x:0,y:0,t:0},hitT:0,kx:0,ky:0,fx:1,fy:0,swing:0,anim:Math.random()*9,shotCd:rnd(.6,2),chCd:rnd(1,3),st:null,stT:0,strafe:Math.random()<.5?-1:1,scale:t.scale||1,home:{x,y},voiceT:0,passive:!!t.passive};m.hp=m.maxhp;
@@ -500,11 +522,11 @@ function mkMonster(key,lvl,x,y){const t=MT[key],D=G.D();const hpS=1+Math.max(0,l
  return m;}
 // Aschenfluch: Chance, dass ein Tier von Ignaroks Asche befallen ist (rote Augen, Ascheglut, aggressiv)
 const CORCH={rabbit:.3,fox:.45,boar:.4,deer:.2,bear:.7};
-function mkBoss(key,lvl,x,y){const B=BOSSES[key];const m=mkMonster(B.base,lvl,x,y);const dr=key==='dragon';m.boss=key;m.B=B;m.name=B.n;m.c=B.c;m.r=B.r;m.cr=Math.min(14,B.r*.5);const roam=!B.fixed,lite=!!B.lite;m.maxhp=m.hp=Math.round(m.maxhp*(dr?24:lite?3:roam?7:15));m.dmg*=dr?1.8:lite?1.1:roam?1.25:1.6;m.armor=dr?.3:lite?0:roam?.05:.2;m.xp=Math.round(m.xp*(dr?15:10));m.spd*=.85;m.home={x,y};m.abT=3;m.abI=0;m.ai='melee';m.passive=false;m.scale=B.r/MT[B.base].r*(MT[B.base].scale||1);m.heads=B.heads||0;if(dr)m.shape='dragon';return m;}
+function mkBoss(key,lvl,x,y){const B=BOSSES[key];const m=mkMonster(B.base,lvl,x,y);const dr=key==='dragon';m.boss=key;m.B=B;m.name=B.n;m.c=B.c;m.r=B.r;m.cr=Math.min(14,B.r*.5);const roam=!B.fixed,lite=!!B.lite;m.maxhp=m.hp=Math.round(m.maxhp*(dr?24:lite?5:roam?7:15));m.dmg*=dr?1.8:lite?1.3:roam?1.25:1.6;m.armor=dr?.3:lite?.05:roam?.05:.2;m.xp=Math.round(m.xp*(dr?8:4));m.spd*=.85;m.home={x,y};m.abT=3;m.abI=0;m.ai='melee';m.passive=false;m.scale=B.r/MT[B.base].r*(MT[B.base].scale||1);m.heads=B.heads||0;if(dr)m.shape='dragon';return m;}
 function mkMini(key,lvl,x,y){const t=MT[key];const m=mkMonster(key,lvl,x,y);m.boss='mini';m.B={n:t.n,mini:1,fixed:1,abil:t.ai==='ranged'?['volley','slam']:['slam','summon'],minion:key,lg:t.lg,poison:t.poison};m.name=`${t.n}-${pick(['Champion','Koloss','Anführer','Urahn'])}`;
- m.maxhp=m.hp=Math.round(m.maxhp*4.5);m.dmg*=1.15;m.armor=0;m.xp=Math.round(m.xp*5);m.scale=(t.scale||1)*1.7;m.r=Math.round(t.r*1.7);m.cr=Math.min(14,m.r*.5);m.abT=3;m.abI=0;m.passive=false;return m;}
+ m.maxhp=m.hp=Math.round(m.maxhp*4.5);m.dmg*=1.15;m.armor=0;m.xp=Math.round(m.xp*3);m.scale=(t.scale||1)*1.7;m.r=Math.round(t.r*1.7);m.cr=Math.min(14,m.r*.5);m.abT=3;m.abI=0;m.passive=false;return m;}
 G.mkMonster=mkMonster;G.mkBoss=mkBoss;G.mkMini=mkMini;G.hitMonster=(...a)=>hitMonster(...a);
-function pickType(tx,ty,lvl){const bl=BL[biome(tx,ty)],d=dV(tx,ty);let c=Object.keys(MT).filter(k=>{const t=MT[k];if(t.b.indexOf(bl)<0)return false;if(t.rare)return d>=t.minD&&Math.random()<t.rare;return lvl>=t.lv[0]-1&&lvl<=t.lv[1]+1;});
+function pickType(tx,ty,lvl){const bl=BL[biome(tx,ty)],d=dV(tx,ty);let c=Object.keys(MT).filter(k=>{const t=MT[k];if(t.b.indexOf(bl)<0)return false;if(t.rare)return d>=t.minD&&Math.random()<t.rare;return lvl>=t.lv[0]-1&&lvl<=Math.max(t.lv[1]*1.6+4,t.lv[1]+12);});
  if(!c.length)c=Object.keys(MT).filter(k=>MT[k].b.indexOf(bl)>=0&&!MT[k].rare);if(!c.length)return 'rat';
  const rare=c.find(k=>MT[k].rare);if(rare)return rare;return pick(c);}
 // ===================== NPCs =====================
@@ -746,7 +768,7 @@ const UNIQ={
  thornvine:[{k:'spear',name:'Dornenspieß',ufx:{poison:1},d:'vergiftet Gegner'}],shadowhound:[{k:'dagger',name:'Schattenzahn',ufx:{ls:.06},d:'Lebensraub 6 %'}]};
 G.UNIQ=UNIQ;G.killMonster=m=>killMonster(m);
 function mkUnique(e,il,src){const o={name:e.name,src,ufx:e.ufx,ud:e.d,uniq:1};const rar=Math.random()<.25?4:3;if(e.k)return genItem('weapon',il+1,rar,Object.assign(o,{kind:e.k}));if(e.set)return genItem(e.s,il+1,rar,Object.assign(o,{set:e.set}));return genItem(e.t,il+1,rar,o);}
-function killMonster(m){m.dead=true;if(P.side)for(const k in SQ){const q=SQ[k],st=P.side[k];if(st&&st.st==='active'&&q.kill===m.type&&st.c<q.cnt){st.c++;if(st.c===q.cnt)G.toast(`📜 ${q.n}: erledigt! Zurück zu ${npcById(q.npc).short}.`,'#ffd54a',true);}}sfx(m.boss?'bosskill':'kill',m);if(m.boss==='dragon')sfx('aggro',{type:'dragon'});const D=G.D();const diff=m.lvl-P.level;let xp=m.xp;if(diff<=-7)xp*=.05;else if(diff<=-4)xp*=.3;else if(diff>=2)xp*=1+Math.min(diff,4)*.08;if(m.summoned)xp*=.3;xp=Math.max(1,Math.round(xp));
+function killMonster(m){m.dead=true;if(P.side)for(const k in SQ){const q=SQ[k],st=P.side[k];if(st&&st.st==='active'&&q.kill===m.type&&st.c<q.cnt){st.c++;if(st.c===q.cnt)G.toast(`📜 ${q.n}: erledigt! Zurück zu ${npcById(q.npc).short}.`,'#ffd54a',true);}}sfx(m.boss?'bosskill':'kill',m);if(m.boss==='dragon')sfx('aggro',{type:'dragon'});const D=G.D();const diff=m.lvl-P.level;let xp=m.xp;if(diff<=-7)xp*=.05;else if(diff<=-4)xp*=.3;else if(diff>=2)xp*=1+Math.min(diff,4)*.08;if(m.summoned)xp*=.3;if(m.boss){const bk=m.boss==='mini'?'mini:'+(m.room||m.type):m.boss;P.bossN=P.bossN||{};const bn=P.bossN[bk]||0;xp*=Math.max(.15,1/(1+bn*.8));P.bossN[bk]=bn+1;}xp=Math.max(1,Math.round(xp));
  gainXP(xp);G.floats.push({x:m.x,y:m.y-m.r-22,t:`+${xp} XP`,c:'#b388ff',life:1.1});
  for(let i=0;i<14;i++)G.parts.push({x:m.x,y:m.y,z:12,vx:rnd(-140,140),vy:rnd(-140,140),life:.55,c:m.c});
  const q=P.q;if(!m.boss&&!m.summoned)P.kills[m.type]=(P.kills[m.type]||0)+1;{const st=P.stats||(P.stats={});st.kills=(st.kills||0)+1;if(m.boss&&m.boss!=='mini')st.bosses=(st.bosses||0)+1;else if(m.boss==='mini')st.minis=(st.minis||0)+1;}
@@ -754,14 +776,9 @@ function killMonster(m){m.dead=true;if(P.side)for(const k in SQ){const q=SQ[k],s
  if((m.type==='wolf'||m.type==='icewolf')&&q.wolves==='active'&&q.wolfN<qd('wolves')){q.wolfN++;if(q.wolfN===qd('wolves'))G.toast('🐺 Genug Wölfe erlegt! Zurück zu Schmiedin Hilda.','#ffd54a',true);}
  if(m.type==='draugr'&&q.draugr==='active'&&q.draugrN<qd('draugr')){q.draugrN++;if(q.draugrN===qd('draugr'))G.toast('⚔ Die Draugr sind zurückgeschlagen! Zurück zu Jarl Ragna.','#ffd54a',true);}
  if(m.type==='goblin'&&q.ears==='active'&&countItem('ear')+G.grounds.filter(g=>g.it.id==='ear').length<qd('ears')&&Math.random()<.5)dropGround(mkStack('ear',1),m.x,m.y);
- if(m.legion&&P.main===4&&P.ms===2&&P.macc&&!P.mflag&&(P.lgN||0)<qd('legion')){P.lgN=(P.lgN||0)+1;if(P.lgN>=qd('legion'))G.toast('⚔ Die Wachen sind gefallen! Feldherr Severin stellt sich dir im Kriegslager!','#ffd54a',true);}
- if(m.qkey&&DQ[m.qkey]){const dq=DQ[m.qkey];if(P.main===dq.main&&P.ms===dq.ms&&P.macc&&!P.mflag){P.mflag=1;G.flashT=.6;G.toast(dq.found,'#ffd54a',true);}}
- if(m.boss==='knut'&&P.main===3&&P.ms===0&&P.macc&&!P.mflag){P.mflag=1;G.toast('📜 Die gestohlene Karte ist zurück! Knut trug außerdem einen Brief mit schwarzem Siegel bei sich. Zurück zu Fürst Aldric!','#ffd54a',true);}
- if(m.boss==='severin'&&P.main===4&&P.ms===2&&P.macc&&!P.mflag){P.mflag=1;G.flashT=1;G.toast('⚔ Feldherr Severin ist besiegt! Du erbeutest die Kriegspläne der Legion. Zurück zu Fürst Aldric!','#ffd54a',true);}
+ mainKill(m);
  if(m.boss){if(m.B.fixed&&BOSSES[m.boss]&&!m.B.mini)G.fixT[m.boss]=m.boss==='dragon'?180:240;
-  if(m.boss==='grukk'&&P.main===3&&P.ms===3&&P.macc&&!P.mflag){P.mflag=1;G.toast('📜 Du hast die Karte des Spähers gefunden! Bring sie zu Fürst Aldric.','#ffd54a',true);}
-  else if(m.boss==='bonelord'&&P.main===4&&P.ms===1&&P.macc&&!P.mflag){P.mflag=1;G.toast('💠 Der Siegelstein ist dein! Bring ihn zu Fürst Aldric.','#ffd54a',true);}
-  else if(m.B.herald&&P.main===5&&P.macc&&!(P.shards||{})[m.boss]){P.shards=P.shards||{};P.shards[m.boss]=1;const n=Object.keys(P.shards).length;G.flashT=1;G.toast(`🔥 Glutsiegel-Splitter erbeutet! (${n}/3)`+(n>=3?' Bring sie zu Gunnar!':''),'#ffd54a',true);}
+  if(m.B.herald&&P.main===5&&P.macc&&!(P.shards||{})[m.boss]){P.shards=P.shards||{};P.shards[m.boss]=1;const n=Object.keys(P.shards).length;G.flashT=1;G.toast(`🔥 Glutsiegel-Splitter erbeutet! (${n}/3)`+(n>=3?' Bring sie zu Gunnar!':''),'#ffd54a',true);}
   else if(m.boss==='dragon'&&P.main===6){P.main=7;placeElara();G.toast('🐉 IGNAROK IST GEFALLEN! Sprich mit Prinzessin Elara.','#ffd54a',true);G.flashT=1.2;}
   else G.toast(`🏆 ${m.name} besiegt!`,'#ffd54a',true);}
  if(Math.random()<.6||m.boss){const g=Math.max(1,Math.round(rint(m.lvl,m.lvl*3)*(m.boss?8:1)*D.gold));G.grounds.push({x:m.x+rnd(-8,8),y:m.y+rnd(-8,8),gold:g,it:G.goldIt,t:0});}
@@ -812,111 +829,256 @@ function spawnTick(dt){spawnT-=dt;if(spawnT>0)return;spawnT=1.8;
  for(let i=0;i<10;i++){const a=Math.random()*6.283,d=rnd(13,26);const tx=Math.floor(ptx+Math.cos(a)*d),ty=Math.floor(pty+Math.sin(a)*d);
   if(G.mons.some(m=>!m.dead&&Math.hypot(m.x-(tx+.5)*TILE,m.y-(ty+.5)*TILE)<TILE*7))continue;
   if(tx<2||ty<2||tx>=WW-2||ty>=H-2||!walkTile(tx,ty)||dV(tx,ty)<RV+9||townAt(tx,ty)||TOWNS.some(t=>Math.hypot(tx-t.x,ty-t.y)<t.r+6)||Math.hypot(tx-LAIR.x,ty-LAIR.y)<15||TOWNS.some(t=>Math.hypot(tx-t.x,ty-t.y)<t.r+4)||BUILD.some(b=>b.wild&&Math.abs(tx-b.x-2)<5&&Math.abs(ty-b.y-1)<5))continue;
-  const lvl=Math.max(1,zoneLevel(tx,ty)+rint(-1,1));const di=G.dayInfo();let key;if(di.night&&Math.random()<.55){const NL=['zombie','zombie','skeleton','spider','bat','shadowhound','wisp','banshee'];if(lvl>=8)NL.push('reaper','necro');if(lvl>=10)NL.push('vampire');if(di.full)NL.push('werewolf','werewolf','werewolf');key=pick(NL);}else key=pickType(tx,ty,lvl);const t=MT[key];const L=t.night?lvl:(t.rare?t.lv[0]:clamp(lvl,t.lv[0],t.lv[1]));const n=1+(t.pack&&Math.random()<.5?rint(1,Math.min(2,t.pack)):0);
+  const lvl=Math.max(1,zoneLevel(tx,ty)+rint(-1,1));const di=G.dayInfo();let key;if(di.night&&Math.random()<.55){const NL=['zombie','zombie','skeleton','spider','bat','shadowhound','wisp','banshee'];if(lvl>=8)NL.push('reaper','necro');if(lvl>=10)NL.push('vampire');if(di.full)NL.push('werewolf','werewolf','werewolf');key=pick(NL);}else key=pickType(tx,ty,lvl);const t=MT[key];const L=t.night?lvl:(t.rare?Math.max(t.lv[0],lvl):clamp(lvl,t.lv[0],40));const n=1+(t.pack&&Math.random()<.5?rint(1,Math.min(2,t.pack)):0);
   for(let k=0;k<n;k++){const x=(tx+.5)*TILE+(k?rnd(-30,30):0),y=(ty+.5)*TILE+(k?rnd(-30,30):0);if(k&&!canMove(x,y,10))continue;G.mons.push(mkMonster(key,L,x,y));}break;}}
 function spawnBoss(){const ptx=P.x/TILE,pty=P.y/TILE,zl=zoneLevel(Math.floor(ptx),Math.floor(pty));if(zl<1)return false;const bl=BL[biome(ptx,pty)];
- if(G.dayInfo().night&&zl>=12&&Math.random()<.35){for(let i=0;i<20;i++){const a=Math.random()*6.283,d=rnd(7,11);const tx=Math.floor(ptx+Math.cos(a)*d),ty=Math.floor(pty+Math.sin(a)*d);if(!walkTile(tx,ty)||townAt(tx,ty)||dV(tx,ty)<RV+2)continue;const m=mkBoss('vampirelord',clamp(Math.min(zl+1,P.level+2),12,30),(tx+.5)*TILE,(ty+.5)*TILE);G.mons.push(m);sfx('horn');G.toast(`🦇 ${m.name} erhebt sich aus der Nacht! (Stufe ${m.lvl})`,'#ff6e6e',true);return true;}}
+ if(G.dayInfo().night&&zl>=12&&Math.random()<.35){for(let i=0;i<20;i++){const a=Math.random()*6.283,d=rnd(7,11);const tx=Math.floor(ptx+Math.cos(a)*d),ty=Math.floor(pty+Math.sin(a)*d);if(!walkTile(tx,ty)||townAt(tx,ty)||dV(tx,ty)<RV+2)continue;const m=mkBoss('vampirelord',clamp(Math.min(zl+1,P.level+2),12,42),(tx+.5)*TILE,(ty+.5)*TILE);G.mons.push(m);sfx('horn');G.toast(`🦇 ${m.name} erhebt sich aus der Nacht! (Stufe ${m.lvl})`,'#ff6e6e',true);return true;}}
  let c=Object.keys(BOSSES).filter(k=>!BOSSES[k].fixed&&BOSSES[k].b.indexOf(bl)>=0&&zl>=BOSSES[k].lv[0]-1&&zl<=BOSSES[k].lv[1]);if(!c.length)c=Object.keys(BOSSES).filter(k=>!BOSSES[k].fixed&&BOSSES[k].b.indexOf(bl)>=0);if(!c.length)return false;const key=pick(c);
  for(let i=0;i<25;i++){const a=Math.random()*6.283,d=rnd(7,11);const tx=Math.floor(ptx+Math.cos(a)*d),ty=Math.floor(pty+Math.sin(a)*d);
   if(tx>=WW-2||!walkTile(tx,ty)||dV(tx,ty)<RV+14||townAt(tx,ty)||TOWNS.some(t=>Math.hypot(tx-t.x,ty-t.y)<t.r+12))continue;const m=mkBoss(key,clamp(Math.min(zl+1,P.level+2),1,BOSSES[key].lv[1]),(tx+.5)*TILE,(ty+.5)*TILE);G.mons.push(m);sfx('horn');sfx('aggro',{type:'boss'});G.toast(`⚠ Ein Boss ist erschienen: ${m.name} (Stufe ${m.lvl})`,'#ff6e6e',true);return true;}return false;}
 G.spawnBoss=spawnBoss;
-const FIX=[{key:'knut',at:RAUB,lv:()=>qd('knut'),cond:()=>P.main===3&&P.ms===0&&P.macc&&!P.mflag},{key:'severin',at:LEGION,lv:()=>qd('severin'),cond:()=>P.main===4&&P.ms===2&&P.macc&&!P.mflag&&(P.lgN||0)>=qd('legion')},{key:'grukk',at:CAMP,lv:()=>qd('grukk'),cond:()=>P.main>3||(P.main===3&&P.ms>=3&&P.macc)},{key:'bonelord',at:CRYPT,lv:()=>qd('morvax'),cond:()=>P.main>4||(P.main===4&&P.ms>=1&&P.macc)},{key:'dragon',at:LAIR,lv:()=>qd('dragon'),cond:()=>P.main>=6&&(P.frost||P.main>6)},{key:'schnitter',at:{x:ASHVALE.x,y:ASHVALE.y-4},lv:()=>qd('schnitter'),cond:()=>P.main>5||(P.main===5&&P.macc)},{key:'eldtree',at:{x:151,y:510},lv:()=>qd('eldtree'),cond:()=>P.main>5||(P.main===5&&P.macc)},{key:'sandking',at:{x:529,y:546},lv:()=>qd('sandking'),cond:()=>P.main>5||(P.main===5&&P.macc)}];
-function legionTick(dt){if(!(P.main===4&&P.ms===2&&P.macc&&!P.mflag)||G.room)return;const cx=(LEGION.x+.5)*TILE,cy=(LEGION.y+.5)*TILE;if(Math.hypot(P.x-cx,P.y-cy)>TILE*34)return;G._lgT=(G._lgT||0)-dt;if(G._lgT>0)return;G._lgT=5;if((P.lgN||0)>=qd('legion'))return;
- const alive=G.mons.filter(m=>m.legion&&!m.dead).length;if(alive>=6)return;for(let n=alive;n<Math.min(6,alive+3);n++){for(let i=0;i<12;i++){const a=Math.random()*6.283,d=rnd(2,8);const tx=Math.floor(LEGION.x+Math.cos(a)*d),ty=Math.floor(LEGION.y+Math.sin(a)*d);if(!walkTile(tx,ty)||SOLIDS[tileAt(tx,ty)])continue;const x=(tx+.5)*TILE,y=(ty+.5)*TILE;if(Math.hypot(P.x-x,P.y-y)<TILE*6)continue;const m=mkMonster(pick(['legion','legion','legarch','blackknight']),qd('severin')-rint(1,2),x,y);m.legion=1;m.passive=false;m.home={x,y};G.mons.push(m);break;}}}
-function fixedTick(dt){legionTick(dt);for(const f of FIX){G.fixT[f.key]-=dt;if(G.fixT[f.key]>0||!f.cond())continue;if(G.mons.some(m=>m.boss===f.key&&!m.dead))continue;const px=(f.at.x+.5)*TILE,py=(f.at.y+.5)*TILE;if(Math.hypot(P.x-px,P.y-py)>TILE*40)continue;
- const m=mkBoss(f.key,f.lv(),px,f.key==='dragon'?py-TILE*1:py+TILE*1.5);G.mons.push(m);if(BOSSES[f.key].herald)G.toast(`☠ ${m.name} erwartet dich! (Stufe ${m.lvl})`,'#ff8a65',true);if(f.key==='dragon')sfx('aggro',{type:'dragon'});else{for(let i=0;i<3;i++){const FM={grukk:['goblin','goblin','shaman'],eldtree:['pilzling','treant','thornvine'],sandking:['mummy','scorpion'],knut:['bandit','bandit','archer'],severin:['legion','legarch','blackknight']};const k=mkMonster(pick(FM[f.key]||['skeleton','skarcher']),Math.max(1,m.lvl-2),m.x+rnd(-90,90),m.y+rnd(-90,90));if(canMove(k.x,k.y,k.cr))G.mons.push(k);}}}}
+const FIX=[{key:'knut',at:RAUB,lv:()=>qd('knut'),cond:()=>stepIs('raub')&&P.macc&&!P.mflag},
+ {key:'severin',at:LEGION,lv:()=>qd('severin'),cond:()=>stepIs('legion')&&P.macc&&!P.mflag&&(P.lgN||0)>=qd('legion')},
+ {key:'valdrik',at:CITADEL,lv:()=>qd('valdrik'),cond:()=>stepIs('n4')&&P.macc&&!P.mflag&&(P.lgN||0)>=qd('garde')},
+ {key:'grukk',at:CAMP,lv:()=>qd('grukk'),cond:()=>pastStep('grukk')||(stepIs('grukk')&&P.macc)},
+ {key:'bonelord',at:CRYPT,lv:()=>qd('morvax'),cond:()=>pastStep('morvax')||(stepIs('morvax')&&P.macc)},
+ {key:'dragon',at:LAIR,lv:()=>qd('dragon'),cond:()=>P.main>=6&&(P.frost||P.main>6)},{key:'schnitter',at:{x:ASHVALE.x,y:ASHVALE.y-4},lv:()=>qd('schnitter'),cond:()=>P.main>5||(P.main===5&&P.macc)},{key:'eldtree',at:HERALDPOS().eldtree,lv:()=>qd('eldtree'),cond:()=>P.main>5||(P.main===5&&P.macc)},{key:'sandking',at:HERALDPOS().sandking,lv:()=>qd('sandking'),cond:()=>P.main>5||(P.main===5&&P.macc)}];
+function fixedTick(dt){campTick(dt);for(const f of FIX){G.fixT[f.key]-=dt;if(G.fixT[f.key]>0||!f.cond())continue;if(G.mons.some(m=>m.boss===f.key&&!m.dead))continue;const px=(f.at.x+.5)*TILE,py=(f.at.y+.5)*TILE;if(Math.hypot(P.x-px,P.y-py)>TILE*40)continue;
+ const m=mkBoss(f.key,f.lv(),px,f.key==='dragon'?py-TILE*1:py+TILE*1.5);G.mons.push(m);if(BOSSES[f.key].herald)G.toast(`☠ ${m.name} erwartet dich! (Stufe ${m.lvl})`,'#ff8a65',true);if(f.key==='dragon')sfx('aggro',{type:'dragon'});else{for(let i=0;i<3;i++){const FM={grukk:['goblin','goblin','shaman'],eldtree:['pilzling','treant','thornvine'],sandking:['mummy','scorpion'],knut:['bandit','bandit','archer'],severin:['legion','legarch','blackknight'],valdrik:['nebelgarde','runenwirker','nebelgarde']};const k=mkMonster(pick(FM[f.key]||['skeleton','skarcher']),Math.max(1,m.lvl-2),m.x+rnd(-90,90),m.y+rnd(-90,90));if(canMove(k.x,k.y,k.cr))G.mons.push(k);}}}}
 
 // ===================== Quests & Story =====================
 const npcById=id=>NPCS.find(n=>n.id===id);G.npcById=npcById;
-const CHAP=['Kapitel 1: Erwachen','Kapitel 1: Audienz','Kapitel 1: Bewährung','','','Kapitel 9: Die drei Herolde','Kapitel 10: Ignarok','Kapitel 10: Die Prinzessin','Kapitel 11: Heimkehr','Epilog'];
-// Hauptquest-Schritte für Kapitel 2–8 (P.main 3 und 4, Unterschritt P.ms)
+const CHAP=['Kapitel 1: Erwachen','Kapitel 1: Audienz','Kapitel 1: Bewährung','','','Kapitel 15: Die drei Herolde','Kapitel 16: Ignarok','Kapitel 16: Die Prinzessin','Kapitel 17: Heimkehr','','Epilog'];
+// ===== Hauptquest-Schritte (P.main 3, 4 und 9; Unterschritt P.ms) =====
+// kind: fix (Boss im Freien) | dungeon (Boss im Dungeon) | kill (Gegner zählen) | camp (Lager stürmen, dann Boss) | talk (zu jemandem reisen)
 const tpT=(x,y)=>({x:(x+.5)*TILE,y:(y+.5)*TILE});const roomTo=id=>{const r=ROOMS.find(q=>q.id===id);return r?{x:r.ent.x,y:r.ent.y}:null;};
 const MSQ={3:[
- {ch:'Kapitel 2: Die gestohlene Karte',gate:'lvR',
-  low:L=>`Du bist noch zu schwach, Ritter. Werde stärker, mindestens Stufe ${qd('lvR')} – die Sonnenwiesen vor den Toren sind ein guter Ort dafür. Du bist Stufe ${L}.`,
-  give:'Schlechte Nachrichten: Heute Nacht sind Räuber in die Burg eingestiegen und haben die Karte des Reiches gestohlen – mit allen Wegen, Furten und Festungen von Eldmar! Ihr Lager liegt nordöstlich des Dorfes in den Sonnenwiesen. Ihr Anführer heißt Knut. Hol mir die Karte zurück!',
-  acc:'Ich hole die Karte zurück',goal:()=>'Besiege Räuberhauptmann Knut im Räuberlager (Sonnenwiesen, nordöstlich)',to:()=>tpT(RAUB.x,RAUB.y),
-  wait:'Das Räuberlager liegt nordöstlich des Dorfes. Folge dem goldenen ★ im Kompass.',ret:'Bring die Karte zu Fürst Aldric',
-  done:'Meine Karte! Gut gemacht. Aber dieser Brief … ein schwarzes Siegel mit einer eisernen Krone. Das Zeichen der Schwarzen Legion aus dem Süden! „Die Ware zur Hütte des Einsiedlers“ steht darin. Was haben Räuber mit dem Einsiedler zu schaffen?',btn:'Karte übergeben',rw:L=>{gainXP(220);P.gold+=40;give(mkStack('potion',2));G.toast('+40 Gold','#ffd54a');}},
- {ch:'Kapitel 3: Die Hütte des Einsiedlers',gate:'lvE',
-  low:L=>`Die Hütte des Einsiedlers liegt weit draußen in den Wiesen. Dort ist es gefährlich – komm mit Stufe ${qd('lvE')} wieder. Du bist Stufe ${L}.`,
+ {id:'raub',ch:'Kapitel 2: Die gestohlene Karte',gate:'lvR',kind:'fix',boss:'knut',
+  low:L=>`Du bist noch zu schwach, Ritter. Werde stärker, mindestens Stufe ${qd('lvR')} – die Wiesen vor den Toren sind ein guter Ort dafür. Du bist Stufe ${L}.`,
+  give:'Schlechte Nachrichten: Heute Nacht sind Räuber in die Burg eingestiegen und haben die Karte des Reiches gestohlen – mit allen Wegen, Furten und Festungen von Eldmar! Ihr Lager liegt nordöstlich, ein gutes Stück hinter den Feldern. Ihr Anführer heißt Knut. Hol mir die Karte zurück!',
+  acc:'Ich hole die Karte zurück',goal:()=>'Besiege Räuberhauptmann Knut im Räuberlager (nordöstlich des Dorfes)',to:()=>tpT(RAUB.x,RAUB.y),
+  wait:'Das Räuberlager liegt nordöstlich des Dorfes. Folge dem goldenen ★.',ret:'Bring die Karte zu Fürst Aldric',
+  found:'📜 Die gestohlene Karte ist zurück! Knut trug außerdem einen Brief mit schwarzem Siegel bei sich.',
+  done:'Meine Karte! Gut gemacht. Aber dieser Brief … ein schwarzes Siegel mit einer eisernen Krone. Das Zeichen der Schwarzen Legion aus dem Süden! „Die Ware zur Hütte des Einsiedlers“ steht darin. Was haben Räuber mit dem alten Bertolt zu schaffen?',
+  btn:'Karte übergeben',gold:40,items:()=>[mkStack('potion',2)],lore:'Der Spieler hat die gestohlene Karte von Räuberhauptmann Knut zurückgeholt.'},
+ {id:'hut',ch:'Kapitel 3: Die Hütte des Einsiedlers',gate:'lvE',kind:'dungeon',room:'hut',base:'ghoul',add:'spider',lv:'hermit',name:'Der verfluchte Einsiedler',
+  enter:'☠ Ein fauliger Gestank … Etwas Untotes haust in der Hütte!',
+  low:L=>`Die Hütte des Einsiedlers liegt weit draußen in den Wiesen. Komm mit Stufe ${qd('lvE')} wieder. Du bist Stufe ${L}.`,
   give:'Der alte Einsiedler Bertolt lebt allein in seiner Hütte südwestlich von hier, am Rand der Wiesen. Seit Wochen hat ihn niemand gesehen. Geh hin und finde heraus, was dort vor sich geht.',
-  acc:'Ich sehe nach',goal:()=>'Erkunde die Hütte des Einsiedlers (Sonnenwiesen, Südwesten)',to:()=>roomTo('hut'),
-  wait:'Die Hütte liegt südwestlich in den Sonnenwiesen. Folge dem goldenen ★.',ret:'Bring die Zeichnungen zu Fürst Aldric',
-  done:'Bertolt … verflucht und untot. Möge er Frieden finden. Und diese Zeichnungen: Soldaten, Banner, Marschwege – er hat die Schwarze Legion beobachtet, und dafür musste er sterben. Die Räuber stecken mit drin. Ihr Hauptversteck ist das Räubernest bei Aschental.',btn:'Zeichnungen übergeben',rw:L=>{gainXP(380);P.gold+=60;give(genItem('chest',Math.max(3,L),1));G.toast('+60 Gold','#ffd54a');}},
- {ch:'Kapitel 4: Das Räubernest',gate:'lvN',
+  acc:'Ich sehe nach',goal:()=>'Erkunde die Hütte des Einsiedlers (Wiesen, Südwesten)',to:()=>roomTo('hut'),
+  wait:'Die Hütte liegt südwestlich in den Wiesen. Folge dem goldenen ★.',ret:'Bring Bertolts Zeichnungen zu Fürst Aldric',
+  found:'📜 Du findest beim Einsiedler Zeichnungen von Soldaten mit schwarzen Bannern – und von Wölfen in Käfigen!',
+  done:'Bertolt … verflucht und untot. Möge er Frieden finden. Diese Zeichnungen: Legionäre, die Wölfe in Käfigen halten und mit Asche füttern! Das erklärt, warum die Wölfe im Nordwesten so rasend sind. Ihr Bau liegt dort draußen.',
+  btn:'Zeichnungen übergeben',gold:60,items:L=>[genItem('chest',Math.max(3,L),1)],lore:'Der Einsiedler Bertolt wurde verflucht aufgefunden; die Legion füttert Wölfe mit Asche.'},
+ {id:'wolf',ch:'Kapitel 4: Die Wolfsmutter',gate:'lvWo',kind:'dungeon',room:'wolfden',base:'wolf',add:'wolf',lv:'wolfmom',name:'Graumähne, die Wolfsmutter',
+  enter:'🐺 Ein tiefes Knurren hallt durch den Bau … Augen glühen wie Kohlen.',
+  low:L=>`Die Wölfe im Nordwesten zerreißen jeden Anfänger. Werde mindestens Stufe ${qd('lvWo')}. Du bist Stufe ${L}.`,
+  give:'Die Wölfe aus dem Bau im Nordwesten reißen Hildas Schafe und greifen sogar Reisende an. Ihre Mutter, Graumähne, ist von der Asche wahnsinnig geworden. Erlöse sie – und finde heraus, wer ihr das angetan hat.',
+  acc:'Ich gehe zum Wolfsbau',goal:()=>'Erlöse Graumähne im Wolfsbau (Wiesen, Nordwesten)',to:()=>roomTo('wolfden'),
+  wait:'Der Wolfsbau liegt nordwestlich in den Wiesen. Folge dem goldenen ★.',ret:'Bring das Aschenamulett zu Fürst Aldric',
+  found:'🐺 Graumähne ist erlöst. An ihrem Hals hing ein glühendes Aschenamulett mit dem Zeichen eines Brandstifters.',
+  done:'Ein Aschenamulett … Dieses Zeichen kenne ich: Es wurde in den Ruinen von Aschental an die Wände geschmiert. Vielleicht hat nicht nur der Drache Aschental verbrannt. Im verkohlten Keller dort soll sich jemand verstecken.',
+  btn:'Amulett übergeben',gold:80,items:L=>[genItem('helm',Math.max(4,L),1)],lore:'Graumähne, die Wolfsmutter, wurde mit einem Aschenamulett der Legion wahnsinnig gemacht.'},
+ {id:'ash',ch:'Kapitel 5: Asche über Aschental',gate:'lvA',kind:'dungeon',room:'cellar',base:'shaman',add:'ghoul',lv:'malrik',name:'Brandstifter Malrik',
+  enter:'🔥 „Noch ein Held, der verbrennen will? Wie schön!“',
+  low:L=>`Aschental ist gefährlich geworden. Komm mit Stufe ${qd('lvA')} wieder. Du bist Stufe ${L}.`,
+  give:'Aschental liegt im Norden, an der Straße nach Glutwacht. Im verkohlten Keller unter den Ruinen haust ein Brandstifter. Finde ihn und finde heraus, für wen er arbeitet.',
+  acc:'Auf nach Aschental',goal:()=>'Besiege den Brandstifter im verkohlten Keller (Ruinen von Aschental)',to:()=>roomTo('cellar'),
+  wait:'Die Ruinen von Aschental liegen nördlich an der Straße. Folge dem goldenen ★.',ret:'Bring Malriks Notizen zu Fürst Aldric',
+  found:'📜 Brandstifter Malrik ist besiegt. Seine Notizen sprechen von Waffenlieferungen ins Räubernest.',
+  done:'Malrik hat Aschental angezündet, BEVOR der Drache kam – im Auftrag der Legion! Und die Waffen dafür kamen aus dem Räubernest, der Höhle von Räuberfürst Falk östlich der Ruinen.',
+  btn:'Notizen übergeben',gold:90,items:L=>[genItem('weapon',Math.max(5,L),2)],lore:'Brandstifter Malrik hat Aschental im Auftrag der Legion angezündet.'},
+ {id:'nest',ch:'Kapitel 6: Das Räubernest',gate:'lvN',kind:'dungeon',room:'banditcave',base:'bandit',add:'archer',lv:'falk',name:'Räuberfürst Falk',
+  enter:'⚔ „Wer wagt es, in mein Nest einzudringen?!“',
   low:L=>`Im Räubernest hausen Dutzende Halsabschneider. Werde stärker, mindestens Stufe ${qd('lvN')}. Du bist Stufe ${L}.`,
   give:'Das Räubernest ist eine Höhle östlich der Ruinen von Aschental. Dort sitzt Räuberfürst Falk. Bring mir Beweise, für wen er arbeitet!',
-  acc:'Auf ins Räubernest',goal:()=>'Besiege Räuberfürst Falk im Räubernest (Höhle östlich von Aschental)',to:()=>roomTo('banditcave'),
-  wait:'Das Räubernest liegt östlich von Aschental. Folge dem goldenen ★.',ret:'Bring Falks Brief zu Fürst Aldric',
-  done:'Ein Sold-Brief der Schwarzen Legion … unterschrieben von Feldherr Severin! Die Legion bezahlt Räuber UND Goblins. Und hier steht: Goblinhäuptling Grukk hat die Karte meines Spähers – die einzige Karte mit dem Weg zum Drachenhort, wo Elara gefangen ist.',btn:'Brief übergeben',rw:L=>{gainXP(560);P.gold+=90;give(genItem('weapon',Math.max(4,L),2,{kind:'sword'}));G.toast('+90 Gold','#ffd54a');}},
- {ch:'Kapitel 5: Spuren im Finsterwald',gate:'lvG',
-  low:L=>`Grukk ist kein gewöhnlicher Gegner. Werde stärker, mindestens Stufe ${qd('lvG')}. Du bist Stufe ${L}.`,
-  give:'Grukk, der Goblinhäuptling, haust in einem Lager tief im Finsterwald, im Osten. Er hat die Karte meines Spähers. Hol sie mir!',
-  acc:'Ich hole die Karte',goal:()=>'Besiege Goblinhäuptling Grukk im Goblinlager (Finsterwald, Osten)',to:()=>tpT(CAMP.x,CAMP.y),
-  wait:'Das Goblinlager liegt im Osten, im Finsterwald. Folge dem goldenen ★ im Kompass.',ret:'Bring die Karte des Spähers zu Fürst Aldric',
-  done:'Die Karte! Bei allen Göttern … Der Weg zum Hort ist durch ein Aschensiegel versperrt. Nur der Siegelstein öffnet es – und den hütet der Knochenfürst Morvax in seiner Krypta im Nebelmoor.',btn:'Karte übergeben',rw:L=>{gainXP(800);give(genItem('amulet',L+1,2));P.gold+=120;G.toast('+120 Gold','#ffd54a');}}],
- 4:[
- {ch:'Kapitel 6: Der Wachturm im Moor',gate:'lvW',
+  acc:'Auf ins Räubernest',goal:()=>'Besiege Räuberfürst Falk im Räubernest',to:()=>roomTo('banditcave'),
+  wait:'Das Räubernest liegt östlich von Aschental. Folge dem goldenen ★.',ret:'Bring Falks Sold-Brief zu Fürst Aldric',
+  found:'📜 Falk trug einen Sold-Brief der Schwarzen Legion bei sich!',
+  done:'Ein Sold-Brief, unterschrieben von Feldherr Severin! Die Legion bezahlt Räuber, Orks UND Goblins. Hier steht auch: Eine Hexe im Moor erschafft Untote für sie – und sie hat den Schlüssel zur Krypta des Morvax gestohlen.',
+  btn:'Brief übergeben',gold:110,items:L=>[genItem('weapon',Math.max(6,L),2,{kind:'sword'})],lore:'Räuberfürst Falk ist besiegt; Feldherr Severin der Legion bezahlt Räuber, Orks und Goblins.'},
+ {id:'turm',ch:'Kapitel 7: Der Wachturm im Moor',gate:'lvW',kind:'dungeon',room:'wtower',base:'witch',add:'ghoul',lv:'grimelda',name:'Moorhexe Grimelda',
+  enter:'🌫 Kichern hallt durch den Turm … die Moorhexe erwartet dich!',
   low:L=>`Das Nebelmoor verschlingt Unvorsichtige. Werde stärker, mindestens Stufe ${qd('lvW')}. Du bist Stufe ${L}.`,
-  give:'Die Krypta des Morvax ist mit einem Schloss aus Knochen versiegelt. Den Schlüssel hat die Moorhexe Grimelda gestohlen – sie haust im alten Wachturm im Nebelmoor, westlich von hier. Hol den Schlüssel!',
+  give:'Die Moorhexe Grimelda haust im alten Wachturm am Rand des Nebelmoors, westlich von hier. Sie erschafft Moorleichen für die Legion und hat den Kryptaschlüssel. Halte sie auf!',
   acc:'Auf zum Wachturm',goal:()=>'Besiege Moorhexe Grimelda im alten Wachturm (Nebelmoor)',to:()=>roomTo('wtower'),
-  wait:'Der alte Wachturm steht im Nebelmoor im Westen. Folge dem goldenen ★.',ret:'Bring den Kryptaschlüssel zu Fürst Aldric',
-  done:'Der Kryptaschlüssel! Jetzt steht dir der Weg zu Morvax offen. Doch sei gewarnt – der Knochenfürst ist älter als dieses Königreich.',btn:'Schlüssel übergeben',rw:L=>{gainXP(950);P.gold+=140;give(mkStack('potion2',1));G.toast('+140 Gold','#ffd54a');}},
- {ch:'Kapitel 7: Der Siegelstein',gate:'lvM',
+  wait:'Der alte Wachturm steht am Rand des Nebelmoors im Westen. Folge dem goldenen ★.',ret:'Bring den Kryptaschlüssel zu Fürst Aldric',
+  found:'🗝 Du hast den Kryptaschlüssel – und einen Brief an die Orks in der Schlucht!',
+  done:'Der Kryptaschlüssel! Gut. Aber dieser Brief ist noch schlimmer: Orks in der Schluchtgrotte im Süden sollen Eichenhain angreifen, sobald die Legion das Zeichen gibt.',
+  btn:'Schlüssel übergeben',gold:140,items:()=>[mkStack('potion2',1)],lore:'Moorhexe Grimelda ist besiegt, der Kryptaschlüssel gefunden.'},
+ {id:'grotte',ch:'Kapitel 8: Die Orks der Schlucht',gate:'lvO',kind:'dungeon',room:'grotto',base:'orc',add:'orc',lv:'brakka',name:'Orkhäuptling Brakka',
+  enter:'🪓 „Menschling! Brakka zerquetscht dich!“',
+  low:L=>`Orks sind keine Räuber. Werde stärker, mindestens Stufe ${qd('lvO')}. Du bist Stufe ${L}.`,
+  give:'Die Schluchtgrotte liegt in der Steinöde, im Süden, tief in der großen Schlucht. Dort sammelt Orkhäuptling Brakka seine Krieger. Schlag zu, bevor sie es tun!',
+  acc:'Ich stelle mich den Orks',goal:()=>'Besiege Orkhäuptling Brakka in der Schluchtgrotte (Steinöde, Süden)',to:()=>roomTo('grotto'),
+  wait:'Die Schluchtgrotte liegt in der Schlucht der Steinöde im Süden. Folge dem goldenen ★.',ret:'Bring Brakkas Kriegskarte zu Fürst Aldric',
+  found:'🗺 Brakka ist gefallen! Seine Kriegskarte zeigt die Wege der Legion durchs Moor und den Finsterwald.',
+  done:'Mit dieser Karte sehen wir ihre Wege. Das Moor und der Finsterwald brennen an allen Ecken. Unsere Verbündeten brauchen Hilfe: Vogt Aldwin in Moorbruck im Westen und Försterin Liv in Waldheim im Osten. Geh zuerst zu Aldwin.',
+  btn:'Kriegskarte übergeben',gold:170,items:L=>[genItem('legs',L,2)],lore:'Orkhäuptling Brakka ist besiegt; seine Kriegskarte zeigt die Wege der Legion.'}],
+ 4:[
+ {id:'moor',ch:'Kapitel 9: Die Moorleichen von Moorbruck',gate:'lvMo',kind:'kill',giver:'aldwin',where:'Vogt Aldwin in Moorbruck (Nebelmoor, Westen)',types:['ghoul','zombie','skeleton'],cnt:'moorkill',near:()=>TP('moor',0,0),rad:110,
+  low:L=>`Fürst Aldric schickt dich? Das Moor ist kein Ort für Stufe ${L}. Komm mit Stufe ${qd('lvMo')} wieder.`,
+  give:`Seit Grimelda tot ist, wandern ihre Moorleichen führerlos umher – und Moorbruck ist umzingelt! Schick ${qd('moorkill')} Untote rund um Moorbruck zurück ins Grab.`,
+  acc:'Ich helfe Moorbruck',goal:()=>`Erschlage Untote rund um Moorbruck: ${P.lgN||0}/${qd('moorkill')}`,to:()=>null,
+  wait:'Die Untoten streifen rund um Moorbruck durchs Moor.',ret:'Kehre zu Vogt Aldwin zurück',
+  found:'💀 Genug Untote erschlagen! Kehre zu Vogt Aldwin zurück.',
+  done:'Moorbruck atmet wieder auf. Danke, Ritter. Ein Bote aus Waldheim kam gestern: Försterin Liv braucht dich dringend im Finsterwald, im Osten.',
+  btn:'Gern geschehen',gold:200,items:L=>[genItem('boots',L,2)],lore:'Der Spieler hat Moorbruck von den Moorleichen befreit.'},
+ {id:'wald',ch:'Kapitel 10: Krieg im Finsterwald',gate:'lvWa',kind:'kill',giver:'liv',where:'Försterin Liv in Waldheim (Finsterwald, Osten)',types:['goblin','shaman'],cnt:'gobkill',near:()=>TP('wald',0,0),rad:140,
+  low:L=>`Du willst im Finsterwald kämpfen? Mit Stufe ${L}? Komm mit Stufe ${qd('lvWa')} wieder.`,
+  give:`Grukks Goblins brennen meinen Wald nieder! Erlege ${qd('gobkill')} Goblins rund um Waldheim, dann zeig ich dir den Weg zu ihrem Häuptling.`,
+  acc:'Ich jage die Goblins',goal:()=>`Erlege Goblins rund um Waldheim: ${P.lgN||0}/${qd('gobkill')}`,to:()=>null,
+  wait:'Die Goblins streifen durch den Finsterwald rund um Waldheim.',ret:'Kehre zu Försterin Liv zurück',
+  found:'👺 Die Goblins fliehen! Kehre zu Försterin Liv zurück.',
+  done:'Gute Jagd! Grukks Lager liegt südlich von hier, tief im Wald. Er hat die Karte, die Aldrics Späher bei sich trug – den einzigen Weg zum Drachenhort.',
+  btn:'Zeig mir den Weg',gold:220,items:L=>[genItem('weapon',L,2,{kind:'longbow'})],lore:'Der Spieler hat Waldheim gegen Grukks Goblins verteidigt.'},
+ {id:'grukk',ch:'Kapitel 11: Grukks Lager',gate:'lvG',kind:'fix',boss:'grukk',giver:'liv',where:'Försterin Liv in Waldheim',turnin:'aldric',
+  low:L=>`Grukk ist kein gewöhnlicher Gegner. Werde stärker, mindestens Stufe ${qd('lvG')}. Du bist Stufe ${L}.`,
+  give:'Grukks Lager liegt südlich von Waldheim, tief im Finsterwald. Hol dir die Karte des Spähers und bring sie Fürst Aldric!',
+  acc:'Ich hole die Karte',goal:()=>'Besiege Goblinhäuptling Grukk im Goblinlager (südlich von Waldheim)',to:()=>tpT(CAMP.x,CAMP.y),
+  wait:'Grukks Lager liegt südlich von Waldheim. Folge dem goldenen ★.',ret:'Bring die Karte des Spähers zu Fürst Aldric',
+  found:'📜 Du hast die Karte des Spähers gefunden! Bring sie zu Fürst Aldric.',
+  done:'Die Karte! Bei allen Göttern … Der Weg zum Hort ist durch ein Aschensiegel versperrt. Nur der Siegelstein öffnet es – und den hütet Knochenfürst Morvax in seiner Krypta. Den Schlüssel hast du ja schon.',
+  btn:'Karte übergeben',gold:260,items:L=>[genItem('amulet',L+1,2)],lore:'Grukk ist besiegt und die Karte des Spähers gefunden.'},
+ {id:'morvax',ch:'Kapitel 12: Der Siegelstein',gate:'lvM',kind:'fix',boss:'bonelord',
   low:L=>`Morvax hat ganze Heere ins Grab gebracht. Werde stärker, mindestens Stufe ${qd('lvM')}. Du bist Stufe ${L}.`,
-  give:'Mit dem Schlüssel kommst du in die Krypta des Knochenfürsten, weit im Westen des Nebelmoors. Bring mir den Siegelstein!',
-  acc:'Auf ins Nebelmoor',goal:()=>'Besiege Knochenfürst Morvax in der Krypta (Nebelmoor, Westen)',to:()=>tpT(CRYPT.x,CRYPT.y),
-  wait:'Die Krypta liegt im Nebelmoor im Westen. Folge dem goldenen ★ im Kompass.',ret:'Bring den Siegelstein zu Fürst Aldric',
-  done:'Der Siegelstein … er glüht wie Kohle. Doch meine Späher melden Schreckliches: Die Schwarze Legion hat in der Steinöde ein Kriegslager errichtet. Sie will Eldmar überfallen, sobald Ignarok das Land in Brand setzt!',btn:'Siegelstein übergeben',rw:L=>{gainXP(1300);P.gold+=180;give(genItem('ring',L+1,2));G.toast('+180 Gold','#ffd54a');}},
- {ch:'Kapitel 8: Die Schwarze Legion',gate:'lvL',
+  give:'Mit Grimeldas Schlüssel kommst du in die Krypta des Knochenfürsten, weit im Südwesten des Nebelmoors. Bring mir den Siegelstein!',
+  acc:'Auf zur Krypta',goal:()=>'Besiege Knochenfürst Morvax in der Krypta (Nebelmoor, Südwesten)',to:()=>tpT(CRYPT.x,CRYPT.y),
+  wait:'Die Krypta liegt im Südwesten des Nebelmoors. Folge dem goldenen ★.',ret:'Bring den Siegelstein zu Fürst Aldric',
+  found:'💠 Der Siegelstein ist dein! Bring ihn zu Fürst Aldric.',
+  done:'Der Siegelstein … er glüht wie Kohle. Doch meine Späher melden Schreckliches: Die Schwarze Legion hat in der Steinöde ein Kriegslager errichtet. Sie will Eldmar überfallen, sobald Ignarok das Land in Brand setzt!',
+  btn:'Siegelstein übergeben',gold:300,items:L=>[genItem('ring',L+1,2)],lore:'Morvax ist besiegt und der Siegelstein gefunden.'},
+ {id:'legion',ch:'Kapitel 13: Die Schwarze Legion',gate:'lvL',kind:'camp',at:()=>LEGION,types:['legion','legion','legarch','blackknight'],cnt:'legion',lv:'severin',boss:'severin',
   low:L=>`Das Kriegslager wird von Legionären und Schwarzrittern bewacht. Werde stärker, mindestens Stufe ${qd('lvL')}. Du bist Stufe ${L}.`,
-  give:'Das Kriegslager der Schwarzen Legion liegt im Süden, in der Steinöde. Dring ein, schalte die Wachen und Ritter aus und besiege Feldherr Severin. Bring mir seine Kriegspläne – wir müssen wissen, was sie vorhaben!',
-  acc:'Ich dringe ins Lager ein',goal:()=>(P.lgN||0)<qd('legion')?`Dring ins Kriegslager der Legion ein (Steinöde, Süden): Wachen & Ritter ${P.lgN||0}/${qd('legion')}`:'Besiege Feldherr Severin im Kriegslager',to:()=>tpT(LEGION.x,LEGION.y),
+  give:'Das Kriegslager der Schwarzen Legion liegt im Süden, in der Steinöde. Dring ein, schalte die Wachen und Ritter aus und besiege Feldherr Severin. Bring mir seine Kriegspläne!',
+  acc:'Ich dringe ins Lager ein',goal:()=>(P.lgN||0)<qd('legion')?`Dring ins Kriegslager der Legion ein (Steinöde): Wachen & Ritter ${P.lgN||0}/${qd('legion')}`:'Besiege Feldherr Severin im Kriegslager',to:()=>tpT(LEGION.x,LEGION.y),
   wait:'Das Kriegslager liegt im Süden in der Steinöde. Folge dem goldenen ★.',ret:'Bring Severins Kriegspläne zu Fürst Aldric',
-  done:'Diese Pläne … Die Legion wartet nur darauf, dass Ignarok Eldmar niederbrennt – dann marschiert sie ein. Wir müssen den Drachen vorher töten! Geh zu Gunnar, dem Drachenjäger in der Taverne. Er weiß, wie man das Aschensiegel mit dem Siegelstein bricht.',btn:'Pläne übergeben',rw:L=>{gainXP(1700);P.gold+=250;give(genItem('weapon',L+1,3));G.toast('+250 Gold','#ffd54a');}}]};
+  found:'⚔ Feldherr Severin ist besiegt! Du erbeutest die Kriegspläne der Legion.',
+  done:'Diese Pläne … Die Legion wartet nur darauf, dass Ignarok Eldmar niederbrennt – dann marschiert Kaiser Valdrik ein. Und der Siegelstein hat einen Riss! Nur die Glutesse der Zwerge kann ihn neu schmieden. Zwerg Durin in Frosthafen kennt den Weg.',
+  btn:'Pläne übergeben',gold:350,items:L=>[genItem('weapon',L+1,3)],lore:'Feldherr Severin der Schwarzen Legion ist besiegt, seine Kriegspläne erbeutet.'},
+ {id:'zwerg',ch:'Kapitel 14: Die Glutesse der Zwerge',gate:'lvZ',kind:'dungeon',room:'dwarf',base:'greydwarf',add:'golem',lv:'grimbart',name:'Steinkönig Grimbart',giver:'durin',where:'Zwerg Durin in Frosthafen (Frostlande, Nordwesten)',
+  enter:'⛏ Steinstaub rieselt … der Steinkönig erhebt sich von seinem Thron!',
+  low:L=>`Ein Riss im Siegelstein? Hm. Die Binge ist voller Ungeheuer, Stufe ${L} reicht da nicht. Komm mit Stufe ${qd('lvZ')} wieder.`,
+  give:'Die Glutesse meiner Ahnen liegt in der Zwergenbinge im Graukamm-Gebirge. Ein Steinkönig aus Fels und Zorn hat sie besetzt. Besiege ihn, dann schmiede ich den Siegelstein neu.',
+  acc:'Ich befreie die Binge',goal:()=>'Besiege Steinkönig Grimbart in der Zwergenbinge (Graukamm-Gebirge)',to:()=>roomTo('dwarf'),
+  wait:'Die Zwergenbinge liegt im Graukamm-Gebirge östlich von Frosthafen. Folge dem goldenen ★.',ret:'Kehre zu Zwerg Durin zurück',
+  found:'🔥 Die Glutesse brennt wieder! Kehre zu Durin zurück.',
+  done:'Bei meinem Bart … die Esse brennt! *Hämmern* … Hier, der Siegelstein ist wieder ganz. Bring ihn zu Gunnar, dem Drachenjäger in der Taverne von Eichenhain. Er weiß, wie man das Aschensiegel bricht.',
+  btn:'Danke, Durin',gold:400,items:L=>[genItem('chest',L+1,3)],lore:'Durin hat den Siegelstein in der Glutesse der Zwerge neu geschmiedet.'}],
+ 9:[
+ {id:'n1',ch:'Kapitel 18: Die Nebellande',gate:'lvN1',kind:'talk',turnin:'runa',
+  low:L=>`Ruh dich aus, Held. Wenn du Stufe ${qd('lvN1')} erreichst, habe ich eine letzte Bitte.`,
+  give:'Elara hat mir etwas erzählt, das mir das Blut gefrieren lässt: Kaiser Valdrik hat einen Pakt mit etwas Uraltem in den Nebellanden geschlossen, ganz im Osten hinter dem Finsterwald. Reise nach Nebelwacht und sprich mit Wächterin Runa.',
+  acc:'Ich reise in die Nebellande',goal:()=>'Reise nach Nebelwacht (Nebellande, ganz im Osten) und sprich mit Wächterin Runa',to:()=>{const n=npcById('runa');return n?{x:n.x,y:n.y}:null;},
+  wait:'Nebelwacht liegt ganz im Osten, hinter Waldheim.',ret:'Sprich mit Wächterin Runa',
+  done:'Ein Ritter aus Eichenhain? Endlich. Valdrik ist hier. Er hat die Sucher geweckt – Wesen aus dem Nebel – und baut seine Zitadelle im Süden der Nebellande. Wir halten kaum noch stand.',
+  btn:'Ich helfe euch',gold:300,items:()=>[mkStack('potion2',2)],lore:'Der Spieler ist in Nebelwacht in den Nebellanden angekommen.'},
+ {id:'n2',ch:'Kapitel 19: Das Summen im Nebel',gate:'lvN2',kind:'kill',giver:'runa',where:'Wächterin Runa in Nebelwacht',types:['sucher','sucherkrieger','zecke','gjall','runenwirker'],cnt:'sucherkill',
+  low:L=>`Die Sucher zerreißen dich in Stücken. Komm mit Stufe ${qd('lvN2')} wieder.`,
+  give:`Die Sucher schwärmen um Nebelwacht wie Hornissen. Erschlage ${qd('sucherkill')} Kreaturen des Nebels, damit wir Luft holen können.`,
+  acc:'Ich lichte den Nebel',goal:()=>`Erschlage Kreaturen der Nebellande: ${P.lgN||0}/${qd('sucherkill')}`,to:()=>null,
+  wait:'Die Sucher schwärmen überall in den Nebellanden.',ret:'Kehre zu Wächterin Runa zurück',
+  found:'🦗 Der Schwarm weicht zurück! Kehre zu Wächterin Runa zurück.',
+  done:'Ihr Schwarm wird von einer Königin gelenkt. Sie nistet im Wurzeltor, nördlich von hier. Solange sie lebt, kommen immer neue.',
+  btn:'Dann töte ich die Königin',gold:350,items:L=>[genItem('helm',L,3)],lore:'Der Spieler hat den Sucherschwarm um Nebelwacht zurückgeschlagen.'},
+ {id:'n3',ch:'Kapitel 20: Das Wurzeltor',gate:'lvN3',kind:'dungeon',room:'mistgate',base:'sucherkrieger',add:'sucher',lv:'queen',name:'Die Sucherkönigin',giver:'runa',where:'Wächterin Runa in Nebelwacht',
+  enter:'👑 Ein schrilles Kreischen – die Sucherkönigin verteidigt ihr Nest!',
+  low:L=>`Die Königin ist zu stark für dich. Komm mit Stufe ${qd('lvN3')} wieder.`,
+  give:'Das Wurzeltor liegt nördlich von Nebelwacht, unter den Wurzeln eines toten Weltbaums. Töte die Sucherkönigin!',
+  acc:'Auf zum Wurzeltor',goal:()=>'Töte die Sucherkönigin im Wurzeltor (nördlich von Nebelwacht)',to:()=>roomTo('mistgate'),
+  wait:'Das Wurzeltor liegt nördlich von Nebelwacht. Folge dem goldenen ★.',ret:'Kehre zu Wächterin Runa zurück',
+  found:'👑 Die Sucherkönigin ist tot! In ihrem Nest liegt Valdriks Siegel.',
+  done:'Valdriks Siegel im Nest der Königin … er hat sie gezüchtet! Jetzt ist er allein mit seiner Nebelgarde. Seine Zitadelle liegt im Süden. Beende das, Ritter – für Eldmar und für Nebelwacht.',
+  btn:'Für Eldmar!',gold:400,items:L=>[genItem('weapon',L+1,4)],lore:'Die Sucherkönigin ist tot.'},
+ {id:'n4',ch:'Kapitel 21: Die Nebelzitadelle',gate:'lvN4',kind:'camp',giver:'runa',where:'Wächterin Runa in Nebelwacht',turnin:'aldric',at:()=>CITADEL,types:['nebelgarde','nebelgarde','runenwirker','sucherkrieger'],cnt:'garde',lv:'valdrik',boss:'valdrik',
+  low:L=>`Die Nebelgarde ist Valdriks Elite. Du brauchst Stufe ${qd('lvN4')}. Du bist Stufe ${L}.`,
+  give:'Die Nebelzitadelle liegt im Süden der Nebellande. Brich durch die Nebelgarde und stelle Kaiser Valdrik. Danach kehr heim zu deinem Fürsten.',
+  acc:'Zur Nebelzitadelle',goal:()=>(P.lgN||0)<qd('garde')?`Stürme die Nebelzitadelle: Nebelgarde ${P.lgN||0}/${qd('garde')}`:'Besiege Kaiser Valdrik in der Nebelzitadelle',to:()=>tpT(CITADEL.x,CITADEL.y),
+  wait:'Die Nebelzitadelle liegt im Süden der Nebellande. Folge dem goldenen ★.',ret:'Kehre zu Fürst Aldric nach Eichenhain zurück',
+  found:'👑 KAISER VALDRIK IST GEFALLEN! Die Nebel lichten sich. Kehre heim zu Fürst Aldric.',
+  done:'Valdrik ist tot … die Legion ist führerlos, der Drache besiegt, meine Tochter zu Hause. Du hast Eldmar zweimal gerettet. Von heute an bist du kein gefallener Ritter mehr – du bist der Schild von Eldmar.',
+  btn:'Es war mir eine Ehre',gold:2000,items:L=>[genItem('weapon',qd('valdrik'),5,{name:'Nebelbrecher',kind:'greatsword',boss:'valdrik',f:'melee'})],lore:'Kaiser Valdrik ist besiegt.'}]};
 G.MSQ=MSQ;
+const MORDER=[];for(const m of [3,4])MSQ[m].forEach((st,i)=>MORDER.push(st.id));MORDER.push('herald','dragon','elara','home');MSQ[9].forEach(st=>MORDER.push(st.id));
 const curStep=()=>MSQ[P.main]?MSQ[P.main][Math.min(P.ms||0,MSQ[P.main].length-1)]:null;
-G.chapter=()=>{const st=curStep();return st?st.ch:CHAP[Math.min(P.main,9)];};
+const progIdx=()=>P.main<3?-1:P.main===3?(P.ms||0):P.main===4?MSQ[3].length+(P.ms||0):P.main<=8?MSQ[3].length+MSQ[4].length+(P.main-5):P.main===9?MSQ[3].length+MSQ[4].length+4+(P.ms||0):999;
+const stepIs=id=>{const st=curStep();return !!st&&st.id===id;};const pastStep=id=>{const i=MORDER.indexOf(id);return i>=0&&progIdx()>i;};
+G.curStep=curStep;G.pastStep=pastStep;
+const npcName=id=>{const n=npcById(id);return n?n.name:id;};
+const stepGiver=st=>st.giver||'aldric',stepTurn=st=>st.turnin||stepGiver(st);
+const stepXP=st=>Math.round(xpNeed(qd(st.gate))*.45);
+function finishStep(st){const L=P.level;gainXP(stepXP(st));P.gold+=Math.round((st.gold||0)*G.D().gold);(st.items?st.items(L):[]).forEach(it=>give(it));G.toast(`+${Math.round((st.gold||0)*G.D().gold)} Gold`,'#ffd54a');
+ const last=P.ms>=MSQ[P.main].length-1;P.macc=false;P.mflag=0;P.lgN=0;if(last){P.main=P.main===4?5:P.main+1;P.ms=0;}else P.ms++;
+ if(P.main===10){G.ui&&G.ui.cutscene&&G.ui.cutscene('outro');}else G.toast(`📜 Weiter: ${G.chapter()}`,'#ffd54a',true);G.save();}
+function mainDialog(n){const st=curStep();if(!st)return null;const L=P.level,B=(l,f,c)=>({l,f,c}),gv=stepGiver(st),tn=stepTurn(st);
+ if(!P.macc&&n.id===gv){if(L<qd(st.gate))return{t:st.low(L),b:[]};return{t:st.give,b:[B(st.acc,()=>{P.macc=true;P.mflag=0;P.lgN=0;G.toast(`📜 ${st.ch}`,'#ffd54a',true);},1)]};}
+ if(P.macc&&n.id===tn&&(P.mflag||st.kind==='talk'))return{t:st.done,b:[B(st.btn,()=>finishStep(st),1)]};
+ if(P.macc&&n.id===gv)return{t:st.wait,b:[]};
+ if(n.id==='aldric'){const who=P.macc?(P.mflag||st.kind==='talk'?tn:null):gv;if(who&&who!=='aldric')return{t:`Geh zu ${st.where&&who===gv?st.where:npcName(who)}. Eldmar zählt auf dich.`,b:[]};}
+ return null;}
+G.mainDialog=mainDialog;
+function mainMark(n){const st=curStep();if(!st)return '';const gv=stepGiver(st),tn=stepTurn(st);if(!P.macc&&n.id===gv)return P.level>=qd(st.gate)?'!':'.';if(P.macc&&n.id===tn&&(P.mflag||st.kind==='talk'))return '?';return '';}
+G.mainMark=mainMark;
+G.chapter=()=>{const st=curStep();return st?st.ch:CHAP[Math.min(P.main,10)];};
+// Questfortschritt bei Kills (Kill- und Lager-Schritte)
+function mainKill(m){const st=curStep();if(!st||!P.macc||P.mflag)return;
+ if(st.kind==='kill'&&st.types.indexOf(m.type)>=0&&!m.summoned){if(st.near){const c=st.near();if(Math.hypot(m.x/TILE-c.x,m.y/TILE-c.y)>(st.rad||120))return;}P.lgN=(P.lgN||0)+1;if(P.lgN>=qd(st.cnt)){P.mflag=1;G.toast(st.found,'#ffd54a',true);}}
+ else if(st.kind==='camp'&&m.camp&&(P.lgN||0)<qd(st.cnt)){P.lgN=(P.lgN||0)+1;if(P.lgN>=qd(st.cnt))G.toast(`⚔ Die Wachen sind gefallen! ${BOSSES[st.boss].n} stellt sich dir!`,'#ffd54a',true);}
+ else if((st.kind==='fix'||st.kind==='camp')&&m.boss===st.boss){P.mflag=1;G.flashT=1;G.toast(st.found,'#ffd54a',true);}
+ else if(st.kind==='dungeon'&&m.qkey===st.room){P.mflag=1;G.flashT=.6;G.toast(st.found,'#ffd54a',true);}}
+// Lager-Schritte: Soldaten nachrücken lassen
+function campTick(dt){const st=curStep();if(!st||st.kind!=='camp'||!P.macc||P.mflag||G.room)return;const C=st.at(),cx=(C.x+.5)*TILE,cy=(C.y+.5)*TILE;if(Math.hypot(P.x-cx,P.y-cy)>TILE*34)return;G._lgT=(G._lgT||0)-dt;if(G._lgT>0)return;G._lgT=5;if((P.lgN||0)>=qd(st.cnt))return;
+ const alive=G.mons.filter(m=>m.camp&&!m.dead).length;if(alive>=6)return;for(let n=alive;n<Math.min(6,alive+3);n++){for(let i=0;i<12;i++){const a=Math.random()*6.283,d=rnd(2,9);const tx=Math.floor(C.x+Math.cos(a)*d),ty=Math.floor(C.y+Math.sin(a)*d);if(!walkTile(tx,ty)||SOLIDS[tileAt(tx,ty)])continue;const x=(tx+.5)*TILE,y=(ty+.5)*TILE;if(Math.hypot(P.x-x,P.y-y)<TILE*6)continue;const m=mkMonster(pick(st.types),qd(st.lv)-rint(1,2),x,y);m.camp=1;m.legion=1;m.passive=false;m.home={x,y};G.mons.push(m);break;}}}
 G.objective=function(){const L=P.level;const tp=(x,y)=>({x:(x+.5)*TILE,y:(y+.5)*TILE});const N=id=>{const n=npcById(id);if(n.loc&&G.room!==n.loc)return{x:n.loc.ent.x,y:n.loc.ent.y-10};return{x:n.x,y:n.y};};
  switch(P.main){
  case 0:return{t:'Sprich mit Heilerin Mara',to:N('mara')};
  case 1:return{t:'Geh zur Burg und sprich mit Fürst Aldric',to:N('aldric')};
  case 2:return P.mN>=qd('prove')?{t:'Kehre zu Fürst Aldric zurück',to:N('aldric')}:{t:`Besiege Monster vor den Mauern: ${P.mN}/${qd('prove')}`,to:null};
- case 3:case 4:{const st=curStep();if(!P.macc)return L<qd(st.gate)?{t:`Erreiche Stufe ${qd(st.gate)}, dann zu Fürst Aldric`,to:null}:{t:'Sprich mit Fürst Aldric',to:N('aldric')};
-  return P.mflag?{t:st.ret,to:N('aldric')}:{t:st.goal(),to:st.to()};}
+ case 3:case 4:case 9:{const st=curStep(),gv=stepGiver(st),tn=stepTurn(st);if(!P.macc)return L<qd(st.gate)?{t:`Erreiche Stufe ${qd(st.gate)}, dann zu ${npcName(gv)}`,to:null}:{t:`Sprich mit ${gv!=='aldric'&&st.where?st.where:npcName(gv)}`,to:N(gv)};
+  if(st.kind==='talk')return{t:st.goal(),to:st.to()};return P.mflag?{t:st.ret,to:N(tn)}:{t:st.goal(),to:st.to()};}
  case 5:{if(!P.macc)return L<qd('lvH')?{t:`Erreiche Stufe ${qd('lvH')} und sprich mit Gunnar in der Taverne`,to:N('gunnar')}:{t:'Sprich mit Drachenjäger Gunnar in der Taverne',to:N('gunnar')};
   const sh=P.shards||{},n=Object.keys(sh).length;if(n>=3)return L<qd('lvD')?{t:`Alle Splitter! Erreiche Stufe ${qd('lvD')} und bring sie Gunnar`,to:N('gunnar')}:{t:'Bring die drei Glutsiegel-Splitter zu Gunnar',to:N('gunnar')};
-  const H=[['schnitter','Vael, den Schnitter, in den Ruinen von Aschental',ASHVALE.x,ASHVALE.y-4],['eldtree','Mortholz, den Baumhirten, an der Abtei im Schattenwald',151,510],['sandking','Khepri, den Sandkönig, am Grab in den Dünen',529,546]].filter(h=>!sh[h[0]]);
+  const H=[['schnitter','Vael, den Schnitter, in den Ruinen von Aschental',ASHVALE.x,ASHVALE.y-4],['eldtree','Mortholz, den Baumhirten, an der Abtei im Schattenwald',HERALDPOS().eldtree.x,HERALDPOS().eldtree.y],['sandking','Khepri, den Sandkönig, am Grab in den Dünen',HERALDPOS().sandking.x,HERALDPOS().sandking.y]].filter(h=>!sh[h[0]]);
   const near=H.reduce((a,h)=>Math.hypot(h[2]*TILE-P.x,h[3]*TILE-P.y)<Math.hypot(a[2]*TILE-P.x,a[3]*TILE-P.y)?h:a);return{t:`Glutsiegel ${n}/3 – besiege ${near[1]}`,to:tp(near[2],near[3])};}
  case 6:return{t:'Erschlage Ignarok in der Drachenfestung auf dem Goldberg (Aschenberge, Nordosten)',to:tp(LAIR.x,LAIR.y)};
  case 7:return{t:'Sprich mit Prinzessin Elara im Drachenhort',to:N('elara')};
  case 8:return{t:'Kehre zu Fürst Aldric in die Burg zurück',to:N('aldric')};
- default:return{t:'Die Geschichte ist erzählt. Jage Bosse und mythische Beute!',to:null};}};
-G.storyContext=function(){const o=G.objective();const q=P.q;return `${G.chapter()}. Aktuelles Ziel des Spielers: ${o.t}. Spielerstufe ${P.level}, Schwierigkeit ${G.D().n}. `+(P.main===3&&P.ms>=1?'Der Spieler hat die gestohlene Karte von Räuberhauptmann Knut zurückgeholt; die Räuber arbeiten für die Schwarze Legion. ':'')+(P.main===3&&P.ms>=2?'Der Einsiedler Bertolt wurde verflucht aufgefunden. ':'')+(P.main===3&&P.ms>=3?'Räuberfürst Falk ist besiegt; Feldherr Severin der Schwarzen Legion bezahlt Räuber und Goblins. ':'')+(P.main>=4?'Grukk ist besiegt und die Karte gefunden. ':'')+(P.main===4&&P.ms>=1?'Moorhexe Grimelda ist besiegt, der Kryptaschlüssel gefunden. ':'')+(P.main>=5||P.main===4&&P.ms>=2?'Morvax ist besiegt. ':'')+(P.main>=5?'Feldherr Severin der Schwarzen Legion ist besiegt, seine Kriegspläne erbeutet. ':'')+(P.main>=5?'Morvax ist besiegt und der Siegelstein gefunden. ':'')+(P.main>=6?'Gunnar hat das Aschensiegel gebrochen. ':'')+(P.main>=7?'Ignarok ist tot! ':'')+(P.main>=8?'Elara ist wieder in der Burg. ':'')+(q.bread==='done'?'Der Spieler hat Bernd mit Weizen geholfen. ':'')+(q.wolves==='done'?'Der Spieler hat Hildas Wolfsplage beendet. ':'');};
-G.npcMark=function(n){{const em=G.extraMark&&G.extraMark(n);if(em)return em;if(n.lie)return '';}const sm0=G.sqMark(n);if(sm0==='?')return '?';const r0=npcMark0(n);return r0||sm0;};
+ default:return{t:'Die Geschichte ist erzählt. Erkunde Eldmar, jage Bosse und finde alle Geheimnisse!',to:null};}};
+G.storyContext=function(){const o=G.objective();const q=P.q;const lore=[];for(const m of [3,4,9])for(const st of MSQ[m])if(pastStep(st.id)&&st.lore)lore.push(st.lore);return `${G.chapter()}. Aktuelles Ziel des Spielers: ${o.t}. Spielerstufe ${P.level}, Schwierigkeit ${G.D().n}. `+lore.join(' ')+' '+(P.main>=6?'Gunnar hat das Aschensiegel gebrochen. ':'')+(P.main>=7?'Ignarok ist tot! ':'')+(P.main>=8?'Elara ist wieder in der Burg. ':'')+(q.bread==='done'?'Der Spieler hat Bernd mit Weizen geholfen. ':'')+(q.wolves==='done'?'Der Spieler hat Hildas Wolfsplage beendet. ':'');};
+G.npcMark=function(n){{const em=G.extraMark&&G.extraMark(n);if(em)return em;if(n.lie)return '';}{const mm=mainMark(n);if(mm==='?'||mm==='!')return mm;}const sm0=G.sqMark(n);if(sm0==='?')return '?';const r0=npcMark0(n);return r0||sm0;};
 const npcMark0=function(n){const q=P.q,L=P.level;switch(n.id){
  case'mara':return P.main===0?'!':'';
- case'ragna':return !q.draugr?(L>=15?'!':'.'):(q.draugr==='active'&&q.draugrN>=qd('draugr')?'?':'');
- case'aldric':{if(P.main===1||(P.main===2&&P.mN>=qd('prove'))||P.main===8)return'?';const st=curStep();if(!st)return'';if(!P.macc)return L>=qd(st.gate)?'?':'.';return P.mflag?'?':'';}
+ case'ragna':return !q.draugr?(L>=26?'!':'.'):(q.draugr==='active'&&q.draugrN>=qd('draugr')?'?':'');
+ case'aldric':{if(P.main===1||(P.main===2&&P.mN>=qd('prove'))||P.main===8)return'?';return '';}
  case'gunnar':return P.main===5?(!P.macc?(L>=qd('lvH')?'!':'.'):(Object.keys(P.shards||{}).length>=3?(L>=qd('lvD')?'?':'.'):'')):'';
  case'elara':return P.main===7?'?':'';
  case'bernd':return !q.bread?'!':(q.bread==='active'&&countItem('wheat')>=5?'?':'');
- case'hilda':return !q.wolves?(L>=3?'!':'.'):(q.wolves==='active'&&q.wolfN>=qd('wolves')?'?':'');
- case'otto':return !q.ears?(L>=5?'!':'.'):(q.ears==='active'&&countItem('ear')>=qd('ears')?'?':'');}return '';};
+ case'hilda':return !q.wolves?(L>=4?'!':'.'):(q.wolves==='active'&&q.wolfN>=qd('wolves')?'?':'');
+ case'otto':return !q.ears?(L>=12?'!':'.'):(q.ears==='active'&&countItem('ear')>=qd('ears')?'?':'');}return '';};
 const SHOPS={wirt:{n:'Schankstube „Zum Krummen Krug“',items:['beer','met','bread']},greta:{n:'Gretas Marktstand',items:['potion','mpotion','bread','carrot','seed','hseed','arrow','bolt']},
  sven:{n:'Svens Handelshaus',items:['potion','potion2','mpotion','bread','carrot','arrow','bolt']},
  brann:{n:'Feldscher Brann',items:['potion','potion2','mpotion','arrow','bolt']},
  hilda:{n:'Hildas Schmiede',items:['arrow','bolt'],smith:1}};Object.assign(SHOPS,SHOP_ADD);G.SHOPS=SHOPS;
 const SQ={
- berta:{npc:'berta',n:'Bertas Ehering',lv:6,fetch:'banditcave',item:'Bertas Ehering',give:'Banditen haben mir den Ehering meines Mannes gestohlen … Sie hausen in einer Höhle in ihrem Lager im Osten der Sonnenwiesen, am Rand des Finsterwalds. Bitte bring ihn mir zurück.',done:'Mein Ring! Den Göttern sei Dank. Nimm das, es ist nicht viel … aber von Herzen.',rw:{gold:180,xp:700,it:['ring',2]}},
- durin:{npc:'durin',n:'Der Ahnenhammer',lv:18,fetch:'dwarf',item:'Durins Ahnenhammer',give:'Die Zwergenbinge im Graukamm-Gebirge, östlich von hier … Grauzwerge und Golems haben sie überrannt. Der Hammer meines Vaters liegt dort in einer Truhe. Hol ihn, und ich schmiede dir etwas Feines.',done:'Bei meinem Bart! Vaters Hammer! Hier, nimm diesen – ich hab ihn für dich neu geschärft.',rw:{gold:300,xp:2400,it:['mace',3,'Runenhammer der Binge']}},
- samira:{npc:'samira',n:'Das Skarabäus-Siegel',lv:17,fetch:'pyramid',item:'Skarabäus-Siegel',give:'Im Grab des Sandkönigs, südöstlich meiner Stadt, ruht das Skarabäus-Siegel meiner Ahnen. Seit es dort liegt, wandeln die Toten. Bring es mir, und Sandfeste wird dich ehren.',done:'Das Siegel … die Wüste atmet auf. Nimm dieses Amulett meiner Mutter.',rw:{gold:350,xp:2200,it:['amulet',3,'Amulett der Dünenfürstin']}},
- liv:{npc:'liv',n:'Brut im Finsterwald',lv:9,kill:'spider',cnt:12,give:'Die Riesenspinnen fressen sich durch meinen Wald. Erlege zwölf von ihnen. Die Spinnenhöhle liegt nördlich von Waldheim.',done:'Gute Jagd! Dieser Bogen ist aus meiner eigenen Eibe.',rw:{gold:160,xp:900,it:['longbow',2,'Livs Eibenbogen']}},
- aldwin:{npc:'aldwin',n:'Die Moorleichen',lv:11,kill:'ghoul',cnt:10,give:'Die Moorleichen steigen jede Nacht näher an Moorbruck heran. Schick zehn von ihnen zurück in den Schlamm.',done:'Ruhe im Moor … für eine Weile. Nimm diese Robe, sie hält Gift fern.',rw:{gold:200,xp:1300,it:['heiler',2]}},
- anselm:{npc:'anselm',n:'Die verschollene Chronik',lv:16,fetch:'abbey',item:'Chronik von Eldmar',give:'In der Ruine der Abtei im Schattenwald, südwestlich, ruht die Chronik von Eldmar. Darin steht, wie Ignarok einst gebannt wurde. Bring sie mir.',done:'Die Chronik! Hier steht es … Ignarok fürchtet Licht. Nimm dieses heilige Buch.',rw:{gold:200,xp:2000,it:['tome_light',3,'Psalter der Morgenröte']}},
- brann:{npc:'brann',n:'Welpenplage',lv:23,kill:'wyrmling',cnt:6,give:'Drachenwelpen nisten in den Aschenbergen. Erlege sechs, bevor sie groß werden.',done:'Sechs weniger! Hier, ein Harnisch aus Welpenschuppen.',rw:{gold:400,xp:3500,it:['ritter',3]}},
- wendla:{npc:'wendla',n:'Hexenwerk',lv:13,fetch:'witchhut',item:'Hexenkessel-Rezept',give:'Die Sumpfhexe in ihrer Kate im Süden stiehlt meine Rezepte! Hol mir mein Kesselbuch zurück.',done:'Kröte, Kraut … ja, alles da! Nimm diese Tränke.',rw:{gold:120,xp:1200,stack:['potion2',3]}}};
+ berta:{npc:'berta',n:'Bertas Ehering',lv:11,fetch:'banditcave',item:'Bertas Ehering',give:'Banditen haben mir den Ehering meines Mannes gestohlen … Sie hausen im Räubernest, einer Höhle östlich der Ruinen von Aschental. Bitte bring ihn mir zurück.',done:'Mein Ring! Den Göttern sei Dank. Nimm das, es ist nicht viel … aber von Herzen.',rw:{gold:180,xp:700,it:['ring',2]}},
+ durin:{npc:'durin',n:'Der Ahnenhammer',lv:27,fetch:'dwarf',item:'Durins Ahnenhammer',give:'Die Zwergenbinge im Graukamm-Gebirge, östlich von hier … Grauzwerge und Golems haben sie überrannt. Der Hammer meines Vaters liegt dort in einer Truhe. Hol ihn, und ich schmiede dir etwas Feines.',done:'Bei meinem Bart! Vaters Hammer! Hier, nimm diesen – ich hab ihn für dich neu geschärft.',rw:{gold:300,xp:2400,it:['mace',3,'Runenhammer der Binge']}},
+ samira:{npc:'samira',n:'Das Skarabäus-Siegel',lv:32,fetch:'pyramid',item:'Skarabäus-Siegel',give:'Im Grab des Sandkönigs, südöstlich meiner Stadt, ruht das Skarabäus-Siegel meiner Ahnen. Seit es dort liegt, wandeln die Toten. Bring es mir, und Sandfeste wird dich ehren.',done:'Das Siegel … die Wüste atmet auf. Nimm dieses Amulett meiner Mutter.',rw:{gold:350,xp:2200,it:['amulet',3,'Amulett der Dünenfürstin']}},
+ liv:{npc:'liv',n:'Brut im Finsterwald',lv:24,kill:'spider',cnt:12,give:'Die Riesenspinnen fressen sich durch meinen Wald. Erlege zwölf von ihnen. Die Spinnenhöhle liegt nördlich von Waldheim.',done:'Gute Jagd! Dieser Bogen ist aus meiner eigenen Eibe.',rw:{gold:160,xp:900,it:['longbow',2,'Livs Eibenbogen']}},
+ aldwin:{npc:'aldwin',n:'Die Hexen des Moors',lv:21,kill:'witch',cnt:6,give:'Grimeldas Schwestern, die Sumpfhexen, verfluchen unsere Brunnen. Bring sechs von ihnen zur Strecke.',done:'Das Wasser ist wieder klar. Nimm diese Robe, sie hält Gift fern.',rw:{gold:200,xp:1300,it:['heiler',2]}},
+ anselm:{npc:'anselm',n:'Die verschollene Chronik',lv:27,fetch:'abbey',item:'Chronik von Eldmar',give:'In der Ruine der Abtei im Schattenwald, südwestlich, ruht die Chronik von Eldmar. Darin steht, wie Ignarok einst gebannt wurde. Bring sie mir.',done:'Die Chronik! Hier steht es … Ignarok fürchtet Licht. Nimm dieses heilige Buch.',rw:{gold:200,xp:2000,it:['tome_light',3,'Psalter der Morgenröte']}},
+ brann:{npc:'brann',n:'Welpenplage',lv:27,kill:'wyrmling',cnt:6,give:'Drachenwelpen nisten in den Aschenbergen. Erlege sechs, bevor sie groß werden.',done:'Sechs weniger! Hier, ein Harnisch aus Welpenschuppen.',rw:{gold:400,xp:3500,it:['ritter',3]}},
+ wendla:{npc:'wendla',n:'Hexenwerk',lv:29,fetch:'witchhut',item:'Hexenkessel-Rezept',give:'Die Sumpfhexe in ihrer Kate im Süden stiehlt meine Rezepte! Hol mir mein Kesselbuch zurück.',done:'Kröte, Kraut … ja, alles da! Nimm diese Tränke.',rw:{gold:120,xp:1200,stack:['potion2',3]}},
+ jorg:{npc:'jorg',n:'Rattenplage',lv:2,kill:'rat',cnt:8,give:'Riesenratten fressen mir das Korn aus der Scheune! Erschlag acht von den Biestern draußen auf den Wiesen.',done:'Endlich Ruhe in der Scheune. Hier, für deine Mühe – und ein Brot von Bernd.',rw:{gold:30,xp:220,stack:['bread',3]}},
+ hedwig:{npc:'hedwig',n:'Wilde Keiler',lv:4,kill:'boar',cnt:6,give:'Ach, die Wildschweine wühlen mir den Kräutergarten um, Kindchen. Jag sechs von ihnen fort, ja?',done:'Du bist ein Schatz. Nimm diesen alten Ring, er hat meinem Mann Glück gebracht.',rw:{gold:45,xp:420,it:['ring',1,'Hedwigs Glücksring']}},
+ lukas:{npc:'lukas',n:'Die gestohlene Laute',lv:8,fetch:'wolfden',item:'Lukas’ Laute',give:'Meine Laute! Ein Wolf hat sie mir auf der Wiese aus der Hand gerissen und in seinen Bau im Nordwesten geschleppt. Ohne sie kann ich keine Balladen über dich singen!',done:'Meine Laute! Hör nur: „Der Ritter, der aus Walhall kam …“ Nimm das, als Dank.',rw:{gold:80,xp:900,it:['amulet',2,'Bardenamulett']}},
+ konrad:{npc:'konrad',n:'Das Schwert meines Vaters',lv:10,fetch:'cellar',item:'Konrads Familienschwert',give:'Mein Vater fiel in Aschental, als das Dorf brannte. Sein Schwert liegt noch im verkohlten Keller. Bring es mir, bitte.',done:'Vaters Schwert … Danke. Nimm meins, ich trage jetzt seins.',rw:{gold:90,xp:1200,it:['sword',2,'Wachschwert der Burg']}},
+ greta:{npc:'greta',n:'Wegelagerer',lv:14,kill:'bandit',cnt:10,give:'Banditen überfallen meine Wagen am Rand des Finsterwalds. Erledige zehn von ihnen, dann fahre ich wieder.',done:'Meine Wagen rollen wieder! Hier, ein Anteil am Gewinn.',rw:{gold:180,xp:2100,stack:['potion',5]}},
+ finn:{npc:'finn',n:'Zentaurenjagd',lv:22,kill:'centaur',cnt:6,give:'Die Zentauren schießen auf meine Holzfäller. Erlege sechs, und ich baue dir einen Bogen, wie du noch keinen gesehen hast.',done:'Sechs! Hier, mein Meisterstück.',rw:{gold:300,xp:5200,it:['longbow',3,'Finns Meisterbogen']}},
+ hakim:{npc:'hakim',n:'Skorpione im Brunnen',lv:27,kill:'scorpion',cnt:10,give:'Riesenskorpione nisten bei den Wasserstellen der Dünen. Zehn von ihnen, und das Wasser gehört wieder uns!',done:'Wasser für alle! Hakim zahlt gut, mein Freund.',rw:{gold:420,xp:8000,stack:['potion2',3]}},
+ sven:{npc:'sven',n:'Die Bernsteinkette',lv:33,fetch:'icecave',item:'Svens Bernsteinkette',give:'Ich hab die Bernsteinkette meiner Frau in der Eishöhle verloren, ganz im Norden. Da drin ist es bitterkalt und voller Biester. Holst du sie mir?',done:'Bei Odin, du hast sie! Meine Frau wird weinen vor Glück.',rw:{gold:600,xp:12000,it:['amulet',3,'Bernsteinamulett']}},
+ ylva:{npc:'ylva',n:'Das Lied der Harpyien',lv:30,kill:'harpy',cnt:8,give:'Die Harpyien im Graukamm singen ein falsches Lied, das meine Skalden verwirrt. Bring sie zum Schweigen – acht sollten reichen.',done:'Stille … und dann mein Lied. Nimm diesen Umhang aus Rabenfedern.',rw:{gold:500,xp:10500,it:['waldlaeufer',3,'Rabenfeder-Rüstung']}},
+ runa:{npc:'runa',n:'Feuer im Nebel',lv:37,kill:'gjall',cnt:5,give:'Die Gjall spucken Feuer auf unsere Palisaden. Hol fünf von ihnen vom Himmel.',done:'Die Palisaden stehen. Nebelwacht dankt dir.',rw:{gold:800,xp:20000,it:['ritter',4,'Rüstung der Nebelwacht']}},
+ odo:{npc:'odo',n:'Nebelbernstein',lv:38,fetch:'mistgate',item:'Nebelbernstein',give:'Im Wurzeltor wächst Nebelbernstein, so groß wie eine Faust. Bring mir einen – ich zahle fürstlich.',done:'Prachtvoll! Fürstlich, wie versprochen.',rw:{gold:1500,xp:22000,stack:['potion2',5]}}};
 G.SQ=SQ;
 function sqState(k){return (P.side&&P.side[k])||null;}
 function sqDialog(n,d){for(const k in SQ){const q=SQ[k];if(q.npc!==n.id)continue;const st=sqState(k),B=(l,f,c)=>({l,f,c});
@@ -948,12 +1110,9 @@ const npcDialog0=function(n){const q=P.q,L=P.level,B=(l,f,c)=>({l,f,c});
   if(P.main===1)return{t:`Man nennt dich einen gefallenen Ritter? Mir ist gleich, woher du kommst, solange du ein Schwert führen kannst. Ignarok hat meine Tochter Elara geraubt. Bevor ich dir ihr Leben anvertraue, beweise dich: Erschlage ${qd('prove')} Kreaturen vor unseren Mauern.`,b:[B('Ich werde mich beweisen',()=>{P.main=2;P.mN=0;G.toast('📜 Hauptquest: Bewährung','#ffd54a',true);},1)]};
   if(P.main===2){if(P.mN>=qd('prove'))return{t:'Du kämpfst wie ein Ritter der alten Zeit. Nimm diese Klinge aus meiner Waffenkammer – du wirst sie brauchen.',b:[B('Bericht erstatten',()=>{P.main=3;P.ms=0;P.macc=false;P.mflag=0;gainXP(150);give(genItem('weapon',Math.max(2,L+1),1,{kind:'sword'}));},0)]};
    return{t:`Du hast erst ${P.mN} von ${qd('prove')} Kreaturen erschlagen. Die Wildnis vor den Toren wartet.`,b:[]};}
-  if(P.main===3||P.main===4){const st=curStep();
-   if(!P.macc){if(L<qd(st.gate))return{t:st.low(L),b:[]};return{t:st.give,b:[B(st.acc,()=>{P.macc=true;P.mflag=0;P.lgN=0;G.toast(`📜 ${st.ch}`,'#ffd54a',true);},1)]};}
-   if(P.mflag)return{t:st.done,b:[B(st.btn,()=>{st.rw(L);const last=P.ms>=MSQ[P.main].length-1;P.macc=false;P.mflag=0;P.lgN=0;if(last){P.main++;P.ms=0;}else P.ms++;G.toast(`📜 Weiter: ${G.chapter()}`,'#ffd54a',true);G.save();},1)]};
-   return{t:st.wait,b:[]};}
+  if(P.main===3||P.main===4||P.main===9){const md=mainDialog(n);if(md)return md;return{t:'Eldmar zählt auf dich, Ritter.',b:[]};}
   if(P.main<8)return{t:P.main===5?'Gunnar wartet in der Taverne „Zum Goldenen Krug“.':'Bring mir meine Tochter zurück, Ritter. Ich flehe dich an.',b:[]};
-  if(P.main===8)return{t:'Elara ist zurück … Du hast mir alles zurückgegeben, was ich verloren glaubte. Ganz Eldmar wird deinen Namen kennen. Nimm diese Klinge meiner Ahnen und den Dank eines Vaters.',b:[B('Es war mir eine Ehre',()=>{P.main=9;gainXP(3000);P.gold+=1000;give(genItem('weapon',qd('dragon')+2,4,{name:'Eichenhains Erbe',kind:'sword',boss:'dragon',f:'melee'}));G.toast('+1000 Gold','#ffd54a');G.ui&&G.ui.cutscene&&G.ui.cutscene('outro');},1)]};
+  if(P.main===8)return{t:'Elara ist zurück … Du hast mir alles zurückgegeben, was ich verloren glaubte. Ganz Eldmar wird deinen Namen kennen. Nimm diese Klinge meiner Ahnen und den Dank eines Vaters.',b:[B('Es war mir eine Ehre',()=>{P.main=9;P.ms=0;P.macc=false;P.mflag=0;gainXP(Math.round(xpNeed(P.level)*.5));P.gold+=1000;give(genItem('weapon',qd('dragon')+2,4,{name:'Eichenhains Erbe',kind:'sword',boss:'dragon',f:'melee'}));G.toast('+1000 Gold','#ffd54a');G.toast('📜 Doch Eldmars Geschichte ist noch nicht zu Ende …','#ffd54a',true);},1)]};
   return{t:'Eichenhain steht für immer in deiner Schuld, Held. Die Tore meiner Burg stehen dir offen.',b:[]};}
  case'gunnar':{
   if(P.main<5)return{t:pick(['Hmpf. Noch ein Grünschnabel, der Drachen jagen will? Ignarok hat meinen Bruder geholt. Komm wieder, wenn du einen Weg zum Hort hast.','Met. Feuer. Rache. Mehr brauch ich nicht.']),b:[]};
@@ -974,19 +1133,19 @@ const npcDialog0=function(n){const q=P.q,L=P.level,B=(l,f,c)=>({l,f,c});
   const bb=[];if(w>=3)bb.push(B('3 Weizen → 2 Brot',()=>{removeItem('wheat',3);give(mkStack('bread',2));}));bb.push(B('Saat holen',()=>give(mkStack('seed',5))));
   return{t:'Dein Weizen war der beste im ganzen Land! Bring mir jederzeit 3 Weizen, dann backe ich dir 2 frische Brote.',b:bb};}
  case'hilda':{const need=qd('wolves');
-  if(!q.wolves){if(L<3)return{t:`Ich bin Hilda, die Schmiedin. Arbeit hätte ich, aber du bist noch grün hinter den Ohren. Komm ab Stufe 3 wieder. (Du bist Stufe ${L}.)`,b:[]};
+  if(!q.wolves){if(L<4)return{t:`Ich bin Hilda, die Schmiedin. Arbeit hätte ich, aber du bist noch grün hinter den Ohren. Komm ab Stufe 4 wieder. (Du bist Stufe ${L}.)`,b:[]};
    return{t:`Wölfe reißen jede Nacht unsere Schafe! Draußen in den Sonnenwiesen jagen sie im Rudel. Erlege ${need} Wölfe, und ich schmiede dir eine seltene Waffe.`,b:[B('Ich jage sie!',()=>{q.wolves='active';q.wolfN=0;QT('Wolfsplage');},1)]};}
   if(q.wolves==='active'){if(q.wolfN>=need)return{t:'Ha! Du bist ein echter Jäger. Hier, frisch aus der Esse und noch warm.',b:[B('Belohnung nehmen',()=>{q.wolves='done';gainXP(450);give(genItem('weapon',L+2,2));DONE('Wolfsplage');})]};
    return{t:`Du hast ${q.wolfN}/${need} Wölfe erlegt. Pass auf, sie kommen im Rudel!`,b:[]};}
   return{t:'Meine Esse glüht für dich, Held. Bring mir Geschichten von deinen Kämpfen.',b:[]};}
  case'otto':{const need=qd('ears');
-  if(!q.ears){if(L<5)return{t:`Halt! Die Goblins werden immer frecher, aber dafür bist du zu unerfahren. Komm ab Stufe 5 wieder. (Du bist Stufe ${L}.)`,b:[]};
+  if(!q.ears){if(L<12)return{t:`Halt! Die Goblins am Rand des Finsterwalds werden immer frecher, aber dafür bist du zu unerfahren. Komm ab Stufe 12 wieder. (Du bist Stufe ${L}.)`,b:[]};
    return{t:`Goblins überfallen unsere Händler! Bring mir ${need} Goblin-Ohren als Beweis, dann bekommst du ein Stück aus der Waffenkammer. Goblins findest du im Finsterwald.`,b:[B('Wird erledigt!',()=>{q.ears='active';QT('Goblin-Ohren');},1)]};}
   if(q.ears==='active'){const e=countItem('ear');if(e>=need)return{t:'Ha, die Goblins werden es sich zweimal überlegen! Hier, eine Rüstung aus der Waffenkammer.',b:[B('Ohren abgeben',()=>{removeItem('ear',need);q.ears='done';gainXP(800);give(genItem(pick(['helm','chest','legs','boots']),L+2,2));DONE('Goblin-Ohren');})]};
    return{t:`Du hast ${e}/${need} Goblin-Ohren. Nicht jeder Goblin lässt eins fallen, also bleib dran!`,b:[]};}
   return{t:'Dank dir ist die Straße wieder sicherer.',b:[]};}
  case'ragna':{const need=qd('draugr');
-  if(!q.draugr){if(L<15)return{t:`Skål, Fremder. Die Draugr erheben sich aus ihren Hügelgräbern und bedrängen Frosthafen. Doch du bist erst Stufe ${L}. Komm wieder ab Stufe 15, dann reden wir.`,b:[]};
+  if(!q.draugr){if(L<26)return{t:`Skål, Fremder. Die Draugr erheben sich aus ihren Hügelgräbern und bedrängen Frosthafen. Doch du bist erst Stufe ${L}. Komm wieder ab Stufe 26, dann reden wir.`,b:[]};
    return{t:`Du hast den Blick eines Kriegers. Die Draugr, untote Krieger aus alter Zeit, ziehen durch die Frostlande. Erschlage ${need} von ihnen, und ich gebe dir eine Rüstung aus der Schatzkammer meiner Ahnen.`,b:[B('Für Frosthafen!',()=>{q.draugr='active';q.draugrN=0;QT('Draugr-Plage');},1)]};}
   if(q.draugr==='active'){if(q.draugrN>=need)return{t:'Die Toten ruhen wieder. Nimm diese Rüstung, sie hat schon meinem Großvater das Leben gerettet.',b:[B('Belohnung nehmen',()=>{q.draugr='done';gainXP(2500);give(genItem(pick(SLOTS4),L+2,3,{set:'waechter'}));DONE('Draugr-Plage');})]};
    return{t:`${q.draugrN}/${need} Draugr erschlagen. Sie wandern zwischen den verschneiten Grabhügeln.`,b:[]};}
@@ -996,16 +1155,13 @@ const npcDialog0=function(n){const q=P.q,L=P.level,B=(l,f,c)=>({l,f,c});
  case'greta':return{t:`Willkommen an meinem Stand! Du hast ${P.gold} Gold. Was darf es sein?`,b:[]};
  }
  return{t:pick(n.greet||['Sei gegrüßt.']),b:[]};};
-G.npcDialog=function(n){const d=(G.extraDialog&&G.extraDialog(n))||npcDialog0(n);d.b=d.b||[];sqDialog(n,d);const sh=SHOPS[n.id];if(sh){d.b=d.b||[];if(sh.smith){d.b.unshift({l:'⚒ Schmiede: Umschmieden',f:()=>G.ui&&G.ui.openShop(n.id,'forge'),c:1});d.b.unshift({l:'⚔ Ausrüstung kaufen',f:()=>G.ui&&G.ui.openShop(n.id,'gear'),c:1});}d.b.unshift({l:'🛒 Handeln (Kaufen & Verkaufen)',f:()=>G.ui&&G.ui.openShop(n.id,'buy'),c:1});}return d;};
+G.npcDialog=function(n){const d=(G.extraDialog&&G.extraDialog(n))||mainDialog(n)||npcDialog0(n);d.b=d.b||[];sqDialog(n,d);const sh=SHOPS[n.id];if(sh){d.b=d.b||[];if(sh.smith){d.b.unshift({l:'⚒ Schmiede: Umschmieden',f:()=>G.ui&&G.ui.openShop(n.id,'forge'),c:1});d.b.unshift({l:'⚔ Ausrüstung kaufen',f:()=>G.ui&&G.ui.openShop(n.id,'gear'),c:1});}d.b.unshift({l:'🛒 Handeln (Kaufen & Verkaufen)',f:()=>G.ui&&G.ui.openShop(n.id,'buy'),c:1});}return d;};
 
 
 // ===================== Update =====================
-const DQ={hut:{main:3,ms:1,base:'ghoul',add:'spider',lv:'hermit',name:'Der verfluchte Einsiedler',enter:'☠ Ein fauliger Gestank … Etwas Untotes haust in der Hütte!',found:'📜 Du findest beim Einsiedler Zeichnungen von Soldaten mit schwarzen Bannern! Bring sie zu Fürst Aldric.'},
- banditcave:{main:3,ms:2,base:'bandit',add:'archer',lv:'falk',name:'Räuberfürst Falk',enter:'⚔ „Wer wagt es, in mein Nest einzudringen?!“',found:'📜 Falk trug einen Sold-Brief der Schwarzen Legion bei sich! Bring ihn zu Fürst Aldric.'},
- wtower:{main:4,ms:0,base:'witch',add:'ghoul',lv:'grimelda',name:'Moorhexe Grimelda',enter:'🌫 Kichern hallt durch den Turm … die Moorhexe erwartet dich!',found:'🗝 Du hast den Kryptaschlüssel! Bring ihn zu Fürst Aldric.'}};
-G.DQ=DQ;
+
 function enterRoom(r){G.mons=G.mons.filter(m=>m.boss==='dragon');G.proj=[];G.teles=[];G.room=r;P.x=(r.door.tx+.5)*TILE;P.y=(r.door.ty-.5)*TILE;P.prevX=null;P.fx=0;P.fy=-1;G.enterT=.7;sfx('door');
- if(r.dungeon){for(const c of r.chests)if(c.opened&&Date.now()-c.at>240000)c.opened=false;const b=r.b;const ks=Object.keys(P.kills||{}).filter(k=>MT[k]&&!MT[k].passive);let key=ks.length?pick(ks):b.def;const dq=DQ[r.id],qa=dq&&P.main===dq.main&&P.ms===dq.ms&&P.macc&&!P.mflag;let m;if(qa){key=dq.add;m=mkMini(dq.base,qd(dq.lv),(r.x0+r.w/2)*TILE,(r.y0+2.5)*TILE);m.name=dq.name;m.qkey=r.id;G.toast(dq.enter,'#ff8a65',true);}else m=mkMini(key,r.lvl+1,(r.x0+r.w/2)*TILE,(r.y0+2.5)*TILE);m.room=r.id;G.mons.push(m);
+ if(r.dungeon){for(const c of r.chests)if(c.opened&&Date.now()-c.at>240000)c.opened=false;const b=r.b;const ks=Object.keys(P.kills||{}).filter(k=>MT[k]&&!MT[k].passive);let key=ks.length?pick(ks):b.def;const dq=curStep(),qa=dq&&dq.kind==='dungeon'&&dq.room===r.id&&P.macc&&!P.mflag;let m;if(qa){key=dq.add;m=mkMini(dq.base,qd(dq.lv),(r.x0+r.w/2)*TILE,(r.y0+2.5)*TILE);m.name=dq.name;m.qkey=r.id;m.maxhp=m.hp=Math.round(m.maxhp*1.15);G.toast(dq.enter,'#ff8a65',true);}else m=mkMini(key,r.lvl+1,(r.x0+r.w/2)*TILE,(r.y0+2.5)*TILE);m.room=r.id;G.mons.push(m);
   [[3,5],[r.w-4,5],[Math.floor(r.w/2),7]].forEach(([x,y])=>{const k=mkMonster(key,r.lvl,(r.x0+x+.5)*TILE,(r.y0+y+.5)*TILE);k.room=r.id;k.passive=false;G.mons.push(k);});
   G.toast(`☠ ${r.name}: ${m.name} lauert hier!`,'#ff8a80',true);sfx('aggro',{type:'boss'});}
  else G.toast('🚪 '+r.name,'#ffe9b0');}
@@ -1061,7 +1217,7 @@ G.update=function(dt){if(P&&!P.dead){const st=P.stats||(P.stats={});st.time=(st.
  const len=Math.hypot(mx,my);P.moving=false;
  P.dodgeCd-=dt;if(P.invT>0)P.invT-=dt;if(P.secondT>0)P.secondT-=dt;
  {const ptx=Math.floor(P.x/TILE),pty=Math.floor(P.y/TILE),ct=tileAt(ptx,pty);const wasC=P.climb;P.onLedge=ct===T.LEDGE&&P.z<=1;P.climb=ct===T.CLIMB;
-  if(P.climb&&!wasC){P.climbFrom={x:P.prevX||P.x,y:P.prevY||P.y};G.toast('🧗 Klettern! Ausdauer im Blick behalten.','#ffe0a0');}
+  if(P.climb&&!wasC){P.climbFrom={x:P.prevX||P.x,y:P.prevY||P.y};G.tip('🧗 Beim Klettern sinkt deine Ausdauer – ist sie leer, rutschst du ab.','climb');}
   if(P.climb&&!P.dead){P.sta-=9*dt;P.staT=.6;if(P.sta<=0){P.sta=0;const f=P.climbFrom||{x:P.x,y:P.y};P.x=f.x;P.y=f.y;P.climb=false;const dmg=Math.round(G.S.maxhp*.15);P.hp=Math.max(1,P.hp-dmg);P.hurtT=.4;G.floats.push({x:P.x,y:P.y-34,t:'Abgerutscht! -'+dmg,c:'#ff8a80',life:1});sfx('hurt');}}
   P.sprint=!!(G.sprintHeld&&len>.15&&!P.climb&&P.sta>4&&!P.dead&&P.dodgeT<=0);if(P.sprint){P.sta-=9*dt*(G.S.staMul||1);P.staT=.5;if(Math.random()<.25)G.parts.push({x:P.x+rnd(-5,5),y:P.y+8,z:2,vx:-mx*30,vy:-my*30,life:.3,c:'#d8c8a0'});}
   if(P.z>0||P.vz>0){P.vz-=980*dt;P.z+=P.vz*dt;if(P.z<=0){P.z=0;P.vz=0;if(P.landSfx){sfx('step');P.landSfx=false;}}}
@@ -1145,11 +1301,19 @@ G.setSlot=n=>{G.slot=n;try{localStorage.setItem('aschen_slot',n)}catch(e){}};
 G.slotInfo=n=>{try{const raw=localStorage.getItem(SK(n))||(n===1?localStorage.getItem(SAVEK4):null);if(!raw)return null;const s=JSON.parse(raw);if(!s||!s.P)return null;const p=s.P;return{lvl:p.lvl||1,gold:p.gold||0,diff:p.diff,at:p.savedAt||0,look:p.look||null,chapter:p.chapter||null};}catch(e){return null;}};
 G.wipeSlot=n=>{try{localStorage.removeItem(SK(n));if(n===1)localStorage.removeItem(SAVEK4);}catch(e){}};
 G.hasSave=()=>{try{return !!(localStorage.getItem(SK(G.slot))||(G.slot===1&&localStorage.getItem(SAVEK4)));}catch(e){return false;}};
-G.save=function(){if(!G.P)return;try{const p=Object.assign({},G.P);delete p.dead;p.roomId=G.room?G.room.id:null;p.savedAt=Date.now();localStorage.setItem(SK(G.slot),JSON.stringify({P:p,farm:[...G.farm.values()],fixT:G.fixT,chests:ROOMS.map(r=>r.chests.map(c=>[c.opened?1:0,c.at]))}));}catch(e){}};
+G.save=function(){if(!G.P)return;try{const p=Object.assign({},G.P);delete p.dead;p.roomId=G.room?G.room.id:null;p.savedAt=Date.now();p.wv=2;const ch={};ROOMS.forEach(r=>{if(r.chests.length)ch[r.id]=r.chests.map(c=>[c.opened?1:0,c.at]);});localStorage.setItem(SK(G.slot),JSON.stringify({P:p,farm:[...G.farm.values()],fixT:G.fixT,chests2:ch}));}catch(e){}};
 G.load=function(){try{let raw=localStorage.getItem(SK(G.slot)),mig=false;if(!raw&&G.slot===1){raw=localStorage.getItem(SAVEK4);mig=!!raw;}const s=JSON.parse(raw||'null');if(!s||!s.P)return false;if(mig){delete s.farm;delete s.chests;s.P.roomId=null;s.P.x=SPAWN.x;s.P.y=SPAWN.y;}newGame(s.P.diff||G.settings.diff);Object.assign(P,s.P);if(P.sta==null)P.sta=100;if(P.mp==null)P.mp=40;P.staT=0;P.dead=false;P.poison=null;P.dodgeT=0;
- if(!Array.isArray(P.inv)||P.inv.length!==36)return false;if(!P.chat)P.chat={};if(Array.isArray(s.farm))s.farm.forEach(f=>{if(f&&CROPS[f.c])G.farm.set(fk(f.tx,f.ty),f);});if(!P.kills)P.kills={};if(P.ms==null){P.ms=P.main===3?((P.macc||P.level>=qd('lvG'))?3:0):P.main===4?(P.macc?1:0):0;P.lgN=0;}if(!P.ways)P.ways={city:1};P.burn=null;P.slow=0;if(s.fixT)G.fixT=Object.assign({grukk:0,bonelord:0,dragon:0},s.fixT);
- G.flags.barrier=!!P.barrier;if(Array.isArray(s.chests))s.chests.forEach((a,i)=>{const r=ROOMS[i];if(r&&Array.isArray(a))a.forEach((v,j)=>{if(r.chests[j]){r.chests[j].opened=!!v[0];r.chests[j].at=v[1]||0;}});});G.room=null;if(P.roomId){const r=ROOMS.find(q=>q.id===P.roomId);if(r){P.x=r.ent.x;P.y=r.ent.y;}}if(P.diff){G.settings.diff=P.diff;}if(!P.side)P.side={};if(P.dayT==null)P.dayT=60;if(mig){P.x=SPAWN.x;P.y=SPAWN.y;G.toast('🗺 Die Welt ist gewachsen! Du startest wieder in Eichenhain. Deine Ausrüstung und Stufe bleiben.','#ffd54a',true);}placeElara();P.furn=P.furn||{};P.inv.forEach((it,i)=>{if(it&&it.stack&&STACK[it.id]&&STACK[it.id].type==='furn'){P.furn[it.id]=(P.furn[it.id]||0)+it.count;P.inv[i]=null;}});{let nb=0;const fixIt=it=>{if(!it||it.stack||it.v13||it.rarity==null)return;const k=RMULT[it.rarity]/RMULT_OLD[it.rarity];if(it.dmg!=null)it.dmg=Math.max(1,Math.round(it.dmg*k));if(it.def!=null)it.def=Math.max(1,Math.round(it.def*k));it.v13=1;if(it.rarity>0)nb++;};(P.inv||[]).forEach(fixIt);for(const k in P.eq||{})fixIt(P.eq[k]);if(P.chest)(P.chest||[]).forEach(fixIt);if(nb)setTimeout(()=>G.toast('⚖ Update 13: Seltene Waffen & Rüstungen wurden neu ausbalanciert.','#ffd54a',true),3500);}if(!canMove(P.x,P.y,10)){P.x=SPAWN.x;P.y=SPAWN.y;}G.S=calc();if(P.hp<=0)P.hp=G.S.maxhp;return true;}catch(e){console.error(e);return false;}};
+ if(!Array.isArray(P.inv)||P.inv.length!==36)return false;if(!P.chat)P.chat={};const oldW=!P.wv;if(Array.isArray(s.farm))s.farm.forEach(f=>{if(f&&CROPS[f.c]){if(oldW){const q=oldToNew(f.tx,f.ty);if(!q)return;f.tx=q[0];f.ty=q[1];}G.farm.set(fk(f.tx,f.ty),f);}});if(!P.kills)P.kills={};if(P.ms==null){P.ms=P.main===3?((P.macc||P.level>=qd('lvG'))?3:0):P.main===4?(P.macc?1:0):0;P.lgN=0;}if(!P.ways)P.ways={city:1};P.burn=null;P.slow=0;if(s.fixT)G.fixT=Object.assign({grukk:0,bonelord:0,dragon:0},s.fixT);
+ G.flags.barrier=!!P.barrier;if(s.chests2)for(const id in s.chests2){const r=ROOMS.find(q=>q.id===id),a=s.chests2[id];if(r&&Array.isArray(a))a.forEach((v,j)=>{if(r.chests[j]){r.chests[j].opened=!!v[0];r.chests[j].at=v[1]||0;}});}if(!oldW&&!s.chests2&&Array.isArray(s.chests))s.chests.forEach((a,i)=>{const r=ROOMS[i];if(r&&Array.isArray(a))a.forEach((v,j)=>{if(r.chests[j]){r.chests[j].opened=!!v[0];r.chests[j].at=v[1]||0;}});});G.room=null;if(oldW){migrateWorld();}if(P.roomId){const r=ROOMS.find(q=>q.id===P.roomId);if(r){P.x=r.ent.x;P.y=r.ent.y;}}if(P.diff){G.settings.diff=P.diff;}if(!P.side)P.side={};if(P.dayT==null)P.dayT=60;if(mig){P.x=SPAWN.x;P.y=SPAWN.y;G.toast('🗺 Die Welt ist gewachsen! Du startest wieder in Eichenhain. Deine Ausrüstung und Stufe bleiben.','#ffd54a',true);}placeElara();P.furn=P.furn||{};P.inv.forEach((it,i)=>{if(it&&it.stack&&STACK[it.id]&&STACK[it.id].type==='furn'){P.furn[it.id]=(P.furn[it.id]||0)+it.count;P.inv[i]=null;}});{let nb=0;const fixIt=it=>{if(!it||it.stack||it.v13||it.rarity==null)return;const k=RMULT[it.rarity]/RMULT_OLD[it.rarity];if(it.dmg!=null)it.dmg=Math.max(1,Math.round(it.dmg*k));if(it.def!=null)it.def=Math.max(1,Math.round(it.def*k));it.v13=1;if(it.rarity>0)nb++;};(P.inv||[]).forEach(fixIt);for(const k in P.eq||{})fixIt(P.eq[k]);if(P.chest)(P.chest||[]).forEach(fixIt);if(nb)setTimeout(()=>G.toast('⚖ Update 13: Seltene Waffen & Rüstungen wurden neu ausbalanciert.','#ffd54a',true),3500);}if(!canMove(P.x,P.y,10)){P.x=SPAWN.x;P.y=SPAWN.y;}G.S=calc();if(P.hp<=0)P.hp=G.S.maxhp;return true;}catch(e){console.error(e);return false;}};
 G.wipe=()=>G.wipeSlot(G.slot);
+// ===== v18: alte Spielstände (kleine Karte) auf die große Welt umrechnen =====
+function oldToNew(x,y){const OT=t=>({x:t.x/2,y:t.y/2});let nx,ny;if(Math.hypot(x-288,y-300)<RV+4){nx=x+VCX-288;ny=y+VCY-300;}else{const t=TOWNS.find(t=>{const o=OT(t);return Math.hypot(x-o.x,y-o.y)<t.r+4;});if(t){const o=OT(t);nx=t.x+(x-o.x);ny=t.y+(y-o.y);}else{nx=x*2;ny=y*2;}}
+ for(let r=0;r<12;r++)for(let a=0;a<Math.max(1,r*8);a++){const xx=Math.round(nx+Math.cos(a/(r*8||1)*6.283)*r),yy=Math.round(ny+Math.sin(a/(r*8||1)*6.283)*r);if(xx>3&&yy>3&&xx<WW-3&&yy<H-3&&walkTile(xx,yy))return[xx,yy];}return null;}
+function migrateWorld(){const tx=P.x/TILE,ty=P.y/TILE;if(tx<576){const q=oldToNew(Math.floor(tx),Math.floor(ty));if(q){P.x=(q[0]+.5)*TILE;P.y=(q[1]+.5)*TILE;}else{P.x=SPAWN.x;P.y=SPAWN.y;}}P.prevX=null;P.fog=null;
+ // Hauptquest auf die neue, längere Questreihe abbilden
+ const MAP3=[[3,0],[3,1],[3,4],[4,2]],MAP4=[[3,5],[4,3],[4,4]];let tgt=null;if(P.main===3)tgt=MAP3[Math.min(P.ms||0,3)];else if(P.main===4)tgt=MAP4[Math.min(P.ms||0,2)];
+ if(tgt){const seq=[];for(const m of [3,4])MSQ[m].forEach((st,i)=>seq.push([m,i,st]));let idx=seq.findIndex(q=>q[0]===tgt[0]&&q[1]===tgt[1]);const cap=seq.findIndex(q=>qd(q[2].gate)>P.level+1);let keep=true;if(cap>=0&&cap<idx){idx=cap;keep=false;}P.main=seq[idx][0];P.ms=seq[idx][1];if(!keep||seq[idx][2].id!==(P.main===3?['raub','hut','nest','grukk'][0]:'')){}if(!keep){P.macc=false;P.mflag=0;}P.lgN=0;}
+ setTimeout(()=>G.toast('🗺 Update 18: Die Welt ist doppelt so groß geworden! Deine Position und deine Quests wurden übernommen.','#ffd54a',true),1500);}
 // ===================== v8: Zuhause, Möbel, Angeln, Katzen, Schätze, Tagesablauf =====================
 const HOMEB=BUILD.find(b=>b.id==='h4'),HR=HOMEB.room;HOMEB.name='Dein Haus';HOMEB.sign='🏠';HOMEB.player=1;HR.name='Dein Haus';HR.player=true;HR.chests=[];
 const CARPB=BUILD.find(b=>b.id==='h7');CARPB.name='Schreinerei';CARPB.sign='🪑';CARPB.room.name='Schreinerei Holger';
@@ -1210,17 +1374,21 @@ function sleep(){const di=G.dayInfo();if(!(di.t>=430||di.t<40)){G.toast('😴 Du
 // Schreiner & Angler
 const mkN=(o)=>{o.x=o.hx=(o.tx+.5)*TILE;o.y=o.hy=(o.ty+.5)*TILE;o.fx=0;o.fy=1;o.wt=0;o.vx=0;o.vy=0;o.anim=0;NPCS.push(o);return o;};
 mkN({id:'holger',name:'Schreiner Holger',short:'Holger',abs:1,tx:CARPB.door.tx+1,ty:CARPB.y+CARPB.h+1,look:{body:'#7a5a3a',skin:'#e0b890',hair:'#8a5a2a',beard:'#8a5a2a'},persona:'Gemütlicher, etwas brummiger Schreiner aus Eichenhain. Baut Betten, Tische und Kamine und liebt den Duft von frischem Holz.',greet:['Holz lebt, mein Freund.','Mein Hobel ist mein bester Freund.']});
+mkN({id:'runa',name:'Wächterin Runa',short:'Runa',lord:1,abs:1,tx:TP('nebel',0,-3).x,ty:TP('nebel',0,-3).y,look:{body:'#3a3050',skin:'#e8c8a8',hair:'#d8d8e8',helm:'#7a7290',cape:'#2a2240'},persona:'Kühle, unerschütterliche Wächterin von Nebelwacht, dem letzten Außenposten am Rand der Nebellande. Spricht knapp, kennt die Sucher und die Nebelzwerge, hasst Kaiser Valdrik, der den Nebel geweckt hat.',greet:['Der Nebel schläft nie. Wir auch nicht.','Halte deine Klinge bereit.','Nebelwacht steht – noch.']});
+mkN({id:'odo',name:'Händler Odo',short:'Odo',abs:1,tx:TP('nebel',7,4).x,ty:TP('nebel',7,4).y,look:{body:'#4a4060',skin:'#d8b890',hair:'#6a5a4a',beard:'#6a5a4a',hat:'#3a3048'},persona:'Zwielichtiger, aber ehrlicher Händler in Nebelwacht. Verkauft Tränke und kauft Nebelbeute zu guten Preisen.',greet:['Große Tränke, frisch aus dem Kessel!','Was der Nebel ausspuckt, kaufe ich.']});
+SHOPS.odo={n:'Odos Nebelladen',items:['potion2','potion','mpotion','bread','arrow','bolt']};
 const ANG=BUILD.find(b=>b.id==='angler');
-mkN({id:'fiete',name:'Angler Fiete',short:'Fiete',abs:1,tx:110,ty:529,look:{body:'#3a4a5a',skin:'#d9a878',hair:'#9a9a8a',beard:'#9a9a8a',hat:'#4a5a3a'},persona:'Einsamer, wortkarger alter Angler, der im Schattenwald an seinem Weiher lebt. Redet gern über Fische, Köder und Katzen. Misstraut Städtern.',greet:['Psst. Du verscheuchst die Fische.','Heute beißen sie …']});
+mkN({id:'fiete',name:'Angler Fiete',short:'Fiete',abs:1,tx:ANG.x+6,ty:ANG.y+7,look:{body:'#3a4a5a',skin:'#d9a878',hair:'#9a9a8a',beard:'#9a9a8a',hat:'#4a5a3a'},persona:'Einsamer, wortkarger alter Angler, der an seinem Weiher in den Wiesen westlich von Eichenhain lebt. Redet gern über Fische, Köder und Katzen. Misstraut Städtern.',greet:['Psst. Du verscheuchst die Fische.','Heute beißen sie …']});
 JOBS.holger=[['door:h7','saw',[6,10]],['home','idle',[3,5]],['door:h7','saw',[5,8]]];JOBS.fiete=[['home','fish',[12,20]],['door:angler','idle',[3,5]]];
 SHOPS.fiete={n:'Fietes Angelkram',items:['bread','potion','arrow']};
 const killsOf=s=>{let n=0;for(const k in P.kills||{})if(k.indexOf(s)>=0)n+=P.kills[k];return n;};
 // Außentruhen
-const OCH=[{id:'tut',tx:VCX+44,ty:VCY+6,loot:'small'},{id:'can1',tx:229,ty:459,loot:'canyon'},{id:'can2',tx:327,ty:472,loot:'canyon'},{id:'bait',tx:361,ty:474,loot:'bait'},{id:'summit',tx:G.SUMMIT.x+2,ty:G.SUMMIT.y-1,loot:'summit'},{id:'abbeyring',tx:146,ty:507,loot:'canyon'},{id:'pyrring',tx:535,ty:545,loot:'canyon'}];
+const OCH=[{id:'tut',tx:VCX+44,ty:VCY+6,loot:'small'},{id:'can1',tx:458,ty:918,loot:'canyon'},{id:'can2',tx:654,ty:944,loot:'canyon'},{id:'bait',tx:722,ty:948,loot:'bait'},{id:'summit',tx:G.SUMMIT.x+2,ty:G.SUMMIT.y-1,loot:'summit'},{id:'abbeyring',tx:HERALDRING()[0][0]-5,ty:HERALDRING()[0][1]+2,loot:'canyon'},{id:'pyrring',tx:HERALDRING()[1][0]+6,ty:HERALDRING()[1][1]+4,loot:'canyon'}];
 for(const c of OCH){const t=tileAt(c.tx,c.ty);if(t!==T.LEDGE&&SOLIDS[t])map[c.ty*W+c.tx]=T.DIRT;}G.OCH=OCH;
 function openOCH(c){P.och=P.och||{};if(P.och[c.id])return;P.och[c.id]=1;sfx('chest');const L=Math.max(P.level,zoneLevel(c.tx,c.ty)),D=G.D();const gold=n=>{P.gold+=n;G.floats.push({x:P.x,y:P.y-40,t:`+${n} Gold`,c:'#ffd54a',life:1});G.invDirty=true;};
- if(c.loot==='small'){gold(30);give(mkStack('potion',1));give(mkStack('arrow',20));G.toast('🦘 Gut gesprungen! Mit der Leertaste kommst du auf Felsstufen.','#ffe0a0',true);}
- else if(c.loot==='bait'){gold(30);P.q.anglerBait=1;G.toast('🎣 Fietes goldener Köder! Bring ihn zum Angler im Schattenwald.','#ffd54a',true);sfx('quest');}
+ if(c.loot==='small'){gold(30);give(mkStack('potion',1));give(mkStack('arrow',20));G.tip('🦘 Gut gesprungen! Mit '+(G.ui&&G.ui.isPc&&G.ui.isPc()?'der Leertaste':'dem ⤒-Knopf')+' kommst du auf Felsstufen.','jump');G.toast('💰 Versteck gefunden!','#ffe0a0');}
+ else if(c.loot==='bait'){gold(30);P.q.anglerBait=1;G.toast('🎣 Fietes goldener Köder! Bring ihn zum Angler am Weiher westlich von Eichenhain.','#ffd54a',true);sfx('quest');}
+ else if(c.loot==='secret'){gold(rint(L*8,L*16));const rar=Math.max(3,rollRar(D.M+.5));give(lootItem(pick(ALLK),L+D.ilvl+2,rar,{src:'Geheimes Versteck'}));if(Math.random()<.5)give(mkStack('potion2',1));sfx('rare');G.toast('🗝 Ein geheimes Versteck! Erkunden lohnt sich.','#ffd54a',true);}
  else if(c.loot==='summit'){gold(250);give(lootItem(pick(ALLK),L+3,4,{src:'Frostgipfel'}));}
  else{gold(rint(L*6,L*12));const rar=Math.max(2,rollRar(D.M));give(lootItem(pick(ALLK),L+D.ilvl+2,rar,{src:'Versteckte Truhe'}));if(Math.random()<.6)give(mkStack('potion2',1));}}
 // Frostherz
@@ -1258,7 +1426,7 @@ function feedCat(c){const fid=['trout','carp','salmon','pike','cfish','goldfish'
  if(c.trust>=3){const nm=pick(CATN);P.pet={c:c.c,name:nm};G.CATS=G.CATS.filter(q=>q!==c);G.PET={x:c.x,y:c.y,fx:0,fy:1,c:c.c,anim:0,room:G.room,pet:1};sfx('quest');G.flashT=.6;G.toast(`😻 Die Katze folgt dir jetzt! Du nennst sie „${nm}“. (+5 % Glück)`,'#ff8fb0',true);G.save();}
  else{G.toast(`🐟 Die Katze frisst und schnurrt … (${c.trust}/3 Vertrauen)`,'#ffd0e0');sfx('pickup');}}
 // Tagesablauf der Dorfbewohner
-{const DLV={hut:6,banditcave:9,wtower:14,cellar:10};for(const r of ROOMS)if(r.dungeon&&DLV[r.id])r.lvl=DLV[r.id];}
+{const DLV={hut:6,wolfden:8,cellar:10,banditcave:12,wtower:15,grotto:18,dwarf:28,mistgate:38};for(const r of ROOMS)if(r.dungeon&&DLV[r.id])r.lvl=DLV[r.id];}
 for(const r of ROOMS){if(r.dungeon||r.player||r.kind==='barn')continue;let beds=0;for(let y=r.y0;y<r.y0+r.h;y++)for(let x=r.x0;x<r.x0+r.w;x++)if(tileAt(x,y)===T.BED)beds++;if(beds)continue;const want=r.b&&(r.b.id==='tavern'||r.b.id==='jarl')?3:r.b&&r.b.kind==='keep'?1:1;let placed=0;const fl=t=>t===T.WOOD||t===T.STONEF;
  for(let k=0;k<r.w&&placed<want;k++){const x=k%2?r.x0+r.w-1-Math.floor(k/2):r.x0+Math.floor(k/2);if(Math.abs(x-r.door.tx)<1)continue;const y=r.y0+r.h-2;if(fl(tileAt(x,y))&&fl(tileAt(x,y+1))&&tileAt(x,y+2)!==T.DOOR){map[y*W+x]=T.BED;map[(y+1)*W+x]=T.BED;placed++;}}}
 const TAVS=BUILD.filter(b=>b.room&&(b.id==='tavern'||b.id==='jarl'||/taverne|schenke|gasthaus/i.test(b.name||'')));
@@ -1392,33 +1560,92 @@ G.buyGear=i=>{const st=G.smithStock(),it=st[i];if(!it)return false;if(P.gold<it.
 G.dev={mkStack,give,genItem,gainXP,STACK,RAR,BUILD,spawnHorses:()=>{G.HORSES=null;}};
 
 // ===== v12.3: Waldpfad zum Angler & Entdeckungen =====
-{const pts=[[100,475],[97,484],[102,493],[99,502],[104,511],[107,518],[106,525]];const carve=(x,y)=>{const t=tileAt(x,y);if(t===T.HOUSE||t===T.DOOR||t===T.WATER||t===T.BRIDGE||t===T.WAYSTONE||t===T.CHEST)return;if(SOLIDS[t]||t===T.DGRASS||t===T.GRASS||t===T.GRASS2)map[y*W+x]=T.DIRT;};
- for(let i=0;i<pts.length-1;i++){const [x0,y0]=pts[i],[x1,y1]=pts[i+1],n=Math.max(Math.abs(x1-x0),Math.abs(y1-y0))*2;for(let k=0;k<=n;k++){const f=k/n,x=Math.round(x0+(x1-x0)*f+Math.sin(f*6+i)*1.2),y=Math.round(y0+(y1-y0)*f);carve(x,y);carve(x+1,y);if(h2(x,y,77)<.5)carve(x-1,y);}}}
+{const A=BUILD.find(b=>b.id==='angler'),sx=A.door.tx,sy=A.door.ty+1;let best=null,bd=1e9;for(let k=0;k<RLIST.length;k+=2){const d=Math.hypot(RLIST[k]-sx,RLIST[k+1]-sy);if(d<bd){bd=d;best=[RLIST[k],RLIST[k+1]];}}
+ const carve=(x,y)=>{const t=tileAt(x,y);if(t===T.HOUSE||t===T.DOOR||t===T.BRIDGE||t===T.WAYSTONE||t===T.CHEST||t===T.PATH)return;map[y*W+x]=t===T.WATER?T.BRIDGE:T.PATH;};
+ if(best){const [ex,ey]=best,n=Math.ceil(bd*2);for(let k=0;k<=n;k++){const f=k/n,x=Math.round(sx+(ex-sx)*f+Math.sin(f*7)*1.6),y=Math.round(sy+(ey-sy)*f+Math.cos(f*5)*1.2);carve(x,y);}
+  // kleines Schild am Abzweig
+  G.ANGSIGN={tx:ex,ty:ey};}}
 for(const b of BUILD){if(!b.room||!b.door)continue;for(let d=1;d<=2;d++){const x=b.door.tx,y=b.door.ty+d,t=tileAt(x,y);if(t===T.HOUSE||t===T.DOOR)continue;if(SOLIDS[t]||t===T.WATER||t===T.SWAMP||t===T.LAVA||t===T.ICE)map[y*W+x]=T.COBBLE;}}
 const POI=[];G.POI=POI;
 {const groundOf=b=>b==='winter'?T.SNOW:b==='desert'?T.SAND:b==='ash'?T.ASH:b==='waste'||b==='peaks'?T.DIRT:T.GRASS;
- const DEF=[[60,330,'skeleton','Gefallener Abenteurer','Ein Skelett in rostiger Rüstung umklammert noch seinen Beutel. Er hat es nicht aus dem Moor geschafft.'],
-  [170,230,'stones','Alter Steinkreis','Uralte Steine stehen im Kreis. Man sagt, hier hätten die ersten Könige von Eldmar geschworen.'],
-  [455,290,'camp','Verlassenes Jägerlager','Die Glut ist längst kalt. Wer hier lagerte, ist in großer Eile aufgebrochen.'],
-  [520,250,'grove','Verborgene Lichtung','Sonnenlicht fällt durch die Baumkronen. Die Luft riecht nach Blüten, du fühlst dich erfrischt.'],
-  [230,130,'cairn','Gipfelsteinmann','Wanderer haben hier Steine aufgeschichtet. In einen ist eingeritzt: „Der Drache schläft nie ganz.“'],
-  [95,130,'stones','Frostkreis','Die Steine sind von Raureif überzogen, aber in der Mitte schmilzt der Schnee nie.'],
-  [470,110,'skeleton','Verkohlte Überreste','Ein Abenteurer, der dem Drachen zu nahe kam. Seine Schätze hat das Feuer verschont.'],
-  [300,470,'cairn','Grenzstein der Alten','Ein verwitterter Stein markiert die alte Grenze des Königreichs. Darunter ist etwas vergraben.'],
-  [470,505,'camp','Karawanenrast','Eine verlassene Rast der Wüstenhändler. In einer Kiste liegt noch Ware.'],
-  [60,470,'grove','Elfenlichtung','Glühende Pilze bilden einen Ring. Es heißt, wer hier rastet, kehrt gestärkt zurück.'],
-  [185,500,'skeleton','Verirrter Pilger','Er suchte die Abtei und fand nur den Schattenwald.'],
-  [360,385,'stones','Sonnenstein','Ein einzelner Stein, der mittags keinen Schatten wirft.']];
+ const DEF=[[120,660,'skeleton','Gefallener Abenteurer','Ein Skelett in rostiger Rüstung umklammert noch seinen Beutel. Er hat es nicht aus dem Moor geschafft.'],
+  [340,460,'stones','Alter Steinkreis','Uralte Steine stehen im Kreis. Man sagt, hier hätten die ersten Könige von Eldmar geschworen.'],
+  [910,580,'camp','Verlassenes Jägerlager','Die Glut ist längst kalt. Wer hier lagerte, ist in großer Eile aufgebrochen.'],
+  [1040,500,'grove','Verborgene Lichtung','Sonnenlicht fällt durch die Baumkronen. Die Luft riecht nach Blüten, du fühlst dich erfrischt.'],
+  [460,260,'cairn','Gipfelsteinmann','Wanderer haben hier Steine aufgeschichtet. In einen ist eingeritzt: „Der Drache schläft nie ganz.“'],
+  [190,260,'stones','Frostkreis','Die Steine sind von Raureif überzogen, aber in der Mitte schmilzt der Schnee nie.'],
+  [940,220,'skeleton','Verkohlte Überreste','Ein Abenteurer, der dem Drachen zu nahe kam. Seine Schätze hat das Feuer verschont.'],
+  [600,940,'cairn','Grenzstein der Alten','Ein verwitterter Stein markiert die alte Grenze des Königreichs. Darunter ist etwas vergraben.'],
+  [940,1010,'camp','Karawanenrast','Eine verlassene Rast der Wüstenhändler. In einer Kiste liegt noch Ware.'],
+  [120,940,'grove','Elfenlichtung','Glühende Pilze bilden einen Ring. Es heißt, wer hier rastet, kehrt gestärkt zurück.'],
+  [370,1000,'skeleton','Verirrter Pilger','Er suchte die Abtei und fand nur den Schattenwald.'],
+  [720,770,'stones','Sonnenstein','Ein einzelner Stein, der mittags keinen Schatten wirft.'],
+  [690,700,'cairn','Steinmännchen mit Inschrift','In einen Stein ist geritzt: „Diese Welt erschuf Akuma. Wer dies liest, hat zu viel Zeit – und genau richtig erkundet.“'],
+  [520,520,'grove','Feenring','Ein Kreis aus winzigen Pilzen. In der Mitte liegt ein Hut, nicht größer als dein Daumen. Du fühlst dich erfrischt.'],
+  [640,780,'skeleton','Der ungeduldige Abenteurer','Neben dem Skelett liegt ein Zettel: „Bin gleich wieder da. Nur kurz Level 40 holen.“'],
+  [420,620,'stones','Verwitterter Steinkreis','Zwölf Steine, einer fehlt. Bauer Jorg schwört, dass er ihn nicht für seinen Stall geklaut hat.'],
+  [760,720,'camp','Lager eines Kartografen','Überall Skizzen derselben Wiese. Auf der letzten steht nur: „Alles ist doppelt so groß geworden?!“'],
+  [880,380,'rune','Runenstein von Aschental','Die Runen erzählen von einem Dorf, das zweimal brannte – einmal durch Feuer, einmal durch Verrat.'],
+  [330,520,'skeleton','Versunkener Fischer','Er wollte im Moor angeln. Seine Rute ragt noch aus dem Schlamm.'],
+  [210,700,'rune','Moorstein','„Wer im Nebel wandelt, hört die Toten flüstern. Wer zurückflüstert, bleibt.“'],
+  [90,880,'grove','Irrlichtlichtung','Kleine Lichter tanzen über dem Wasser und weichen dir aus. Eines setzt sich kurz auf deine Schulter.'],
+  [960,640,'camp','Verlassenes Holzfällerlager','Die Axt steckt noch im Stamm. Daneben eine Spur aus Goblinfüßen.'],
+  [1100,460,'cairn','Grenzstein des Finsterwalds','„Bis hierher und nicht weiter“, steht darauf. Dahinter beginnt der Nebel.'],
+  [1080,760,'skeleton','Gefallener Späher','Er trägt das Wappen von Eichenhain. In seiner Hand: ein leerer Kartenköcher.'],
+  [520,1000,'rune','Runenstein der Schlucht','Eine Zeichnung zeigt Orks, die einer Gestalt mit eiserner Krone huldigen.'],
+  [700,1080,'camp','Verlassene Grabungsstelle','Spitzhacken, Seile und ein Tagebuch: „Tag 40: Golems. Überall Golems.“'],
+  [360,1100,'grove','Schattenquelle','Eine Quelle, so klar wie Glas, mitten im finstersten Wald. Das Wasser schmeckt nach Minze.'],
+  [180,1040,'skeleton','Der letzte Pilger','Auf seinem Grabstein steht: „Er hatte nur eine Zeile Text.“'],
+  [960,1100,'cairn','Sandbedeckter Obelisk','Eine Inschrift warnt: „Wer den Sandkönig weckt, weckt auch seinen Hunger.“'],
+  [1180,1000,'camp','Oase des Händlers','Ein Teppich, eine leere Wasserkanne und ein Schild: „Bin beten. Nicht klauen.“'],
+  [1040,300,'skeleton','Verbrannter Drachenjäger','Ein Helm mit Hörnern. Gunnar würde ihn erkennen.'],
+  [820,160,'rune','Runenstein der Asche','„Ignarok war einst ein Wächter. Dann vergaß er, was er bewachte.“'],
+  [640,220,'stones','Hügelkreis der Zwerge','Zwergenrunen: „Hier tranken Durins Ahnen auf jedes neue Bier.“'],
+  [400,120,'skeleton','Erfrorener Sammler','Er umklammert eine Feder von etwas sehr Großem.'],
+  [260,320,'grove','Nordlichtlichtung','Selbst im Schnee blühen hier blaue Blumen. Der Himmel schimmert grün.'],
+  [150,240,'cairn','Steinmann der Skalden','„Die beste Geschichte ist die, die du selbst erlebst.“ – Skaldin Ylva'],
+  [1250,700,'rune','Nebelrune','Die Rune leuchtet violett, als du näherkommst. Ein Summen geht davon aus.'],
+  [1260,500,'skeleton','Gefallener Nebelwächter','Seine Rüstung trägt das Zeichen von Nebelwacht. Er fiel mit dem Gesicht zum Nebel.'],
+  [1290,860,'grove','Herz des Nebels','Hier lichtet sich der Nebel. Ein uralter Baumstumpf atmet ruhig wie ein schlafendes Tier.'],
+  [1230,360,'camp','Lager der Nebelzwerge','Seltsame Werkzeuge aus blauem Metall. Ein Topf mit noch warmem Eintopf.'],
+  [560,440,'cairn','Ein rostiges Schwert im Stein','Es steckt fest. Ganz fest. Vielleicht später. Vielleicht nie.'],
+  [600,860,'stones','Der singende Stein','Wenn der Wind darüber streicht, klingt es fast wie Lukas’ Laute. Nur schöner.']];
  const near=(x,y)=>BUILD.some(b=>x>b.x-8&&x<b.x+b.w+8&&y>b.y-8&&y<b.y+b.h+8)||TOWNS.some(t=>Math.hypot(t.x-x,t.y-y)<t.r+8)||Math.hypot(x-VCX,y-VCY)<40;
  DEF.forEach(([x0,y0,kind,name,text],i)=>{let best=null;for(let r=0;r<30&&!best;r+=2)for(let k=0;k<16&&!best;k++){const an=k/16*6.283,x=Math.round(x0+Math.cos(an)*r),y=Math.round(y0+Math.sin(an)*r);if(x<8||y<8||x>WW-8||y>H-8||near(x,y))continue;let wat=0;for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++){const t=tileAt(x+dx,y+dy);if(t===T.WATER||t===T.LAVA||t===T.HOUSE||t===T.WAYSTONE||t===T.PATH||t===T.COBBLE)wat++;}if(!wat)best=[x,y];}
   if(!best)return;const [cx,cy]=best,g=groundOf(biome(cx,cy));for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++){if(dx*dx+dy*dy>18)continue;map[(cy+dy)*W+cx+dx]=g;}
   const id='poi'+i;let chest=true;
   if(kind==='stones'){for(let k=0;k<8;k++){const an=k/8*6.283;map[(cy+Math.round(Math.sin(an)*3))*W+cx+Math.round(Math.cos(an)*3)]=T.ROCK;}}
   else if(kind==='cairn'){map[(cy-1)*W+cx]=T.RUIN;map[(cy-1)*W+cx+1]=T.ROCK;}
+  else if(kind==='rune'){map[(cy-1)*W+cx]=T.WAYSTONE===undefined?T.ROCK:T.RUIN;chest=h2(cx,cy,5)<.5;}
   else if(kind==='camp'){map[(cy-2)*W+cx-1]=T.TENT;map[cy*W+cx+2]=T.FIRE;map[(cy+1)*W+cx-2]=T.STUMP;}
   else if(kind==='skeleton'){map[cy*W+cx-1]=T.BONES;map[(cy+1)*W+cx+1]=T.BONES;}
   else if(kind==='grove'){for(let k=0;k<10;k++){const an=k/10*6.283;const x=cx+Math.round(Math.cos(an)*3),y=cy+Math.round(Math.sin(an)*3);map[y*W+x]=biome(cx,cy)==='dark'?T.MUSH:T.FLOWER;}chest=false;}
   if(chest)OCH.push({id:'c_'+id,tx:cx,ty:cy,loot:'canyon'});POI.push({id,name,text,kind,tx:cx,ty:cy});});}
+// ===== v18: Wildwechsel-Pfade, versteckte Truhen und Erreichbarkeit =====
+{const R=(i,k)=>h2(i,k,1801);const okB=new Set(['forest','dark','mist','meadow','winter','swamp']);
+ const groundAt=(x,y)=>{const b=biome(x,y);return b==='winter'?T.SNOW:b==='swamp'?T.SWAMP:(b==='dark'||b==='mist')?T.DGRASS:b==='desert'?T.SAND:b==='waste'||b==='peaks'?T.DIRT:b==='ash'?T.ASH:T.GRASS2;};
+ const SOFT=new Set([T.TREE,T.DEAD,T.STUMP,T.MUSH,T.ROCK,T.CACTUS]);
+ const carve1=(x,y)=>{if(x<4||y<4||x>=WW-4||y>=H-4)return;const t=map[y*W+x];if(SOFT.has(t))map[y*W+x]=groundAt(x,y);};
+ let made=0;for(let i=0;i<3000&&made<260;i++){let x=8+Math.floor(R(i,1)*(WW-16)),y=8+Math.floor(R(i,2)*(H-16));const b=biome(x,y);if(!okB.has(b)||dV(x,y)<RV+12||townAt(x,y))continue;
+  let tr=0;for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++)if(map[(y+dy)*W+x+dx]===T.TREE)tr++;if(tr<16)continue;
+  made++;let a=R(i,3)*6.283;const len=16+Math.floor(R(i,4)*36);for(let st=0;st<len;st++){carve1(Math.round(x),Math.round(y));a+=(h2(i,st,1802)-.5)*.9;x+=Math.cos(a);y+=Math.sin(a);if(x<6||y<6||x>WW-6||y>H-6)break;}
+  if(made%3===0){const cx=Math.round(x),cy=Math.round(y);if(cx>6&&cy>6&&cx<WW-6&&cy<H-6&&!townAt(cx,cy)){for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)carve1(cx+dx,cy+dy);const t=map[cy*W+cx];if(!SOLIDS[t]&&t!==T.WATER&&t!==T.LAVA)OCH.push({id:'s_'+i,tx:cx,ty:cy,loot:'secret'});}}}
+ // Erreichbarkeit: abgeschlossene Inseln mit dem Rest der Welt verbinden (Bäume/Felsen weg, über Wasser Stege)
+ const N=WW*H,par=new Int32Array(N).fill(-1),cost=i=>{const t=map[Math.floor(i/WW)*W+i%WW];if(!SOLIDS[t]||t===T.CLIMB||t===T.BARRIER||t===T.LEDGE||t===T.WAYSTONE)return 0;if(SOFT.has(t))return 1;if(t===T.WATER)return 2;return -1;};
+ const start=VCY*WW+VCX+2;const best=new Int32Array(N).fill(1e9);best[start]=0;
+ // Dijkstra mit kleiner Gewichtung über Ringpuffer (0-1-2-BFS)
+ const buckets=[[start],[],[]];let cur=0,bi=0,guard=0;const done=new Uint8Array(N);
+ while(guard++<40000000){let list=buckets[bi%3];if(!list.length){let any=false;for(let k=1;k<=2;k++)if(buckets[(bi+k)%3].length){any=true;break;}if(!any)break;bi++;continue;}const i=list.pop();if(done[i])continue;done[i]=1;const x=i%WW,y=(i/WW)|0;
+  for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(nx<3||ny<3||nx>=WW-3||ny>=H-3)continue;const j=ny*WW+nx;if(done[j])continue;const c=cost(j);if(c<0)continue;const nd=best[i]+c;if(nd<best[j]){best[j]=nd;par[j]=i;buckets[(bi+c)%3].push(j);}}}
+ // Inseln (begehbare Felder, die nur über Umwege erreichbar sind) finden und verbinden
+ const seen=new Uint8Array(N);let fixed=0;
+ for(let i=0;i<N;i++){if(seen[i]||best[i]===0||best[i]>=1e9||cost(i)!==0)continue;const comp=[i];seen[i]=1;let mi=i;for(let k=0;k<comp.length;k++){const c=comp[k],x=c%WW,y=(c/WW)|0;if(best[c]<best[mi])mi=c;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const j=(y+dy)*WW+x+dx;if(!seen[j]&&best[j]>0&&best[j]<1e9&&cost(j)===0){seen[j]=1;comp.push(j);}}}
+  if(comp.length<5)continue;let c=mi,g2=0;while(c>=0&&best[c]>0&&g2++<4000){const x=c%WW,y=(c/WW)|0,t=map[y*W+x];if(SOFT.has(t))map[y*W+x]=groundAt(x,y);else if(t===T.WATER)map[y*W+x]=T.BRIDGE;c=par[c];}fixed++;}
+ // winzige, weiterhin unerreichbare Lücken (1–4 Felder) zuwachsen lassen, damit man nirgends feststecken kann
+ {const pass=i=>{const t=map[Math.floor(i/WW)*W+i%WW];return !SOLIDS[t]||t===T.CLIMB||t===T.BARRIER||t===T.LEDGE;};const rs=new Uint8Array(N);const q=[start];rs[start]=1;for(let k=0;k<q.length;k++){const c=q[k],x=c%WW,y=(c/WW)|0;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(nx<1||ny<1||nx>=WW-1||ny>=H-1)continue;const j=ny*WW+nx;if(!rs[j]&&pass(j)){rs[j]=1;q.push(j);}}}
+  const s3=new Uint8Array(N);for(let i=0;i<N;i++){if(rs[i]||s3[i]||!pass(i))continue;const comp=[i];s3[i]=1;for(let k=0;k<comp.length&&comp.length<6;k++){const c=comp[k],x=c%WW,y=(c/WW)|0;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const j=(y+dy)*WW+x+dx;if(!rs[j]&&!s3[j]&&pass(j)){s3[j]=1;comp.push(j);}}}
+   if(comp.length<5)for(const c0 of comp){const x=c0%WW,y=(c0/WW)|0,t=map[y*W+x];if(t===T.WATER||t===T.BRIDGE||t===T.WAYSTONE||t===T.PATH||t===T.COBBLE||t===T.LEDGE||t===T.CLIMB)continue;if(OCH.some(o=>o.tx===x&&o.ty===y))continue;const b=biome(x,y);map[y*W+x]=(b==='desert'||b==='waste'||b==='ash'||b==='peaks')?T.ROCK:T.TREE;}}}
+ G.REACHFIX=fixed;}
 let poiT=0;function poiTick(dt){poiT+=dt;if(poiT<.5||G.room)return;poiT=0;P.disc=P.disc||{};for(const p of POI){if(P.disc[p.id])continue;if(Math.hypot(P.x/TILE-p.tx,P.y/TILE-p.ty)<4.5){P.disc[p.id]=1;const n=Object.keys(P.disc).length;sfx('rare');gainXP(60+zoneLevel(p.tx,p.ty)*12);if(p.kind==='grove'){const S=G.calc();P.hp=S.maxhp;P.mp=S.maxMp;}G.toast(`✦ Entdeckt: ${p.name} (${n}/${POI.length})\n${p.text}`,'#ffe9a0',true);G.save();}}}
 // Hooks
 G.v8tick=dt=>{poiTick(dt);if(!G.HORSES)spawnHorses();for(const h of G.HORSES)if(h.room?G.room===h.room:(!G.room&&Math.hypot(h.x-P.x,h.y-P.y)<TILE*40))horseTick(h,dt);horsePush();G.fishTick(dt);if(!G.CATS)spawnCats();for(const c of G.CATS)if(!G.room&&Math.hypot(c.x-P.x,c.y-P.y)<TILE*30)catTick(c,dt,false);if(P.pet){if(!G.PET)G.PET={x:P.x,y:P.y+14,fx:0,fy:1,c:P.pet.c,anim:0,room:G.room,pet:1};catTick(G.PET,dt,true);}

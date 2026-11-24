@@ -22,7 +22,8 @@ button{touch-action:manipulation;cursor:pointer}
 #lvl{pointer-events:auto;touch-action:manipulation;cursor:pointer;width:36px;height:36px;border-radius:50%;background:radial-gradient(#ffe08a,#b8860b);border:2px solid #5a3d1e;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:15px;color:#3b2612;flex:none;box-shadow:0 2px 5px #000}
 .bars{flex:1}
 .bar{height:15px;border:2px solid #3b2612;background:#2a1a0c;border-radius:4px;position:relative;overflow:hidden}
-.bar+.bar,.bar+.bar2{margin-top:3px}.bar2{display:flex;gap:3px}.bar2 .bar{flex:1;height:11px}.bar2 .bar span{font-size:8.5px;line-height:8px}#stf{background:linear-gradient(#c5e1a5,#558b2f)}#mpf{background:linear-gradient(#82b1ff,#2962ff)}#ammo{display:none;font-size:11px;color:#ffe9b0;text-shadow:0 0 3px #000;font-weight:bold}.mapP{width:auto;max-width:96vw}#mapC{display:block;margin:4px auto;border:2px solid #5a3d1e;border-radius:4px;image-rendering:pixelated}
+.bar+.bar,.bar+.bar2{margin-top:3px}.bar2{display:flex;gap:3px}.bar2 .bar{flex:1;height:11px}.bar2 .bar span{font-size:8.5px;line-height:8px}#stf{background:linear-gradient(#c5e1a5,#558b2f)}#mpf{background:linear-gradient(#82b1ff,#2962ff)}#ammo{display:none;font-size:11px;color:#ffe9b0;text-shadow:0 0 3px #000;font-weight:bold}.mapP{width:auto;max-width:96vw}.mapBar{display:flex;gap:6px;justify-content:center;margin:2px 0 4px}.mapBar .btn{min-width:44px;padding:4px 10px;font-size:15px}
+#mapC{display:block;margin:4px auto;border:2px solid #5a3d1e;border-radius:4px;image-rendering:pixelated}
 .bar i{position:absolute;left:0;top:0;bottom:0;width:0}
 #hpf{background:linear-gradient(#ef5350,#b71c1c)}#hpf.poison{background:linear-gradient(#9ccc65,#33691e)}
 #xpf{background:linear-gradient(#ffe082,#c8a400)}
@@ -61,6 +62,7 @@ button{touch-action:manipulation;cursor:pointer}
 #joy{position:fixed;width:116px;height:116px;margin:-58px 0 0 -58px;border-radius:50%;border:3px solid rgba(244,230,196,.55);background:rgba(0,0,0,.22);display:none;pointer-events:none}
 #knob{position:absolute;left:50%;top:50%;width:50px;height:50px;margin:-25px 0 0 -25px;border-radius:50%;background:radial-gradient(#f4e6c4,#a07840);border:2px solid #5a3d1e}
 #joyHint{position:fixed;left:18px;bottom:calc(var(--s) + 46px + env(safe-area-inset-bottom));color:rgba(244,230,196,.65);font-size:12px;pointer-events:none;text-shadow:0 1px 2px #000;max-width:40vw}
+#tipBox{position:fixed;left:10px;top:150px;width:240px;z-index:6;background:rgba(25,15,6,.78);border:1px solid #8a6a3a;border-left:3px solid #ffd54a;border-radius:6px;padding:5px 8px;font:12px/1.35 Georgia,serif;color:#f4e6c4;opacity:0;transform:translateX(-12px);transition:opacity .4s,transform .4s;pointer-events:none}#tipBox.on{opacity:1;transform:none;pointer-events:auto;cursor:pointer}body:not(.pc) #tipBox{font-size:11px;padding:4px 7px}
 #toasts{position:fixed;left:50%;top:calc(200px + env(safe-area-inset-top));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;width:92vw;z-index:5}
 .toast{background:rgba(25,15,6,.9);border:2px solid #8a6a3a;border-radius:6px;padding:3px 9px;font-size:12px;color:#f4e6c4;display:flex;align-items:center;gap:6px;animation:tin .25s ease-out;max-width:100%}
 .toast img{width:24px;height:24px;flex:none}
@@ -241,13 +243,16 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
   <h3>Dein Haus 🏠</h3>
   <p>Du wohnst jetzt im eigenen Häuschen in Eichenhain, am Anfang mit einem Strohlager. Schreiner Holger in der Schreinerei verkauft Möbel: Bett (Stroh → Feld → Einzel → Doppel → Königsbett), Tisch, Kamin, Regal, Teppich, Licht, Deko und Katzenkorb. Gekaufte Möbel landen in deinem <b>Möbellager</b> und nehmen keinen Inventarplatz weg. Nimm Holgers <b>Schreinerhammer</b> in die Hand und drück Rechtsklick (Handy: im Haus ✋), dann öffnet sich das Lager. Stell dich vor eine freie Stelle und tippe „Aufstellen“. Mit dem Hammer ein Möbelstück anvisieren und <span class="kbd">F</span>/✋ drücken baut es ab, es wandert zurück ins Lager. In deinem eigenen Bett kannst du abends schlafen und die Nacht überspringen. Je gemütlicher dein Haus, desto stärker der Bonus „Ausgeruht“ (mehr Leben und Regeneration für einen Tag).</p>
   <h3>Angeln 🎣 &amp; Katzen 🐱</h3>
-  <p>Angler Fiete wohnt am Weiher im Schattenwald. Hilf ihm, dann bekommst du eine Angelrute. Wähle sie aus, schau aufs Wasser und wirf mit ⚔ aus. Zuckt der Schwimmer („!“), sofort nochmal drücken. Du fängst Fische (zum Essen und Verkaufen), Müll, Schätze und manchmal etwas ganz Besonderes. In Eichenhain streunen Katzen herum: Fütterst du eine mit Fisch, wird sie dein Haustier (+5 % Glück). Auf dem Königsbett schläft sie neben dir.</p>
+  <p>Angler Fiete wohnt an einem Weiher in den Wiesen westlich von Eichenhain – ein kleiner Trampelpfad zweigt von der Weststraße zu ihm ab. Hilf ihm, dann bekommst du eine Angelrute. Wähle sie aus, schau aufs Wasser und wirf mit ⚔ aus. Zuckt der Schwimmer („!“), sofort nochmal drücken. Du fängst Fische (zum Essen und Verkaufen), Müll, Schätze und manchmal etwas ganz Besonderes. In Eichenhain streunen Katzen herum: Fütterst du eine mit Fisch, wird sie dein Haustier (+5 % Glück). Auf dem Königsbett schläft sie neben dir.</p>
   <h3>Quests 📜</h3>
   <p>Oben links siehst du die Hauptquest (mit Himmelsrichtung und Entfernung) und darunter deine Nebenquests. Im Inventar gibt es den Reiter „📜 Quests“ (Taste <span class="kbd">J</span>) mit allen Details. Der Kompass oben zeigt mit einem goldenen ★ immer zum Ziel der Hauptquest, Nebenquests mit einem blauen „!“.</p>
   <h3>Gesetz & Kopfgeld ⚖</h3>
   <p>In fremden Häusern kannst du Fässer, Kisten, Säcke und Regale durchsuchen (🖐 Stehlen). Sieht dich dabei jemand, bekommst du <b>Kopfgeld</b>. Wer Bürger angreift, bekommt ebenfalls Kopfgeld (der erste Schlag ist nur eine Warnung). Wachen verfolgen dich dann: Du kannst das Kopfgeld bezahlen, ins Gefängnis gehen (1 Tag, 10 % Gold) oder fliehen. Auch Truhen in fremden Häusern zählen als Diebstahl, wenn jemand Wache hält – in der Burg steht immer eine Wache. Schlafende Bewohner merken nichts. Wer Katzen angreift, bekommt ebenfalls Kopfgeld. Je höher das Kopfgeld, desto höher die <b>Fahndungsstufe ★</b>: Ab ★★ (oder wenn du fliehst) greifen die Wachen an – und sie sind umso stärker, je höher die Stufe ist. Sprich eine Wache an, um dich zu ergeben. Wichtige Personen können nicht sterben, nur bewusstlos werden. Wenn du schläfst (oder im Kerker sitzt), sind am nächsten Morgen alle bewusstlosen und besiegten Bewohner und Wachen wieder auf den Beinen. Truhen für Quests und Dungeons bleiben frei plünderbar.</p>
   <h3>Die Hauptquest 📜</h3>
-  <p>Fürst Aldric gibt dir die nächste Hauptquest erst, wenn du stark genug für die Region bist – im Questbuch steht dann „Erreiche Stufe X“. Die ersten Kapitel spielen rund um Eichenhain (Räuberlager, Hütte des Einsiedlers, Räubernest). Danach geht es in den Finsterwald, ins Nebelmoor, ins Kriegslager der Schwarzen Legion in der Steinöde und schließlich zu den Herolden und zu Ignarok. Je später eine Region in der Geschichte drankommt, desto stärker sind die Monster dort.</p>
+  <p>Die Geschichte hat 21 Kapitel und führt dich von Stufe 1 bis Stufe 40: von den Räubern rund um Eichenhain über das Nebelmoor, den Finsterwald, die Schwarze Legion und den Drachen Ignarok bis in die <b>Nebellande</b> ganz im Osten. Eine Quest gibt es erst, wenn du stark genug für die Region bist – im Questbuch steht dann „Erreiche Stufe X“. Dazwischen helfen dir Nebenquests (gelbes ! über Bewohnern) beim Leveln. Je später eine Region in der Geschichte drankommt, desto stärker sind die Monster dort.</p>
+  <h3>Erkunden 🧭</h3>
+  <p>Die Welt ist riesig. Abseits der Wege gibt es schmale Wildwechsel-Pfade durch die Wälder, versteckte Truhen mit besonders guter Beute, Runensteine, Lichtungen und das eine oder andere Geheimnis – ohne Markierung, nur für Neugierige. Wegschreine ✨ in Städten und an wichtigen Orten erlauben Schnellreisen. Die Karte (M oder Minikarte antippen) kannst du mit + / −, Mausrad oder zwei Fingern zoomen und durch Ziehen verschieben.</p>
+  <p>Bosse kannst du mehrmals besiegen – ihre Beute lohnt sich immer, aber für Wiederholungen gibt es weniger Erfahrung.</p>
   <h3>Taverne & Bier 🍺</h3>
   <p>Bei Wirt Bodo in der Taverne gibt's Bier und Honigmet (zählt wie 2 Bier). Im Inventar antippen zum Trinken. Ab 3 Bier bist du <b>betrunken</b>: langsamer, du torkelst im Zickzack und die Welt schwankt – je mehr du trinkst, desto schlimmer. Mit der Zeit wirst du wieder nüchtern. Ab 10 Bier kippst du um und wachst am nächsten Morgen mit Kater in deinem Haus auf.</p>
   <h3>Haus einrichten 🔨</h3>
@@ -407,11 +412,11 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
 </div>
 <div id="cs"><div id="csText"></div><button id="csSkip">Überspringen ⏭</button><div id="csTap">▶ Tippen / Klicken zum Weiterlesen</div></div>
 
-<script src="core.js?v=17.1"></script>
-<script src="sound.js?v=17.1"></script>
-<script src="r2d.js?v=17.1"></script>
-<script src="r3d.js?v=17.1"></script>
-<script src="ui.js?v=17.1"></script>
+<script src="core.js?v=18"></script>
+<script src="sound.js?v=18"></script>
+<script src="r2d.js?v=18"></script>
+<script src="r3d.js?v=18"></script>
+<script src="ui.js?v=18"></script>
 <!-- PWA: Service Worker starten (für Offline-Betrieb) -->
 <script>
 if ('serviceWorker' in navigator) {
