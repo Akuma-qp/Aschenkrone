@@ -12,7 +12,7 @@ input{user-select:text;-webkit-user-select:text}
 canvas.full{display:block;position:fixed;inset:0;touch-action:none}
 #c3d{display:none}
 body.pc #ctrls,body.pc #joyHint,body.pc #bRotL,body.pc #bRotR,body.pc #bTiltU,body.pc #bTiltD,body.pc #bAtk,body.pc #bInv,body.pc #bAct,body.pc #bJump,body.pc #bDodge,body.pc #bSprint{display:none!important}
-body.pc canvas#c2d{cursor:none}
+body.pc.ingame canvas#c2d,body.pc.ingame canvas#c3d{cursor:none}body.pc canvas#c2d{cursor:default}
 .kbd{display:inline-block;min-width:18px;padding:0 4px;border:1px solid #5a3d1e;border-bottom-width:2px;border-radius:4px;background:#fffaf0;font-family:sans-serif;font-size:11px;text-align:center}
 button{touch-action:manipulation;cursor:pointer}
 .parch{background:linear-gradient(#f4e6c4,#e3cc98);border:3px solid #5a3d1e;border-radius:8px;box-shadow:0 0 0 2px #c9a86a inset,0 4px 14px rgba(0,0,0,.6)}
@@ -56,12 +56,13 @@ button{touch-action:manipulation;cursor:pointer}
 #bAct{right:92px;bottom:2px;width:62px;height:62px;font-size:11px;font-weight:bold;background:radial-gradient(#fff3c4,#d4a017);line-height:1.1}
 #bAct.off{opacity:.4}
 #bDodge{right:12px;bottom:92px;width:54px;height:54px;font-size:24px;background:radial-gradient(#e1f5fe,#4f9fd4)}
-#bDodge.cd{opacity:.45}#bJump{right:150px;bottom:62px;width:50px;height:50px;font-size:24px;font-weight:bold;background:radial-gradient(#f1f8e9,#7cb342)}#bSprint{right:162px;bottom:6px;width:46px;height:46px;font-size:20px;background:radial-gradient(#fff8e1,#ffa000)}#bSprint.on{box-shadow:0 0 0 3px #ffeb3b,0 3px 8px #000;background:radial-gradient(#fff59d,#ff6f00)}#bSprint::after{content:'GEHEN';position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);font:bold 8px Georgia;color:#fff;text-shadow:0 1px 2px #000;white-space:nowrap}#bSprint.on::after{content:'SPRINT 🔒'}#skyclock{position:fixed;left:50%;transform:translateX(-50%);top:calc(6px + env(safe-area-inset-top));width:120px;height:44px;zoom:var(--gui,1);pointer-events:none}
+#bDodge.cd{opacity:.45}#bJump{right:150px;bottom:62px;width:50px;height:50px;font-size:24px;font-weight:bold;background:radial-gradient(#f1f8e9,#7cb342)}#bRide{right:14px;bottom:154px;width:48px;height:48px;font-size:24px;background:radial-gradient(#efebe9,#8d6e63);display:none}#bRide.show{display:block}#bRide.on{box-shadow:0 0 0 3px #ffd54a,0 3px 8px #000}body.pc #bRide{display:none!important}#bSprint{right:162px;bottom:6px;width:46px;height:46px;font-size:20px;background:radial-gradient(#fff8e1,#ffa000)}#bSprint.on{box-shadow:0 0 0 3px #ffeb3b,0 3px 8px #000;background:radial-gradient(#fff59d,#ff6f00)}#bSprint::after{content:'GEHEN';position:absolute;left:50%;bottom:-13px;transform:translateX(-50%);font:bold 8px Georgia;color:#fff;text-shadow:0 1px 2px #000;white-space:nowrap}#bSprint.on::after{content:'SPRINT 🔒'}#skyclock{position:fixed;left:50%;transform:translateX(-50%);top:calc(6px + env(safe-area-inset-top));width:120px;height:44px;zoom:var(--gui,1);pointer-events:none}
 @media (max-aspect-ratio:1/1){#skyclock{left:auto;transform:none;right:calc(10px + env(safe-area-inset-right));top:calc(198px + env(safe-area-inset-top))}}
 #bInv{right:94px;bottom:74px;width:52px;height:52px;font-size:25px;background:radial-gradient(#f4e6c4,#a07840)}
 #joy{position:fixed;width:116px;height:116px;margin:-58px 0 0 -58px;border-radius:50%;border:3px solid rgba(244,230,196,.55);background:rgba(0,0,0,.22);display:none;pointer-events:none}
 #knob{position:absolute;left:50%;top:50%;width:50px;height:50px;margin:-25px 0 0 -25px;border-radius:50%;background:radial-gradient(#f4e6c4,#a07840);border:2px solid #5a3d1e}
 #joyHint{position:fixed;left:18px;bottom:calc(var(--s) + 46px + env(safe-area-inset-bottom));color:rgba(244,230,196,.65);font-size:12px;pointer-events:none;text-shadow:0 1px 2px #000;max-width:40vw}
+#fxBar{display:flex;flex-wrap:wrap;gap:4px;margin:3px 0;pointer-events:none}.fxc{font:bold 11px Georgia;padding:1px 6px;border:1px solid;border-radius:9px;background:rgba(20,12,4,.72);animation:fxIn .3s}@keyframes fxIn{from{transform:scale(1.3);opacity:0}to{transform:none;opacity:1}}
 #tipBox{position:fixed;left:10px;top:150px;width:240px;z-index:6;background:rgba(25,15,6,.78);border:1px solid #8a6a3a;border-left:3px solid #ffd54a;border-radius:6px;padding:5px 8px;font:12px/1.35 Georgia,serif;color:#f4e6c4;opacity:0;transform:translateX(-12px);transition:opacity .4s,transform .4s;pointer-events:none}#tipBox.on{opacity:1;transform:none;pointer-events:auto;cursor:pointer}body:not(.pc) #tipBox{font-size:11px;padding:4px 7px}
 #toasts{position:fixed;left:50%;top:calc(200px + env(safe-area-inset-top));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;width:92vw;z-index:5}
 .toast{background:rgba(25,15,6,.9);border:2px solid #8a6a3a;border-radius:6px;padding:3px 9px;font-size:12px;color:#f4e6c4;display:flex;align-items:center;gap:6px;animation:tin .25s ease-out;max-width:100%}
@@ -166,6 +167,9 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Aschenkrone">
+
+
+
 </head>
 <body>
 <canvas id="c3d" class="full"></canvas>
@@ -198,6 +202,7 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
   <button id="bDodge" aria-label="Ausweichen">🌀</button>
   <button id="bJump" aria-label="Springen">⤒</button>
   <button id="bSprint" aria-label="Sprinten">🚶</button>
+  <button id="bRide" aria-label="Reiten">🐴</button>
   <button id="bAct" class="off">✋</button>
   <button id="bAtk" aria-label="Angriff">⚔</button>
  </div>
@@ -241,13 +246,13 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
   <h3>Springen, Sprinten &amp; Klettern</h3>
   <p>Springen (Leertaste oder ⤒) bringt dich etwa einen Meter hoch, auf graue Felsstufen und darüber. Manche Orte erreichst du nur so, zum Beispiel die Ringe um die Abtei und das Pharaonengrab. Sprinten (Shift oder 🏃) kostet Ausdauer. An Kletterwänden mit Seilen und Ranken kletterst du die Schlucht hinunter und auf den Frostgipfel. Geht dir dabei die Ausdauer aus, rutschst du ab. Hinweis: Strg+W schließt im Browser den Tab, nimm zum Ausweichen notfalls <span class="kbd">C</span>.</p>
   <h3>Dein Haus 🏠</h3>
-  <p>Du wohnst jetzt im eigenen Häuschen in Eichenhain, am Anfang mit einem Strohlager. Schreiner Holger in der Schreinerei verkauft Möbel: Bett (Stroh → Feld → Einzel → Doppel → Königsbett), Tisch, Kamin, Regal, Teppich, Licht, Deko und Katzenkorb. Gekaufte Möbel landen in deinem <b>Möbellager</b> und nehmen keinen Inventarplatz weg. Nimm Holgers <b>Schreinerhammer</b> in die Hand und drück Rechtsklick (Handy: im Haus ✋), dann öffnet sich das Lager. Stell dich vor eine freie Stelle und tippe „Aufstellen“. Mit dem Hammer ein Möbelstück anvisieren und <span class="kbd">F</span>/✋ drücken baut es ab, es wandert zurück ins Lager. In deinem eigenen Bett kannst du abends schlafen und die Nacht überspringen. Je gemütlicher dein Haus, desto stärker der Bonus „Ausgeruht“ (mehr Leben und Regeneration für einen Tag).</p>
+  <p>Du wohnst im eigenen Haus in Eichenhain, am Anfang nur mit einem Strohlager. Im <b>Handwerkshof</b> im Süden des Dorfs arbeiten drei Leute in eigenen Zimmern: Schreiner <b>Holger</b> (sehr viele Möbel einzeln – Betten, Tische, Sofas, Schränke, Kamine, Lampen, Bilder …), Gartenkünstlerin <b>Flora</b> (Außen-Deko fürs Dorf: Bänke, Laternen, Brunnen, Beete, Statuen …) und Baumeister <b>Baldur</b> (Hausausbau: Schlafzimmer für 8.000 Gold, zwei Seitenflügel für 30.000 Gold). Sie verkaufen nur in ihrem Laden, <b>Mo–Sa 09:00–18:00 Uhr</b> – sonntags ist Ruhetag. Im <b>Schaufenster</b> stehen jeden Tag 1–2 andere, zufällige Einzelstücke, die es nur an diesem Tag gibt. Gekauftes landet im <b>Möbellager</b> (kein Inventarplatz). Du kannst beliebig viele Stücke aufstellen – auch fünf Betten. In deinem eigenen Bett schläfst du abends; je gemütlicher das Haus, desto stärker „Ausgeruht“.</p>
   <h3>Angeln 🎣 &amp; Katzen 🐱</h3>
   <p>Angler Fiete wohnt an einem Weiher in den Wiesen westlich von Eichenhain – ein kleiner Trampelpfad zweigt von der Weststraße zu ihm ab. Hilf ihm, dann bekommst du eine Angelrute. Wähle sie aus, schau aufs Wasser und wirf mit ⚔ aus. Zuckt der Schwimmer („!“), sofort nochmal drücken. Du fängst Fische (zum Essen und Verkaufen), Müll, Schätze und manchmal etwas ganz Besonderes. In Eichenhain streunen Katzen herum: Fütterst du eine mit Fisch, wird sie dein Haustier (+5 % Glück). Auf dem Königsbett schläft sie neben dir.</p>
   <h3>Quests 📜</h3>
   <p>Oben links siehst du die Hauptquest (mit Himmelsrichtung und Entfernung) und darunter deine Nebenquests. Im Inventar gibt es den Reiter „📜 Quests“ (Taste <span class="kbd">J</span>) mit allen Details. Der Kompass oben zeigt mit einem goldenen ★ immer zum Ziel der Hauptquest, Nebenquests mit einem blauen „!“.</p>
   <h3>Gesetz & Kopfgeld ⚖</h3>
-  <p>In fremden Häusern kannst du Fässer, Kisten, Säcke und Regale durchsuchen (🖐 Stehlen). Sieht dich dabei jemand, bekommst du <b>Kopfgeld</b>. Wer Bürger angreift, bekommt ebenfalls Kopfgeld (der erste Schlag ist nur eine Warnung). Wachen verfolgen dich dann: Du kannst das Kopfgeld bezahlen, ins Gefängnis gehen (1 Tag, 10 % Gold) oder fliehen. Auch Truhen in fremden Häusern zählen als Diebstahl, wenn jemand Wache hält – in der Burg steht immer eine Wache. Schlafende Bewohner merken nichts. Wer Katzen angreift, bekommt ebenfalls Kopfgeld. Je höher das Kopfgeld, desto höher die <b>Fahndungsstufe ★</b>: Ab ★★ (oder wenn du fliehst) greifen die Wachen an – und sie sind umso stärker, je höher die Stufe ist. Sprich eine Wache an, um dich zu ergeben. Wichtige Personen können nicht sterben, nur bewusstlos werden. Wenn du schläfst (oder im Kerker sitzt), sind am nächsten Morgen alle bewusstlosen und besiegten Bewohner und Wachen wieder auf den Beinen. Truhen für Quests und Dungeons bleiben frei plünderbar.</p>
+  <p>In fremden Häusern kannst du Fässer, Kisten, Säcke und Regale durchsuchen (🖐 Stehlen). Sieht dich dabei jemand, bekommst du <b>Kopfgeld</b>. Wer Bürger angreift, bekommt ebenfalls Kopfgeld (der erste Schlag ist nur eine Warnung). Wachen verfolgen dich dann: Du kannst das Kopfgeld bezahlen, ins Gefängnis gehen (1 Tag, ein Viertel deines Golds plus Strafe, und die Wachen nehmen dir 3 zufällige Gegenstände ab) oder fliehen. Wer eine Wache tötet, kann das Kopfgeld erst am nächsten Morgen bei einer anderen, lebenden Wache begleichen. Auch Truhen in fremden Häusern zählen als Diebstahl, wenn jemand Wache hält – in der Burg steht immer eine Wache. Schlafende Bewohner merken nichts. Wer Katzen angreift, bekommt ebenfalls Kopfgeld. Je höher das Kopfgeld, desto höher die <b>Fahndungsstufe ★</b>: Ab ★★ (oder wenn du fliehst) greifen die Wachen an – und sie sind umso stärker, je höher die Stufe ist. Sprich eine Wache an, um dich zu ergeben. Wichtige Personen können nicht sterben, nur bewusstlos werden. Wenn du schläfst (oder im Kerker sitzt), sind am nächsten Morgen alle bewusstlosen und besiegten Bewohner und Wachen wieder auf den Beinen. Truhen für Quests und Dungeons bleiben frei plünderbar.</p>
   <h3>Die Hauptquest 📜</h3>
   <p>Die Geschichte hat 21 Kapitel und führt dich von Stufe 1 bis Stufe 40: von den Räubern rund um Eichenhain über das Nebelmoor, den Finsterwald, die Schwarze Legion und den Drachen Ignarok bis in die <b>Nebellande</b> ganz im Osten. Eine Quest gibt es erst, wenn du stark genug für die Region bist – im Questbuch steht dann „Erreiche Stufe X“. Dazwischen helfen dir Nebenquests (gelbes ! über Bewohnern) beim Leveln. Je später eine Region in der Geschichte drankommt, desto stärker sind die Monster dort.</p>
   <h3>Erkunden 🧭</h3>
@@ -256,7 +261,11 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
   <h3>Taverne & Bier 🍺</h3>
   <p>Bei Wirt Bodo in der Taverne gibt's Bier und Honigmet (zählt wie 2 Bier). Im Inventar antippen zum Trinken. Ab 3 Bier bist du <b>betrunken</b>: langsamer, du torkelst im Zickzack und die Welt schwankt – je mehr du trinkst, desto schlimmer. Mit der Zeit wirst du wieder nüchtern. Ab 10 Bier kippst du um und wachst am nächsten Morgen mit Kater in deinem Haus auf.</p>
   <h3>Haus einrichten 🔨</h3>
-  <p>Nimm den Schreinerhammer in die Hand und drück in deinem Haus Rechtsklick (Handy: ✋). Es öffnet sich ein Plan von oben mit Kacheln: Möbel aus dem Lager auswählen, an die gewünschte Stelle tippen oder ziehen (grün = passt), dann „✔ Platzieren“. Aufgestellte Möbel antippen zum Umstellen oder Abbauen.</p>
+  <p>Nimm den Schreinerhammer in die Hand und drück in deinem Haus Rechtsklick (Handy: ✋). Es öffnet sich ein zoombarer Plan von oben: ein Stück aus dem Lager wählen, an die gewünschte Stelle tippen oder ziehen (grün = passt), dann „✔ Platzieren“. Aufgestellte Stücke antippen zum Umstellen oder Abbauen. <b>Dorf dekorieren:</b> Mit dem Hammer in der Hand in einem befreundeten Dorf ✋ drücken – der Plan zeigt dann genau dieses Dorf, Feld für Feld. Wege und Türen bleiben immer frei.</p>
+  <h3>Wochentage & Tagesabläufe 📅</h3>
+  <p>Eine Woche hat 7 Tage (Mo–So, oben im Himmel angezeigt). Händler haben Öffnungszeiten, viele Bewohner gehen sonntags vormittags in die Kapelle und treffen sich mittwochabends in der Taverne. Nachts schlafen alle in ihren eigenen Betten. In den Tavernen der anderen Städte kannst du ein <b>Gästezimmer</b> für eine Nacht mieten.</p>
+  <h3>Casino „Goldene Krone“ 🎰</h3>
+  <p>Im Osten von Eichenhain (täglich 12:00–02:00 Uhr): Spielautomaten, Blackjack bei Croupière Bella und Casino Hold’em bei Croupier Kasimir – nach den echten Regeln. Inhaber Fortunato hat auch eine kleine Aufgabe für Glückspilze.</p>
   <h3>Der Aschenfluch 🔥</h3>
   <p>Seit Ignaroks Rückkehr rieselt Asche über Eldmar und vergiftet die Tiere. Befallene Tiere haben glühend rote Augen und Glut im Fell und greifen alles an. Gesunde Hasen und Füchse fliehen vor dir, Wildschweine verteidigen nur ihr Revier, wenn du ihnen zu nahe kommst.</p>
   <h3>Städte 🏘</h3>
@@ -412,11 +421,11 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
 </div>
 <div id="cs"><div id="csText"></div><button id="csSkip">Überspringen ⏭</button><div id="csTap">▶ Tippen / Klicken zum Weiterlesen</div></div>
 
-<script src="core.js?v=18.1"></script>
-<script src="sound.js?v=18.1"></script>
-<script src="r2d.js?v=18.1"></script>
-<script src="r3d.js?v=18.1"></script>
-<script src="ui.js?v=18.1"></script>
+<script src="core.js?v=22"></script>
+<script src="sound.js?v=22"></script>
+<script src="r2d.js?v=22"></script>
+<script src="r3d.js?v=22"></script>
+<script src="ui.js?v=22"></script>
 <!-- PWA: Service Worker starten (für Offline-Betrieb) -->
 <script>
 if ('serviceWorker' in navigator) {
@@ -427,5 +436,7 @@ if ('serviceWorker' in navigator) {
 // Spielstände dauerhaft schützen (Browser soll sie nicht automatisch löschen)
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist();
 </script>
+
+
 </body>
 </html>

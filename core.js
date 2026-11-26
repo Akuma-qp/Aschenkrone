@@ -28,23 +28,28 @@ G.DIFF={
 const DK=['leicht','normal','schwer'];
 G.D=()=>G.DIFF[G.settings.diff]||G.DIFF.normal;
 G.di=()=>Math.max(0,DK.indexOf(G.settings.diff));
-const QD={prove:[4,6,8],lvR:[2,3,4],knut:[4,5,6],lvE:[4,5,6],hermit:[6,7,8],lvWo:[6,7,8],wolfmom:[8,9,10],lvA:[8,9,10],malrik:[10,11,12],lvN:[10,11,12],falk:[12,13,14],lvW:[13,14,15],grimelda:[15,16,17],lvO:[16,17,18],brakka:[18,19,20],lvMo:[18,19,20],moorkill:[8,10,12],lvWa:[20,21,22],gobkill:[10,14,16],lvG:[22,23,24],grukk:[23,24,25],lvM:[24,25,26],morvax:[25,26,27],lvL:[26,27,28],legion:[6,8,10],severin:[28,29,30],lvZ:[28,29,30],grimbart:[29,30,31],lvH:[29,30,31],schnitter:[30,31,32],eldtree:[31,32,33],sandking:[32,33,34],lvD:[33,34,35],dragon:[36,37,38],lvN1:[36,37,38],lvN2:[36,37,38],sucherkill:[10,12,14],lvN3:[37,38,39],queen:[38,40,41],lvN4:[39,40,40],garde:[8,10,12],valdrik:[41,42,43],wolves:[6,8,12],ears:[4,6,9],draugr:[6,8,12]};
+const QD={prove:[4,6,8],lvR:[2,3,4],knut:[4,5,6],lvE:[4,5,6],hermit:[6,7,8],lvWo:[6,7,8],wolfmom:[8,9,10],lvA:[8,9,10],malrik:[10,11,12],lvN:[10,11,12],falk:[12,13,14],lvW:[13,14,15],grimelda:[15,16,17],lvO:[16,17,18],brakka:[18,19,20],lvMo:[18,19,20],moorkill:[8,10,12],lvWa:[20,21,22],gobkill:[10,14,16],lvG:[22,23,24],grukk:[23,24,25],lvM:[24,25,26],morvax:[25,26,27],lvL:[26,27,28],legion:[6,8,10],severin:[28,29,30],lvZ:[28,29,30],grimbart:[29,30,31],lvV:[2,2,2],lvF1:[29,30,31],lvF2:[29,30,31],jagd:[6,8,10],grimmholt:[30,31,32],lvWk:[30,31,32],lvDo:[31,32,33],dorn:[6,8,10],morwenna:[32,33,34],lvH:[31,32,33],schnitter:[32,33,34],eldtree:[33,34,35],sandking:[34,35,36],lvD:[35,36,37],dragon:[36,37,38],lvN1:[36,37,38],lvN2:[36,37,38],sucherkill:[10,12,14],lvN3:[37,38,39],queen:[38,40,41],lvN4:[39,40,40],garde:[8,10,12],valdrik:[41,42,43],wolves:[6,8,12],ears:[4,6,9],draugr:[6,8,12]};
 const qd=k=>QD[k][G.di()];G.qd=qd;
 
 
 // ===================== Welt =====================
-const TILE=32,WW=1312,H=1152,W=WW+120,VCX=576,VCY=600,RV=36,CH=16,SEED=4242;
-const T={GRASS:0,GRASS2:1,PATH:2,WATER:3,TREE:4,ROCK:5,SAND:6,COBBLE:7,HOUSE:8,FIELD:9,ASH:10,WALL:11,FLOWER:12,DEAD:13,SWAMP:14,LAVA:15,DIRT:16,WELL:17,CWALL:18,TOWER:19,TENT:20,FIRE:21,RUIN:22,BARRIER:23,CRYPT:24,CROP:25,VOID:26,WOOD:27,STONEF:28,IWALL:29,SWALL:30,DOOR:31,TABLE:32,BED:33,BARREL:34,SHELF:35,HEARTH:36,ANVIL:37,ALTAR:38,PEW:39,CARPET:40,CHEST:41,PILLAR:42,CRATE:43,THRONE:44,SNOW:45,ICE:46,GOLD:47,FWALL:48,WAYSTONE:49,CLIFF:50,CACTUS:51,MUSH:52,DGRASS:53,BONES:54,BURNT:55,STUMP:56,HERBS:57,BRIDGE:58,LEDGE:59,CLIMB:60,PFURN:61,HAY:62,STALL:63,STRAW:64,TROUGH:65,CART:66,SACK:67,PFENCE:68,OVEN:69,RACK:70,DUMMY:71,COUNTER:72,LOOM:73,CAULDRON:74,BENCH:75,ARMOR:76,DESK:77,GRIND:78,WHEEL:79,DIVAN:80,FUR:81};
-const SOLIDS=new Uint8Array(96);[T.WATER,T.TREE,T.ROCK,T.HOUSE,T.WALL,T.DEAD,T.LAVA,T.WELL,T.CWALL,T.TOWER,T.TENT,T.FIRE,T.RUIN,T.CRYPT,T.VOID,T.IWALL,T.SWALL,T.TABLE,T.BED,T.BARREL,T.SHELF,T.HEARTH,T.ANVIL,T.ALTAR,T.PEW,T.CHEST,T.PILLAR,T.CRATE,T.THRONE,T.FWALL,T.WAYSTONE,T.CLIFF,T.CACTUS,T.MUSH,T.STUMP,T.CLIMB,T.PFURN,T.HAY,T.STALL,T.TROUGH,T.CART,T.SACK,T.PFENCE,T.OVEN,T.RACK,T.DUMMY,T.COUNTER,T.LOOM,T.CAULDRON,T.BENCH,T.ARMOR,T.DESK,T.GRIND,T.WHEEL,T.DIVAN].forEach(t=>SOLIDS[t]=1);
+const TILE=32,WW=1312,H=1152,W=WW+120,VCX=576,VCY=600,RV=48,CH=16,SEED=4242;
+const T={GRASS:0,GRASS2:1,PATH:2,WATER:3,TREE:4,ROCK:5,SAND:6,COBBLE:7,HOUSE:8,FIELD:9,ASH:10,WALL:11,FLOWER:12,DEAD:13,SWAMP:14,LAVA:15,DIRT:16,WELL:17,CWALL:18,TOWER:19,TENT:20,FIRE:21,RUIN:22,BARRIER:23,CRYPT:24,CROP:25,VOID:26,WOOD:27,STONEF:28,IWALL:29,SWALL:30,DOOR:31,TABLE:32,BED:33,BARREL:34,SHELF:35,HEARTH:36,ANVIL:37,ALTAR:38,PEW:39,CARPET:40,CHEST:41,PILLAR:42,CRATE:43,THRONE:44,SNOW:45,ICE:46,GOLD:47,FWALL:48,WAYSTONE:49,CLIFF:50,CACTUS:51,MUSH:52,DGRASS:53,BONES:54,BURNT:55,STUMP:56,HERBS:57,BRIDGE:58,LEDGE:59,CLIMB:60,PFURN:61,HAY:62,STALL:63,STRAW:64,TROUGH:65,CART:66,SACK:67,PFENCE:68,OVEN:69,RACK:70,DUMMY:71,COUNTER:72,LOOM:73,CAULDRON:74,BENCH:75,ARMOR:76,DESK:77,GRIND:78,WHEEL:79,DIVAN:80,FUR:81,SLOTM:82,FELT:83,MISTW:84};
+const SOLIDS=new Uint8Array(96);[T.WATER,T.TREE,T.ROCK,T.HOUSE,T.WALL,T.DEAD,T.LAVA,T.WELL,T.CWALL,T.TOWER,T.TENT,T.FIRE,T.RUIN,T.CRYPT,T.VOID,T.IWALL,T.SWALL,T.TABLE,T.BED,T.BARREL,T.SHELF,T.HEARTH,T.ANVIL,T.ALTAR,T.PEW,T.CHEST,T.PILLAR,T.CRATE,T.THRONE,T.FWALL,T.WAYSTONE,T.CLIFF,T.CACTUS,T.MUSH,T.STUMP,T.CLIMB,T.PFURN,T.HAY,T.STALL,T.TROUGH,T.CART,T.SACK,T.PFENCE,T.OVEN,T.RACK,T.DUMMY,T.COUNTER,T.LOOM,T.CAULDRON,T.BENCH,T.ARMOR,T.DESK,T.GRIND,T.WHEEL,T.DIVAN,T.SLOTM,T.FELT].forEach(t=>SOLIDS[t]=1);
 const map=new Uint8Array(W*H),BIO=new Uint8Array(WW*H);
 const BNAMES=['village','meadow','forest','swamp','waste','winter','ash','dark','desert','peaks','mist'];
 const dV=(x,y)=>Math.hypot(x-VCX,y-VCY);
-const TOWNS=[{id:'frost',name:'Frosthafen',x:300,y:190,r:18,gnd:'snow',wall:'wood',gates:[Math.PI/2,0]},
- {id:'glut',name:'Glutwacht',x:700,y:280,r:17,gnd:'ash',wall:'stone',gates:[Math.PI/2,-Math.PI/4]},
- {id:'moor',name:'Moorbruck',x:168,y:636,r:16,gnd:'swamp',wall:'wood',gates:[0,Math.PI/2]},
- {id:'wald',name:'Waldheim',x:1000,y:540,r:16,gnd:'forest',wall:'wood',gates:[Math.PI,Math.PI/2]},
- {id:'nebel',name:'Nebelwacht',x:1220,y:556,r:15,gnd:'mist',wall:'stone',gates:[Math.PI,Math.PI/2]},
- {id:'sand',name:'Sandfeste',x:940,y:1010,r:17,gnd:'sand',wall:'stone',gates:[-Math.PI*0.8,Math.PI/4]}];
+const TOWNS=[{id:'frost',name:'Frosthafen',x:300,y:190,r:23,gnd:'snow',wall:'wood',gates:[Math.PI/2,0]},
+ {id:'glut',name:'Glutwacht',x:700,y:280,r:25,gnd:'ash',wall:'stone',gates:[Math.PI/2,-Math.PI/4]},
+ {id:'moor',name:'Moorbruck',x:168,y:636,r:21,gnd:'swamp',wall:'wood',gates:[0,Math.PI/2]},
+ {id:'wald',name:'Waldheim',x:1000,y:540,r:24,gnd:'forest',wall:'wood',gates:[Math.PI,Math.PI/2]},
+ {id:'nebel',name:'Nebelwacht',x:1220,y:556,r:20,gnd:'mist',wall:'stone',gates:[Math.PI,Math.PI/2]},
+ {id:'sand',name:'Sandfeste',x:940,y:1010,r:22,gnd:'sand',wall:'stone',gates:[-Math.PI*0.8,Math.PI/4]},
+ // v20: neue Königreiche – Fellvolk (Tiermenschen), Walküren (Verbündete), Schwarzwall (feindlich)
+ {id:'fell',name:'Rotfellhain',x:860,y:790,r:24,gnd:'forest',wall:'wood',gates:[2.36,-Math.PI/2],realm:'Fellvolk'},
+ {id:'schild',name:'Schildhorst',x:500,y:84,r:23,gnd:'snow',wall:'stone',gates:[Math.PI/2],realm:'Walküren'},
+ {id:'schwarz',name:'Schwarzwall',x:210,y:1050,r:23,gnd:'mist',wall:'stone',gates:[-1.71,0],hostile:1,realm:'Dornenreich'}];
+const townHostile=t=>!!t&&!!t.hostile&&!(G.P&&G.pastStep&&G.pastStep('dorn'));G.townHostile=townHostile;
 const townAt=(x,y)=>TOWNS.find(t=>Math.hypot(x-t.x,y-t.y)<t.r+.5);
 G.SUMMIT={x:116,y:76,r:10};
 const CANYON=[[428,904],[490,932],[556,940],[620,934],[690,956],[768,940]];
@@ -67,7 +72,7 @@ const GC={mist:'#4f4a63',interior:'#3a2a1a',village:'#64933f',meadow:'#5f9440',f
 const CASTLE={x0:VCX-13,y0:VCY-41,x1:VCX+13,y1:VCY-16};
 const inCastle=(x,y)=>x>=CASTLE.x0&&x<=CASTLE.x1&&y>=CASTLE.y0&&y<=CASTLE.y1;
 const HILL={x:VCX,y:VCY-29,r:21,h:3.2};
-const CAMP={x:1044,y:684},CRYPT={x:124,y:796},LAIR={x:1000,y:116},BANDITS={x:814,y:448},ASHVALE={x:744,y:412},RAUB={x:660,y:524},LEGION={x:442,y:988},CITADEL={x:1226,y:758};
+const CAMP={x:1044,y:684},CRYPT={x:124,y:796},LAIR={x:1000,y:116},BANDITS={x:814,y:448},ASHVALE={x:744,y:412},RAUB={x:660,y:524},HUNT={x:900,y:852},LEGION={x:442,y:988},CITADEL={x:1226,y:758};
 const V=(dx,dy)=>[VCX+dx,VCY+dy];
 const BUILD=[
  {id:'bakery',kind:'house',x:-15,y:-10,w:5,h:3,roof:'#a0522d',name:'Bäckerei',sign:'🥖',annex:'oven'},
@@ -93,9 +98,20 @@ const BUILD=[
  {id:'keep',kind:'keep',x:-7,y:-39,w:14,h:7,roof:'#555b66',name:'Burg Eichenhain',sign:'🏰'},
  {id:'cbarr',kind:'house',x:-12,y:-28,w:4,h:3,roof:'#4a5060',name:'Kaserne',annex:'rack'},
  {id:'cstab',kind:'barn',x:8,y:-28,w:4,h:3,roof:'#4a5060',name:'Burgstall'},
+ // v22: größeres Eichenhain – Casino, Handwerkshof, Trankladen, neue Wohnhäuser
+ {id:'casino',kind:'house',x:28,y:-6,w:8,h:4,roof:'#6a1a4a',name:'Casino „Goldene Krone“',sign:'🎰',chimney:1,status:3},
+ {id:'cas1',kind:'house',x:32,y:4,w:4,h:3,roof:'#5a2a4a',name:'Villa Fortunato',status:3,annex:'garden'},
+ {id:'cas2',kind:'house',x:30,y:-11,w:3,h:3,roof:'#4a2a3a',name:'Haus Kasimir',status:2},
+ {id:'cas3',kind:'house',x:30,y:10,w:3,h:3,roof:'#6a3a4a',name:'Haus Bella',status:2},
+ {id:'werk',kind:'house',x:-14,y:30,w:9,h:4,roof:'#7a5a2a',name:'Handwerkshof',sign:'🪚',chimney:1,status:2},
+ {id:'trank',kind:'house',x:4,y:30,w:4,h:3,roof:'#3a6a5a',name:'Trankladen',sign:'🧪',annex:'garden',status:2},
+ {id:'h10',kind:'house',x:14,y:28,w:4,h:3,roof:'#6a4a4a',name:'Pfarrhaus',status:1},
+ {id:'h11',kind:'house',x:-24,y:26,w:4,h:3,roof:'#7a4a2a',annex:'garden',status:1},
+ {id:'h12',kind:'house',x:34,y:16,w:4,h:3,roof:'#5a4a3a',annex:'woodpile',status:2},
 ];
 BUILD.forEach(b=>{b.x+=VCX;b.y+=VCY;});
 const TP=(id,dx,dy)=>{const t=TOWNS.find(q=>q.id===id);return{x:t.x+dx,y:t.y+dy};};
+const SCHWC=TP('schwarz',6,-6);
 const tb=(id,town,dx,dy,w,h,o)=>{const p=TP(town,dx,dy);BUILD.push(Object.assign({id,kind:'house',x:p.x,y:p.y,w,h,roof:'#5a4a3a'},o));};
 tb('jarl','frost',-3,-9,7,3,{roof:'#5a4a3a',snow:1,name:'Jarlshalle',sign:'🪓',chimney:1,annex:'woodpile'});
 tb('f1','frost',-10,-3,3,3,{roof:'#6a4a3a',snow:1,name:'Fischerhütte',annex:'barrels'});
@@ -118,13 +134,28 @@ const TADD={
  glut:{stall:[-4,-4],farm:[-6,-13],field:[4,-11],houses:[[-11,2,4,3,'Mannschaftshaus'],[8,2,3,3,'Quartiermeisterei'],[-11,-8,3,3,'Wachstube'],[-8,8,3,3,'Hannes Kate']],roof:'#4a3a34',stone:1},
  moor:{stall:[-4,3],farm:[9,-4],field:[4,-10],houses:[[-8,-8,4,3,'Flößerhaus'],[2,7,3,3,'Reetkate'],[-4,8,3,3,'Gesas Kate'],[-9,5,3,3,'Torfstecherhütte']],roof:'#4a5a3a',stilt:1},
  wald:{stall:[-5,-3],farm:[9,-4],field:[5,5],houses:[[-8,5,4,3,'Holzfällerhaus'],[-10,-4,3,3,'Jägerkate'],[-7,-10,3,3,'Ansgars Haus'],[5,-10,3,3,'Kräuterhütte']],roof:'#5a3a1a'},
- sand:{stall:[-2,-4],farm:[0,-14],field:[5,-8],houses:[[-6,7,4,3,'Weberei'],[-9,-7,3,3,'Wasserträgerhaus'],[6,4,3,3,'Leylas Haus'],[0,8,3,3,'Lehmhaus']],roof:'#b89050',flat:1}};
+ sand:{stall:[-2,-4],farm:[0,-14],field:[5,-8],houses:[[-6,7,4,3,'Weberei'],[-9,-7,3,3,'Wasserträgerhaus'],[6,4,3,3,'Leylas Haus'],[0,8,3,3,'Lehmhaus']],roof:'#b89050',flat:1},
+ fell:{stall:[-4,-4],farm:[8,-6],field:[4,5],houses:[[-9,4,4,3,'Bau der Jäger'],[-10,-5,3,3,'Kräuterbau'],[-6,-11,3,3,'Webstube'],[9,0,3,3,'Schnitzerhütte']],roof:'#8a4a22'},
+ schild:{stall:[-4,-4],farm:[8,-5],field:[4,5],houses:[[-9,4,4,3,'Federhalle'],[-10,-5,3,3,'Schildschmiede'],[-6,-11,3,3,'Rabenhorst'],[8,1,3,3,'Wachhaus']],roof:'#5a5a6a',snow:1,stone:1},
+ schwarz:{stall:[-5,2],farm:[-5,9],field:[3,8],houses:[[-11,3,4,3,'Gesindehaus'],[-11,-6,3,3,'Köhlerkate'],[-8,-12,3,3,'Kerkerturm'],[9,3,3,3,'Hehlerei']],roof:'#2a2a32',stone:1}};
 const TFIELDS=[],JOBS_ADD={},SHOP_ADD={};
 for(const tid in TADD){const a=TADD[tid],ex={};for(const k of ['snow','stone','stilt','flat'])if(a[k])ex[k]=1;
  tb(tid+'_mkt',tid,a.stall[0],a.stall[1],3,2,{kind:'stall',roof:'#b03a2a',name:'Markt',sign:'⚖️'});
  tb(tid+'_farm',tid,a.farm[0],a.farm[1],4,3,Object.assign({roof:a.roof,name:'Bauernhof',sign:'🌾',annex:'pen'},ex));
  a.houses.forEach((h,i)=>tb(tid+'_h'+i,tid,h[0],h[1],h[2],h[3],Object.assign({roof:a.roof,name:h[4],annex:['woodpile','barrels','garden',null][i],chimney:i%2},ex)));
  const fp=TP(tid,a.field[0],a.field[1]);for(let y=0;y<3;y++)for(let x=0;x<5;x++)TFIELDS.push([fp.x+x,fp.y+y]);}
+tb('fhall','fell',2,-9,6,3,{roof:'#7a3a1a',name:'Rotfellhalle',sign:'🦊',annex:'rack'});
+tb('shall','schild',1,-10,8,4,{kind:'keep',roof:'#4a4a5a',name:'Walkürenburg',sign:'🪽',stone:1,snow:1,status:3,tx22:'keep'});
+tb('dornkeep','schwarz',3,-13,8,4,{roof:'#1a1a22',name:'Dornenfeste',sign:'🥀',stone:1});
+// v22: Tavernen, Burgen, Schmieden & Trankläden in den Städten – freie Plätze werden gesucht
+function townSpot(tid,w,h){const t=TOWNS.find(q=>q.id===tid);const occ=(x,y)=>{for(const b of BUILD)if(x>=b.x-1&&x<=b.x+b.w&&y>=b.y-1&&y<=b.y+b.h+1)return true;for(const f of TFIELDS)if(f[0]===x&&f[1]===y)return true;return false;};
+ let best=null;for(let rr=t.r-4;rr>=5&&!best;rr-=.5)for(let a=0;a<96;a++){const an=a/96*6.283+.2;{const x0=Math.round(t.x+Math.cos(an)*rr-w/2),y0=Math.round(t.y+Math.sin(an)*rr-h/2);let ok=true;
+  for(let y=y0-1;y<=y0+h+2&&ok;y++)for(let x=x0-1;x<=x0+w&&ok;x++){const dx=x-t.x,dy=y-t.y;if(Math.hypot(dx,dy)>t.r-1.8||Math.abs(dx)<=1||Math.abs(dy)<=1||occ(x,y))ok=false;const aa=Math.atan2(dy,dx);if(ok&&t.gates.some(g=>Math.abs(((aa-g)+Math.PI*3)%(Math.PI*2)-Math.PI)<.35))ok=false;}
+  if(ok){best={x:x0,y:y0};break;}}if(best)break;}return best;}
+const TEXTRA={glut:['tav','smith'],moor:['tav'],wald:['tav','keep','potion'],nebel:['tav','smith'],sand:['tav','potion'],fell:['tav','keep'],schild:['tav','smith'],frost:[]};
+const TXN={tav:['Taverne','🍺','#8b3a3a',6,3],keep:['Burg','🏰','#555b66',8,4],smith:['Schmiede','⚒️','#59606b',5,3],potion:['Trankladen','🧪','#3a6a5a',4,3]};
+for(const tid in TEXTRA)for(const k of TEXTRA[tid]){const d=TXN[k],sp=townSpot(tid,d[3],d[4]);if(!sp){console.warn('kein Platz',tid,k);continue;}const tw=TOWNS.find(q=>q.id===tid);
+ BUILD.push({id:tid+'_'+k,kind:k==='keep'?'keep':'house',x:sp.x,y:sp.y,w:d[3],h:d[4],roof:d[2],name:k==='keep'?'Burg '+tw.name:d[0],sign:d[1],chimney:k==='tav'||k==='smith'?1:0,stone:k==='keep'||TADD[tid]&&TADD[tid].stone?1:0,snow:TADD[tid]&&TADD[tid].snow?1:0,flat:TADD[tid]&&TADD[tid].flat?1:0,stilt:TADD[tid]&&TADD[tid].stilt&&k!=='keep'?1:0,annex:k==='smith'?'forge':k==='tav'?'barrels':null,status:k==='keep'?3:2,tx22:k});}
 const WILD=[{id:'hut',kind:'hut',x:456,y:716,w:4,h:3,roof:'#3a2a1a',name:'Verlassene Jägerhütte',def:'boar'},
  {id:'cave',kind:'cave',x:1040,y:392,w:4,h:3,name:'Spinnenhöhle',def:'spider'},
  {id:'wtower',kind:'wtower',x:296,y:492,w:3,h:3,name:'Alter Wachturm',def:'skeleton'},
@@ -159,6 +190,7 @@ const ROADS=[
  [[168,658],[144,740],[126,780]],[[1000,564],[1024,640],[1042,668]],[[1000,572],[1030,520],[1044,402]],
  [[880,572],[840,500],[814,462]],[[300,612],[298,502]],[[400,604],[440,690],[460,724]],[[200,632],[196,800],[196,948]],[[960,1032],[1020,1060],[1058,1082]]];
 ROADS.push([[1000,562],[1060,578],[1140,566],[1204,557]]);
+ROADS.push([[760,880],[806,842],[848,803]],[[860,772],[900,700],[960,620],[1000,572]],[[470,197],[486,150],[500,101]],[[196,948],[202,990],[207,1030]],[[229,1050],[268,1030],[302,1010]],[[880,808],[900,846]]);
 const RLIST=[];
 const HERALDRING=()=>{const ab=BUILD.find(b=>b.id==='abbey'),py=BUILD.find(b=>b.id==='pyramid');return[[ab.x+1,ab.y+5,9.2],[py.x+3,py.y+5,9.6]];};
 const HERALDPOS=()=>{const ab=BUILD.find(b=>b.id==='abbey'),py=BUILD.find(b=>b.id==='pyramid');return{eldtree:{x:ab.x+1,y:ab.y+10},sandking:{x:py.x+3,y:py.y+10}};};G.HERALDPOS=HERALDPOS;
@@ -166,7 +198,7 @@ function gen(){
  map.fill(T.VOID);
  for(let y=0;y<H;y++)for(let x=0;x<WW;x++){
   const d=dV(x,y),b=biome(x,y),n=fbm(x*.62,y*.62,SEED),m=noise(x/3.2,y/3.2,SEED+50),r=h2(x,y,SEED+99),o=noise(x/30,y/30,SEED+7);let t=T.GRASS;
-  if(b==='village'){t=r<.5?T.GRASS:T.GRASS2;if(r>.95)t=T.FLOWER;const cross=Math.abs(x-VCX)<=1||Math.abs(y-VCY)<=1;if(d<5||(cross&&d<RV-.4))t=T.COBBLE;}
+  if(b==='village'){t=r<.5?T.GRASS:T.GRASS2;if(r>.95)t=T.FLOWER;const cross=Math.abs(x-VCX)<=1||Math.abs(y-VCY)<=1;if(d<5||(cross&&d<RV-.4&&y>=CASTLE.y0))t=T.COBBLE;}
   else if(b==='meadow'){if(n<.26)t=T.WATER;else if(n<.29)t=T.SAND;else if(m>.78&&o>.35)t=T.TREE;else if(r<.004)t=T.ROCK;else t=r<.05?T.FLOWER:(r<.5?T.GRASS:T.GRASS2);}
   else if(b==='forest'){if(n<.25)t=T.WATER;else if(n<.28)t=T.SAND;else if(m>.52||r<.05)t=T.TREE;else if(r>.992)t=T.STUMP;else t=r<.5?T.GRASS:T.GRASS2;}
   else if(b==='swamp'){if(n<.34)t=T.WATER;else if(m>.66||r<.03)t=T.DEAD;else if(r>.985)t=T.MUSH;else t=T.SWAMP;}
@@ -181,7 +213,7 @@ function gen(){
   if(b==='waste'||b==='dark'||b==='desert'){const [dc]=segD(x,y,CANYON);const cw=canyonW(x,y);if(dc<cw)t=(r<.02)?T.ROCK:(r>.99?T.BONES:T.DIRT);else if(dc<cw+1.6)t=T.CLIFF;}
   if(inCastle(x,y)){const ex=x===CASTLE.x0||x===CASTLE.x1,ey=y===CASTLE.y0||y===CASTLE.y1;const gate=Math.abs(x-VCX)<=2&&y===CASTLE.y1;t=(ex&&ey)?T.TOWER:((ex||ey)&&!gate?T.CWALL:T.COBBLE);
    if(y===CASTLE.y1&&(Math.abs(x-VCX)===3||Math.abs(x-VCX)===4))t=T.TOWER;if((ex&&Math.abs(y-(CASTLE.y0+CASTLE.y1)/2)<1)||(ey&&Math.abs(x-VCX)===9))t=T.TOWER;if(Math.abs(x-VCX)<=2&&y>CASTLE.y0+8)t=T.COBBLE;}
-  else if(b==='village'&&d>=RV-.6&&d<RV+.6&&!(y<CASTLE.y1&&x>CASTLE.x0-3&&x<CASTLE.x1+3)){const gate=Math.abs(x-VCX)<=1||Math.abs(y-VCY)<=1;t=gate?T.COBBLE:T.WALL;}
+  else if(b==='village'&&d>=RV-.6&&d<RV+.6&&!inCastle(x,y)){const gate=(Math.abs(x-VCX)<=1&&y>VCY)||Math.abs(y-VCY)<=1;t=gate?T.COBBLE:T.WALL;}
   if(x<3||y<3||x>=WW-3||y>=H-3)t=(b==='ash'||b==='waste'||b==='winter'||b==='peaks'||b==='desert')?T.CLIFF:T.TREE;
   map[y*W+x]=t;}
  const set=(x,y,t)=>{if(x>=3&&y>=3&&x<WW-3&&y<H-3)map[y*W+x]=t;};
@@ -197,12 +229,15 @@ function gen(){
    else if(dd<tw.r+.5){t=nearGate?T.COBBLE:(tw.wall==='stone'?T.CWALL:T.WALL);}
    set(x,y,t);}
   for(const g of tw.gates)for(let k=tw.r-1;k<=tw.r+4;k++)for(let s=-1;s<=1;s++){const x=Math.round(tw.x+Math.cos(g)*k-Math.sin(g)*s),y=Math.round(tw.y+Math.sin(g)*k+Math.cos(g)*s);if(k>tw.r+.6){if(get(x,y)!==T.WALL&&get(x,y)!==T.CWALL)set(x,y,T.PATH);}else set(x,y,T.COBBLE);}}
+ if(true){const tw=TOWNS.find(t=>t.id==='nebel');for(const g of tw.gates)for(let s=-1;s<=1;s++)set(Math.round(tw.x+Math.cos(g)*tw.r-Math.sin(g)*s),Math.round(tw.y+Math.sin(g)*tw.r+Math.cos(g)*s),T.MISTW);}// v22: Nebelschleier
  { const g=TOWNS[1];[[-6,4],[6,5],[-4,8],[3,8]].forEach(([a,b])=>set(g.x+a,g.y+b,T.TENT));set(g.x-1,g.y+3,T.FIRE);}
  // Goblinlager & Banditenlager
  for(const [C,rr,wall] of [[CAMP,7,false],[BANDITS,8,true]]){for(let dy=-rr-1;dy<=rr+1;dy++)for(let dx=-rr-1;dx<=rr+1;dx++){const dd=Math.hypot(dx,dy);if(dd<rr-.5)set(C.x+dx,C.y+dy,T.DIRT);else if(wall&&dd<rr+.5&&!(Math.abs(dx)<=1&&dy>0))set(C.x+dx,C.y+dy,T.WALL);}
   [[-3,-2],[3,-3],[-3,3],[4,2]].forEach(([a,b])=>set(C.x+a,C.y+b,T.TENT));set(C.x,C.y,T.FIRE);}
  // Räuberlager (Sonnenwiesen) & Kriegslager der Schwarzen Legion (Steinöde)
  {const C=RAUB,rr=6;for(let dy=-rr-1;dy<=rr+1;dy++)for(let dx=-rr-1;dx<=rr+1;dx++){const dd=Math.hypot(dx,dy);if(dd<rr-.5)set(C.x+dx,C.y+dy,T.DIRT);else if(dd<rr+.5&&!(Math.abs(dx)<=1&&dy>0))set(C.x+dx,C.y+dy,T.WALL);}
+  [[-3,-2],[3,-2],[-3,2]].forEach(([a,b])=>set(C.x+a,C.y+b,T.TENT));set(C.x,C.y,T.FIRE);}
+ {const C=HUNT,rr=7;for(let dy=-rr-1;dy<=rr+1;dy++)for(let dx=-rr-1;dx<=rr+1;dx++){const dd=Math.hypot(dx,dy);if(dd<rr-.5)set(C.x+dx,C.y+dy,T.DIRT);else if(dd<rr+.5&&!(Math.abs(dx)<=1&&dy>0))set(C.x+dx,C.y+dy,T.WALL);}
   [[-3,-2],[3,-2],[-3,2]].forEach(([a,b])=>set(C.x+a,C.y+b,T.TENT));set(C.x,C.y,T.FIRE);}
  {const C=LEGION,rr=11;for(let dy=-rr-1;dy<=rr+1;dy++)for(let dx=-rr-1;dx<=rr+1;dx++){const dd=Math.hypot(dx,dy);if(dd<rr-.5)set(C.x+dx,C.y+dy,T.DIRT);else if(dd<rr+.5&&!(Math.abs(dx)<=1&&dy>0))set(C.x+dx,C.y+dy,T.CWALL);}
   [[-6,-4],[-2,-7],[3,-7],[7,-3],[-7,3],[6,4],[-4,7],[4,7]].forEach(([a,b])=>set(C.x+a,C.y+b,T.TENT));[[0,-1],[-4,1],[4,1]].forEach(([a,b])=>set(C.x+a,C.y+b,T.FIRE));set(C.x-2,C.y+rr,T.TOWER);set(C.x+2,C.y+rr,T.TOWER);}
@@ -235,7 +270,7 @@ function gen(){
  for(const [cx,cy,rr] of HERALDRING())for(let dy=-11;dy<=11;dy++)for(let dx=-11;dx<=11;dx++){const d=Math.hypot(dx,dy);if(d<rr-.5||d>rr+.5)continue;const x=cx+dx,y=cy+dy,t=get(x,y);if(t===T.WATER||t===T.LAVA)continue;if(!SOLIDS[t]||t===T.TREE||t===T.ROCK||t===T.CACTUS||t===T.STUMP||t===T.DEAD)set(x,y,T.LEDGE);}
  {const S0=G.SUMMIT;for(let dy=-16;dy<=16;dy++)for(let dx=-16;dx<=16;dx++){const d=Math.hypot(dx,dy),x=S0.x+dx,y=S0.y+dy;if(d>15.5)continue;if(d<6.4)set(x,y,d<1.2?T.SNOW:(h2(x,y,6)<.08?T.ROCK:T.SNOW));else if(d<10.5){const climb=Math.abs(dx)<=1&&dy>0;set(x,y,climb?T.CLIMB:T.CLIFF);}else if(d<12)set(x,y,T.SNOW);}}
  for(let i=0;i<CANYON.length-1;i++){const [ax,ay]=CANYON[i],[bx,by]=CANYON[i+1];for(const u of [.3,.72]){const mx=ax+(bx-ax)*u,my=ay+(by-ay)*u,L=Math.hypot(bx-ax,by-ay),nx=-(by-ay)/L,ny=(bx-ax)/L;for(const sd of [-1,1])for(let k=0;k<=9;k++)for(const w of [-1,0,1]){const x=Math.round(mx+nx*sd*k+(bx-ax)/L*w),y=Math.round(my+ny*sd*k+(by-ay)/L*w);if(get(x,y)===T.CLIFF)set(x,y,T.CLIMB);}}}
- {const tx=VCX+44,ty=VCY+6;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)set(tx+dx,ty+dy,T.LEDGE);for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++){if(Math.abs(dx)<=1&&Math.abs(dy)<=1)continue;const t=get(tx+dx,ty+dy);if(SOLIDS[t]||t===T.WATER)set(tx+dx,ty+dy,T.GRASS);}}
+ {const tx=VCX+56,ty=VCY+6;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)set(tx+dx,ty+dy,T.LEDGE);for(let dy=-3;dy<=3;dy++)for(let dx=-3;dx<=3;dx++){if(Math.abs(dx)<=1&&Math.abs(dy)<=1)continue;const t=get(tx+dx,ty+dy);if(SOLIDS[t]||t===T.WATER)set(tx+dx,ty+dy,T.GRASS);}}
  for(const b of BUILD)for(let y=b.y;y<b.y+b.h;y++)for(let x=b.x;x<b.x+b.w;x++)map[y*W+x]=T.HOUSE;
  // Anbauten & Höfe
  for(const b of BUILD){if(b.wild)continue;const by=b.y+b.h;if(b.annex==='forge'){set(b.x+b.w,b.y+b.h-1,T.ANVIL);}else if(b.annex==='garden'){for(let x=b.x-1;x<b.x+b.w+1;x++){if(x===b.door.tx)continue;const t=get(x,by+1);if(!SOLIDS[t]&&t!==T.COBBLE&&t!==T.PATH)set(x,by+1,T.HERBS);}}else if(b.annex==='barrels'){set(b.x-1,b.y+b.h-1,T.BARREL);}else if(b.annex==='woodpile'){set(b.x+b.w,b.y+1,T.CRATE);}else if(b.annex==='rack'){set(b.x-1,b.y+b.h-1,T.CRATE);}}
@@ -248,7 +283,7 @@ gen();
 
 // ===================== Innenräume =====================
 const ROOMS=[];
-function makeRoom(b,w,h,floor,wall){const si=ROOMS.length,ox=WW+8+(si%6)*18,oy=2+Math.floor(si/6)*15;
+let BIGN=0;function makeRoom(b,w,h,floor,wall){const si=ROOMS.length;let ox=WW+8+(si%6)*18,oy=2+Math.floor(si/6)*15;if(w>16||h>13){ox=WW+8+(BIGN%2)*54;oy=700+Math.floor(BIGN/2)*34;BIGN++;}
  for(let y=oy;y<=oy+h+1;y++)for(let x=ox;x<=ox+w+1;x++){const edge=x===ox||y===oy||x===ox+w+1||y===oy+h+1;map[y*W+x]=edge?wall:floor;}
  const dx=ox+1+Math.floor(w/2),dy=oy+h+1;map[dy*W+dx]=T.DOOR;
  const r={id:b.id,name:b.name||'Wohnhaus',kind:b.kind,x0:ox+1,y0:oy+1,w,h,floor,door:{tx:dx,ty:dy},chests:[],b,dungeon:!!b.wild,ent:{x:(b.door.tx+.5)*TILE,y:(b.y+b.h+.65)*TILE}};
@@ -256,10 +291,45 @@ function makeRoom(b,w,h,floor,wall){const si=ROOMS.length,ox=WW+8+(si%6)*18,oy=2
 const F=(r,x,y,t)=>{map[(r.y0+y)*W+r.x0+x]=t;};
 const CH_=(r,x,y,loot)=>{F(r,x,y,T.CHEST);r.chests.push({tx:r.x0+x,ty:r.y0+y,loot,opened:false,at:0});};
 const LAYOUT={"cbarr": ["B.B.B.B.RR", "B.B.B.B..M", "..........", "TTTT....D.", "..........", "C........M", "bc...._.Rc"], "guard": ["B.B..RRM", "B.B.....", "........", "..TT..D.", "S.......", "SC....bc"], "gkeep": ["M.SPS..M", "........", ".TT...R.", ".TT...R.", "_......B", "C..._..B"], "gforge": ["HH.RR.bb", "........", ".A..G.t.", "........", "B......c", "B.....Cc"], "gbarr": ["B.B.B.SS", "B.B.B...", "........", "K....T.B", ".....T.B", "c.....C."], "smith": ["SHHH.RRb", "S.......", "S..A..G.", ".......t", "B......c", "B.....Cb"], "bakery": ["OHO..kkS", ".......S", ".TT.....", "........", "BNNN.NNc", "B....C.b"], "healer": ["SSK.SB", ".....B", ".TT...", ".....B", "C..._B"], "tavern": ["bbbNNNN.HS", "..........", "B.TT..TT.B", "B........B", "B.TT..TT.B", "B........B", "bc..._...C"], "jarl": ["S.H.Y..F.S", "I...._...I", ".TTT._.TTT", "....._....", ".TTT._.TTT", "B...._...B", "B..bc_cb.B"], "h1": ["BB..H.Lb", "BB......", "....TT..", "Z...TT..", ".......S", "c...._CS"], "h2": ["B.B..H.b", "B.B.....", ".....TT.", ".....TT.", "S......c", "S..._..C"], "h3": [".HK.SS.B", ".......B", ".TT.....", ".TT....b", "c......L", "C..._..b"], "h5": ["B..H..cc", "B.......", "..TT..W.", "..TT....", "S......F", "S..._.Cb"], "h6": ["SS.H..BB", "......BB", ".TT.....", ".TT..Z..", "b.......", "bc.._..C"], "h9": ["B.K.H.SS", "B.......", "...TT...", "...TT..L", "c.......", "C..._.bb"], "farm": ["B..H.kkk", "B......h", ".TT....h", ".TT.....", "b.......", "bc.._.Cc"], "h7": ["SS.H.ccc", "B.......", "B.WW..T.", "......T.", "c.......", "cC.._.W."], "h8": ["SSS.KPSB", ".......B", ".TT.....", ".TT..K..", "S.......", "SC.._..b"], "f1": ["B..H.bbb", "B.......", ".TT...F.", ".TT.....", "c.......", "C..._.bc"], "f2": ["B.RR.H.M", "B.......", "..F..WW.", ".TT.....", ".TT....c", "S..._.Cb"], "f3": ["SSPS.H.B", ".......B", ".TT..F..", ".TT.....", "A.......", "c..._.Cb"], "sven": ["SS.H.ccB", ".......B", "NNN..kkc", "........", "bb......", "cbc._..C"], "mhall": ["S.PSP.HB", ".......B", ".TTTT...", "._____..", ".TTTT...", "S..._..C"], "m1": ["B..HK..S", "B......S", "..TT....", "..TT..Z.", "b.......", "bc.._.Cc"], "m2": ["SSK.H..B", ".......B", ".TT..K..", ".TT.....", "S.......", "S..._.Cc"], "whall": ["RR..H.MB", ".......B", ".TTTT...", "...F....", ".TTTT..B", "c..._.CB"], "w1": ["B..H..SS", "B.......", ".F.TT...", "...TT..L", "c.......", "C..._.bb"], "w2": ["RRR.H..B", ".......B", ".WW..cc.", "........", ".TT....R", ".TT._.CR"], "spal": ["I.VY_.VI", "...___..", "I..___.I", ".V.___V.", "I..___.B", "C..___.B"], "s1": ["B..VV.SS", "B.......", "..___...", "..___.T.", "b.....T.", "bc.._..C"], "s2": ["kkkc.V.B", ".......B", ".NNN..k.", ".___....", ".___..V.", "c..._.Cb"]};
-const LEG={'B':T.BED,'T':T.TABLE,'b':T.BARREL,'S':T.SHELF,'H':T.HEARTH,'A':T.ANVIL,'c':T.CRATE,'k':T.SACK,'h':T.HAY,'O':T.OVEN,'R':T.RACK,'D':T.DUMMY,'N':T.COUNTER,'L':T.LOOM,'K':T.CAULDRON,'W':T.BENCH,'M':T.ARMOR,'P':T.DESK,'G':T.GRIND,'Z':T.WHEEL,'V':T.DIVAN,'F':T.FUR,'_':T.CARPET,'I':T.PILLAR,'X':T.ALTAR,'Y':T.THRONE,'t':T.TROUGH};
+const LEG={'B':T.BED,'T':T.TABLE,'b':T.BARREL,'S':T.SHELF,'H':T.HEARTH,'A':T.ANVIL,'c':T.CRATE,'k':T.SACK,'h':T.HAY,'O':T.OVEN,'R':T.RACK,'D':T.DUMMY,'N':T.COUNTER,'L':T.LOOM,'K':T.CAULDRON,'W':T.BENCH,'M':T.ARMOR,'P':T.DESK,'G':T.GRIND,'Z':T.WHEEL,'V':T.DIVAN,'F':T.FUR,'_':T.CARPET,'I':T.PILLAR,'X':T.ALTAR,'Y':T.THRONE,'t':T.TROUGH,'$':T.SLOTM,'J':T.FELT};
 const LOOTOF={smith:'smith',gforge:'smith',bakery:'bakery',healer:'healer',gbarr:'healer',h8:'healer',m2:'healer',tavern:'tavern',jarl:'tavern',guard:'guard',cbarr:'guard',gkeep:'guard'};
 const STONEB={cbarr:1,gkeep:1,spal:1,gforge:1};
+const LAY22={"casino": ["$.$.$.$.$.$.#S.P...S_C", "............#.......__", "............#V.......F", "____........#V....T...", "____........####.#####", "....JJJ............bbb", "....JJJ........N....bb", "...................NNN", "..JJJ..........T..T...", "..JJJ..........T..T...", ".....................b", "M..I...........I.....M", "M....................M"], "werk": ["SWW...S#M......M#SP...PS", "......c#........#.......", "c.....c#..I..I..#..TT...", "W......#........#..TT...", "W......#........#.......", "cc....b#b......b#S.....S", "###.########.#####.#####", "________................", "________................", "________..........T....b", "________..............bb"], "tavern": ["B.c#B.c#B.c#B.c#BB.T", "B..#B..#B..#B..#BB._", "...#...#...#...#...S", "S..#S..#S..#S..#....", "#.###.###.###.###.##", "bbbbb..............H", ".TTTTT..............", "............TT......", ".TT.................", "...........TT.......", "b.................TT", "b.................C."], "tav": ["B.c#B.c#BB.T", "B..#B..#BB._", "##.###.###.#", "bbb........H", ".......TT...", ".TT.........", ".......TT...", "b..........b", "b..........c"], "potion": ["SKS..SSS", "........", "..NNNN..", "........", "B......b", "B.....Cb"], "keep2": ["S..I...Y...I..S", "_______________", "..I.........I..", "..........#####", "..TT......#B..S", "..TT......#B...", "..........#.._.", "M.........+....", "M.........#..C.", "C.........#####"]};
+// v22: Räume aus ASCII-Plänen bauen ('#' Innenwand, '+' Durchgang)
+function layRoom(b,L,floor,wall,loot){const r=makeRoom(b,L[0].length,L.length,floor,wall);for(let y=0;y<L.length;y++)for(let x=0;x<L[0].length;x++){const ch=L[y][x];if(ch==='#')F(r,x,y,wall);else if(ch==='C')CH_(r,x,y,loot||'home');else if(LEG[ch]!=null)F(r,x,y,LEG[ch]);}return r;}
+function bigKeep(b){const r=makeRoom(b,36,24,T.STONEF,T.SWALL),S=(x,y,t)=>F(r,x,y,t),wall=(x0,y0,x1,y1)=>{for(let y=y0;y<=y1;y++)for(let x=x0;x<=x1;x++)S(x,y,T.SWALL);};
+ wall(8,0,8,10);wall(27,0,27,10);wall(0,11,35,11);wall(13,12,13,23);wall(22,12,22,23);wall(23,18,35,18);
+ for(const [x,y] of [[17,11],[18,11],[13,16],[13,17],[22,14],[22,20],[8,5],[27,5],[4,11],[30,18]])S(x,y,T.STONEF);
+ // Thronsaal
+ S(17,1,T.THRONE);for(let y=2;y<=10;y++){S(17,y,T.CARPET);S(18,y,T.CARPET);}for(let y=12;y<=23;y++){S(17,y,T.CARPET);S(18,y,T.CARPET);}for(let x=15;x<=20;x++)S(x,1,x===17?T.THRONE:T.CARPET);
+ [[11,3],[24,3],[11,7],[24,7],[14,5],[21,5]].forEach(([x,y])=>S(x,y,T.PILLAR));S(10,0,T.ARMOR);S(25,0,T.ARMOR);CH_(r,9,0,'keep');CH_(r,26,0,'keep');S(9,10,T.SHELF);S(26,10,T.SHELF);
+ // Küche
+ S(1,0,T.OVEN);S(2,0,T.OVEN);S(4,0,T.HEARTH);S(6,1,T.CAULDRON);S(3,4,T.TABLE);S(4,4,T.TABLE);S(3,7,T.TABLE);S(4,7,T.TABLE);S(0,9,T.SACK);S(0,10,T.SACK);S(1,10,T.BARREL);S(7,0,T.SHELF);S(7,9,T.BARREL);S(0,3,T.SHELF);
+ // Waffenkammer
+ S(29,0,T.RACK);S(31,0,T.RACK);S(33,0,T.RACK);S(35,2,T.ARMOR);S(35,4,T.ARMOR);S(35,6,T.ARMOR);S(31,6,T.DUMMY);S(34,10,T.CRATE);S(35,10,T.CRATE);S(28,10,T.ANVIL);
+ // Festsaal
+ for(let x=2;x<=10;x++){S(x,14,T.TABLE);S(x,20,T.TABLE);S(x,13,T.BENCH);S(x,21,T.BENCH);}S(6,12,T.HEARTH);S(0,23,T.BARREL);S(1,23,T.BARREL);S(12,23,T.BARREL);S(0,17,T.ARMOR);S(12,12,T.SHELF);for(let x=3;x<=9;x++)S(x,17,T.CARPET);
+ // Flur
+ [[15,14],[20,14],[15,19],[20,19]].forEach(([x,y])=>S(x,y,T.PILLAR));S(14,12,T.ARMOR);S(21,12,T.ARMOR);
+ // Gemach des Fürsten
+ S(33,12,T.BED);S(34,12,T.BED);S(33,13,T.BED);S(34,13,T.BED);S(25,12,T.DIVAN);S(35,16,T.SHELF);S(24,16,T.DESK);for(let y=14;y<=16;y++)for(let x=28;x<=31;x++)S(x,y,T.CARPET);S(35,12,T.LOOM);
+ // Bibliothek
+ for(const x of [23,24,25,26,28,29,31,32,33,34,35])S(x,19,T.SHELF);for(const x of [23,24,25,26,27,28,29,31,32,33,34,35])S(x,23,T.SHELF);S(28,21,T.DESK);S(32,21,T.DESK);S(25,21,T.CARPET);S(26,21,T.CARPET);
+ r.name='Schloss Eichenhain';r.zones=[[9,0,26,10,'Thronsaal'],[0,0,7,10,'Schlossküche'],[28,0,35,10,'Waffenkammer'],[0,12,12,23,'Festsaal'],[14,12,21,23,'Schlossflur'],[23,12,35,17,'Gemach des Fürsten'],[23,19,35,23,'Bibliothek']];return r;}
 function furnish(b){let r;const k=b.id;
+ if(k==='keep'){bigKeep(b);return;}
+ if(k==='h4'){r=makeRoom(b,24,13,T.WOOD,T.IWALL);return;}
+ if(k==='casino'){r=layRoom(b,LAY22.casino,T.WOOD,T.IWALL,'tavern');r.zones=[[13,0,21,3,'Büro des Inhabers']];return;}
+ if(k==='werk'){r=layRoom(b,LAY22.werk,T.WOOD,T.IWALL);r.zones=[[0,0,6,5,'Schreinerei Holger'],[8,0,15,5,'Gartenkunst Flora'],[17,0,23,5,'Baumeister Baldur'],[0,7,7,10,'Schaufenster']];r.show=[[1,7],[4,7]];return;}
+ if(k==='tavern'){r=layRoom(b,LAY22.tavern,T.WOOD,T.IWALL,'tavern');r.guest=[r.x0+16,r.y0,r.x0+19,r.y0+3];r.zones=[[16,0,19,3,'Gästezimmer']];return;}
+ if(b.tx22==='tav'){r=layRoom(b,LAY22.tav,T.WOOD,T.IWALL,'tavern');r.guest=[r.x0+8,r.y0,r.x0+11,r.y0+1];r.zones=[[8,0,11,1,'Gästezimmer']];return;}
+ if(b.tx22==='potion'||k==='trank'){r=layRoom(b,LAY22.potion,T.WOOD,T.IWALL,'healer');return;}
+ if(b.tx22==='smith'){r=layRoom(b,LAYOUT.smith,T.STONEF,T.IWALL,'smith');return;}
+ if(b.tx22==='keep'){r=layRoom(b,LAY22.keep2,T.STONEF,T.SWALL,'keep');return;}
+ if(b.kind==='house'&&!b.wild&&!LAYOUT[k]&&b.status!==1&&b.status!=null){const st=b.status;
+  if(st===0){r=makeRoom(b,7,5,T.STRAW,T.IWALL);F(r,0,0,T.HAY);F(r,0,1,T.BED);F(r,5,0,T.HEARTH);F(r,6,0,T.SACK);F(r,6,1,T.BARREL);F(r,3,2,T.TABLE);F(r,6,3,T.CRATE);CH_(r,0,4,'home');return;}
+  if(st===2){r=makeRoom(b,9,6,T.WOOD,T.IWALL);F(r,0,0,T.BED);F(r,1,0,T.BED);F(r,0,1,T.BED);F(r,1,1,T.BED);F(r,7,0,T.HEARTH);F(r,8,0,T.SHELF);F(r,4,0,T.SHELF);F(r,4,2,T.TABLE);F(r,5,2,T.TABLE);F(r,8,3,T.BARREL);for(let x=3;x<=6;x++)F(r,x,4,T.CARPET);F(r,0,4,T.DESK);CH_(r,8,5,'home');return;}
+  if(st===3){r=makeRoom(b,11,7,T.WOOD,T.IWALL);F(r,0,0,T.BED);F(r,1,0,T.BED);F(r,0,1,T.BED);F(r,1,1,T.BED);F(r,9,0,T.HEARTH);F(r,10,0,T.SHELF);F(r,4,0,T.SHELF);F(r,5,0,T.SHELF);F(r,3,3,T.TABLE);F(r,4,3,T.TABLE);F(r,5,3,T.TABLE);F(r,10,3,T.DIVAN);F(r,10,4,T.DIVAN);F(r,0,5,T.DESK);F(r,0,3,T.ARMOR);for(let y=2;y<=5;y++)for(let x=7;x<=8;x++)F(r,x,y,T.CARPET);CH_(r,10,6,'home');return;}}
  if(LAYOUT[k]&&b.kind==='house'){const L=LAYOUT[k];r=makeRoom(b,L[0].length,L.length,STONEB[k]||k==='smith'?T.STONEF:T.WOOD,STONEB[k]?T.SWALL:T.IWALL);for(let y=0;y<L.length;y++)for(let x=0;x<L[0].length;x++){const ch=L[y][x];if(ch==='C')CH_(r,x,y,LOOTOF[k]||'home');else if(LEG[ch]!=null)F(r,x,y,LEG[ch]);}return;}
  if(b.kind==='keep'){r=makeRoom(b,12,9,T.STONEF,T.SWALL);F(r,6,0,T.THRONE);for(let y=1;y<9;y++)for(let x=5;x<=7;x++)F(r,x,y,T.CARPET);[[2,2],[9,2],[2,6],[9,6]].forEach(([x,y])=>F(r,x,y,T.PILLAR));F(r,0,4,T.TABLE);F(r,0,5,T.TABLE);F(r,11,4,T.TABLE);F(r,11,5,T.TABLE);F(r,3,0,T.SHELF);F(r,8,0,T.SHELF);CH_(r,0,0,'keep');CH_(r,11,0,'keep');return;}
  if(b.kind==='chapel'){r=makeRoom(b,8,8,T.STONEF,T.SWALL);F(r,3,0,T.ALTAR);F(r,4,0,T.ALTAR);for(let y=1;y<8;y++){F(r,3,y,T.CARPET);F(r,4,y,T.CARPET);}for(const y of [2,4,6]){for(const x of [0,1,2,5,6,7])F(r,x,y,T.PEW);}CH_(r,7,0,'chapel');return;}
@@ -275,6 +345,7 @@ function furnish(b){let r;const k=b.id;
   r=makeRoom(b,11,7,T.STRAW,T.IWALL);for(const px of [2,5,8])for(let y=0;y<3;y++)F(r,px,y,T.STALL);for(const bx of [0,3,6,9]){F(r,bx,0,T.TROUGH);F(r,bx+1,0,T.HAY);}
   [[0,6],[0,5],[1,6],[10,6],[10,5]].forEach(([x,y])=>F(r,x,y,T.HAY));F(r,9,6,T.SACK);F(r,10,3,T.BARREL);CH_(r,10,4,'home');return;}
  r=makeRoom(b,8,6,T.WOOD,T.IWALL);F(r,0,0,T.BED);F(r,0,1,T.BED);F(r,6,0,T.HEARTH);F(r,7,0,T.BARREL);F(r,3,2,T.TABLE);F(r,4,2,T.TABLE);F(r,7,3,T.SHELF);F(r,3,4,T.CARPET);F(r,4,4,T.CARPET);CH_(r,0,5,'home');}
+for(const b of BUILD){if(b.wild||b.status!=null)continue;const nm=b.name||'';b.status=/_farm$|^farm$/.test(b.id)||/Kate|Hütte|Bau\b|Torf/.test(nm)?0:/Handelshaus|Halle|Palast|Villa|Vogtshaus|Bäckerei|Schmiede|Alchemist|Basar|Feste|Jarl/.test(nm)||b.kind==='keep'?2:1;}
 for(const b of BUILD)if(b.kind!=='mill'&&b.kind!=='stall')furnish(b);
 const roomAt=(tx,ty)=>ROOMS.find(r=>tx>=r.x0-1&&tx<=r.x0+r.w&&ty>=r.y0-1&&ty<=r.y0+r.h);
 G.ROOMS=ROOMS;G.roomAt=roomAt;G.room=null;
@@ -290,16 +361,24 @@ function hgt(x,y){if(x>WW+1)return 0;let h=0;{const sd=Math.hypot(x-G.SUMMIT.x-.
  return h;}
 G.flags={barrier:false};
 const tileAt=(tx,ty)=>(tx<0||ty<0||tx>=W||ty>=H)?T.ROCK:map[ty*W+tx];
-const isSolidT=t=>SOLIDS[t]||(t===T.BARRIER&&!G.flags.barrier);
-const walkTile=(tx,ty)=>!isSolidT(tileAt(tx,ty));
-const solidPx=(px,py)=>isSolidT(tileAt(Math.floor(px/TILE),Math.floor(py/TILE)));
-const canMove=(x,y,r)=>!solidPx(x-r,y-r)&&!solidPx(x+r,y-r)&&!solidPx(x-r,y+r)&&!solidPx(x+r,y+r);
-const solidPP=(px,py)=>{const t=tileAt(Math.floor(px/TILE),Math.floor(py/TILE));const p=G.P;if(t===T.LEDGE)return!(p&&(p.z>13||p.onLedge));if(t===T.CLIMB)return false;return isSolidT(t);};
-const canMoveP=(x,y,r)=>!solidPP(x-r,y-r)&&!solidPP(x+r,y-r)&&!solidPP(x-r,y+r)&&!solidPP(x+r,y+r);
+const VDS=new Uint8Array(W*H);G.VDS=VDS;// v22: aufgestellte Möbel/Deko blockieren
+const isSolidT=t=>SOLIDS[t]||(t===T.BARRIER&&!G.flags.barrier)||(t===T.MISTW&&!(G.mistOpen&&G.mistOpen()));
+const walkTile=(tx,ty)=>!isSolidT(tileAt(tx,ty))&&!VDS[ty*W+tx];
+// v21: Bäume blockieren nur am Stamm (kleiner Kreis) – Wälder sind durchquerbar
+// am Baumstamm vorbeigleiten statt hängen zu bleiben
+function treeSlide(nx,ny,sp){const P=G.P;const ax=P.x+nx*16,ay=P.y+ny*16,tx=Math.floor(ax/TILE),ty=Math.floor(ay/TILE);let best=null;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const qx=tx+dx,qy=ty+dy;if(tileAt(qx,qy)!==T.TREE)continue;const cx=(qx+.5)*TILE,cy=(qy+.62)*TILE,d=Math.hypot(cx-ax,cy-ay);if(!best||d<best.d)best={cx,cy,d};}if(!best)return;
+ let px=-ny,py=nx;if((best.cx-P.x)*px+(best.cy-P.y)*py>0){px=-px;py=-py;}const sx=P.x+px*sp*.9+nx*sp*.3,sy=P.y+py*sp*.9+ny*sp*.3;if(canMoveP(sx,sy,10)){P.x=sx;P.y=sy;}}
+const trunkHit=(px,py,tx,ty)=>{const dx=px-(tx+.5)*TILE,dy=py-(ty+.62)*TILE;return dx*dx+dy*dy<49;};
+const solidPx=(px,py)=>{const tx=Math.floor(px/TILE),ty=Math.floor(py/TILE),t=tileAt(tx,ty);if(VDS[ty*W+tx]&&tx>=0&&ty>=0&&tx<W)return true;if(t===T.TREE&&tx<WW)return false;return isSolidT(t);};
+// Kreis gegen Stamm: zwischen zwei benachbarten Bäumen passt man immer hindurch
+const trunkNear=(x,y,r)=>{const tx=Math.floor(x/TILE),ty=Math.floor(y/TILE),lim=r*.6+5;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const qx=tx+dx,qy=ty+dy;if(qx>=WW||tileAt(qx,qy)!==T.TREE)continue;const ex=x-(qx+.5)*TILE,ey=y-(qy+.62)*TILE;if(ex*ex+ey*ey<lim*lim)return true;}return false;};
+const canMove=(x,y,r)=>!solidPx(x-r,y-r)&&!solidPx(x+r,y-r)&&!solidPx(x-r,y+r)&&!solidPx(x+r,y+r)&&!trunkNear(x,y,r);
+const solidPP=(px,py)=>{const tx0=Math.floor(px/TILE),ty0=Math.floor(py/TILE),t=tileAt(tx0,ty0);if(VDS[ty0*W+tx0]&&tx0>=0&&ty0>=0&&tx0<W)return true;const p=G.P;if(t===T.TREE&&tx0<WW)return false;if(t===T.LEDGE)return!(p&&(p.z>13||p.onLedge));if(t===T.CLIMB)return false;return isSolidT(t);};
+const canMoveP=(x,y,r)=>!solidPP(x-r,y-r)&&!solidPP(x+r,y-r)&&!solidPP(x-r,y+r)&&!solidPP(x+r,y+r)&&!trunkNear(x,y,r);
 const vDist=(px,py)=>Math.hypot(px/TILE-VCX-.5,py/TILE-VCY-.5);
-const inSafe=(px,py)=>{if(px>=WW*TILE)return !(G.room&&G.room.dungeon);const tx=px/TILE,ty=py/TILE;if(vDist(px,py)<RV-.4||inCastle(Math.floor(tx),Math.floor(ty)))return true;return TOWNS.some(t=>Math.hypot(tx-t.x-.5,ty-t.y-.5)<t.r-.4);};
-const monBlocked=(px,py)=>{const tx=px/TILE,ty=py/TILE;if(vDist(px,py)<RV+.6||inCastle(Math.floor(tx),Math.floor(ty)))return true;return TOWNS.some(t=>Math.hypot(tx-t.x-.5,ty-t.y-.5)<t.r+1.2);};
-Object.assign(G,{TILE,WW,W,H,VCX,VCY,RV,CH,T,map,biome,BL,zoneLevel,dV,hgt,CASTLE,inCastle,HILL,CAMP,CRYPT,LAIR,BANDITS,ASHVALE,RAUB,LEGION,CITADEL,CANYON,ZN,GC,BUILD,TOWNS,WAYS,tileAt,isSolidT,walkTile,solidPx,canMove,vDist,inSafe,townAt,SOLIDS});
+const inSafe=(px,py)=>{if(px>=WW*TILE)return !(G.room&&G.room.dungeon);const tx=px/TILE,ty=py/TILE;if(vDist(px,py)<RV-.4||inCastle(Math.floor(tx),Math.floor(ty)))return true;return TOWNS.some(t=>!townHostile(t)&&Math.hypot(tx-t.x-.5,ty-t.y-.5)<t.r-.4);};
+const monBlocked=(px,py)=>{const tx=px/TILE,ty=py/TILE;if(vDist(px,py)<RV+.6||inCastle(Math.floor(tx),Math.floor(ty)))return true;return TOWNS.some(t=>!townHostile(t)&&Math.hypot(tx-t.x-.5,ty-t.y-.5)<t.r+1.2);};
+Object.assign(G,{TILE,WW,W,H,VCX,VCY,RV,CH,T,map,biome,BL,zoneLevel,dV,hgt,CASTLE,inCastle,HILL,CAMP,CRYPT,LAIR,BANDITS,ASHVALE,RAUB,LEGION,CITADEL,HUNT,SCHWC,CANYON,ZN,GC,BUILD,TOWNS,WAYS,tileAt,isSolidT,walkTile,solidPx,canMove,vDist,inSafe,townAt,SOLIDS});
 
 // ===================== Gegenstände =====================
 const RAR=[{n:'Gewöhnlich',c:'#a6a6a6',d:'#6b6b6b'},{n:'Ungewöhnlich',c:'#41c94a',d:'#23852b'},{n:'Selten',c:'#3d8bff',d:'#1f5fd1'},{n:'Episch',c:'#b14cff',d:'#7d22c9'},{n:'Legendär',c:'#ffb300',d:'#b87500'},{n:'Mythisch',c:'#ff2d55',d:'#c8002a'}];
@@ -345,6 +424,24 @@ const STACK={beer:{name:'Bier',type:'food',heal:5,beer:1,desc:'Frisch gezapftes 
  arrow:{name:'Pfeile',type:'ammo',desc:'Munition für Bogen und Langbogen. Jeder Schuss verbraucht einen Pfeil.',price:1,pack:20,sell:0},bolt:{name:'Armbrustbolzen',type:'ammo',desc:'Munition für die Armbrust. Jeder Schuss verbraucht einen Bolzen.',price:2,pack:12,sell:0},
  mpotion:{name:'Manatrank',type:'food',mana:.6,desc:'Füllt 60 % deines Manas auf. Tippen zum Trinken.',price:25,sell:8},
  wheat:{name:'Weizen',type:'material',desc:'Für Bäcker Bernd.',sell:2},herb:{name:'Heilkraut',type:'material',desc:'3 Heilkraut → 1 Heiltrank bei Heilerin Mara.',sell:4},ear:{name:'Goblin-Ohr',type:'quest',desc:'Für Wache Otto.',sell:0}};
+// ===== v21 (Teil 3A): Garten, Holz, Gerichte =====
+const FOODC=[['salat','Salat','🥬',[35,55],'leaf','#7ccf4a',18,4],['rbete','Rote Bete','🟣',[40,60],'root','#8a1a3a',22,5],['radies','Radieschen','🔴',[25,40],'root','#e03a4a',12,3],['kohl','Kohl','🥬',[55,80],'leaf','#9ad07a',30,7],['tomate','Tomate','🍅',[45,70],'vine','#e8302a',20,5],['kuerbis','Kürbis','🎃',[70,100],'pumpkin','#f08a1a',45,12],['zwiebel','Zwiebel','🧅',[40,60],'root','#e0c080',14,4],['lauch','Lauch','🥬',[45,65],'tall','#d8f0b0',16,4],['mais','Mais','🌽',[55,85],'corn','#f0d040',24,6],['gurke','Gurke','🥒',[40,60],'vine','#3a8a2a',16,4],['ruebe','Rübe','🟤',[40,60],'root','#e8d0a0',20,5],['spinat','Spinat','🥬',[30,45],'leaf','#2e7a2a',14,4],['erdbeere','Erdbeeren','🍓',[40,65],'vine','#e02040',18,6],['paprika','Paprika','🫑',[45,70],'vine','#e8a020',18,5],['knoblauch','Knoblauch','🧄',[45,65],'root','#f0ece0',12,5]];
+const FLOWC=[['sonnenblume','Sonnenblume','🌻','#f8c818'],['rose','Rose','🌹','#d81e3a'],['kornblume','Kornblume','💠','#3a6ae8'],['mohn','Mohn','🌺','#e8281e'],['lavendel','Lavendel','💜','#9a7ae0'],['tulpe','Tulpe','🌷','#f05a8a'],['gaensebl','Gänseblümchen','🌼','#ffffff'],['veilchen','Veilchen','🪻','#6a3ab0'],['ringelbl','Ringelblume','🏵️','#f89a1a'],['lilie','Lilie','⚜️','#f8f0f0']];
+const TREEC=[['eiche','Eiche','oak'],['birke','Birke','birch'],['kiefer','Kiefer','pine'],['weide','Weide','willow'],['ahorn','Ahorn','maple'],['kirsche','Kirschbaum','cherry']];
+for(const [id,n,ic,,,col,heal,sl] of FOODC){STACK[id]={name:n,type:'food',heal,ic,desc:`Frische Feldfrucht. Heilt ${heal} LP. Zutat für Gerichte beim Bäcker.`,price:sl*3,sell:sl,crop:1};STACK['s_'+id]={name:n+'-Samen',type:'seed',plant:id,ic:'🌱',desc:'Lebensmittel-Saat: Boden erst mit der Harke lockern, max. 3 Felder von Wasser entfernt säen, dann mit der Gießkanne gießen.',price:3+Math.round(sl*.6),sell:1};}
+for(const [id,n,ic,col] of FLOWC){STACK['fl_'+id]={name:n,type:'material',ic,desc:'Frisch gepflückte Blume. Hübsch – und der Gärtner kauft sie.',sell:4,flower:1};STACK['f_'+id]={name:n+'-Samen',type:'seed',plant:'fl_'+id,ic:'🌸',desc:'Blumensaat: wächst überall auf Gras und Erde (auch außerhalb der Mauern), ohne Gießen. Nicht auf Wasser, Lava oder Wegen.',price:5,sell:1};}
+for(const [id,n] of TREEC)STACK['t_'+id]={name:n+'-Setzling',type:'seed',plant:'tr_'+id,ic:'🌳',desc:'Setzling: auf Gras oder Erde mit etwas Platz drumherum pflanzen (auch außerhalb der Mauern). Wächst in etwa zwei Tagen zu einem Baum.',price:25,sell:6};
+Object.assign(STACK,{harke:{name:'Harke',type:'tool',tool:'hoe',ic:'⛏️',desc:'In die Hand nehmen und auf ein Feld (3×3 um dich) klicken/tippen oder ⚔ drücken: lockert den Boden für Lebensmittel-Saat.',price:40,sell:12},
+ kanne:{name:'Gießkanne',type:'tool',tool:'can',ic:'🚿',desc:'Gießt gesäte Felder (ein Guss hält einen Tag). Leer? Am Wasser auffüllen.',price:35,sell:10},
+ axt:{name:'Holzfälleraxt',type:'tool',tool:'axe',ic:'🪓',desc:'In die Hand nehmen und auf Bäume schlagen: gibt Holz, Stöcke und manchmal Harz oder Setzlinge. Gefällte Bäume wachsen nach ein paar Tagen nach.',price:90,sell:25},
+ holz:{name:'Holz',type:'material',ic:'🪵',desc:'Rohstoff vom Holzfällen. Noch ohne Handwerk – wird später gebraucht. Förster und Händler kaufen es.',sell:2,wood:1},
+ stock:{name:'Stock',type:'material',ic:'🥢',desc:'Rohstoff vom Holzfällen. Noch ohne Handwerk – wird später gebraucht.',sell:1,wood:1},
+ harz:{name:'Harz',type:'material',ic:'🟠',desc:'Seltener Rohstoff aus Baumrinde. Noch ohne Handwerk – wird später gebraucht.',sell:6,wood:1}});
+// Gerichte vom Bäcker – zeitlich begrenzte Stärkungen (wie in Stardew Valley)
+const BUFFN={spd:['💨','Tempo +15 %'],regen:['💚','Regeneration'],str:['💪','Stärke +15 %'],res:['🛡','Resistenz +15'],luck:['🍀','Glück +15'],sta:['⚡','Ausdauer +40'],hp:['❤','Leben +20 %'],mp:['🔮','Mana +40']};G.BUFFN=BUFFN;
+const DISH=[['d_eintopf','Gemüseeintopf','🍲',{kohl:1,carrot:1,zwiebel:1},'regen',240,60],['d_salat','Gartensalat','🥗',{salat:1,tomate:1,gurke:1},'spd',240,35],['d_kuerbis','Kürbiskuchen','🥧',{kuerbis:1,wheat:2},'hp',300,50],['d_kraut','Kräuterbrot','🥖',{bread:1,knoblauch:1,herb:1},'res',300,45],['d_erdbeer','Erdbeertörtchen','🍰',{erdbeere:2,wheat:1},'luck',300,30],['d_mais','Maisfladen mit Paprika','🫓',{mais:1,paprika:1},'sta',300,40],['d_suppe','Rote-Bete-Suppe','🥣',{rbete:1,ruebe:1,radies:1},'str',240,45],['d_quiche','Spinatquiche','🥧',{spinat:1,lauch:1,wheat:1},'mp',300,40]];
+for(const [id,n,ic,ing,bf,dur,heal] of DISH)STACK[id]={name:n,type:'food',heal,ic,buff:bf,dur,desc:`Heilt ${heal} LP und gibt ${Math.round(dur/60)} Min. ${BUFFN[bf][1]}.`,sell:Math.round(heal/3)+8};
+G.DISH=DISH;
 const PRE={
  scharf:{n:'Scharf',c:'w',dmg:.1},schnell:{n:'Schnell',c:'w',spd:.1},wuchtig:{n:'Wuchtig',c:'w',dmg:.15,spd:-.05},toedlich:{n:'Tödlich',c:'w',dmg:.08,crit:5},
  flink:{n:'Flink',c:'w',spd:.15,dmg:-.05},meister:{n:'Meisterhaft',c:'w',dmg:.12,spd:.08,crit:3},legendaer:{n:'Legendär',c:'w',dmg:.15,spd:.1,crit:5,best:1},
@@ -366,7 +463,7 @@ function afxVal(k,l,r){const M=RMULT[r];switch(k){case'melee':case'ranged':case'
 // o: {kind,set,name,boss,bossy,f,src}
 function genItem(type,ilvl,rar,o){o=o||{};ilvl=Math.max(1,Math.round(ilvl));
  const it={uid:(Date.now()%1e8)+'-'+(uidC++),type,rarity:rar,ilvl,af:{},v13:1};const M=RMULT[rar]*(o.boss||o.bossy?1.2:1),b=band(ilvl);let pool,base;
- if(type==='weapon'){const k=o.kind||pick(Object.keys(WKIND));const K=WKIND[k];it.kind=k;it.dmg=Math.round(pw(ilvl)*M*K.m);pool=AFPOOL[K.cls];
+ if(type==='weapon'){const k=WKIND[o.kind]?o.kind:pick(Object.keys(WKIND));const K=WKIND[k];it.kind=k;it.dmg=Math.round(pw(ilvl)*M*K.m);pool=AFPOOL[K.cls];
   base=K.mat==='tome'?`${MAT.tome[b]} ${K.n}`:MAT[K.mat][b]+K.n;}
  else if(SLM[type]){const st=o.set||pick(Object.keys(SETS));const S=SETS[st];it.set=st;it.def=Math.round(pw(ilvl)*.5*SLM[type]*S.defm*M);if(o.kind)it.kind=o.kind;pool=AFPOOL[st];base=MAT[S.mat][b]+'-'+S.pieces[type];}
  else{pool=AFPOOL.jewel;base=MAT.gem[b]+(type==='ring'?'ring':'amulett');}
@@ -382,12 +479,13 @@ const sellPrice=it=>it.stack?(STACK[it.id].sell||0)*it.count:Math.round((4+pw(it
 Object.assign(G,{PRE,rollPre,reqLvl,iname,reforgeCost,itemEff,RAR,RMULT,rollRar,METAL,AFX,SLOTN,WKIND,SETS,STACK,mkStack,genItem,sellPrice,itemScore,lootItem});
 
 function drawIcon(g,it,s){const c=RAR[it.rarity||0].c;let mt=METAL[it.rarity||0];if(it.set){const S=SETS[it.set];if(S.mat==='leather')mt=['#7a5a32','#86653a','#946f40','#a07a48','#b08850','#c09858'][it.rarity||0];else if(S.mat==='cloth')mt=S.c;}g.save();g.scale(s/32,s/32);g.lineCap='round';g.lineJoin='round';g.lineWidth=1.5;
+ {const S0=it.stack&&STACK[it.id];if(S0&&S0.ic){if(it.type==='quest'){const gr=g.createRadialGradient(16,16,2,16,16,16);gr.addColorStop(0,'rgba(255,220,120,.55)');gr.addColorStop(1,'rgba(255,200,80,0)');g.fillStyle=gr;g.fillRect(0,0,32,32);}g.font='21px serif';g.textAlign='center';g.textBaseline='middle';g.fillText(S0.ic,16,17);if(it.type==='quest'){g.fillStyle='#ffd54a';g.font='bold 10px Georgia';g.fillText('!',27,6);}g.restore();return;}}
  switch(it.type){
  case'weapon':{g.translate(16,16);g.rotate(Math.PI/4);const k=it.kind,wood=it.name==='Rostiges Schwert';
   if(k==='sword'||k==='dagger'){const L=k==='dagger'?10:15;g.fillStyle=wood?'#a07a5a':mt;g.beginPath();g.moveTo(-2.6,4);g.lineTo(-2.6,-L+3);g.lineTo(0,-L);g.lineTo(2.6,-L+3);g.lineTo(2.6,4);g.closePath();g.fill();g.strokeStyle='rgba(0,0,0,.45)';g.stroke();g.fillStyle=c;g.fillRect(-7,4,14,3.2);g.fillStyle='#6b4423';g.fillRect(-1.6,7,3.2,6);g.fillStyle=c;g.beginPath();g.arc(0,14,2.2,0,7);g.fill();}
   else if(k==='spear'||k==='halberd'){g.fillStyle='#7a5230';g.fillRect(-1.3,-6,2.6,22);g.fillStyle=mt;g.beginPath();g.moveTo(0,-16);g.lineTo(3.5,-7);g.lineTo(-3.5,-7);g.closePath();g.fill();if(k==='halberd'){g.beginPath();g.moveTo(1,-9);g.lineTo(9,-12);g.quadraticCurveTo(11,-6,8,-2);g.lineTo(1,-4);g.fill();}g.fillStyle=c;g.fillRect(-2.5,-7,5,2);}
   else if(k==='bow'||k==='longbow'){g.rotate(-Math.PI/4);g.strokeStyle='#8a5a2a';g.lineWidth=k==='longbow'?2.4:3;const R=k==='longbow'?14:11;g.beginPath();g.arc(-4,0,R,-1.25,1.25);g.stroke();g.strokeStyle='#eee';g.lineWidth=.8;g.beginPath();g.moveTo(-4+Math.cos(-1.25)*R,Math.sin(-1.25)*R);g.lineTo(-4+Math.cos(1.25)*R,Math.sin(1.25)*R);g.stroke();g.fillStyle=c;g.fillRect(R-6,-2,3,4);}
-  else if(k==='crossbow'){g.rotate(-Math.PI/4);g.fillStyle='#6a4626';g.fillRect(-12,-2,22,4);g.strokeStyle=mt;g.lineWidth=2.5;g.beginPath();g.arc(8,0,9,Math.PI*.6,Math.PI*1.4);g.stroke();g.fillStyle=c;g.fillRect(-4,-3,4,6);}
+  else if(k==='crossbow'){g.rotate(-Math.PI/4);g.fillStyle='#5a3a1e';g.fillRect(-13,-2.5,24,5);g.fillStyle='#3e2814';g.fillRect(-14,-3.5,5,7);g.fillStyle='#8a8f96';g.fillRect(-5,-3,2,6);g.fillRect(4,-3,2,6);g.strokeStyle=mt;g.lineWidth=2.6;g.beginPath();g.moveTo(12,-12);g.quadraticCurveTo(6,-6,9,0);g.quadraticCurveTo(6,6,12,12);g.stroke();g.strokeStyle='#efe6cf';g.lineWidth=1;g.beginPath();g.moveTo(12,-12);g.lineTo(0,0);g.lineTo(12,12);g.stroke();g.fillStyle='#c9c9d2';g.beginPath();g.moveTo(16,0);g.lineTo(11,-2);g.lineTo(11,2);g.fill();g.fillStyle='#7a5a32';g.fillRect(0,-.8,11,1.6);g.fillStyle=c;g.fillRect(-9,2.5,3,3);}
   else if(k&&k.indexOf('tome')===0){g.rotate(-Math.PI/4);const ec={tome_fire:'#c0391b',tome_frost:'#2a7ab0',tome_storm:'#6a4ab0',tome_light:'#d8b030'}[k];g.fillStyle=ec;g.fillRect(-10,-12,20,24);g.fillStyle='#f4e6c4';g.fillRect(8,-11,3,22);g.fillStyle=c;g.fillRect(-10,-12,3,24);g.fillStyle='#fff3b0';g.beginPath();g.arc(1,0,4.5,0,7);g.fill();g.fillStyle=ec;g.beginPath();g.arc(1,0,2.2,0,7);g.fill();}
   else if(k==='greatsword'){g.fillStyle=mt;g.beginPath();g.moveTo(-3.4,6);g.lineTo(-3.4,-15);g.lineTo(0,-19);g.lineTo(3.4,-15);g.lineTo(3.4,6);g.closePath();g.fill();g.strokeStyle='rgba(0,0,0,.45)';g.stroke();g.fillStyle='rgba(255,255,255,.35)';g.fillRect(-.6,-15,1.2,20);g.fillStyle=c;g.fillRect(-8,6,16,3);g.fillStyle='#4a3020';g.fillRect(-1.6,9,3.2,8);}
   else if(k==='warhammer'){g.fillStyle='#7a5230';g.fillRect(-1.6,-10,3.2,26);g.fillStyle=mt;g.fillRect(-9,-16,18,9);g.strokeStyle='rgba(0,0,0,.5)';g.strokeRect(-9,-16,18,9);g.fillStyle=c;g.fillRect(-9,-13,18,2);}
@@ -409,7 +507,7 @@ function drawIcon(g,it,s){const c=RAR[it.rarity||0].c;let mt=METAL[it.rarity||0]
  case'seed':{if(it.id==='hseed'){g.fillStyle='#4a8a3a';for(let i=0;i<6;i++){g.beginPath();g.arc(9+(i%3)*7,13+Math.floor(i/3)*8,2.6,0,7);g.fill();}g.strokeStyle='#2a5a1a';g.lineWidth=1;g.strokeRect(5,24,22,4);break;}g.fillStyle='#d8b450';for(let i=0;i<7;i++){g.beginPath();g.ellipse(8+(i%4)*5+(i>3?2:0),12+Math.floor(i/4)*8+(i%2)*2,2.6,3.6,.4,0,7);g.fill();}g.strokeStyle='#7a5a20';g.lineWidth=1;g.strokeRect(5,24,22,4);break;}
  case'material':{if(it.id==='herb'){g.fillStyle='#3a9a3a';for(let i=0;i<5;i++){g.save();g.translate(16,24);g.rotate(-1+i*.5);g.beginPath();g.ellipse(0,-9,3.5,8,0,0,7);g.fill();g.restore();}g.fillStyle='#e8f0a0';g.beginPath();g.arc(16,12,2.5,0,7);g.fill();break;}g.strokeStyle='#c9a64a';g.lineWidth=1.8;for(let i=-1;i<=1;i++){g.beginPath();g.moveTo(16,29);g.lineTo(16+i*7,6);g.stroke();g.fillStyle='#e8c95a';for(let j=0;j<4;j++){g.beginPath();g.ellipse(16+i*7-i*j*1.2-2,8+j*3.5,2,3,-.4,0,7);g.fill();g.beginPath();g.ellipse(16+i*7-i*j*1.2+2,8+j*3.5,2,3,.4,0,7);g.fill();}}break;}
  case'quest':{g.fillStyle='#7bb661';g.beginPath();g.moveTo(10,26);g.quadraticCurveTo(4,10,18,5);g.quadraticCurveTo(28,8,22,20);g.quadraticCurveTo(18,24,10,26);g.fill();g.strokeStyle='#3e6b2a';g.lineWidth=2;g.stroke();g.beginPath();g.moveTo(14,20);g.quadraticCurveTo(12,12,18,10);g.stroke();break;}
- case'furn':case'tool':{g.font='22px serif';g.textAlign='center';g.textBaseline='middle';g.fillText(it.type==='tool'?'🔨':(FURN[STACK[it.id].fk]||{}).ic||'🪑',16,17);if(it.type==='furn'){g.fillStyle='#ffd54a';g.font='bold 9px Georgia';g.fillText('★'+STACK[it.id].ft,25,27);}break;}
+ case'furn':case'tool':{g.font='22px serif';g.textAlign='center';g.textBaseline='middle';g.fillText(it.type==='tool'?'🔨':(G.FDECO&&G.FDECO[it.id]||{}).ic||'🪑',16,17);break;}
  case'gold':{g.fillStyle='#b8860b';g.beginPath();g.arc(13,19,8,0,7);g.fill();g.fillStyle='#ffd54a';g.beginPath();g.arc(19,14,8,0,7);g.fill();g.strokeStyle='#8a6a00';g.lineWidth=1.5;g.stroke();g.fillStyle='#fff3b0';g.fillRect(16,11,3,3);break;}
  }g.restore();}
 const iconCache=new Map();
@@ -514,8 +612,16 @@ const BOSSES={
  mini:{n:'Champion',fixed:1,mini:1,b:'',lv:[1,40],abil:['slam'],loot:[]},
 };
 BOSSES.nebelalter={n:'Der Alte im Nebel',base:'sucherkrieger',c:'#4a2a6a',r:26,lv:[32,45],b:'n',abil:['slam','summon','leap'],minion:'sucher',loot:[{k:'scythe',name:'Sichel des Alten',f:'melee',ufx:{poison:1},d:'vergiftet'},{t:'ring',name:'Ring der tausend Augen',f:'crit'}]};
+Object.assign(BOSSES,{grimmholt:{n:'Häschermeister Grimmholt',base:'legarch',c:'#4a3a1a',r:19,lv:[20,34],b:'',fixed:1,abil:['volley','combo','summon','slam'],minion:'legion',loot:[{k:'crossbow',name:'Grimmholts Fangarmbrust',f:'ranged',ufx:{slow:1},d:'verlangsamt Gegner'},{k:'longbow',name:'Häscherbogen Grimmholts',f:'ranged',ufx:{crit:6},d:'+6 % Krit'},{t:'ring',name:'Grimmholts Käfigring',f:'luck'}]},
+ morwenna:{n:'Königin Morwenna, die Fluchweberin',base:'necro',c:'#3a0a2a',r:21,lv:[24,44],b:'',fixed:1,abil:['volley','summon','fire','sweep','slam'],minion:'legion',loot:[{k:'tome_storm',name:'Morwennas Fluchgewebe',f:'spell',ufx:{ls:.05},d:'5 % Lebensraub'},{k:'dagger',name:'Dornendolch der Königin',f:'melee',ufx:{poison:1,crit:6},d:'vergiftet, +6 % Krit'},{t:'amulet',name:'Morwennas Dornenreif',f:'dmg'},{set:'magier',s:'chest',name:'Robe der Fluchweberin',f:'spell'}]}});
+// v20: Jede Boss-Waffe bekommt eine passende Spezialfähigkeit (falls noch keine gesetzt ist)
+const UFX_K=k=>k==='dagger'?[{poison:1,crit:4},'vergiftet, +4 % Krit']:(k==='axe'||k==='mace'||k==='warhammer'||k==='flail')?[{stun:.12},'12 % Betäubung']:(k==='bow'||k==='longbow')?[{crit:7},'+7 % Krit']:k==='crossbow'?[{slow:1},'verlangsamt Gegner']:k==='tome_fire'?[{burn:1},'setzt in Brand']:k==='tome_frost'?[{slow:1},'verlangsamt Gegner']:k==='tome_light'?[{ls:.05},'5 % Lebensraub']:k==='tome_storm'?[{crit:8},'+8 % Krit']:k==='scythe'?[{ls:.04},'4 % Lebensraub']:[{crit:6},'+6 % Krit'];
+for(const k in BOSSES)for(const e of BOSSES[k].loot||[])if(e.k&&WKIND[e.k]&&!e.ufx){const u=UFX_K(e.k);e.ufx=u[0];e.d=u[1];}
 for(const k in BOSSES){const B=BOSSES[k];if(!B.fixed&&B.lv)B.lv[1]=Math.max(B.lv[1],Math.min(45,Math.round(B.lv[1]*1.5)));}
 G.MT=MT;G.BOSSES=BOSSES;G.LG=LG;
+// v20: Seltene Mob-Trophäen (ca. 5 %) – noch ohne eigene Fähigkeit, später fürs Handwerk gedacht
+const MDROP='rabbit:Hasenpfote:🐾|rat:Rattenschwanz:🐀|boar:Wildschweinhauer:🦷|fox:Fuchsschwanz:🦊|wolf:Wolfsfell:🐺|unicorn:Einhornhaar:✨|slime:Schleimklumpen:🟢|sucher:Sucher-Chitin:🪲|sucherkrieger:Sucher-Klinge:🪲|zecke:Zeckenpanzer:🕷️|runenwirker:Runensplitter:🔷|gjall:Gjall-Drüse:🫧|nebelgarde:Nebelgarde-Abzeichen:🎖️|legion:Legionsabzeichen:🎖️|legarch:Legionsbogensehne:🏹|blackknight:Schwarzer Panzersplitter:⚫|bandit:Gestohlene Münze:🪙|archer:Gefiederte Pfeilspitze:🏹|spider:Spinnenseide:🕸️|goblin:Goblinzahn:🦷|shaman:Schamanenfeder:🪶|bear:Bärenpelz:🐻|centaur:Zentaurenhuf:🐎|skeleton:Knochensplitter:🦴|skarcher:Knochenpfeil:🦴|ghoul:Moorschlamm:🟤|witch:Hexenkraut:🌿|ghost:Geisteressenz:👻|basilisk:Basiliskenauge:👁️|orc:Orkhauer:🦷|golem:Golemkern:🪨|troll:Trollblut:🩸|minotaur:Minotaurenhorn:📯|griffin:Greifenfeder:🪶|frostslime:Frostgel:❄️|penguin:Pinguinfeder:🪶|icewolf:Eiswolfpelz:🐺|draugr:Draugr-Rune:🔷|frostgiant:Riesenzahn:🦷|lavaslime:Lavaperle:🔥|imp:Dämonenhorn:😈|salamander:Salamanderschuppe:🦎|wyrmling:Drachenschuppe:🐉|knight:Dunkelritter-Wappen:🛡️|kobold:Koboldschleuder:🪃|wasp:Wespenstachel:🐝|greydwarf:Grauzwerg-Moos:🌿|zombie:Verrottete Hand:✋|bat:Fledermausflügel:🦇|vampire:Vampirzahn:🧛|werewolf:Werwolfkralle:🐺|wraith:Schattenfetzen:🌫️|pilzling:Pilzhut:🍄|treant:Borkenstück:🪵|scorpion:Skorpionstachel:🦂|mummy:Mumienbinde:🩹|jackal:Schakalfell:🐕|harpy:Harpyienfeder:🪶|thornvine:Dornenranke:🌵|trapper:Fallenseil:🪢|icewitch:Eiskristall:💎|reaper:Sensensplitter:💀|banshee:Bansheeschleier:🌫️|shadowhound:Schattenfell:🐕|necro:Nekromantenschädel:💀|wisp:Irrlichtfunke:✨|phoenix:Phönixfeder:🔥'.split('|').map(x=>x.split(':'));
+for(const [k,n,ic] of MDROP)if(MT[k]){const l0=(MT[k].lv&&MT[k].lv[0])||1;STACK['m_'+k]={name:n,type:'material',ic,desc:`Seltene Trophäe (${MT[k].n}). Hat noch keine Wirkung – wird später fürs Handwerk gebraucht.`,price:0,sell:2+Math.round(l0*.7),trophy:1};}
 function mkMonster(key,lvl,x,y){const t=MT[key],D=G.D();const hpS=1+Math.max(0,lvl-10)*.04,dmS=1+Math.max(0,lvl-15)*.02;
  const m={x,y,type:key,lvl,t,r:t.r,cr:Math.min(t.r,11),maxhp:Math.round((34+lvl*15)*hpS*t.hp*D.mhp),dmg:(5+lvl*2.8)*dmS*t.dmg*D.mdmg,spd:t.spd*rnd(.92,1.08),xp:Math.round((8+lvl*6)*t.xp),name:t.n,c:t.c,shape:t.shape,ai:t.ai||'melee',atkCd:.6,wd:{x:0,y:0,t:0},hitT:0,kx:0,ky:0,fx:1,fy:0,swing:0,anim:Math.random()*9,shotCd:rnd(.6,2),chCd:rnd(1,3),st:null,stT:0,strafe:Math.random()<.5?-1:1,scale:t.scale||1,home:{x,y},voiceT:0,passive:!!t.passive};m.hp=m.maxhp;
  if(t.lg==='beast'&&CORCH[key]!=null){const bi=biome(Math.floor(x/TILE),Math.floor(y/TILE));const ch=Math.min(.95,CORCH[key]+(bi==='ash'?.5:bi==='dark'||bi==='swamp'?.2:0)+(G.P&&G.P.main>=4?.15:0));if(Math.random()<ch){m.cor=1;m.passive=false;m.name=(key==='boar'?'Aschbefallenes ':key==='rabbit'?'Aschbefallener ':'Aschbefallener ')+t.n;m.maxhp=m.hp=Math.round(m.maxhp*1.15);m.dmg*=1.15;m.xp=Math.round(m.xp*1.25);m.spd*=1.08;}else if(key==='rabbit'||key==='fox'){m.passive=true;m.flee=1;}else if(key==='boar'){m.passive=true;m.terr=1;}}
@@ -530,20 +636,20 @@ function pickType(tx,ty,lvl){const bl=BL[biome(tx,ty)],d=dV(tx,ty);let c=Object.
  if(!c.length)c=Object.keys(MT).filter(k=>MT[k].b.indexOf(bl)>=0&&!MT[k].rare);if(!c.length)return 'rat';
  const rare=c.find(k=>MT[k].rare);if(rare)return rare;return pick(c);}
 // ===================== NPCs =====================
-const LORE='Das Spiel spielt im Königreich Eldmar. In der Mitte liegt die Stadt Eichenhain mit der mächtigen Burg Eichenhain auf einem Hügel im Norden der Stadt. Vor drei Nächten griff der Feuerdrache Ignarok das Land an, brannte das Dorf Aschental nieder und entführte Prinzessin Elara, die Tochter von Fürst Aldric. Der Spieler ist ein gefallener Ritter der Silberwacht, der am Aschenpass gegen Ignarok starb. Die Walküren verwehrten ihm den Einzug nach Walhall, weil sein Werk unvollendet ist. Heilerin Mara fand ihn am Flussufer. Feinde: Die Schwarze Legion von Kaiser Valdrik aus dem Süden plant eine Invasion von Eldmar und bezahlt Räuber und Goblins; ihr Feldherr Severin hat ein Kriegslager in der Steinöde. Orte: Räuberlager von Räuberhauptmann Knut nordöstlich des Dorfes, die Hütte des Einsiedlers Bertolt im Südwesten der Wiesen, das Räubernest (Höhle von Räuberfürst Falk) bei Aschental, der alte Wachturm im Nebelmoor (Moorhexe Grimelda), Sonnenwiesen rund um Eichenhain (Tiere, Kobolde, Grauzwerge, Riesenwespen, am Rand selten Einhörner), Banditenlager im Osten der Wiesen, das zerstörte Dorf Aschental im Nordosten der Wiesen, der Finsterwald im Osten mit dem Dorf Waldheim (Försterin Liv), dem Goblinlager und der Spinnenhöhle, das Nebelmoor im Westen mit dem Pfahldorf Moorbruck (Vogt Aldwin) und der Krypta des Knochenfürsten Morvax, die Frostlande im Nordwesten mit Frosthafen (Jarl Ragna), das Graukamm-Gebirge im Norden mit der Zwergenbinge, die Aschenberge im Nordosten mit dem Außenposten Glutwacht und der Drachenfestung auf dem Goldberg, im Süden die Steinöde mit einer tiefen Schlucht und der verlassenen Mine, im Südosten die Sengenden Dünen mit Sandfeste (Fürstin Samira) und dem Grab des Sandkönigs, im Südwesten der finstere Schattenwald mit der Ruine der Abtei und einer Hexenkate. Nachts erheben sich Zombies, Skelette, Fledermäuse und Vampire, bei Vollmond Werwölfe.';
+const LORE='Das Spiel spielt im Königreich Eldmar. In der Mitte liegt die Stadt Eichenhain mit der mächtigen Burg Eichenhain auf einem Hügel im Norden der Stadt. Vor drei Nächten griff der Feuerdrache Ignarok das Land an, brannte das Dorf Aschental nieder und entführte Prinzessin Elara, die Tochter von Fürst Aldric. Der Spieler ist ein gefallener Ritter der Silberwacht, der am Aschenpass gegen Ignarok starb. Die Walküren verwehrten ihm den Einzug nach Valhalla, weil sein Werk unvollendet ist. Heilerin Mara fand ihn am Flussufer. Feinde: Die Schwarze Legion von Kaiser Valdrik aus dem Süden plant eine Invasion von Eldmar und bezahlt Räuber und Goblins; ihr Feldherr Severin hat ein Kriegslager in der Steinöde. Orte: Räuberlager von Räuberhauptmann Knut nordöstlich des Dorfes, die Hütte des Einsiedlers Bertolt im Südwesten der Wiesen, das Räubernest (Höhle von Räuberfürst Falk) bei Aschental, der alte Wachturm im Nebelmoor (Moorhexe Grimelda), Sonnenwiesen rund um Eichenhain (Tiere, Kobolde, Grauzwerge, Riesenwespen, am Rand selten Einhörner), Banditenlager im Osten der Wiesen, das zerstörte Dorf Aschental im Nordosten der Wiesen, der Finsterwald im Osten mit dem Dorf Waldheim (Försterin Liv), dem Goblinlager und der Spinnenhöhle, das Nebelmoor im Westen mit dem Pfahldorf Moorbruck (Vogt Aldwin) und der Krypta des Knochenfürsten Morvax, die Frostlande im Nordwesten mit Frosthafen (Jarl Ragna), das Graukamm-Gebirge im Norden mit der Zwergenbinge, die Aschenberge im Nordosten mit dem Außenposten Glutwacht und der Drachenfestung auf dem Goldberg, im Süden die Steinöde mit einer tiefen Schlucht und der verlassenen Mine, im Südosten die Sengenden Dünen mit Sandfeste (Fürstin Samira) und dem Grab des Sandkönigs, im Südwesten der finstere Schattenwald mit der Ruine der Abtei und einer Hexenkate. Nachts erheben sich Zombies, Skelette, Fledermäuse und Vampire, bei Vollmond Werwölfe. Der Aschenfluch: Seit Ignaroks Erwachen liegt ein Fluch über Eldmar, gewoben von Königin Morwenna (der Fluchweberin, Valdriks Schwester) in die Aschenkrone, die Kaiser Valdrik trägt. Außerhalb geweihter Mauern verfallen fast alle Geschöpfe dem Zorn; nur Runensteine der Dörfer und fließendes Wasser halten ihn fern – deshalb ist Angler Fiete an seinem Bach sicher. Der Drache ist nur Valdriks Werkzeug, nicht der eigentliche Feind. Weitere Völker: das Fellvolk in Rotfellhain südlich des Finsterwalds (Tiermenschen mit Ohren und Schweifen von Fuchs, Katze, Hund und Wolf; Häuptlingin Sirka), die Walküren und Einherjer auf dem Schildhorst hoch im Graukamm (Walküre Svanhild, die den Spieler einst nach Eldmar zurückschickte), und das feindliche Dornenreich Schwarzwall im Schattenwald im Südwesten, wo Morwennas Dornenwachen jeden Fremden angreifen, während die unterdrückten Bürger friedlich sind. Stallmeister Matthes in Eichenhain hilft beim Zähmen von Pferden (mit Karotten) und gibt Reitern einen Sattel. Dorf Eichenhain (v21): Gärtnerin Linde (Gärtnerei) verkauft Saat, Setzlinge, Harke und Gießkanne; Lebensmittel brauchen gelockerten Boden, Wasser in höchstens 3 Feldern Nähe und Gießen; Blumen und Bäume wachsen überall außer auf Wasser, Lava und Wegen. Bäcker Bernd backt aus Feldfrüchten Gerichte mit zeitlich begrenzter Stärkung. Gildenmeisterin Isolde (Abenteurergilde) vergibt alle 3 Tage neue Aufträge und kauft Jagdbeute. Kartograph Edwin (Kartenstube) entziffert Karten, verkauft Ortsmarker und verbessert die Erkundungsreichweite. Försterin Liv in Waldheim verkauft Äxte; Holz, Stöcke und Harz sind Rohstoffe für später. Jeder Händler kauft nur, was zu ihm passt; die Schmiedin nur Ausrüstung.';
 const OX=VCX-96,OY=VCY-120;
 const NPCS=[
  {id:'mara',name:'Heilerin Mara',short:'Mara',tx:113,ty:118,look:{body:'#5b8c5a',skin:'#f1c27d',hair:'#e8e8e8',dress:1},persona:'Ältere, weise Kräuterheilerin. Sie hat den Spieler bewusstlos am Flussufer gefunden und gesund gepflegt. Mütterlich, ruhig, ein wenig geheimnisvoll. Sie spürt, dass die Götter den Spieler zurückgeschickt haben. Sie braut aus Heilkraut Heiltränke.',greet:['Wie geht es deinen Wunden?','Die Kräuter blühen dieses Jahr spät …']},
  {id:'aldric',name:'Fürst Aldric',short:'Aldric',tx:95,ty:89,look:{body:'#6a1b2a',skin:'#e8b88a',hair:'#bdbdbd',crown:1,cape:'#8b0000'},persona:'Fürst von Eichenhain und Herr der Burg. Ernst und stolz, voller Sorge um seine entführte Tochter Elara. Spricht förmlich und gebieterisch, aber gerecht.',greet:['Sprich, Ritter.']},
  {id:'elara',name:'Prinzessin Elara',short:'Elara',abs:1,tx:LAIR.x,ty:LAIR.y+2,look:{body:'#6a4ab0',skin:'#f5d0b0',hair:'#e8c35a',dress:1,crown:1},persona:'Tochter von Fürst Aldric, vom Drachen entführt. Mutig, schlagfertig und alles andere als hilflos. Im Hort hat sie selbst nach einem Fluchtweg gesucht.',greet:['Da bist du ja, mein Retter!']},
- {id:'gunnar',name:'Drachenjäger Gunnar',short:'Gunnar',tx:82,ty:127,look:{body:'#7a2e2e',skin:'#d9a066',hair:'#c9a227',beard:'#c9a227',helm:'#8a8f96'},persona:'Rauer, vernarbter Drachenjäger aus dem Norden. Trinkt gern Met in der Taverne. Er hat seinen Bruder an Ignarok verloren und will Rache. Wortkarg, mit trockenem Humor. Er glaubt an Walhall.',greet:['Hmpf.','Noch ein Met, und ich erzähl dir von Drachen.']},
+ {id:'gunnar',name:'Drachenjäger Gunnar',short:'Gunnar',tx:82,ty:127,look:{body:'#7a2e2e',skin:'#d9a066',hair:'#c9a227',beard:'#c9a227',helm:'#8a8f96'},persona:'Rauer, vernarbter Drachenjäger aus dem Norden. Trinkt gern Met in der Taverne. Er hat seinen Bruder an Ignarok verloren und will Rache. Wortkarg, mit trockenem Humor. Er glaubt an Valhalla.',greet:['Hmpf.','Noch ein Met, und ich erzähl dir von Drachen.']},
  {id:'hilda',name:'Schmiedin Hilda',short:'Hilda',tx:108,ty:114,look:{body:'#5a4636',skin:'#e8b88a',hair:'#d35400'},persona:'Kräftige Schmiedin, direkt und laut, stolz auf ihr Handwerk. Sie hasst Wölfe, weil sie ihre Schafe reißen. Sie kennt sich mit Waffen aus: Speere stechen weit, Armbrüste durchschlagen, Langbögen treffen von weit weg.',greet:['Die Esse ist heiß!','Gute Klingen brauchen Geduld.']},
  {id:'bernd',name:'Bäcker Bernd',short:'Bernd',tx:87,ty:113,look:{body:'#e8e0cc',skin:'#f1c27d',hat:'#ffffff'},persona:'Gemütlicher, rundlicher Bäcker, redselig, lacht gern und macht schlechte Brotwitze. Er weiß, dass Saat nur nahe am Wasser gedeiht.',greet:['Frisches Brot – na ja, bald wieder!']},
  {id:'otto',name:'Wache Otto',short:'Otto',tx:108,ty:127,look:{body:'#4a5a7a',skin:'#f1c27d',helm:'#9aa0a6'},persona:'Pflichtbewusster, etwas ängstlicher Wachsoldat. Er hasst Goblins und erzählt gern, wie er beinahe einen gefangen hätte.',greet:['Alles ruhig. Glaube ich.']},
  {id:'greta',name:'Händlerin Greta',short:'Greta',tx:89,ty:132,shop:1,look:{body:'#b06a2a',skin:'#e8b88a',hair:'#5a2a1a',dress:1},persona:'Reisende Händlerin, geschäftstüchtig, feilscht gern und kennt Gerüchte aus fernen Ländern. Sie verkauft Heiltränke, Brot, Karotten und Saat und kauft Beute an.',greet:['Tränke, Brot, Saatgut! Und ich kaufe deine Beute!']},
  {id:'konrad',name:'Burgwache Konrad',short:'Konrad',tx:100,ty:106,look:{body:'#3a4a6a',skin:'#f1c27d',helm:'#9aa0a6'},persona:'Junger Wachsoldat am Burgtor. Gelangweilt, neugierig, liebt Gerüchte und Klatsch über den Hof.',greet:['Halt! Ach, du bist es.','Langweiliger Dienst heute.']},
  {id:'lukas',name:'Barde Lukas',short:'Lukas',tx:86,ty:124,wander:1.5,look:{body:'#2a7a6a',skin:'#f1c27d',hair:'#3a2a1a',hat:'#7a1a4a'},persona:'Eitler, fröhlicher Barde. Er reimt gern, übertreibt maßlos und will die Heldentaten des Spielers besingen.',greet:['♪ Oh tapfrer Recke, hör mein Lied … ♪']},
- {id:'anselm',name:'Bruder Anselm',short:'Anselm',tx:102,ty:135,wander:1,look:{body:'#6b4a2a',skin:'#e8c8a0',hair:'#9a9a9a',dress:1},persona:'Sanftmütiger Mönch der Kapelle. Er hütet alte Schriften über Drachen, Walküren, Walhall und Fabelwesen wie Einhörner, Greife und Zentauren.',greet:['Friede sei mit dir.']},
+ {id:'anselm',name:'Bruder Anselm',short:'Anselm',tx:102,ty:135,wander:1,look:{body:'#6b4a2a',skin:'#e8c8a0',hair:'#9a9a9a',dress:1},persona:'Sanftmütiger Mönch der Kapelle. Er hütet alte Schriften über Drachen, Walküren, Valhalla und Fabelwesen wie Einhörner, Greife und Zentauren.',greet:['Friede sei mit dir.']},
  {id:'mia',name:'Mia',short:'Mia',tx:93,ty:124,wander:4,child:1,look:{body:'#d84a6a',skin:'#f5d0b0',hair:'#8a4a1a',dress:1},persona:'Neugieriges achtjähriges Mädchen. Sie will unbedingt Ritterin werden, stellt viele Fragen und plappert drauflos. Sie träumt davon, einmal ein Einhorn zu sehen.',greet:['Bist du ein echter Ritter?!']},
  {id:'jorg',name:'Bauer Jorg',short:'Jorg',tx:85,ty:131,wander:2,look:{body:'#7a6a3a',skin:'#d9a066',hat:'#c9a86a'},persona:'Grummeliger Bauer. Er schimpft über Wölfe, Wetter und Steuern, hat aber ein gutes Herz. Er weiß: Felder brauchen Wasser in der Nähe, sonst wächst nichts.',greet:['Diese verflixten Wölfe …']},
  {id:'hedwig',name:'Oma Hedwig',short:'Hedwig',tx:78,ty:118,wander:1,look:{body:'#5a4a6a',skin:'#e8c8a0',hair:'#ffffff',dress:1},persona:'Uralte Dorfälteste. Sie erzählt Geschichten vom letzten Drachenangriff vor 60 Jahren, ist etwas schwerhörig und sehr liebevoll.',greet:['Komm näher, Kind, ich hör so schlecht.']},
@@ -588,6 +694,24 @@ const TPPL={
   ['nadia','Weberin Nadia','Nadia','f','#c08a2a','#1a1a1a','Teppichweberin, deren Muster Geschichten erzählen.',['Dieser Teppich erzählt vom Sandkönig.','Jeder Faden ist eine Erinnerung.','Möchtest du einen Teppich? Er fliegt nicht. Leider.']],
   ['tarik','Töpfer Tarik','Tarik','m','#9a6a4a','#3a2a1a','Töpfer, der Krüge aus rotem Lehm brennt.',['Ein guter Krug hält das Wasser kühl.','Vorsicht, frisch gebrannt!','Die Mumien … sie stehlen meine Krüge. Warum?!']]]};
 const TSHOP={sigrun:['potion','potion2','bread','carrot','arrow'],hanne:['potion','potion2','mpotion','arrow','bolt','bread'],gesa:['bread','carrot','potion','mpotion','arrow'],ansgar:['arrow','bolt','bread','potion','carrot'],leyla:['potion','potion2','mpotion','bread','arrow','bolt']};
+// v20: Bewohner der neuen Königreiche
+Object.assign(TPPL,{
+ fell:[['ruko','Bauer Ruko','Ruko','m','#6a4a2a','#b8602a','Fuchsmann vom Fellvolk, baut Rüben und Pilze an. Redet schnell und lacht viel.',['Riechst du das? Regen kommt.','Meine Rüben sind die besten im ganzen Wald.','Ein Mensch, hier? Na so was.']],
+  ['mauz','Händlerin Mauz','Mauz','f','#7a5a8a','#d9a060','Katzenfrau vom Fellvolk. Handelt mit Kräutern und Tränken und lässt sich nie übers Ohr hauen.',['Schnurr … was darf es sein?','Ich sehe im Dunkeln. Und ich sehe, wenn jemand schummelt.','Frische Kräuter, scharfe Preise.']],
+  ['wuffel','Fährtenleser Bolder','Bolder','m','#5a4a3a','#8a6a4a','Hundemann vom Fellvolk, bester Spurenleser weit und breit. Treu bis in den Tod.',['Ich hab deine Spur schon vor einer Stunde gerochen.','Die Häscher riechen nach Eisen und Angst.','Wuff – äh, hallo.']],
+  ['nala','Weberin Nala','Nala','f','#4a5a6a','#7a7a80','Graue Katzenfrau vom Fellvolk, webt Umhänge aus Wolfshaar.',['Fell ist wärmer als jede Wolle.','Die Legion hat meinen Bruder geholt …','Komm nicht zu nah an meine Spindel.']],
+  ['tiko','Fuchsjunge Tiko','Tiko','m','#8a5a2a','#d07a32','Neugieriger Fuchsjunge vom Fellvolk, will Ritter werden.',['Bist du ein echter Ritter?!','Ich kann schon fast so schnell rennen wie Bolder!','Darf ich dein Schwert halten?'],1]],
+ schild:[['ulf','Einherjer Ulf','Ulf','m','#5a6070','#c8b070','Gefallener Krieger, der auf dem Schildhorst auf seinen Platz in Valhalla wartet. Hütet die Bergziegen.',['Valhalla wartet. Ich habe Zeit.','Die Ziegen hier oben sind stärker als manche Krieger.','Auch du bist gefallen, nicht wahr? Ich sehe es an deinen Augen.']],
+  ['brynja','Walküre Brynja','Brynja','f','#c8ccd8','#e8d8a8','Walküre, verwaltet Met und Vorräte des Horsts. Streng, aber gerecht.',['Met und Heiltrank, für alle, die noch kämpfen.','Wir wählen die Gefallenen. Nicht umgekehrt.','Steh gerade, Ritter.']],
+  ['randver','Einherjer Randver','Randver','m','#4a5a4a','#6a4a2a','Gefallener Bogenschütze, der hier oben Pfeile schnitzt.',['Ein guter Pfeil fliegt gerade, wie ein guter Mann.','Der Wind hier oben trägt jeden Schuss.','Ich fiel bei Glutwacht. Lang ist es her.']],
+  ['eira','Walküre Eira','Eira','f','#d8dce8','#f0e6c8','Junge Walküre und Heilerin des Horsts.',['Deine Wunden erzählen Geschichten.','Valhalla ist schöner, als du denkst.','Flieg nicht zu nah an die Sonne – auch wir lernen das.']],
+  ['skeggi','Rabenhüter Skeggi','Skeggi','m','#3a3a3a','#2a2a2a','Wortkarger Alter, der die Raben des Horsts füttert. Die Raben bringen den Walküren Nachrichten.',['Krah.','Meine Raben sehen alles.','Die Raben sagen, du hast viel vor.']]],
+ schwarz:[['wilma','Magd Wilma','Wilma','f','#5a4a4a','#6a4a3a','Magd auf den Feldern der Königin. Hasst die Dornenwachen, flüstert nur.',['Psst! Die Wachen hören alles.','Die Königin nimmt uns das halbe Korn.','Bist du … nicht von hier? Dann pass auf dich auf.']],
+  ['rike','Hehlerin Rike','Rike','f','#3a3a4a','#2a1a1a','Verkauft unter der Hand, was die Dornenwachen nicht sehen sollen.',['Schnell, bevor die Wache vorbeikommt.','Keine Fragen, keine Namen.','Gold riecht nicht. Zum Glück.']],
+  ['jost','Bettler Jost','Jost','m','#4a4038','#8a8a8a','Ehemaliger Schmied, dem die Königin die Werkstatt nahm.',['Eine Münze für einen alten Mann?','Ich habe einst Schwerter geschmiedet. Jetzt bettle ich.','Die Dornenfeste … dort gehen Menschen hinein, aber selten heraus.']],
+  ['oswin','Köhler Oswin','Oswin','m','#2a2a2a','#3a3a3a','Köhler, der Holzkohle für die Schmieden der Legion brennen muss.',['Rauch und Asche, jeden Tag.','Die Legion braucht Kohle für ihre Klingen.','Wenn die Königin fällt … dann brenne ich nur noch für mich.']],
+  ['ella','Ella','Ella','f','#6a5a7a','#a07a4a','Kleines Mädchen aus Schwarzwall, das heimlich Blumen pflanzt.',['Willst du eine Blume? Psst!','Die Wachen sind gemein.','Mama sagt, irgendwann kommt ein Ritter.'],1]]});
+Object.assign(TSHOP,{mauz:['potion','potion2','mpotion','hseed','bread','arrow'],brynja:['potion','potion2','mpotion','met','arrow','bolt'],rike:['potion','potion2','bread','arrow','bolt']});
 for(const tid in TPPL){const a=TADD[tid];const homes=[[tid+'_farm',a.farm[0],a.farm[1],4,3],[tid+'_h3',...a.houses[3]],[tid+'_h0',...a.houses[0]],[tid+'_h1',...a.houses[1]],[tid+'_h2',...a.houses[2]]];
  TPPL[tid].forEach((d,i)=>{const h=homes[i];const p=TP(tid,h[1]+Math.floor(h[3]/2),h[2]+h[4]);const fem=d[3]==='f';
   NPCS.push({id:d[0],name:d[1],short:d[2],abs:1,tx:p.x,ty:p.y,child:d[8]?1:0,wander:i>=2?2:0,town:tid,look:{body:d[4],skin:tid==='sand'?'#c68642':tid==='glut'?'#d9a066':'#f0d0b0',hair:d[5],dress:fem?1:0,hat:i===0?'#c9a86a':null,beard:!fem&&i%2===0&&!d[8]?d[5]:null},persona:d[6]+' Lebt in '+TOWNS.find(t=>t.id===tid).name+'.',greet:d[7]});
@@ -595,7 +719,7 @@ for(const tid in TPPL){const a=TADD[tid];const homes=[[tid+'_farm',a.farm[0],a.f
   else if(i===1){JOBS_ADD[d[0]]=[['door:'+tid+'_mkt','idle',[7,10]],['home','idle',[2,4]]];SHOP_ADD[d[0]]={n:d[1].split(' ')[1]+'s Marktstand',items:TSHOP[d[0]]};}
   else JOBS_ADD[d[0]]=[['patrol','idle',[3,5]],['door:'+tid+'_mkt','idle',[3,5]],['home','idle',[3,6]],['patrol','idle',[2,4]]];});}
 // Update 16: Stadtwachen
-for(const [tid,nm,sh] of [['frost','Wache Torvald','Torvald'],['moor','Wache Hennes','Hennes'],['wald','Wache Kuno','Kuno'],['sand','Wache Rashid','Rashid']]){const tw=TOWNS.find(t=>t.id===tid);const p=TP(tid,1,tw.r-4);NPCS.push({id:'wache_'+tid,name:nm,short:sh,abs:1,tx:p.x,ty:p.y,town:tid,guard:1,look:{body:'#4a5a7a',skin:tid==='sand'?'#c68642':'#f0d0b0',helm:'#9aa0a6'},persona:'Stadtwache von '+tw.name+'. Streng, aber fair. Achtet auf Diebe und Unruhestifter.',greet:['Halte dich an die Gesetze, Fremder.','Alles ruhig in '+tw.name+'.','Diebe landen bei mir im Kerker.']});JOBS_ADD['wache_'+tid]=[['patrol','idle',[3,5]]];}
+for(const [tid,nm,sh] of [['frost','Wache Torvald','Torvald'],['moor','Wache Hennes','Hennes'],['wald','Wache Kuno','Kuno'],['sand','Wache Rashid','Rashid'],['fell','Wächter Grauzahn','Grauzahn'],['schild','Walküre Gunnhild','Gunnhild']]){const tw=TOWNS.find(t=>t.id===tid);const p=TP(tid,1,tw.r-4);NPCS.push({id:'wache_'+tid,name:nm,short:sh,abs:1,tx:p.x,ty:p.y,town:tid,guard:1,look:{body:'#4a5a7a',skin:tid==='sand'?'#c68642':'#f0d0b0',helm:'#9aa0a6'},persona:'Stadtwache von '+tw.name+'. Streng, aber fair. Achtet auf Diebe und Unruhestifter.',greet:['Halte dich an die Gesetze, Fremder.','Alles ruhig in '+tw.name+'.','Diebe landen bei mir im Kerker.']});JOBS_ADD['wache_'+tid]=[['patrol','idle',[3,5]]];}
 NPCS.forEach(n=>{if(!n.abs){n.tx+=OX;n.ty+=OY;}n.x=n.hx=(n.tx+.5)*TILE;n.y=n.hy=(n.ty+.5)*TILE;n.fx=0;n.fy=1;n.wt=0;n.vx=0;n.vy=0;n.anim=0;});
 G.NPCS=NPCS;G.LORE=LORE;
 const JOBS={hilda:[['anvil','hammer',[7,12]],['home','idle',[3,6]],['anvil','hammer',[6,9]],['door:smith','idle',[2,4]]],
@@ -682,7 +806,7 @@ function calc(){const L=P.level,s={base:3+L*1.2,def:0,maxhp:100+L*12,melee:0,ran
  {const R=skR;s.hpPct+=R('vit')*4;s.maxSta=Math.round(s.maxSta*(1+R('sta')*.04));s.maxMp=Math.round(s.maxMp*(1+R('mana')*.04));const rg=1+R('reg')*.08;s.regen*=rg;s.mpRegen*=rg;s.staReg=rg;s.melee+=R('str')*2;s.ranged+=R('aim')*2;s.spell+=R('arc')*2;s.dr=R('tough')*.015;s.spd+=R('swift')*2;s.staMul=1-R('swift')*.05;if(s.staCost)s.staCost=Math.max(3,Math.round(s.staCost*s.staMul));}
  s.def=Math.round(s.def*(1+s.defp/100));s.maxhp=Math.round(s.maxhp*(1+s.hpPct/100));s.regen+=s.maxhp*s.regenPct/100;
  s.crit=Math.min(s.crit,75);s.spd=Math.min(s.spd,50);s.res=Math.min(s.res,80);
- const cb=s.cls==='magic'?s.spell:s.cls==='ranged'?s.ranged:s.melee;s.total=(s.base+s.wdmg)*(1+cb/100);s.speed=140*(1+s.spd/100)*(P.slow>0?.6:1)*((P.drunk||0)>=3?Math.max(.62,.88-((P.drunk||0)-3)*.04):1);if(P.hangover&&P.dayT<P.hangover)s.maxSta=Math.round((s.maxSta||100)*.75);if(P.rested&&P.dayT<P.rested.until){s.maxhp=Math.round(s.maxhp*(1+P.rested.b/100));s.regen*=1+P.rested.b/40;}if(P.pet)s.luck=(s.luck||0)+5;s.regen=Math.round(s.regen*10)/10;return s;}
+ const cb=s.cls==='magic'?s.spell:s.cls==='ranged'?s.ranged:s.melee;s.total=(s.base+s.wdmg)*(1+cb/100);s.speed=140*(1+s.spd/100)*(P.slow>0?.6:1)*((P.drunk||0)>=3?Math.max(.62,.88-((P.drunk||0)-3)*.04):1);if(P.hangover&&P.dayT<P.hangover)s.maxSta=Math.round((s.maxSta||100)*.75);if(P.rested&&P.dayT<P.rested.until){s.maxhp=Math.round(s.maxhp*(1+P.rested.b/100));s.regen*=1+P.rested.b/40;}if(P.pet)s.luck=(s.luck||0)+5;{const BF=P.buffs||{},on=k=>(BF[k]||0)>P.dayT;if(on('spd'))s.speed*=1.15;if(on('regen'))s.regen+=3+s.maxhp*.012;if(on('str'))s.total*=1.15;if(on('res'))s.res=Math.min(80,(s.res||0)+15);if(on('luck'))s.luck=(s.luck||0)+15;if(on('sta'))s.maxSta=(s.maxSta||100)+40;if(on('hp'))s.maxhp=Math.round(s.maxhp*1.2);if(on('mp')){s.maxMp+=40;s.mpRegen*=1.3;}}if(P.riding)s.speed*=1.65;s.regen=Math.round(s.regen*10)/10;return s;}
 G.calc=calc;
 function addItem(it){if(it.stack){for(let i=0;i<36;i++){const s=P.inv[i];const cap=it.type==='ammo'?999:64;if(s&&s.stack&&s.id===it.id&&s.count<cap){const mv=Math.min(cap-s.count,it.count);s.count+=mv;it.count-=mv;if(it.count<=0){G.invDirty=true;return true;}}}}
  for(let i=0;i<36;i++)if(!P.inv[i]){P.inv[i]=it;G.invDirty=true;return true;}return false;}
@@ -696,11 +820,11 @@ const DRUNKN=['Nüchtern','Angeheitert','Betrunken','Sturzbetrunken','Kurz vorm 
 function drinkBeer(n){const before=drunkLvl();P.drunk=(P.drunk||0)+n;P.drunkTot=(P.drunkTot||0)+n;sfx('drink');G.floats.push({x:P.x,y:P.y-34,t:pick(['Prost! 🍺','Hicks!','Aaah …','Noch eins!']),c:'#ffd54a',life:1});
  if(P.drunk>=10){passOut();return;}const l=drunkLvl();if(l!==before&&l>=2)G.toast(`🍺 ${DRUNKN[l]}! ${l===2?'Du läufst etwas langsamer und schwankst.':'Die Welt dreht sich … du torkelst stark.'}`,'#ffd54a');G.S=calc();}
 function passOut(){P.drunk=0;{const st=P.stats||(P.stats={});st.passOut=(st.passOut||0)+1;}if(G.ui&&G.ui.closeDialog)G.ui.closeDialog();G.sleepFx=3.2;G.reviveNPCs&&G.reviveNPCs();const n=Math.floor(P.dayT/DAYLEN),t=P.dayT%DAYLEN;P.dayT=(t>=28?n+1:n)*DAYLEN+60;P.poison=null;P.burn=null;G.mons=G.mons.filter(m=>m.boss==='dragon');G.proj=[];G.teles=[];
- G.room=HR;let bx=HR.door.tx,by=HR.door.ty-1;const a=(P.home.bed||0)&&G.furnAnchor?G.furnAnchor('bed'):null;if(a){const fp=G.furnFoot('bed',P.home.bed,a[0],a[1]);let best=null;for(const [fx,fy] of fp)for(const [ox,oy] of [[1,0],[-1,0],[0,1],[0,-1]]){const x=HR.x0+fx+ox,y=HR.y0+fy+oy;if(x<=HR.x0||x>=HR.x0+HR.w-1||y<=HR.y0||y>=HR.y0+HR.h-1)continue;if(fp.some(([qx,qy])=>qx===fx+ox&&qy===fy+oy))continue;if(!walkTile(x,y)||SOLIDS[tileAt(x,y)])continue;best=[x,y];break;}if(best){bx=best[0];by=best[1];}}
+ G.room=HR;let bx=HR.door.tx,by=HR.door.ty-1;const hb=G.homeBed&&P.home&&P.home.items?G.homeBed():null,a=hb?[hb.x,hb.y]:null;if(a){const fp=G.decoFoot(hb.i,a[0],a[1]);let best=null;for(const [fx,fy] of fp)for(const [ox,oy] of [[1,0],[-1,0],[0,1],[0,-1]]){const x=HR.x0+fx+ox,y=HR.y0+fy+oy;if(x<=HR.x0||x>=HR.x0+HR.w-1||y<=HR.y0||y>=HR.y0+HR.h-1)continue;if(fp.some(([qx,qy])=>qx===fx+ox&&qy===fy+oy))continue;if(!walkTile(x,y)||SOLIDS[tileAt(x,y)])continue;best=[x,y];break;}if(best){bx=best[0];by=best[1];}}
  P.x=(bx+.5)*TILE;P.y=(by+.5)*TILE;P.prevX=null;const S=calc();G.S=S;P.hp=Math.max(P.hp,Math.round(S.maxhp*.6));P.sta=S.maxSta*.5;P.hangover=P.dayT+300;
  G.toast('😵 Du bist umgekippt …','#ffcc80',true);setTimeout(()=>G.toast('🏠 Du wachst mit dickem Kopf in deinem Haus auf. Kater: weniger Ausdauer für eine Weile.','#ffe9a0',true),1100);G.save();}
 G.passOut=passOut;
-function useItem(i){const it=P.inv[i];if(!it||it.type!=='food')return;const S=G.S;if(STACK[it.id].beer){drinkBeer(STACK[it.id].beer);P.hp=Math.min(S.maxhp,P.hp+STACK[it.id].heal);it.count--;if(it.count<=0)P.inv[i]=null;G.invDirty=true;return;}if(STACK[it.id].mana){if(P.mp>=S.maxMp){G.toast('Dein Mana ist schon voll','#ccc');return;}const v=Math.round(S.maxMp*STACK[it.id].mana);P.mp=Math.min(S.maxMp,P.mp+v);sfx('drink');G.floats.push({x:P.x,y:P.y-34,t:`+${v} Mana`,c:'#82b1ff',life:.9});it.count--;if(it.count<=0)P.inv[i]=null;G.invDirty=true;return;}if(P.hp>=S.maxhp&&!P.poison&&!P.burn){G.toast('Deine LP sind schon voll','#ccc');return;}const s=STACK[it.id];const h=s.pct?Math.round(S.maxhp*s.pct):s.heal;P.hp=Math.min(S.maxhp,P.hp+h);if(it.id.indexOf('potion')===0){P.poison=null;P.burn=null;P.slow=0;}sfx(it.id.indexOf('potion')===0?'drink':'eat');G.floats.push({x:P.x,y:P.y-34,t:`+${h}`,c:'#69f0ae',life:.9});it.count--;if(it.count<=0)P.inv[i]=null;G.invDirty=true;}
+function useItem(i){const it=P.inv[i];if(!it||it.type!=='food')return;const S=G.S;if(STACK[it.id].buff){const sd=STACK[it.id];P.buffs=P.buffs||{};P.buffs[sd.buff]=P.dayT+sd.dur;G.S=calc();P.hp=Math.min(G.S.maxhp,P.hp+sd.heal);sfx('eat');G.floats.push({x:P.x,y:P.y-34,t:`${BUFFN[sd.buff][0]} ${BUFFN[sd.buff][1]}`,c:'#ffe082',life:1.3});G.toast(`${sd.ic||'🍽'} ${sd.name}: ${BUFFN[sd.buff][1]} für ${Math.round(sd.dur/60)} Min.`,'#ffe082');it.count--;if(it.count<=0)P.inv[i]=null;G.invDirty=true;return;}if(STACK[it.id].beer){drinkBeer(STACK[it.id].beer);P.hp=Math.min(S.maxhp,P.hp+STACK[it.id].heal);it.count--;if(it.count<=0)P.inv[i]=null;G.invDirty=true;return;}if(STACK[it.id].mana){if(P.mp>=S.maxMp){G.toast('Dein Mana ist schon voll','#ccc');return;}const v=Math.round(S.maxMp*STACK[it.id].mana);P.mp=Math.min(S.maxMp,P.mp+v);sfx('drink');G.floats.push({x:P.x,y:P.y-34,t:`+${v} Mana`,c:'#82b1ff',life:.9});it.count--;if(it.count<=0)P.inv[i]=null;G.invDirty=true;return;}if(P.hp>=S.maxhp&&!P.poison&&!P.burn){G.toast('Deine LP sind schon voll','#ccc');return;}const s=STACK[it.id];const h=s.pct?Math.round(S.maxhp*s.pct):s.heal;P.hp=Math.min(S.maxhp,P.hp+h);if(it.id.indexOf('potion')===0){P.poison=null;P.burn=null;P.slow=0;}sfx(it.id.indexOf('potion')===0?'drink':'eat');G.floats.push({x:P.x,y:P.y-34,t:`+${h}`,c:'#69f0ae',life:.9});it.count--;if(it.count<=0)P.inv[i]=null;G.invDirty=true;}
 function buy(id,n,price){const p=price!=null?price:STACK[id].price*n;if(P.gold<p){G.toast('Nicht genug Gold','#ff8a80');return false;}P.gold-=p;sfx('coin');give(mkStack(id,n));return true;}
 function quickHeal(){let i=P.inv.findIndex(s=>s&&s.id==='potion');if(i<0)i=P.inv.findIndex(s=>s&&s.id==='potion2');if(i<0)i=P.inv.findIndex(s=>s&&(s.id==='bread'||s.id==='carrot'));if(i<0){G.toast('Keine Heiltränke oder Essen dabei','#ff8a80');return;}useItem(i);}
 Object.assign(G,{addItem,countItem,removeItem,give,useItem,dropGround,buy,quickHeal});
@@ -713,19 +837,20 @@ function hitMonster(m,dmg,cr,o){m.lastHit=G.time;o=o||{};if(m.dead)return;if(m.e
  if(o.stun&&Math.random()<o.stun&&!m.boss){m.stunT=1;G.floats.push({x:m.x,y:m.y-m.r-18,t:'Betäubt!',c:'#fff59d',life:.7});}
  if(!m.st&&o.kb!==0){const dx=m.x-P.x,dy=m.y-P.y,d=Math.hypot(dx,dy)||1,kb=(m.boss?30:150)*(o.kb||1);m.kx=dx/d*kb;m.ky=dy/d*kb;}
  if(o.elem==='fire')m.burn={t:3,dps:dmg*.18};if(o.elem==='frost')m.slowT=2.2;if(o.elem==='holy'){const h=Math.max(1,Math.round(dmg*.15));P.hp=Math.min(G.S.maxhp,P.hp+h);}
+ {const n=cr?9:4,col=cr?'#ffd54a':(m.undead||m.type==='skeleton'?'#e0e0e0':'#ff6b5a');for(let i=0;i<n;i++)G.parts.push({x:m.x,y:m.y,z:14,vx:rnd(-120,120),vy:rnd(-120,120),life:.28,c:col});if(cr)G.floats.push({x:m.x,y:m.y-m.r-30,t:'KRITISCH!',c:'#ffd54a',life:.7});}
  if(G.settings.dmgNums)G.floats.push({x:m.x+rnd(-6,6),y:m.y-m.r-8,t:cr?`${dmg}!`:`${dmg}`,c:cr?'#ffd54a':(o.elem==='fire'?'#ffb070':o.elem==='frost'?'#9be7ff':'#fff'),life:.8,big:cr});
  for(let i=0;i<4;i++)G.parts.push({x:m.x,y:m.y,z:10,vx:rnd(-90,90),vy:rnd(-90,90),life:.35,c:o.pc||m.c});
  if(m.hp<=0)killMonster(m);}
 function pickTarget(range,cone){let best=null,bs=-1e9;const ax=G.aim?G.aim.x:P.fx,ay=G.aim?G.aim.y:P.fy;
  for(const m of G.mons){if(m.dead||m.passive&&!m.provoked&&!m.aggro&&false)continue;const dx=m.x-P.x,dy=m.y-P.y,d=Math.hypot(dx,dy);if(d-m.r>range)continue;const dot=(dx*ax+dy*ay)/(d||1);if(dot<cone)continue;const sc=dot*200-d;if(sc>bs){bs=sc;best=m;}}return best;}
 let warnT=0;function warn(t){if(G.time-warnT<1.4)return;warnT=G.time;G.floats.push({x:P.x,y:P.y-40,t,c:'#ffcc80',life:1});}
-function attack(){if(P.atkCd>0||P.dead||P.dodgeT>0)return;{const hs=P.inv[P.sel];if(hs&&hs.id==='rod'){if(!G._rodLatch){G._rodLatch=1;G.fishAct();}return;}}const S=G.S;
+function attack(){if(P.atkCd>0||P.dead||P.dodgeT>0)return;{const hs=P.inv[P.sel];if(hs&&hs.id==='rod'){if(!G._rodLatch){G._rodLatch=1;G.fishAct();}return;}if(hs&&STACK[hs.id]&&STACK[hs.id].tool&&!G.room){P.atkCd=.35;G.toolSwing();return;}}const S=G.S;if(S.cls==='melee'&&!G.room)cutGrass();
  if(S.tooHigh){warn(`Benötigt Stufe ${reqLvl(S.tooHigh)}!`);}
  let weak=1;if(S.cls==='melee'){if(P.sta<S.staCost){weak=.45;P.sta=Math.max(0,P.sta-S.staCost*.3);warn('Erschöpft – schwacher Schlag!');}else P.sta-=S.staCost;P.staT=.7;}
  else if(S.cls==='magic'){if(P.mp<S.mpCost){warn('Kein Mana!');P.atkCd=.3;return;}P.mp-=S.mpCost;}
  else{const am=WKIND[S.kind].proj==='bolt'?'bolt':'arrow';if(countItem(am)<1){warn(am==='bolt'?'Keine Bolzen!':'Keine Pfeile!');P.atkCd=.4;return;}removeItem(am,1);}
  P.atkCd=S.cd*(weak<1?1.35:1);P.swing=.22;
- if(G.aim){P.fx=G.aim.x;P.fy=G.aim.y;}const FPB=G.settings.cam==='fp'&&G.settings.mode!=='2d'?12:0,RCH=S.reach+FPB;const rng=S.cls==='melee'?RCH+6:S.range;const precise=S.cls!=='melee'&&!!G.aim;const t=pickTarget(rng,S.cls==='melee'?(S.thrust?.9:.55):precise?.972:.86);
+ if(G.aim){P.fx=G.aim.x;P.fy=G.aim.y;}const FPB=G.settings.cam==='fp'?12:0,RCH=S.reach+FPB;const rng=S.cls==='melee'?RCH+6:S.range;const precise=S.cls!=='melee'&&!!G.aim;const t=pickTarget(rng,S.cls==='melee'?(S.thrust?.9:.55):precise?.972:.86);
  if(t){const d=Math.hypot(t.x-P.x,t.y-P.y)||1;const k=S.cls==='melee'?1:precise?.5:.72;let fx=P.fx*(1-k)+(t.x-P.x)/d*k,fy=P.fy*(1-k)+(t.y-P.y)/d*k;const l=Math.hypot(fx,fy)||1;P.fx=fx/l;P.fy=fy/l;}P.atkFx=P.fx;P.atkFy=P.fy;
  if(S.cls==='melee'){const fa=Math.atan2(P.fy,P.fx);let hit=false,anyCrit=false;
   for(const m of G.mons){if(m.dead)continue;const dx=m.x-P.x,dy=m.y-P.y,d=Math.hypot(dx,dy);if(d>RCH+m.r+6)continue;let a=Math.atan2(dy,dx)-fa;while(a>Math.PI)a-=6.283;while(a<-Math.PI)a+=6.283;
@@ -746,10 +871,10 @@ function hitPlayer(dmg,src){if(P.dead||G.god)return;if(P.frost&&src&&(src.burn||
  const D=G.D(),lvl=src.lvl||1,diff=Math.max(0,lvl-P.level),S=G.S;dmg*=1+diff*D.pen*2.4;
  const red=S.def/(S.def+50+lvl*6);if(src.type==='magic')dmg*=(1-S.res/100)*(1-red*.5);else dmg*=1-red;
  if(P.invT>0)return;dmg*=1-(S.dr||0);
- dmg=Math.max(1,Math.round(dmg*rnd(.9,1.1)));if(P.hp-dmg<=0&&skR('second')&&!(P.secondT>0)){dmg=Math.max(0,P.hp-1);P.secondT=600;P.invT=2;G.toast('🕯 Zweite Chance! Du überlebst mit letzter Kraft.','#ffd54a',true);for(let i=0;i<20;i++)G.parts.push({x:P.x,y:P.y,z:20,vx:rnd(-120,120),vy:rnd(-120,120),life:.8,c:'#ffe082'});}P.hp-=dmg;P.hurtT=.25;sfx('hurt');G.floats.push({x:P.x,y:P.y-30,t:'-'+dmg,c:'#ff5252',life:.8});
+ dmg=Math.max(1,Math.round(dmg*rnd(.9,1.1)));if(P.riding&&P.mount&&!P.mount.dead){const hd=Math.round(dmg*.45);dmg=Math.max(1,dmg-hd);if(hd>0)horseHurt(hd);}if(P.hp-dmg<=0&&skR('second')&&!(P.secondT>0)){dmg=Math.max(0,P.hp-1);P.secondT=600;P.invT=2;G.toast('🕯 Zweite Chance! Du überlebst mit letzter Kraft.','#ffd54a',true);for(let i=0;i<20;i++)G.parts.push({x:P.x,y:P.y,z:20,vx:rnd(-120,120),vy:rnd(-120,120),life:.8,c:'#ffe082'});}P.hp-=dmg;P.hurtT=.25;sfx('hurt');G.floats.push({x:P.x,y:P.y-30,t:'-'+dmg,c:'#ff5252',life:.8});
  const rf=1-S.res/100;if(src.poison)P.poison={t:3.5,dps:Math.max(1,dmg*.12*rf)};if(src.burn)P.burn={t:3,dps:Math.max(1,dmg*.14*rf)};if(src.chill)P.slow=2*rf;if(src.root&&P.dodgeT<=0){P.rootT=Math.max(P.rootT||0,src.root*rf);G.floats.push({x:P.x,y:P.y-30,t:src.net?'Im Netz gefangen!':'Festgehalten!',c:'#ff8a80',life:.9});}if(src.grab||src.slow)P.slow=Math.max(P.slow||0,(src.slow?2.4:1.4)*rf);if(src.pull&&!src.pull.dead){P.pullFrom=src.pull;P.pullT=.32;G.floats.push({x:P.x,y:P.y-30,t:'Herangezogen!',c:'#ff8a80',life:.8});}if(src.vamp&&!src.vamp.dead){src.vamp.hp=Math.min(src.vamp.maxhp,src.vamp.hp+dmg*.6);}
  if(P.hp<=0){P.hp=0;die();}}
-function die(){sfx('death');P.dead=true;P.poison=null;P.burn=null;const loss=Math.floor(P.gold*G.D().goldLoss);P.gold-=loss;{const st=P.stats||(P.stats={});st.deaths=(st.deaths||0)+1;st.deathGold=(st.deathGold||0)+loss;}G.lastLoss=loss;G.ui&&G.ui.onDeath&&G.ui.onDeath(loss);}
+function die(){sfx('death');P.dead=true;P.poison=null;P.burn=null;const loss=G.deathLoss?G.deathLoss():Math.floor(P.gold*G.D().goldLoss);P.gold-=loss;{const st=P.stats||(P.stats={});st.deaths=(st.deaths||0)+1;st.deathGold=(st.deathGold||0)+loss;}G.lastLoss=loss;G.ui&&G.ui.onDeath&&G.ui.onDeath(loss);}
 G.respawn=()=>{if(G.room){G.mons=G.mons.filter(m=>m.room!==G.room.id);G.room=null;}P.dead=false;P.x=SPAWN.x;P.y=SPAWN.y;G.S=calc();P.hp=G.S.maxhp;P.slow=0;G.teles=[];G.proj=[];G.mons.forEach(m=>m.aggro=false);};
 function gainXP(x){P.xp+=x;let up=false;while(P.xp>=xpNeed(P.level)){P.xp-=xpNeed(P.level);P.level++;up=true;}if(up){sfx('levelup');G.S=calc();P.hp=G.S.maxhp;G.toast(`⭐ Stufe ${P.level} erreicht! Volle Heilung. +1 Skillpunkt (Taste K / ⭐ im Inventar)`,'#ffd54a',true);for(let i=0;i<24;i++)G.parts.push({x:P.x,y:P.y,z:20,vx:rnd(-120,120),vy:rnd(-120,120),life:.8,c:'#ffd54a'});}}
 G.gainXP=gainXP;
@@ -766,9 +891,9 @@ const UNIQ={
  golem:[{k:'warhammer',name:'Golemfaust',ufx:{stun:.2},d:'20 % Betäubung'}],greydwarf:[{k:'mace',name:'Moosknüppel',ufx:{slow:1},d:'verlangsamt Gegner'}],wasp:[{k:'dagger',name:'Wespenstachel',ufx:{poison:1},d:'vergiftet Gegner'}],
  kobold:[{k:'crossbow',name:'Koboldschleuder-Armbrust',ufx:{pierce:1},d:'durchschlagend'}],icewitch:[{k:'tome_frost',name:'Eisherz-Grimoire',ufx:{slow:1},d:'stärkere Verlangsamung'}],
  thornvine:[{k:'spear',name:'Dornenspieß',ufx:{poison:1},d:'vergiftet Gegner'}],shadowhound:[{k:'dagger',name:'Schattenzahn',ufx:{ls:.06},d:'Lebensraub 6 %'}]};
-G.UNIQ=UNIQ;G.killMonster=m=>killMonster(m);
-function mkUnique(e,il,src){const o={name:e.name,src,ufx:e.ufx,ud:e.d,uniq:1};const rar=Math.random()<.25?4:3;if(e.k)return genItem('weapon',il+1,rar,Object.assign(o,{kind:e.k}));if(e.set)return genItem(e.s,il+1,rar,Object.assign(o,{set:e.set}));return genItem(e.t,il+1,rar,o);}
-function killMonster(m){m.dead=true;if(P.side)for(const k in SQ){const q=SQ[k],st=P.side[k];if(st&&st.st==='active'&&q.kill===m.type&&st.c<q.cnt){st.c++;if(st.c===q.cnt)G.toast(`📜 ${q.n}: erledigt! Zurück zu ${npcById(q.npc).short}.`,'#ffd54a',true);}}sfx(m.boss?'bosskill':'kill',m);if(m.boss==='dragon')sfx('aggro',{type:'dragon'});const D=G.D();const diff=m.lvl-P.level;let xp=m.xp;if(diff<=-7)xp*=.05;else if(diff<=-4)xp*=.3;else if(diff>=2)xp*=1+Math.min(diff,4)*.08;if(m.summoned)xp*=.3;if(m.boss){const bk=m.boss==='mini'?'mini:'+(m.room||m.type):m.boss;P.bossN=P.bossN||{};const bn=P.bossN[bk]||0;xp*=Math.max(.15,1/(1+bn*.8));P.bossN[bk]=bn+1;}xp=Math.max(1,Math.round(xp));
+G.UNIQ=UNIQ;G.killMonster=m=>killMonster(m);G.hitPlayer=(d,o)=>hitPlayer(d,o||{});
+function mkUnique(e,il,src){const o={name:e.name,src,ufx:e.ufx,ud:e.d,uniq:1};const rar=Math.random()<.25?4:3;if(e.k&&WKIND[e.k])return genItem('weapon',il+1,rar,Object.assign(o,{kind:e.k}));if(e.set)return genItem(e.s,il+1,rar,Object.assign(o,{set:e.set,kind:e.k}));return genItem(e.t,il+1,rar,o);}
+function killMonster(m){m.dead=true;if(m.boss&&!m.summoned)P.bossK=(P.bossK||0)+1;if(m.realm)G.realmKilled(m);if(m.mistg)G.mistKilled(m);if(!m.summoned&&(m.type==='centaur'&&Math.random()<(m.boss?.6:.18)||m.boss&&m.boss!=='mini'&&Math.random()<.05)){const D=G.D();dropGround(mkBarding(m.lvl+(D.ilvl||0),Math.max(m.boss?2:0,rollRar(D.M))),m.x,m.y);G.toast('🐎 Eine Pferderüstung ist gefallen!','#ffd54a');}if(P.side)for(const k in SQ){const q=SQ[k],st=P.side[k];if(st&&st.st==='active'&&q.kill===m.type&&st.c<q.cnt){st.c++;if(st.c===q.cnt)G.toast(`📜 ${q.n}: erledigt! Zurück zu ${npcById(q.npc).short}.`,'#ffd54a',true);}}sfx(m.boss?'bosskill':'kill',m);if(m.boss==='dragon')sfx('aggro',{type:'dragon'});const D=G.D();const diff=m.lvl-P.level;let xp=m.xp;if(diff<=-7)xp*=.05;else if(diff<=-4)xp*=.3;else if(diff>=2)xp*=1+Math.min(diff,4)*.08;if(m.summoned)xp*=.3;if(m.boss){const bk=m.boss==='mini'?'mini:'+(m.room||m.type):m.boss;P.bossN=P.bossN||{};const bn=P.bossN[bk]||0;xp*=Math.max(.15,1/(1+bn*.8));P.bossN[bk]=bn+1;}xp=Math.max(1,Math.round(xp));
  gainXP(xp);G.floats.push({x:m.x,y:m.y-m.r-22,t:`+${xp} XP`,c:'#b388ff',life:1.1});
  for(let i=0;i<14;i++)G.parts.push({x:m.x,y:m.y,z:12,vx:rnd(-140,140),vy:rnd(-140,140),life:.55,c:m.c});
  const q=P.q;if(!m.boss&&!m.summoned)P.kills[m.type]=(P.kills[m.type]||0)+1;{const st=P.stats||(P.stats={});st.kills=(st.kills||0)+1;if(m.boss&&m.boss!=='mini')st.bosses=(st.bosses||0)+1;else if(m.boss==='mini')st.minis=(st.minis||0)+1;}
@@ -783,16 +908,17 @@ function killMonster(m){m.dead=true;if(P.side)for(const k in SQ){const q=SQ[k],s
   else G.toast(`🏆 ${m.name} besiegt!`,'#ffd54a',true);}
  if(Math.random()<.6||m.boss){const g=Math.max(1,Math.round(rint(m.lvl,m.lvl*3)*(m.boss?8:1)*D.gold));G.grounds.push({x:m.x+rnd(-8,8),y:m.y+rnd(-8,8),gold:g,it:G.goldIt,t:0});}
  if(Math.random()<(m.boss?.35:.05))dropGround(mkStack(m.lvl>=18&&Math.random()<.3?'potion2':'potion',1),m.x,m.y);
- if(!m.boss&&Math.random()<.04)dropGround(mkStack(pick(['seed','hseed','carrot']),rint(1,2)),m.x,m.y);
+ if(!m.boss&&Math.random()<.04)dropGround(mkStack(pick(P.carrotOK?['seed','hseed','carrot']:['seed','hseed','seed']),rint(1,2)),m.x,m.y);
  if(m.t.shot&&m.t.shot.kind==='arrow'&&Math.random()<.45)dropGround(mkStack('arrow',rint(3,8)),m.x,m.y);else if(Math.random()<.04)dropGround(mkStack(Math.random()<.6?'arrow':'bolt',rint(2,6)),m.x,m.y);
  if(Math.random()<.025)dropGround(mkStack('mpotion',1),m.x,m.y);
  if(m.summoned)return;
+ if(!m.boss&&STACK['m_'+m.type]&&Math.random()<.05*(1+G.S.luck/200)){dropGround(mkStack('m_'+m.type,1),m.x,m.y);G.floats.push({x:m.x,y:m.y-m.r-36,t:'✦ '+STACK['m_'+m.type].name,c:'#ffcc80',life:1.4});}
  {const U=UNIQ[m.type]||(m.B&&m.B.mini&&UNIQ[m.B.base]);if(U){const e=pick(U);if(Math.random()<(e.ch||.035)*(m.boss?4:1)*(1+G.S.luck/100)){const it=mkUnique(e,m.lvl+G.D().ilvl,`${m.name} (Stufe ${m.lvl})`);dropGround(it,m.x,m.y);G.flashT=.8;G.toast(`★ EINZIGARTIG: ${it.name}!`,'#ff9e40',true,it);}}}
  const mini=m.B&&m.B.mini;const ch=m.B&&m.B.herald?1:Math.min(.95,(mini?D.chM:m.boss?D.chB:D.chN)*(1+G.S.luck/100));
  if(Math.random()<ch){const rar=rollRar(mini?D.M:m.boss?D.B:D.N);const il=m.lvl+D.ilvl+(m.boss?2:0);let it;const src=`${m.name} (Stufe ${m.lvl})`;
-  if(m.boss&&!mini&&m.B.loot.length&&(m.B.herald||Math.random()<.6)){const e=pick(m.B.loot);const xo={ufx:e.ufx,ud:e.d};const rr=m.B.herald?Math.max(rar,3):rar;it=e.k?genItem('weapon',il,rr,Object.assign({kind:e.k,name:e.name,boss:m.boss,f:e.f,src},xo)):e.set?genItem(e.s,il,rr,Object.assign({set:e.set,kind:e.k,name:e.name,boss:m.boss,f:e.f,src},xo)):genItem(e.t,il,rr,Object.assign({name:e.name,boss:m.boss,f:e.f,src},xo));}
+  if(m.boss&&(!mini||m.B.dboss)&&m.B.loot&&m.B.loot.length&&(m.B.herald||rar>=4||Math.random()<.6)){const e=pick(m.B.loot);const xo={ufx:e.ufx,ud:e.d};const rr=m.B.herald?Math.max(rar,3):rar;const bk=mini?undefined:m.boss;it=e.k&&WKIND[e.k]?genItem('weapon',il,rr,Object.assign({kind:e.k,name:e.name,boss:bk,f:e.f,src},xo)):e.set?genItem(e.s,il,rr,Object.assign({set:e.set,kind:e.k,name:e.name,boss:bk,f:e.f,src},xo)):genItem(e.t,il,rr,Object.assign({name:e.name,boss:bk,f:e.f,src},xo));if(!it.ufx&&it.af){const fk=e.f&&it.af[e.f]!=null?e.f:Object.keys(it.af)[0];if(fk){it.af[fk]=Math.round(it.af[fk]*1.6*10)/10;it.uniq=1;it.ud=`Segen von ${m.name.split(',')[0]}: Hauptwert +60 %`;}}}
   else{const lg=LG[(m.B&&m.B.lg)||(m.B?MT[m.B.base]&&MT[m.B.base].lg:null)||m.t.lg]||LG.beast;it=lootItem(pick(lg),il,rar,{bossy:!!m.boss,src});}
-  dropGround(it,m.x,m.y);if(it.kind&&WKIND[it.kind].cls==='ranged')dropGround(mkStack(it.kind==='crossbow'?'bolt':'arrow',it.kind==='crossbow'?8:15),m.x,m.y);
+  dropGround(it,m.x,m.y);if(it.kind&&WKIND[it.kind]&&WKIND[it.kind].cls==='ranged')dropGround(mkStack(it.kind==='crossbow'?'bolt':'arrow',it.kind==='crossbow'?8:15),m.x,m.y);
   if(rar===5){G.flashT=2;G.toast(`✦✦ MYTHISCH! ${it.name} ✦✦`,RAR[5].c,true,it);}else if(rar>=3)G.toast(`${RAR[rar].n}e Beute ist gefallen!`,RAR[rar].c,false);}}
 function shoot(m,ax,ay,s){if(s.root){s=Object.assign({},s);}sfx(s.kind==='arrow'||s.kind==='rock'?'arrow':'zap',m);const d=Math.hypot(ax,ay)||1;G.proj.push({x:m.x,y:m.y,vx:ax/d*s.spd,vy:ay/d*s.spd,dmg:m.dmg*(s.mul||1),lvl:m.lvl,c:s.c,kind:s.kind,poison:s.poison,burn:s.burn,chill:s.chill,slow:s.slow,pull:s.pull,root:s.root,net:s.net,type:s.kind==='arrow'||s.kind==='rock'?'phys':'magic',life:2.4,r:s.kind==='arrow'||s.kind==='rock'?5:7});}
 function monSkills(m,dt,d,dx,dy){const sk=m.t.sk;if(!sk||m.boss==='dragon')return;m.skCd=(m.skCd==null?rnd(1.5,3.5):m.skCd)-dt;
@@ -809,15 +935,26 @@ function monSkills(m,dt,d,dx,dy){const sk=m.t.sk;if(!sk||m.boss==='dragon')retur
  else if(a==='web'){shoot(m,dx,dy,{c:'#e8e8f0',spd:260,kind:'web',mul:.4,slow:1});m.skCd=rnd(4,6);m.swing=.25;}
  else if(a==='pull'){shoot(m,dx,dy,{c:m.t.vamp?'#c0102a':'#6a8a3a',spd:330,kind:'hook',mul:.5,pull:m});m.skCd=rnd(5,7);m.swing=.25;}
  else if(a==='blink'){m.st='blink';m.stT=.45;m.skCd=rnd(5,8);}}
-function bossAbility(m,dt,d){if(!m.enraged&&m.hp<m.maxhp*.5&&m.boss!=='mini'){m.enraged=true;m.spd*=1.2;sfx('horn');G.toast(`🔥 ${m.name} gerät in Raserei!`,'#ff6e6e',true);for(let i=0;i<14;i++)G.parts.push({x:m.x,y:m.y,z:20,vx:rnd(-160,160),vy:rnd(-160,160),life:.6,c:'#ff4a2a'});}
- m.abT-=dt*(m.enraged?1.35:1);if(m.abT>0||d>340||m.st)return;const ab=m.B.abil,a=ab[m.abI++%ab.length],dr=m.boss==='dragon';m.abT=dr?2.6:3.6;
+// v20: Boss-Phasen, angekündigte Angriffe, thematische Diener
+const ABN={slam:'Zerschmettern!',leap:'Sprungangriff!',combo:'Klingenwirbel!',sweep:'Rundumschlag!',fire:'Feuerregen!',volley:'Geschosshagel!',summon:'Ruft Diener!',line:'Sturmangriff!',quake:'Erdbeben!',inferno:'FEUERSTURM!'};
+const MTHEME={zombie:'skeleton',ghoul:'skeleton',mummy:'scorpion',vampire:'bat',wraith:'skeleton',reaper:'skeleton',necro:'skeleton',banshee:'skeleton',treant:'pilzling',frostgiant:'icewolf',troll:'kobold',knight:'skeleton',basilisk:'salamander',minotaur:'bandit'};
+const FIREB=new Set(['imp','lavaslime','salamander','wyrmling','phoenix']);
+function bossExtra(m){if(m._ex)return m._ex;const b=m.B.base||m.type,t=MT[b]||m.t||{};return m._ex=m.boss==='dragon'?['inferno','line']:FIREB.has(b)?['inferno']:t.ai==='ranged'||t.shot?['quake']:['line','quake'];}
+function bossAbility(m,dt,d){const isB=m.boss!=='mini'||m.B.dboss;
+ if(!m.enraged&&m.hp<m.maxhp*.5&&isB){m.enraged=true;m.spd*=1.2;sfx('horn');G.toast(`🔥 ${m.name} gerät in Raserei – neue Angriffe!`,'#ff6e6e',true);for(let i=0;i<14;i++)G.parts.push({x:m.x,y:m.y,z:20,vx:rnd(-160,160),vy:rnd(-160,160),life:.6,c:'#ff4a2a'});}
+ if(!m.desp&&m.hp<m.maxhp*.25&&isB){m.desp=true;G.toast(`☠ ${m.name} kämpft verzweifelt – weich aus!`,'#ff5252',true);m.abT=Math.min(m.abT,.6);const kids=G.mons.filter(k=>k.parent===m&&!k.dead).length;if(kids<5)for(let i=0;i<3;i++){const k=mkMonster(m.B.minion||MTHEME[m.B.base]||m.type,Math.max(1,m.lvl-2),m.x+rnd(-70,70),m.y+rnd(-70,70));if(!canMove(k.x,k.y,k.cr)){k.x=m.x;k.y=m.y;}k.parent=m;k.aggro=true;k.provoked=true;k.passive=false;k.summoned=true;k.room=m.room;G.mons.push(k);}}
+ m.abT-=dt*(m.desp?1.7:m.enraged?1.35:1);if(m.abT>0||d>380||m.st)return;const ab=m.enraged&&isB?m.B.abil.concat(bossExtra(m)):m.B.abil,a=ab[m.abI++%ab.length],dr=m.boss==='dragon';m.abT=dr?2.6:3.6;
+ if(ABN[a]&&(isB||a!=='slam'))G.floats.push({x:m.x,y:m.y-m.r-30,t:ABN[a],c:a==='inferno'||a==='fire'?'#ffb74d':'#ffe082',life:1.3});
+ if(a==='inferno'){if(dr)G.toast('🔥 Ignarok holt tief Luft … such eine Lücke im Feuer!','#ff8a50',true);const safe=Math.random()*6.283,cx=P.x,cy=P.y;let n=0;for(let ring=0;ring<4;ring++){const R0=ring*78,cnt=ring?Math.round(ring*7):1;for(let i=0;i<cnt;i++){const an=i/cnt*6.283+ring*.4;let da=Math.abs(((an-safe)+Math.PI*3)%(Math.PI*2)-Math.PI);if(ring>0&&da<.55)continue;if(ring===0&&Math.random()<.5)continue;G.teles.push({x:cx+Math.cos(an)*R0,y:cy+Math.sin(an)*R0,r:46,t:1.75,max:1.75,dmg:m.dmg*1.35,lvl:m.lvl,c:'255,110,0',type:'magic',burn:1,q:n++>0});}}return;}
+ if(a==='line'){const ux=(P.x-m.x)/(d||1),uy=(P.y-m.y)/(d||1);for(let i=0;i<12;i++){const dd=30+i*40;G.teles.push({x:m.x+ux*dd,y:m.y+uy*dd,r:34,t:1.2,max:1.2,dmg:m.dmg*1.3,lvl:m.lvl,c:'255,200,60',type:'phys',q:i>0});}m.st='leap';m.stT=1.1;m.lx=m.x+ux*Math.min(460,d+120);m.ly=m.y+uy*Math.min(460,d+120);if(!canMove(m.lx,m.ly,m.cr)){m.lx=P.x;m.ly=P.y;}m.sx0=m.x;m.sy0=m.y;return;}
+ if(a==='quake'){for(let w=1;w<=3;w++){const R0=w*85,cnt=Math.round(R0/26);for(let i=0;i<cnt;i++){const an=i/cnt*6.283;G.teles.push({x:m.x+Math.cos(an)*R0,y:m.y+Math.sin(an)*R0,r:26,t:.8+w*.45,max:.8+w*.45,dmg:m.dmg*1.1,lvl:m.lvl,c:'200,160,90',type:'phys',q:i>0});}}return;}
  if(a==='leap'){m.st='leap';m.stT=1.1;m.lx=P.x;m.ly=P.y;m.sx0=m.x;m.sy0=m.y;G.teles.push({x:P.x,y:P.y,r:Math.max(60,m.r*2.2),t:1.1,max:1.1,dmg:m.dmg*1.5,lvl:m.lvl,c:'255,90,40',type:'phys'});return;}
  if(a==='combo'){const ux=(P.x-m.x)/(d||1),uy=(P.y-m.y)/(d||1);for(let i=0;i<3;i++){const dd=Math.min(d,40+i*38);G.teles.push({x:m.x+ux*dd,y:m.y+uy*dd,r:48+i*6,t:.75+i*.38,max:.75+i*.38,dmg:m.dmg*.9,lvl:m.lvl,c:'255,60,60',type:'phys'});}return;}
  if(a==='sweep'){G.teles.push({x:m.x,y:m.y,r:Math.max(110,m.r*3.6),t:1.25,max:1.25,dmg:m.dmg*1.2,lvl:m.lvl,c:'255,160,40',type:'phys',ring:1});return;}
  if(a==='slam')G.teles.push({x:P.x,y:P.y,r:dr?82:64,t:1.05,max:1.05,dmg:m.dmg*1.4,lvl:m.lvl,c:dr?'255,130,0':'255,50,50',type:'phys'});
  else if(a==='fire'){for(let i=0;i<3;i++){const ox=i?rnd(-95,95):0,oy=i?rnd(-95,95):0;G.teles.push({x:P.x+ox,y:P.y+oy,r:72,t:1.1+i*.18,max:1.1+i*.18,dmg:m.dmg*1.25,lvl:m.lvl,c:'255,130,0',type:'magic',burn:1});}}
  else if(a==='volley'){const n=dr?14:10,col=dr||m.heads?'#ff7a1a':(m.B.poison?'#9cff3b':(m.t.chill?'#9fe3ff':'#c77dff'));for(let i=0;i<n;i++){const an=i/n*6.283+m.anim;shoot(m,Math.cos(an),Math.sin(an),{c:col,spd:dr?230:190,kind:'orb',mul:.7,poison:m.B.poison,burn:dr||m.heads?1:0,chill:m.t.chill});}}
- else if(a==='summon'){const kids=G.mons.filter(k=>k.parent===m&&!k.dead).length;if(kids<4)for(let i=0;i<2;i++){const k=mkMonster(m.B.minion||m.type,Math.max(1,m.lvl-2),m.x+rnd(-50,50),m.y+rnd(-50,50));if(!canMove(k.x,k.y,k.cr)){k.x=m.x;k.y=m.y;}k.parent=m;k.aggro=true;k.provoked=true;k.passive=false;k.summoned=true;k.room=m.room;G.mons.push(k);}}}
+ else if(a==='summon'){const kids=G.mons.filter(k=>k.parent===m&&!k.dead).length;if(kids<4)for(let i=0;i<2;i++){const k=mkMonster(m.B.minion||MTHEME[m.B.base]||m.type,Math.max(1,m.lvl-2),m.x+rnd(-50,50),m.y+rnd(-50,50));if(!canMove(k.x,k.y,k.cr)){k.x=m.x;k.y=m.y;}k.parent=m;k.aggro=true;k.provoked=true;k.passive=false;k.summoned=true;k.room=m.room;G.mons.push(k);}}}
 Object.assign(G,{attack,dodge});
 // ===================== Spawns =====================
 // Spawns nur im Umkreis des Spielers; weniger Monster; Energiesparmodus außerhalb der Sichtweite
@@ -838,30 +975,58 @@ function spawnBoss(){const ptx=P.x/TILE,pty=P.y/TILE,zl=zoneLevel(Math.floor(ptx
   if(tx>=WW-2||!walkTile(tx,ty)||dV(tx,ty)<RV+14||townAt(tx,ty)||TOWNS.some(t=>Math.hypot(tx-t.x,ty-t.y)<t.r+12))continue;const m=mkBoss(key,clamp(Math.min(zl+1,P.level+2),1,BOSSES[key].lv[1]),(tx+.5)*TILE,(ty+.5)*TILE);G.mons.push(m);sfx('horn');sfx('aggro',{type:'boss'});G.toast(`⚠ Ein Boss ist erschienen: ${m.name} (Stufe ${m.lvl})`,'#ff6e6e',true);return true;}return false;}
 G.spawnBoss=spawnBoss;
 const FIX=[{key:'knut',at:RAUB,lv:()=>qd('knut'),cond:()=>stepIs('raub')&&P.macc&&!P.mflag},
+ {key:'grimmholt',at:HUNT,lv:()=>qd('grimmholt'),cond:()=>stepIs('jagd')&&P.macc&&!P.mflag&&(P.lgN||0)>=qd('jagd')},
+ {key:'morwenna',at:SCHWC,lv:()=>qd('morwenna'),cond:()=>stepIs('dorn')&&P.macc&&!P.mflag&&(P.lgN||0)>=qd('dorn')},
  {key:'severin',at:LEGION,lv:()=>qd('severin'),cond:()=>stepIs('legion')&&P.macc&&!P.mflag&&(P.lgN||0)>=qd('legion')},
  {key:'valdrik',at:CITADEL,lv:()=>qd('valdrik'),cond:()=>stepIs('n4')&&P.macc&&!P.mflag&&(P.lgN||0)>=qd('garde')},
  {key:'grukk',at:CAMP,lv:()=>qd('grukk'),cond:()=>pastStep('grukk')||(stepIs('grukk')&&P.macc)},
  {key:'bonelord',at:CRYPT,lv:()=>qd('morvax'),cond:()=>pastStep('morvax')||(stepIs('morvax')&&P.macc)},
  {key:'dragon',at:LAIR,lv:()=>qd('dragon'),cond:()=>P.main>=6&&(P.frost||P.main>6)},{key:'schnitter',at:{x:ASHVALE.x,y:ASHVALE.y-4},lv:()=>qd('schnitter'),cond:()=>P.main>5||(P.main===5&&P.macc)},{key:'eldtree',at:HERALDPOS().eldtree,lv:()=>qd('eldtree'),cond:()=>P.main>5||(P.main===5&&P.macc)},{key:'sandking',at:HERALDPOS().sandking,lv:()=>qd('sandking'),cond:()=>P.main>5||(P.main===5&&P.macc)}];
-function fixedTick(dt){campTick(dt);for(const f of FIX){G.fixT[f.key]-=dt;if(G.fixT[f.key]>0||!f.cond())continue;if(G.mons.some(m=>m.boss===f.key&&!m.dead))continue;const px=(f.at.x+.5)*TILE,py=(f.at.y+.5)*TILE;if(Math.hypot(P.x-px,P.y-py)>TILE*40)continue;
- const m=mkBoss(f.key,f.lv(),px,f.key==='dragon'?py-TILE*1:py+TILE*1.5);G.mons.push(m);if(BOSSES[f.key].herald)G.toast(`☠ ${m.name} erwartet dich! (Stufe ${m.lvl})`,'#ff8a65',true);if(f.key==='dragon')sfx('aggro',{type:'dragon'});else{for(let i=0;i<3;i++){const FM={grukk:['goblin','goblin','shaman'],eldtree:['pilzling','treant','thornvine'],sandking:['mummy','scorpion'],knut:['bandit','bandit','archer'],severin:['legion','legarch','blackknight'],valdrik:['nebelgarde','runenwirker','nebelgarde']};const k=mkMonster(pick(FM[f.key]||['skeleton','skarcher']),Math.max(1,m.lvl-2),m.x+rnd(-90,90),m.y+rnd(-90,90));if(canMove(k.x,k.y,k.cr))G.mons.push(k);}}}}
+// v20: Dornenwachen von Schwarzwall – nur die Wachen greifen an, die Bürger nicht
+const RPOST=[[-2,-14],[2,-8],[-6,-2],[6,0],[14,-1],[-3,9],[8,-5],[10,6]];G._realmDead=G._realmDead||{};
+function realmTick(dt){G._rmT=(G._rmT||0)-dt;if(G._rmT>0||G.room)return;G._rmT=2;const t=TOWNS.find(q=>q.id==='schwarz');const near=Math.hypot(P.x/TILE-t.x,P.y/TILE-t.y)<t.r+30;
+ if(!townHostile(t)||!near){for(const m of G.mons)if(m.realm&&!m.aggro)m.dead=true;return;}
+ const lvl=Math.max(zoneLevel(t.x,t.y)+4,qd('lvDo')-2);RPOST.forEach(([dx,dy],i)=>{if(G.mons.some(m=>m.realm===i+1&&!m.dead))return;if((G._realmDead[i]||0)>G.time)return;const x=(t.x+dx+.5)*TILE,y=(t.y+dy+.5)*TILE;if(Math.hypot(P.x-x,P.y-y)<TILE*9)return;
+  const m=mkMonster(i%3===2?'legarch':i===0?'blackknight':'legion',lvl,x,y);m.realm=i+1;m.passive=false;m.home={x,y};m.name='Dornenwache';G.mons.push(m);});}
+G.realmKilled=m=>{if(m.realm)G._realmDead[m.realm-1]=G.time+150;};
+function fixedTick(dt){campTick(dt);realmTick(dt);G.mistTick&&G.mistTick(dt);G.weekTick&&G.weekTick();for(const f of FIX){G.fixT[f.key]-=dt;if(G.fixT[f.key]>0||!f.cond())continue;if(G.mons.some(m=>m.boss===f.key&&!m.dead))continue;const px=(f.at.x+.5)*TILE,py=(f.at.y+.5)*TILE;if(Math.hypot(P.x-px,P.y-py)>TILE*40)continue;
+ const m=mkBoss(f.key,f.lv(),px,f.key==='dragon'?py-TILE*1:py+TILE*1.5);G.mons.push(m);if(BOSSES[f.key].herald)G.toast(`☠ ${m.name} erwartet dich! (Stufe ${m.lvl})`,'#ff8a65',true);if(f.key==='dragon')sfx('aggro',{type:'dragon'});else{for(let i=0;i<3;i++){const FM={grukk:['goblin','goblin','shaman'],eldtree:['pilzling','treant','thornvine'],sandking:['mummy','scorpion'],knut:['bandit','bandit','archer'],severin:['legion','legarch','blackknight'],grimmholt:['legion','legarch'],morwenna:['legion','blackknight','legarch'],valdrik:['nebelgarde','runenwirker','nebelgarde']};const k=mkMonster(pick(FM[f.key]||['skeleton','skarcher']),Math.max(1,m.lvl-2),m.x+rnd(-90,90),m.y+rnd(-90,90));if(canMove(k.x,k.y,k.cr))G.mons.push(k);}}}}
 
 // ===================== Quests & Story =====================
 const npcById=id=>NPCS.find(n=>n.id===id);G.npcById=npcById;
-const CHAP=['Kapitel 1: Erwachen','Kapitel 1: Audienz','Kapitel 1: Bewährung','','','Kapitel 15: Die drei Herolde','Kapitel 16: Ignarok','Kapitel 16: Die Prinzessin','Kapitel 17: Heimkehr','','Epilog'];
+const CHAP=['Kapitel 1: Erwachen','Kapitel 1: Audienz','Kapitel 1: Bewährung','','','Kapitel 19: Die drei Herolde','Kapitel 20: Ignarok','Kapitel 20: Die Prinzessin','Kapitel 21: Heimkehr','','Epilog'];
 // ===== Hauptquest-Schritte (P.main 3, 4 und 9; Unterschritt P.ms) =====
 // kind: fix (Boss im Freien) | dungeon (Boss im Dungeon) | kill (Gegner zählen) | camp (Lager stürmen, dann Boss) | talk (zu jemandem reisen)
 const tpT=(x,y)=>({x:(x+.5)*TILE,y:(y+.5)*TILE});const roomTo=id=>{const r=ROOMS.find(q=>q.id===id);return r?{x:r.ent.x,y:r.ent.y}:null;};
 const MSQ={3:[
- {id:'raub',ch:'Kapitel 2: Die gestohlene Karte',gate:'lvR',kind:'fix',boss:'knut',
+ {id:'vorrat',qitem:'Saatbeutel vom Fürsten',qic:'🌾',ch:'Kapitel 2: Nach dem Feuer',gate:'lvV',kind:'bring',item:'wheat',n:5,turnin:'bernd',
+  low:L=>'Komm erst wieder zu Kräften.',
+  give:'Bevor wir uns um das Reich kümmern: Unser Dorf hungert. Vor drei Tagen hat Ignarok die Kornspeicher niedergebrannt, und Bäcker Bernd hat kein Mehl mehr. Geh zu Gärtnerin Linde in der Gärtnerei – sie gibt dir in meinem Namen Saat, Harke und Gießkanne. Bring Bernd fünf Bündel Weizen.',
+  acc:'Ich kümmere mich um Weizen',goal:()=>`Baue Weizen an und bring Bäcker Bernd 5 Weizen (${countItem('wheat')}/5) – Saat & Werkzeug bei Gärtnerin Linde`,to:()=>{const n=npcById(P.q.lindeKit?'bernd':'linde');return n?{x:n.x,y:n.y}:null;},
+  wait:'Gärtnerin Linde in der Gärtnerei hilft dir mit Saat und Werkzeug. Bernd wartet in der Bäckerei.',ret:'Bring Bäcker Bernd 5 Weizen',
+  done:'Fünf Bündel! Den Göttern sei Dank – heute riecht Eichenhain wieder nach Brot. Komm mit Zutaten von deinen Feldern zu mir: Ich backe dir Gerichte, die dich stärker, schneller oder zäher machen. Und Ritter – Fürst Aldric hat nach dir gefragt.',
+  btn:'Weizen übergeben',gold:30,items:()=>[mkStack('bread',4)],lore:'Der Spieler hat Bäcker Bernd nach dem Drachenangriff mit Weizen versorgt.',after:()=>{P.q.bread='done';}},
+ {id:'gilde',ch:'Kapitel 3: Die Abenteurergilde',gate:'lvV',kind:'talk',turnin:'isolde',
+  low:L=>'Ruh dich aus.',
+  give:'Gut, dass du da bist. Die Abenteurergilde hat endlich wieder eine Meisterin: Isolde, eine alte Söldnerin. Melde dich bei ihr – sie hat ein Kopfgeld, das uns alle betrifft.',
+  acc:'Ich gehe zur Gilde',goal:()=>'Melde dich bei Gildenmeisterin Isolde in der Abenteurergilde',to:()=>{const n=npcById('isolde');return n?{x:n.x,y:n.y}:null;},
+  wait:'Die Abenteurergilde liegt im Westen des Dorfes.',ret:'Sprich mit Gildenmeisterin Isolde',
+  done:'Du bist also der Ritter, über den alle reden. Ich trage dich ein. Hier ist dein erster Aushang: Heute Nacht sind Räuber in die Burg eingestiegen und haben die Karte des Reiches gestohlen. Kopfgeld auf ihren Hauptmann Knut! Und merk dir: Bei der Gilde gibt es alle drei Tage neue Aufträge – und ich kaufe dir Jagdbeute ab.',
+  btn:'Eingetragen!',gold:20,items:()=>[mkStack('potion',1)],lore:'Der Spieler ist der Abenteurergilde von Eichenhain beigetreten.'},
+ {id:'raub',qitem:'Die Karte des Reiches (verschmiert)',qic:'🗺️',ch:'Kapitel 4: Die gestohlene Karte',gate:'lvR',kind:'fix',boss:'knut',giver:'isolde',where:'Gildenmeisterin Isolde in der Abenteurergilde',turnin:'edwin',
   low:L=>`Du bist noch zu schwach, Ritter. Werde stärker, mindestens Stufe ${qd('lvR')} – die Wiesen vor den Toren sind ein guter Ort dafür. Du bist Stufe ${L}.`,
-  give:'Schlechte Nachrichten: Heute Nacht sind Räuber in die Burg eingestiegen und haben die Karte des Reiches gestohlen – mit allen Wegen, Furten und Festungen von Eldmar! Ihr Lager liegt nordöstlich, ein gutes Stück hinter den Feldern. Ihr Anführer heißt Knut. Hol mir die Karte zurück!',
+  give:'Das Kopfgeld: Räuberhauptmann Knut hat die Karte des Reiches gestohlen – mit allen Wegen, Furten und Festungen von Eldmar! Sein Lager liegt nordöstlich, ein gutes Stück hinter den Feldern. Hol die Karte zurück. Und bring sie zuerst zu Kartograph Edwin – Räuber kritzeln gern ihre eigenen Zeichen darauf.',
   acc:'Ich hole die Karte zurück',goal:()=>'Besiege Räuberhauptmann Knut im Räuberlager (nordöstlich des Dorfes)',to:()=>tpT(RAUB.x,RAUB.y),
-  wait:'Das Räuberlager liegt nordöstlich des Dorfes. Folge dem goldenen ★.',ret:'Bring die Karte zu Fürst Aldric',
+  wait:'Das Räuberlager liegt nordöstlich des Dorfes. Folge dem goldenen ★.',ret:'Bring die Karte zu Kartograph Edwin in der Kartenstube',
   found:'📜 Die gestohlene Karte ist zurück! Knut trug außerdem einen Brief mit schwarzem Siegel bei sich.',
-  done:'Meine Karte! Gut gemacht. Aber dieser Brief … ein schwarzes Siegel mit einer eisernen Krone. Das Zeichen der Schwarzen Legion aus dem Süden! „Die Ware zur Hütte des Einsiedlers“ steht darin. Was haben Räuber mit dem alten Bertolt zu schaffen?',
-  btn:'Karte übergeben',gold:40,items:()=>[mkStack('potion',2)],lore:'Der Spieler hat die gestohlene Karte von Räuberhauptmann Knut zurückgeholt.'},
- {id:'hut',ch:'Kapitel 3: Die Hütte des Einsiedlers',gate:'lvE',kind:'dungeon',room:'hut',base:'ghoul',add:'spider',lv:'hermit',name:'Der verfluchte Einsiedler',
+  done:'*Edwin rückt seine Brille zurecht.* Verschmiert, zerknittert … und die Räuber haben ihre Zeichen daraufgekritzelt. Moment … das sind keine Kritzeleien. Das ist eine Geheimschrift! Gib mir einen Augenblick … So. Ich habe sie entziffert und die Ortsmarker der Städte gleich mit eingetragen. Bring sie dem Fürsten.',
+  btn:'Karte zum Entziffern geben',gold:40,items:()=>[mkStack('potion',2)],lore:'Der Spieler hat die gestohlene Karte von Räuberhauptmann Knut zurückgeholt und Kartograph Edwin hat sie entziffert.',after:()=>{P.mapMarks=1;G.ui&&G.ui.revealTowns&&G.ui.revealTowns();}},
+ {id:'karte',qitem:'Entzifferte Karte des Reiches',qic:'🗺️',ch:'Kapitel 5: Die entzifferte Karte',gate:'lvV',kind:'talk',giver:'edwin',where:'Kartograph Edwin in der Kartenstube',turnin:'aldric',
+  low:L=>'…',give:'Die Räuber haben eine Geheimschrift benutzt – und zwar eine, die ich vom Siegel der Schwarzen Legion kenne. Da steht: „Die Ware zur Hütte des Einsiedlers“. Bring dem Fürsten die Karte, schnell!',
+  acc:'Ich bringe sie dem Fürsten',goal:()=>'Bring die entzifferte Karte zu Fürst Aldric',to:()=>{const n=npcById('aldric');return n?{x:n.x,y:n.y}:null;},wait:'Fürst Aldric wartet auf der Burg.',ret:'Bring die entzifferte Karte zu Fürst Aldric',
+  done:'Meine Karte – und entziffert! Gut gemacht. Aber diese Geheimschrift … ein schwarzes Siegel mit einer eisernen Krone. Das Zeichen der Schwarzen Legion aus dem Süden! „Die Ware zur Hütte des Einsiedlers“. Was haben Räuber mit dem alten Bertolt zu schaffen?',
+  btn:'Karte übergeben',gold:20,items:()=>[],lore:'Fürst Aldric hat die entzifferte Karte erhalten.'},
+ {id:'hut',qitem:'Tagebuch des Einsiedlers',qic:'📓',ch:'Kapitel 3: Die Hütte des Einsiedlers',gate:'lvE',kind:'dungeon',room:'hut',base:'ghoul',add:'spider',lv:'hermit',name:'Der verfluchte Einsiedler',
   enter:'☠ Ein fauliger Gestank … Etwas Untotes haust in der Hütte!',
   low:L=>`Die Hütte des Einsiedlers liegt weit draußen in den Wiesen. Komm mit Stufe ${qd('lvE')} wieder. Du bist Stufe ${L}.`,
   give:'Der alte Einsiedler Bertolt lebt allein in seiner Hütte südwestlich von hier, am Rand der Wiesen. Seit Wochen hat ihn niemand gesehen. Geh hin und finde heraus, was dort vor sich geht.',
@@ -870,7 +1035,7 @@ const MSQ={3:[
   found:'📜 Du findest beim Einsiedler Zeichnungen von Soldaten mit schwarzen Bannern – und von Wölfen in Käfigen!',
   done:'Bertolt … verflucht und untot. Möge er Frieden finden. Diese Zeichnungen: Legionäre, die Wölfe in Käfigen halten und mit Asche füttern! Das erklärt, warum die Wölfe im Nordwesten so rasend sind. Ihr Bau liegt dort draußen.',
   btn:'Zeichnungen übergeben',gold:60,items:L=>[genItem('chest',Math.max(3,L),1)],lore:'Der Einsiedler Bertolt wurde verflucht aufgefunden; die Legion füttert Wölfe mit Asche.'},
- {id:'wolf',ch:'Kapitel 4: Die Wolfsmutter',gate:'lvWo',kind:'dungeon',room:'wolfden',base:'wolf',add:'wolf',lv:'wolfmom',name:'Graumähne, die Wolfsmutter',
+ {id:'wolf',qitem:'Graumähnes Reißzahn',qic:'🦷',ch:'Kapitel 4: Die Wolfsmutter',gate:'lvWo',kind:'dungeon',room:'wolfden',base:'wolf',add:'wolf',lv:'wolfmom',name:'Graumähne, die Wolfsmutter',
   enter:'🐺 Ein tiefes Knurren hallt durch den Bau … Augen glühen wie Kohlen.',
   low:L=>`Die Wölfe im Nordwesten zerreißen jeden Anfänger. Werde mindestens Stufe ${qd('lvWo')}. Du bist Stufe ${L}.`,
   give:'Die Wölfe aus dem Bau im Nordwesten reißen Hildas Schafe und greifen sogar Reisende an. Ihre Mutter, Graumähne, ist von der Asche wahnsinnig geworden. Erlöse sie – und finde heraus, wer ihr das angetan hat.',
@@ -879,7 +1044,7 @@ const MSQ={3:[
   found:'🐺 Graumähne ist erlöst. An ihrem Hals hing ein glühendes Aschenamulett mit dem Zeichen eines Brandstifters.',
   done:'Ein Aschenamulett … Dieses Zeichen kenne ich: Es wurde in den Ruinen von Aschental an die Wände geschmiert. Vielleicht hat nicht nur der Drache Aschental verbrannt. Im verkohlten Keller dort soll sich jemand verstecken.',
   btn:'Amulett übergeben',gold:80,items:L=>[genItem('helm',Math.max(4,L),1)],lore:'Graumähne, die Wolfsmutter, wurde mit einem Aschenamulett der Legion wahnsinnig gemacht.'},
- {id:'ash',ch:'Kapitel 5: Asche über Aschental',gate:'lvA',kind:'dungeon',room:'cellar',base:'shaman',add:'ghoul',lv:'malrik',name:'Brandstifter Malrik',
+ {id:'ash',qitem:'Malriks Brandbrief',qic:'✉️',ch:'Kapitel 5: Asche über Aschental',gate:'lvA',kind:'dungeon',room:'cellar',base:'shaman',add:'ghoul',lv:'malrik',name:'Brandstifter Malrik',
   enter:'🔥 „Noch ein Held, der verbrennen will? Wie schön!“',
   low:L=>`Aschental ist gefährlich geworden. Komm mit Stufe ${qd('lvA')} wieder. Du bist Stufe ${L}.`,
   give:'Aschental liegt im Norden, an der Straße nach Glutwacht. Im verkohlten Keller unter den Ruinen haust ein Brandstifter. Finde ihn und finde heraus, für wen er arbeitet.',
@@ -888,7 +1053,7 @@ const MSQ={3:[
   found:'📜 Brandstifter Malrik ist besiegt. Seine Notizen sprechen von Waffenlieferungen ins Räubernest.',
   done:'Malrik hat Aschental angezündet, BEVOR der Drache kam – im Auftrag der Legion! Und die Waffen dafür kamen aus dem Räubernest, der Höhle von Räuberfürst Falk östlich der Ruinen.',
   btn:'Notizen übergeben',gold:90,items:L=>[genItem('weapon',Math.max(5,L),2)],lore:'Brandstifter Malrik hat Aschental im Auftrag der Legion angezündet.'},
- {id:'nest',ch:'Kapitel 6: Das Räubernest',gate:'lvN',kind:'dungeon',room:'banditcave',base:'bandit',add:'archer',lv:'falk',name:'Räuberfürst Falk',
+ {id:'nest',qitem:'Falks Beuteliste',qic:'📃',ch:'Kapitel 6: Das Räubernest',gate:'lvN',kind:'dungeon',room:'banditcave',base:'bandit',add:'archer',lv:'falk',name:'Räuberfürst Falk',
   enter:'⚔ „Wer wagt es, in mein Nest einzudringen?!“',
   low:L=>`Im Räubernest hausen Dutzende Halsabschneider. Werde stärker, mindestens Stufe ${qd('lvN')}. Du bist Stufe ${L}.`,
   give:'Das Räubernest ist eine Höhle östlich der Ruinen von Aschental. Dort sitzt Räuberfürst Falk. Bring mir Beweise, für wen er arbeitet!',
@@ -897,7 +1062,19 @@ const MSQ={3:[
   found:'📜 Falk trug einen Sold-Brief der Schwarzen Legion bei sich!',
   done:'Ein Sold-Brief, unterschrieben von Feldherr Severin! Die Legion bezahlt Räuber, Orks UND Goblins. Hier steht auch: Eine Hexe im Moor erschafft Untote für sie – und sie hat den Schlüssel zur Krypta des Morvax gestohlen.',
   btn:'Brief übergeben',gold:110,items:L=>[genItem('weapon',Math.max(6,L),2,{kind:'sword'})],lore:'Räuberfürst Falk ist besiegt; Feldherr Severin der Legion bezahlt Räuber, Orks und Goblins.'},
- {id:'turm',ch:'Kapitel 7: Der Wachturm im Moor',gate:'lvW',kind:'dungeon',room:'wtower',base:'witch',add:'ghoul',lv:'grimelda',name:'Moorhexe Grimelda',
+ {id:'gift',qitem:'Bündel Heilkraut',qic:'🌿',ch:'Kapitel: Das Moorgift',gate:'lvW',kind:'bring',item:'herb',n:3,turnin:'mara',
+  low:L=>`Das Moor ist tödlich. Komm mit Stufe ${qd('lvW')} wieder. Du bist Stufe ${L}.`,
+  give:'Bevor du ins Nebelmoor gehst: Die Hexe dort vergiftet Brunnen und Pfeile. Heilerin Mara kann ein Gegengift brauen – aber ihr fehlt Heilkraut. Gärtnerin Linde verkauft Heilkrautsamen; sie wachsen am Wasser. Bring Mara drei Heilkraut.',
+  acc:'Ich besorge Heilkraut',goal:()=>`Bring Heilerin Mara 3 Heilkraut (${countItem('herb')}/3) – Samen bei Gärtnerin Linde`,to:()=>{const n=npcById('mara');return n?{x:n.x,y:n.y}:null;},
+  wait:'Heilkrautsamen gibt es bei Gärtnerin Linde. Sie wachsen nur nahe am Wasser.',ret:'Bring Heilerin Mara 3 Heilkraut',
+  done:'Genau richtig! *Sie zerstößt das Kraut und murmelt etwas.* Hier – drei Fläschchen Gegengift. Das Moor wird dir nichts anhaben.',
+  btn:'Kraut übergeben',gold:40,items:()=>[mkStack('potion2',2)],lore:'Heilerin Mara hat dem Spieler Gegengift gebraut.'},
+ {id:'schmied',ch:'Kapitel: Hildas Meisterstück',gate:'lvW',kind:'talk',turnin:'hilda',
+  low:L=>'…',give:'Schmiedin Hilda hat die ganze Nacht an der Esse gestanden. Sie sagt, sie habe etwas für dich – gegen das, was im Moor lauert. Geh zu ihr.',
+  acc:'Ich gehe zu Hilda',goal:()=>'Sprich mit Schmiedin Hilda in der Schmiede',to:()=>{const n=npcById('hilda');return n?{x:n.x,y:n.y}:null;},wait:'Die Schmiede liegt im Norden des Dorfes.',ret:'Sprich mit Schmiedin Hilda',
+  done:'Da bist du ja! Für dich, Ritter – geschmiedet aus dem Eisen der alten Kornspeicher, die der Drache zerstört hat. Möge es Eichenhain rächen. Und denk dran: Ausrüstung, die du nicht brauchst, kauf ich dir ab – aber nur Ausrüstung, keine Rüben!',
+  btn:'Danke, Hilda',gold:0,items:L=>[genItem('weapon',L+1,2,{name:'Hildas Meisterstück'})],lore:'Schmiedin Hilda hat dem Spieler eine Waffe geschmiedet.'},
+ {id:'turm',qitem:'Grimeldas Hexenbuch',qic:'📕',ch:'Kapitel 7: Der Wachturm im Moor',gate:'lvW',kind:'dungeon',room:'wtower',base:'witch',add:'ghoul',lv:'grimelda',name:'Moorhexe Grimelda',
   enter:'🌫 Kichern hallt durch den Turm … die Moorhexe erwartet dich!',
   low:L=>`Das Nebelmoor verschlingt Unvorsichtige. Werde stärker, mindestens Stufe ${qd('lvW')}. Du bist Stufe ${L}.`,
   give:'Die Moorhexe Grimelda haust im alten Wachturm am Rand des Nebelmoors, westlich von hier. Sie erschafft Moorleichen für die Legion und hat den Kryptaschlüssel. Halte sie auf!',
@@ -906,7 +1083,7 @@ const MSQ={3:[
   found:'🗝 Du hast den Kryptaschlüssel – und einen Brief an die Orks in der Schlucht!',
   done:'Der Kryptaschlüssel! Gut. Aber dieser Brief ist noch schlimmer: Orks in der Schluchtgrotte im Süden sollen Eichenhain angreifen, sobald die Legion das Zeichen gibt.',
   btn:'Schlüssel übergeben',gold:140,items:()=>[mkStack('potion2',1)],lore:'Moorhexe Grimelda ist besiegt, der Kryptaschlüssel gefunden.'},
- {id:'grotte',ch:'Kapitel 8: Die Orks der Schlucht',gate:'lvO',kind:'dungeon',room:'grotto',base:'orc',add:'orc',lv:'brakka',name:'Orkhäuptling Brakka',
+ {id:'grotte',qitem:'Brakkas Kriegshorn',qic:'📯',ch:'Kapitel 8: Die Orks der Schlucht',gate:'lvO',kind:'dungeon',room:'grotto',base:'orc',add:'orc',lv:'brakka',name:'Orkhäuptling Brakka',
   enter:'🪓 „Menschling! Brakka zerquetscht dich!“',
   low:L=>`Orks sind keine Räuber. Werde stärker, mindestens Stufe ${qd('lvO')}. Du bist Stufe ${L}.`,
   give:'Die Schluchtgrotte liegt in der Steinöde, im Süden, tief in der großen Schlucht. Dort sammelt Orkhäuptling Brakka seine Krieger. Schlag zu, bevor sie es tun!',
@@ -924,6 +1101,13 @@ const MSQ={3:[
   found:'💀 Genug Untote erschlagen! Kehre zu Vogt Aldwin zurück.',
   done:'Moorbruck atmet wieder auf. Danke, Ritter. Ein Bote aus Waldheim kam gestern: Försterin Liv braucht dich dringend im Finsterwald, im Osten.',
   btn:'Gern geschehen',gold:200,items:L=>[genItem('boots',L,2)],lore:'Der Spieler hat Moorbruck von den Moorleichen befreit.'},
+ {id:'forst',qitem:'Bündel für die Palisade',qic:'🪵',ch:'Kapitel: Holz für Waldheim',gate:'lvWa',kind:'bring',item:'holz',n:10,turnin:'liv',
+  low:L=>`Der Finsterwald ist gefährlich. Komm mit Stufe ${qd('lvWa')} wieder. Du bist Stufe ${L}.`,
+  give:'Waldheim im Finsterwald ruft um Hilfe: Goblins haben die Palisade niedergebrannt, und Försterin Liv hat niemanden mehr, der Holz schlägt. Reise nach Waldheim – Liv gibt dir eine Axt. Schlag zehn Holz und bring es ihr.',
+  acc:'Ich helfe Waldheim',goal:()=>`Schlag Holz und bring Försterin Liv 10 Holz (${countItem('holz')}/10) – die Axt gibt dir Liv`,to:()=>{const n=npcById('liv');return n?{x:n.x,y:n.y}:null;},
+  wait:'Waldheim liegt im Finsterwald im Osten.',ret:'Bring Försterin Liv 10 Holz',
+  done:'Zehn Stämme! Damit flicken wir die Palisade noch heute. Behalte die Axt – Holz kauf ich dir immer ab, und Setzlinge gibt es bei mir auch. Aber die Goblins kommen wieder …',
+  btn:'Holz übergeben',gold:80,items:()=>[mkStack('potion',2)],lore:'Der Spieler hat Waldheim mit Holz für die Palisade geholfen.'},
  {id:'wald',ch:'Kapitel 10: Krieg im Finsterwald',gate:'lvWa',kind:'kill',giver:'liv',where:'Försterin Liv in Waldheim (Finsterwald, Osten)',types:['goblin','shaman'],cnt:'gobkill',near:()=>TP('wald',0,0),rad:140,
   low:L=>`Du willst im Finsterwald kämpfen? Mit Stufe ${L}? Komm mit Stufe ${qd('lvWa')} wieder.`,
   give:`Grukks Goblins brennen meinen Wald nieder! Erlege ${qd('gobkill')} Goblins rund um Waldheim, dann zeig ich dir den Weg zu ihrem Häuptling.`,
@@ -932,7 +1116,7 @@ const MSQ={3:[
   found:'👺 Die Goblins fliehen! Kehre zu Försterin Liv zurück.',
   done:'Gute Jagd! Grukks Lager liegt südlich von hier, tief im Wald. Er hat die Karte, die Aldrics Späher bei sich trug – den einzigen Weg zum Drachenhort.',
   btn:'Zeig mir den Weg',gold:220,items:L=>[genItem('weapon',L,2,{kind:'longbow'})],lore:'Der Spieler hat Waldheim gegen Grukks Goblins verteidigt.'},
- {id:'grukk',ch:'Kapitel 11: Grukks Lager',gate:'lvG',kind:'fix',boss:'grukk',giver:'liv',where:'Försterin Liv in Waldheim',turnin:'aldric',
+ {id:'grukk',qitem:'Grukks Häuptlingsknochen',qic:'🦴',ch:'Kapitel 11: Grukks Lager',gate:'lvG',kind:'fix',boss:'grukk',giver:'liv',where:'Försterin Liv in Waldheim',turnin:'aldric',
   low:L=>`Grukk ist kein gewöhnlicher Gegner. Werde stärker, mindestens Stufe ${qd('lvG')}. Du bist Stufe ${L}.`,
   give:'Grukks Lager liegt südlich von Waldheim, tief im Finsterwald. Hol dir die Karte des Spähers und bring sie Fürst Aldric!',
   acc:'Ich hole die Karte',goal:()=>'Besiege Goblinhäuptling Grukk im Goblinlager (südlich von Waldheim)',to:()=>tpT(CAMP.x,CAMP.y),
@@ -940,7 +1124,7 @@ const MSQ={3:[
   found:'📜 Du hast die Karte des Spähers gefunden! Bring sie zu Fürst Aldric.',
   done:'Die Karte! Bei allen Göttern … Der Weg zum Hort ist durch ein Aschensiegel versperrt. Nur der Siegelstein öffnet es – und den hütet Knochenfürst Morvax in seiner Krypta. Den Schlüssel hast du ja schon.',
   btn:'Karte übergeben',gold:260,items:L=>[genItem('amulet',L+1,2)],lore:'Grukk ist besiegt und die Karte des Spähers gefunden.'},
- {id:'morvax',ch:'Kapitel 12: Der Siegelstein',gate:'lvM',kind:'fix',boss:'bonelord',
+ {id:'morvax',qitem:'Splitter des Siegelsteins',qic:'💠',ch:'Kapitel 12: Der Siegelstein',gate:'lvM',kind:'fix',boss:'bonelord',
   low:L=>`Morvax hat ganze Heere ins Grab gebracht. Werde stärker, mindestens Stufe ${qd('lvM')}. Du bist Stufe ${L}.`,
   give:'Mit Grimeldas Schlüssel kommst du in die Krypta des Knochenfürsten, weit im Südwesten des Nebelmoors. Bring mir den Siegelstein!',
   acc:'Auf zur Krypta',goal:()=>'Besiege Knochenfürst Morvax in der Krypta (Nebelmoor, Südwesten)',to:()=>tpT(CRYPT.x,CRYPT.y),
@@ -948,7 +1132,7 @@ const MSQ={3:[
   found:'💠 Der Siegelstein ist dein! Bring ihn zu Fürst Aldric.',
   done:'Der Siegelstein … er glüht wie Kohle. Doch meine Späher melden Schreckliches: Die Schwarze Legion hat in der Steinöde ein Kriegslager errichtet. Sie will Eldmar überfallen, sobald Ignarok das Land in Brand setzt!',
   btn:'Siegelstein übergeben',gold:300,items:L=>[genItem('ring',L+1,2)],lore:'Morvax ist besiegt und der Siegelstein gefunden.'},
- {id:'legion',ch:'Kapitel 13: Die Schwarze Legion',gate:'lvL',kind:'camp',at:()=>LEGION,types:['legion','legion','legarch','blackknight'],cnt:'legion',lv:'severin',boss:'severin',
+ {id:'legion',qitem:'Kriegspläne der Legion',qic:'📜',ch:'Kapitel 13: Die Schwarze Legion',gate:'lvL',kind:'camp',at:()=>LEGION,types:['legion','legion','legarch','blackknight'],cnt:'legion',lv:'severin',boss:'severin',
   low:L=>`Das Kriegslager wird von Legionären und Schwarzrittern bewacht. Werde stärker, mindestens Stufe ${qd('lvL')}. Du bist Stufe ${L}.`,
   give:'Das Kriegslager der Schwarzen Legion liegt im Süden, in der Steinöde. Dring ein, schalte die Wachen und Ritter aus und besiege Feldherr Severin. Bring mir seine Kriegspläne!',
   acc:'Ich dringe ins Lager ein',goal:()=>(P.lgN||0)<qd('legion')?`Dring ins Kriegslager der Legion ein (Steinöde): Wachen & Ritter ${P.lgN||0}/${qd('legion')}`:'Besiege Feldherr Severin im Kriegslager',to:()=>tpT(LEGION.x,LEGION.y),
@@ -956,24 +1140,54 @@ const MSQ={3:[
   found:'⚔ Feldherr Severin ist besiegt! Du erbeutest die Kriegspläne der Legion.',
   done:'Diese Pläne … Die Legion wartet nur darauf, dass Ignarok Eldmar niederbrennt – dann marschiert Kaiser Valdrik ein. Und der Siegelstein hat einen Riss! Nur die Glutesse der Zwerge kann ihn neu schmieden. Zwerg Durin in Frosthafen kennt den Weg.',
   btn:'Pläne übergeben',gold:350,items:L=>[genItem('weapon',L+1,3)],lore:'Feldherr Severin der Schwarzen Legion ist besiegt, seine Kriegspläne erbeutet.'},
- {id:'zwerg',ch:'Kapitel 14: Die Glutesse der Zwerge',gate:'lvZ',kind:'dungeon',room:'dwarf',base:'greydwarf',add:'golem',lv:'grimbart',name:'Steinkönig Grimbart',giver:'durin',where:'Zwerg Durin in Frosthafen (Frostlande, Nordwesten)',
+ {id:'zwerg',qitem:'Neu geschmiedeter Siegelstein',qic:'💎',ch:'Kapitel 14: Die Glutesse der Zwerge',gate:'lvZ',kind:'dungeon',room:'dwarf',base:'greydwarf',add:'golem',lv:'grimbart',name:'Steinkönig Grimbart',giver:'durin',where:'Zwerg Durin in Frosthafen (Frostlande, Nordwesten)',
   enter:'⛏ Steinstaub rieselt … der Steinkönig erhebt sich von seinem Thron!',
   low:L=>`Ein Riss im Siegelstein? Hm. Die Binge ist voller Ungeheuer, Stufe ${L} reicht da nicht. Komm mit Stufe ${qd('lvZ')} wieder.`,
   give:'Die Glutesse meiner Ahnen liegt in der Zwergenbinge im Graukamm-Gebirge. Ein Steinkönig aus Fels und Zorn hat sie besetzt. Besiege ihn, dann schmiede ich den Siegelstein neu.',
   acc:'Ich befreie die Binge',goal:()=>'Besiege Steinkönig Grimbart in der Zwergenbinge (Graukamm-Gebirge)',to:()=>roomTo('dwarf'),
   wait:'Die Zwergenbinge liegt im Graukamm-Gebirge östlich von Frosthafen. Folge dem goldenen ★.',ret:'Kehre zu Zwerg Durin zurück',
   found:'🔥 Die Glutesse brennt wieder! Kehre zu Durin zurück.',
-  done:'Bei meinem Bart … die Esse brennt! *Hämmern* … Hier, der Siegelstein ist wieder ganz. Bring ihn zu Gunnar, dem Drachenjäger in der Taverne von Eichenhain. Er weiß, wie man das Aschensiegel bricht.',
-  btn:'Danke, Durin',gold:400,items:L=>[genItem('chest',L+1,3)],lore:'Durin hat den Siegelstein in der Glutesse der Zwerge neu geschmiedet.'}],
+  done:'Bei meinem Bart … die Esse brennt! *Hämmern* … Hier, der Siegelstein ist wieder ganz. Bring Fürst Aldric die Nachricht. Wenn die Zeit reif ist, bricht Gunnar, der Drachenjäger, damit das Aschensiegel.',
+  btn:'Danke, Durin',gold:400,items:L=>[genItem('chest',L+1,3)],lore:'Durin hat den Siegelstein in der Glutesse der Zwerge neu geschmiedet.'},
+ {id:'fell',ch:'Kapitel 15: Das Fellvolk',gate:'lvF1',kind:'talk',turnin:'sirka',
+  low:L=>`Ruh dich aus, Ritter. Mit Stufe ${qd('lvF1')} habe ich einen heiklen Auftrag für dich. Du bist Stufe ${L}.`,
+  give:'Durin hat den Siegelstein neu geschmiedet – Gunnar wird ihn brauchen. Doch bevor wir uns dem Drachen stellen, brauchen wir Verbündete. In Severins Kriegsplänen stand etwas, das ich nur aus Ammenmärchen kenne: das Fellvolk. Menschen mit den Ohren und Schweifen von Fuchs, Katze, Hund und Wolf. Sie leben verborgen in Rotfellhain, südlich des Finsterwalds – und die Legion macht Jagd auf sie. Reise hin und biete ihnen unser Bündnis an.',
+  acc:'Ich suche das Fellvolk',goal:()=>'Reise nach Rotfellhain (südlich des Finsterwalds) und sprich mit Häuptlingin Sirka',to:()=>{const n=npcById('sirka');return n?{x:n.x,y:n.y}:null;},
+  wait:'Rotfellhain liegt südlich des Finsterwalds, zwischen Wald und Dünen.',ret:'Sprich mit Häuptlingin Sirka in Rotfellhain',qitem:'Bündnisbrief des Fürsten',qic:'📜',
+  done:'Ein Mensch, der nicht mit Ketten kommt? Das ist selten. *Sie liest den Brief und schnuppert daran.* Ich bin Sirka Rotfell, Häuptlingin des Fellvolks. Unsere Nasen riechen den Aschenfluch, deshalb meiden wir eure Städte. Doch die Schwarze Legion fängt unsere Jungen und verkauft sie als Spürhunde. Hilf uns – dann steht Rotfellhain an Eichenhains Seite.',
+  btn:'Ich helfe euch',gold:350,items:()=>[mkStack('potion2',2)],lore:'Der Spieler hat das Fellvolk in Rotfellhain gefunden und ein Bündnis angeboten.'},
+ {id:'jagd',ch:'Kapitel 16: Die Häscher',gate:'lvF2',kind:'camp',giver:'sirka',where:'Häuptlingin Sirka in Rotfellhain',at:()=>HUNT,types:['legion','legarch','legarch','blackknight'],cnt:'jagd',lv:'grimmholt',boss:'grimmholt',
+  low:L=>`Die Häscher sind gut bewaffnet. Komm mit Stufe ${qd('lvF2')} wieder. Du bist Stufe ${L}.`,
+  give:'Südöstlich von hier, am Rand der Dünen, liegt das Häscherlager der Legion. Ihr Anführer heißt Grimmholt – er hält drei unserer Jungen in Käfigen. Zerschlag seine Wachen, dann wird er sich zeigen. Bring mir den Schlüssel zu den Käfigen.',
+  acc:'Ich befreie die Jungen',goal:()=>(P.lgN||0)<qd('jagd')?`Stürme das Häscherlager: Häscher ${P.lgN||0}/${qd('jagd')}`:'Besiege Häschermeister Grimmholt im Häscherlager',to:()=>tpT(HUNT.x,HUNT.y),
+  wait:'Das Häscherlager liegt südöstlich von Rotfellhain. Folge dem goldenen ★.',ret:'Bring den Käfigschlüssel zu Häuptlingin Sirka',qitem:'Käfigschlüssel der Häscher',qic:'🗝️',
+  found:'🗝 Grimmholt ist gefallen! Du nimmst ihm den Käfigschlüssel ab – und einen Brief mit einem Dornensiegel.',
+  done:'Die Jungen sind frei! Das Fellvolk vergisst das nie. Und dieser Brief … das Dornensiegel gehört Königin Morwenna von Schwarzwall, Valdriks Schwester. Man nennt sie die Fluchweberin. Unsere alte Schamanin sagt: Morwenna hat den Fluch in die Aschenkrone gewoben. Gegen sie brauchst du Hilfe von oben – von den Walküren. Ihr Horst liegt hoch im Graukamm.',
+  btn:'Ich suche die Walküren',gold:400,items:L=>[genItem('weapon',L+1,3,{kind:'dagger',name:'Rotfell-Kralle'})],lore:'Der Spieler hat Häschermeister Grimmholt besiegt und die Jungen des Fellvolks befreit.'},
+ {id:'walk',ch:'Kapitel 17: Der Ruf der Walküren',gate:'lvWk',kind:'talk',giver:'sirka',where:'Häuptlingin Sirka in Rotfellhain',turnin:'svanhild',
+  low:L=>`Der Weg zum Schildhorst ist eisig und gefährlich. Komm mit Stufe ${qd('lvWk')} wieder.`,
+  give:'Der Walkürenhorst Schildhorst liegt auf den Gipfeln des Graukamms, nördlich der Zwergenbinge. Nimm Morwennas Brief mit. Wenn jemand weiß, wie man die Fluchweberin besiegt, dann die Töchter Valhallas.',
+  acc:'Auf zum Schildhorst',goal:()=>'Reise zum Schildhorst (Graukamm-Gipfel, Norden) und sprich mit Walküre Svanhild',to:()=>{const n=npcById('svanhild');return n?{x:n.x,y:n.y}:null;},
+  wait:'Schildhorst liegt hoch im Graukamm, nördlich der Zwergenbinge.',ret:'Bring Morwennas Brief zu Walküre Svanhild',qitem:'Morwennas Brief mit Dornensiegel',qic:'✉️',
+  done:'Ich kenne dich, Ritter. Wir waren es, die dich zurückschickten, als du am Aschenpass fielst. *Sie liest den Brief.* Morwenna … Sie webt den Fluch, der die Tiere zornig macht und die Toten nicht ruhen lässt. Solange sie lebt, nährt sie die Aschenkrone ihres Bruders. Wir Walküren dürfen keine Burg der Lebenden betreten – in Schwarzwall musst du allein gehen. Ihre Dornenwachen greifen jeden an, den sie sehen. Die Bürger aber sind Gefangene, keine Feinde. Verschone sie.',
+  btn:'Ich gehe nach Schwarzwall',gold:400,items:L=>[genItem('amulet',L+1,3,{name:'Feder der Walküren'})],lore:'Die Walküren unterstützen den Spieler gegen Königin Morwenna.'},
+ {id:'dorn',ch:'Kapitel 18: Die Dornenfeste',gate:'lvDo',kind:'camp',giver:'svanhild',where:'Walküre Svanhild auf dem Schildhorst',turnin:'aldric',at:()=>SCHWC,types:['legion','legion','legarch','blackknight'],cnt:'dorn',lv:'morwenna',boss:'morwenna',
+  low:L=>`Morwennas Dornenwachen sind Elitekrieger. Du brauchst Stufe ${qd('lvDo')}. Du bist Stufe ${L}.`,
+  give:'Schwarzwall liegt im Schattenwald, ganz im Südwesten von Eldmar. Brich durch die Dornenwachen im Burghof vor der Dornenfeste, bis Morwenna selbst erscheint. Und denk daran: Nur die Wachen und die Königin sind deine Feinde.',
+  acc:'Für Eldmar!',goal:()=>(P.lgN||0)<qd('dorn')?`Stürme den Burghof von Schwarzwall: Dornenwachen ${P.lgN||0}/${qd('dorn')}`:'Besiege Königin Morwenna, die Fluchweberin',to:()=>tpT(SCHWC.x,SCHWC.y),
+  wait:'Schwarzwall liegt im Schattenwald, ganz im Südwesten. Folge dem goldenen ★.',ret:'Bring Morwennas Dornenreif zu Fürst Aldric',qitem:'Zerbrochener Dornenreif',qic:'🥀',
+  found:'🥀 Königin Morwenna ist gefallen! Ihr Fluchgewebe zerfällt zu Asche – doch die Aschenkrone selbst hält den Fluch noch. Kehre zu Fürst Aldric zurück.',
+  done:'Morwenna tot und Schwarzwall frei? Bei allen Göttern … Das Fellvolk und die Walküren an unserer Seite – so etwas gab es in Eldmar seit tausend Jahren nicht. Doch der Fluch lebt weiter, solange Valdrik die Aschenkrone trägt. Zuerst aber der Drache: Geh zu Gunnar in die Taverne. Mit Durins Siegelstein könnt ihr das Aschensiegel brechen.',
+  btn:'Zu Gunnar',gold:600,items:L=>[genItem('weapon',L+1,4)],lore:'Königin Morwenna von Schwarzwall ist besiegt, Schwarzwall ist befreit.'}],
  9:[
- {id:'n1',ch:'Kapitel 18: Die Nebellande',gate:'lvN1',kind:'talk',turnin:'runa',
+ {id:'n1',qitem:'Brief der Prinzessin',qic:'✉️',ch:'Kapitel 22: Die Nebellande',gate:'lvN1',kind:'talk',turnin:'runa',
   low:L=>`Ruh dich aus, Held. Wenn du Stufe ${qd('lvN1')} erreichst, habe ich eine letzte Bitte.`,
   give:'Elara hat mir etwas erzählt, das mir das Blut gefrieren lässt: Kaiser Valdrik hat einen Pakt mit etwas Uraltem in den Nebellanden geschlossen, ganz im Osten hinter dem Finsterwald. Reise nach Nebelwacht und sprich mit Wächterin Runa.',
   acc:'Ich reise in die Nebellande',goal:()=>'Reise nach Nebelwacht (Nebellande, ganz im Osten) und sprich mit Wächterin Runa',to:()=>{const n=npcById('runa');return n?{x:n.x,y:n.y}:null;},
   wait:'Nebelwacht liegt ganz im Osten, hinter Waldheim.',ret:'Sprich mit Wächterin Runa',
   done:'Ein Ritter aus Eichenhain? Endlich. Valdrik ist hier. Er hat die Sucher geweckt – Wesen aus dem Nebel – und baut seine Zitadelle im Süden der Nebellande. Wir halten kaum noch stand.',
   btn:'Ich helfe euch',gold:300,items:()=>[mkStack('potion2',2)],lore:'Der Spieler ist in Nebelwacht in den Nebellanden angekommen.'},
- {id:'n2',ch:'Kapitel 19: Das Summen im Nebel',gate:'lvN2',kind:'kill',giver:'runa',where:'Wächterin Runa in Nebelwacht',types:['sucher','sucherkrieger','zecke','gjall','runenwirker'],cnt:'sucherkill',
+ {id:'n2',ch:'Kapitel 23: Das Summen im Nebel',gate:'lvN2',kind:'kill',giver:'runa',where:'Wächterin Runa in Nebelwacht',types:['sucher','sucherkrieger','zecke','gjall','runenwirker'],cnt:'sucherkill',
   low:L=>`Die Sucher zerreißen dich in Stücken. Komm mit Stufe ${qd('lvN2')} wieder.`,
   give:`Die Sucher schwärmen um Nebelwacht wie Hornissen. Erschlage ${qd('sucherkill')} Kreaturen des Nebels, damit wir Luft holen können.`,
   acc:'Ich lichte den Nebel',goal:()=>`Erschlage Kreaturen der Nebellande: ${P.lgN||0}/${qd('sucherkill')}`,to:()=>null,
@@ -981,7 +1195,7 @@ const MSQ={3:[
   found:'🦗 Der Schwarm weicht zurück! Kehre zu Wächterin Runa zurück.',
   done:'Ihr Schwarm wird von einer Königin gelenkt. Sie nistet im Wurzeltor, nördlich von hier. Solange sie lebt, kommen immer neue.',
   btn:'Dann töte ich die Königin',gold:350,items:L=>[genItem('helm',L,3)],lore:'Der Spieler hat den Sucherschwarm um Nebelwacht zurückgeschlagen.'},
- {id:'n3',ch:'Kapitel 20: Das Wurzeltor',gate:'lvN3',kind:'dungeon',room:'mistgate',base:'sucherkrieger',add:'sucher',lv:'queen',name:'Die Sucherkönigin',giver:'runa',where:'Wächterin Runa in Nebelwacht',
+ {id:'n3',qitem:'Valdriks Siegel',qic:'🔱',ch:'Kapitel 24: Das Wurzeltor',gate:'lvN3',kind:'dungeon',room:'mistgate',base:'sucherkrieger',add:'sucher',lv:'queen',name:'Die Sucherkönigin',giver:'runa',where:'Wächterin Runa in Nebelwacht',
   enter:'👑 Ein schrilles Kreischen – die Sucherkönigin verteidigt ihr Nest!',
   low:L=>`Die Königin ist zu stark für dich. Komm mit Stufe ${qd('lvN3')} wieder.`,
   give:'Das Wurzeltor liegt nördlich von Nebelwacht, unter den Wurzeln eines toten Weltbaums. Töte die Sucherkönigin!',
@@ -990,7 +1204,7 @@ const MSQ={3:[
   found:'👑 Die Sucherkönigin ist tot! In ihrem Nest liegt Valdriks Siegel.',
   done:'Valdriks Siegel im Nest der Königin … er hat sie gezüchtet! Jetzt ist er allein mit seiner Nebelgarde. Seine Zitadelle liegt im Süden. Beende das, Ritter – für Eldmar und für Nebelwacht.',
   btn:'Für Eldmar!',gold:400,items:L=>[genItem('weapon',L+1,4)],lore:'Die Sucherkönigin ist tot.'},
- {id:'n4',ch:'Kapitel 21: Die Nebelzitadelle',gate:'lvN4',kind:'camp',giver:'runa',where:'Wächterin Runa in Nebelwacht',turnin:'aldric',at:()=>CITADEL,types:['nebelgarde','nebelgarde','runenwirker','sucherkrieger'],cnt:'garde',lv:'valdrik',boss:'valdrik',
+ {id:'n4',qitem:'Valdriks Kaiserkrone (zerbrochen)',qic:'👑',ch:'Kapitel 25: Die Nebelzitadelle',gate:'lvN4',kind:'camp',giver:'runa',where:'Wächterin Runa in Nebelwacht',turnin:'aldric',at:()=>CITADEL,types:['nebelgarde','nebelgarde','runenwirker','sucherkrieger'],cnt:'garde',lv:'valdrik',boss:'valdrik',
   low:L=>`Die Nebelgarde ist Valdriks Elite. Du brauchst Stufe ${qd('lvN4')}. Du bist Stufe ${L}.`,
   give:'Die Nebelzitadelle liegt im Süden der Nebellande. Brich durch die Nebelgarde und stelle Kaiser Valdrik. Danach kehr heim zu deinem Fürsten.',
   acc:'Zur Nebelzitadelle',goal:()=>(P.lgN||0)<qd('garde')?`Stürme die Nebelzitadelle: Nebelgarde ${P.lgN||0}/${qd('garde')}`:'Besiege Kaiser Valdrik in der Nebelzitadelle',to:()=>tpT(CITADEL.x,CITADEL.y),
@@ -999,6 +1213,14 @@ const MSQ={3:[
   done:'Valdrik ist tot … die Legion ist führerlos, der Drache besiegt, meine Tochter zu Hause. Du hast Eldmar zweimal gerettet. Von heute an bist du kein gefallener Ritter mehr – du bist der Schild von Eldmar.',
   btn:'Es war mir eine Ehre',gold:2000,items:L=>[genItem('weapon',qd('valdrik'),5,{name:'Nebelbrecher',kind:'greatsword',boss:'valdrik',f:'melee'})],lore:'Kaiser Valdrik ist besiegt.'}]};
 G.MSQ=MSQ;
+// v20: Quest-Gegenstände – fest im Inventar, nicht verkaufbar, nicht wegwerfbar, werden bei der Abgabe entfernt
+for(const m of [3,4,9])MSQ[m].forEach(st=>{if(st.qitem)STACK['q_'+st.id]={name:st.qitem,type:'quest',ic:st.qic||'📜',desc:'Quest-Gegenstand: '+st.ret+'.',sell:0,qitem:1};});
+const qHas=st=>st&&st.qitem&&P.inv.some(x=>x&&x.id==='q_'+st.id);
+function qGive(st){if(!st||!st.qitem||qHas(st))return;const it=mkStack('q_'+st.id,1);let slot=-1;for(let i=9;i<36;i++)if(!P.inv[i]){slot=i;break;}if(slot<0)for(let i=0;i<9;i++)if(!P.inv[i]){slot=i;break;}if(slot<0){slot=35;const old=P.inv[35];if(old&&!(STACK[old.id]&&STACK[old.id].qitem))dropGround(old,P.x,P.y);}P.inv[slot]=it;G.invDirty=true;G.toast(`${st.qic||'📜'} Quest-Gegenstand: ${st.qitem}`,'#ffd54a');}
+function qTake(st){for(let i=0;i<36;i++){const x=P.inv[i];if(x&&x.id==='q_'+st.id)P.inv[i]=null;}G.invDirty=true;}
+// Abgleich: nur der aktuelle Schritt darf seinen Gegenstand haben (alte/verwaiste werden entfernt)
+function qSync(){const st=curStep();for(let i=0;i<36;i++){const x=P.inv[i];if(x&&STACK[x.id]&&STACK[x.id].qitem&&!(st&&x.id==='q_'+st.id&&P.macc))P.inv[i]=null;}if(st&&st.qitem&&P.macc&&(P.mflag||st.kind==='talk'||st.kind==='bring'))qGive(st);}
+G.qSync=()=>{try{qSync();}catch(e){}};
 const MORDER=[];for(const m of [3,4])MSQ[m].forEach((st,i)=>MORDER.push(st.id));MORDER.push('herald','dragon','elara','home');MSQ[9].forEach(st=>MORDER.push(st.id));
 const curStep=()=>MSQ[P.main]?MSQ[P.main][Math.min(P.ms||0,MSQ[P.main].length-1)]:null;
 const progIdx=()=>P.main<3?-1:P.main===3?(P.ms||0):P.main===4?MSQ[3].length+(P.ms||0):P.main<=8?MSQ[3].length+MSQ[4].length+(P.main-5):P.main===9?MSQ[3].length+MSQ[4].length+4+(P.ms||0):999;
@@ -1007,21 +1229,28 @@ G.curStep=curStep;G.pastStep=pastStep;
 const npcName=id=>{const n=npcById(id);return n?n.name:id;};
 const stepGiver=st=>st.giver||'aldric',stepTurn=st=>st.turnin||stepGiver(st);
 const stepXP=st=>Math.round(xpNeed(qd(st.gate))*.45);
-function finishStep(st){const L=P.level;gainXP(stepXP(st));P.gold+=Math.round((st.gold||0)*G.D().gold);(st.items?st.items(L):[]).forEach(it=>give(it));G.toast(`+${Math.round((st.gold||0)*G.D().gold)} Gold`,'#ffd54a');
- const last=P.ms>=MSQ[P.main].length-1;P.macc=false;P.mflag=0;P.lgN=0;if(last){P.main=P.main===4?5:P.main+1;P.ms=0;}else P.ms++;
+function finishStep(st){const L=P.level;gainXP(stepXP(st));P.gold+=Math.round((st.gold||0)*G.D().gold);(st.items?st.items(L):[]).forEach(it=>give(it));G.toast(`+${Math.round((st.gold||0)*G.D().gold)} Gold`,'#ffd54a');if(st.after)st.after();
+ qTake(st);const last=P.ms>=MSQ[P.main].length-1;P.macc=false;P.mflag=0;P.lgN=0;if(last){P.main=P.main===4?5:P.main+1;P.ms=0;}else P.ms++;
  if(P.main===10){G.ui&&G.ui.cutscene&&G.ui.cutscene('outro');}else G.toast(`📜 Weiter: ${G.chapter()}`,'#ffd54a',true);G.save();}
 function mainDialog(n){const st=curStep();if(!st)return null;const L=P.level,B=(l,f,c)=>({l,f,c}),gv=stepGiver(st),tn=stepTurn(st);
- if(!P.macc&&n.id===gv){if(L<qd(st.gate))return{t:st.low(L),b:[]};return{t:st.give,b:[B(st.acc,()=>{P.macc=true;P.mflag=0;P.lgN=0;G.toast(`📜 ${st.ch}`,'#ffd54a',true);},1)]};}
+ if(!P.macc&&n.id===gv){if(L<qd(st.gate))return{t:st.low(L),b:[]};return{t:st.give,b:[B(st.acc,()=>{P.macc=true;P.mflag=0;P.lgN=0;G.toast(`📜 ${st.ch}`,'#ffd54a',true);if(st.kind==='talk'||st.kind==='bring')qGive(st);},1)]};}
+ if(P.macc&&n.id===tn&&st.kind==='bring'){if(countItem(st.item)>=st.n)return{t:st.done,b:[B(st.btn,()=>{removeItem(st.item,st.n);finishStep(st);},1)]};return{t:`Du hast ${countItem(st.item)}/${st.n} ${STACK[st.item].name}. ${st.wait}`,b:[]};}
  if(P.macc&&n.id===tn&&(P.mflag||st.kind==='talk'))return{t:st.done,b:[B(st.btn,()=>finishStep(st),1)]};
  if(P.macc&&n.id===gv)return{t:st.wait,b:[]};
  if(n.id==='aldric'){const who=P.macc?(P.mflag||st.kind==='talk'?tn:null):gv;if(who&&who!=='aldric')return{t:`Geh zu ${st.where&&who===gv?st.where:npcName(who)}. Eldmar zählt auf dich.`,b:[]};}
  return null;}
 G.mainDialog=mainDialog;
-function mainMark(n){const st=curStep();if(!st)return '';const gv=stepGiver(st),tn=stepTurn(st);if(!P.macc&&n.id===gv)return P.level>=qd(st.gate)?'!':'.';if(P.macc&&n.id===tn&&(P.mflag||st.kind==='talk'))return '?';return '';}
+function mainMark(n){const st=curStep();if(!st)return '';const gv=stepGiver(st),tn=stepTurn(st);if(!P.macc&&n.id===gv)return P.level>=qd(st.gate)?'!':'.';if(P.macc&&n.id===tn&&(P.mflag||st.kind==='talk'||st.kind==='bring'&&countItem(st.item)>=st.n))return '?';return '';}
 G.mainMark=mainMark;
+// v21: Kapitel werden fortlaufend durchnummeriert (neue Dorf-Kapitel eingeschoben)
+{let n=2;const re=/^Kapitel[^:]*: /;for(const st of MSQ[3])st.ch=`Kapitel ${n++}: `+st.ch.replace(re,'');for(const st of MSQ[4])st.ch=`Kapitel ${n++}: `+st.ch.replace(re,'');CHAP[5]=`Kapitel ${n++}: Die drei Herolde`;CHAP[6]=`Kapitel ${n}: Ignarok`;CHAP[7]=`Kapitel ${n++}: Die Prinzessin`;CHAP[8]=`Kapitel ${n++}: Heimkehr`;for(const st of MSQ[9])st.ch=`Kapitel ${n++}: `+st.ch.replace(re,'');}
+// Spielstände: Schritt über seine ID wiederfinden (neue Schritte verschieben keine Fortschritte)
+const OLDQ={3:['raub','hut','wolf','ash','nest','turm','grotte'],4:['moor','wald','grukk','morvax','legion','zwerg','fell','jagd','walk','dorn']};
+G.questMigrate=()=>{const L=MSQ[P.main];if(!L)return;let id=P.msId;if(!id&&(P.qv||0)<21&&OLDQ[P.main])id=OLDQ[P.main][P.ms];if(id){const i=L.findIndex(st=>st.id===id);if(i>=0)P.ms=i;}P.qv=21;P.msId=L[P.ms]&&L[P.ms].id;};
 G.chapter=()=>{const st=curStep();return st?st.ch:CHAP[Math.min(P.main,10)];};
 // Questfortschritt bei Kills (Kill- und Lager-Schritte)
-function mainKill(m){const st=curStep();if(!st||!P.macc||P.mflag)return;
+function mainKill(m){const had=P.mflag;mainKill0(m);const st=curStep();if(!had&&P.mflag&&st)qGive(st);}
+function mainKill0(m){const st=curStep();if(!st||!P.macc||P.mflag)return;
  if(st.kind==='kill'&&st.types.indexOf(m.type)>=0&&!m.summoned){if(st.near){const c=st.near();if(Math.hypot(m.x/TILE-c.x,m.y/TILE-c.y)>(st.rad||120))return;}P.lgN=(P.lgN||0)+1;if(P.lgN>=qd(st.cnt)){P.mflag=1;G.toast(st.found,'#ffd54a',true);}}
  else if(st.kind==='camp'&&m.camp&&(P.lgN||0)<qd(st.cnt)){P.lgN=(P.lgN||0)+1;if(P.lgN>=qd(st.cnt))G.toast(`⚔ Die Wachen sind gefallen! ${BOSSES[st.boss].n} stellt sich dir!`,'#ffd54a',true);}
  else if((st.kind==='fix'||st.kind==='camp')&&m.boss===st.boss){P.mflag=1;G.flashT=1;G.toast(st.found,'#ffd54a',true);}
@@ -1035,7 +1264,7 @@ G.objective=function(){const L=P.level;const tp=(x,y)=>({x:(x+.5)*TILE,y:(y+.5)*
  case 1:return{t:'Geh zur Burg und sprich mit Fürst Aldric',to:N('aldric')};
  case 2:return P.mN>=qd('prove')?{t:'Kehre zu Fürst Aldric zurück',to:N('aldric')}:{t:`Besiege Monster vor den Mauern: ${P.mN}/${qd('prove')}`,to:null};
  case 3:case 4:case 9:{const st=curStep(),gv=stepGiver(st),tn=stepTurn(st);if(!P.macc)return L<qd(st.gate)?{t:`Erreiche Stufe ${qd(st.gate)}, dann zu ${npcName(gv)}`,to:null}:{t:`Sprich mit ${gv!=='aldric'&&st.where?st.where:npcName(gv)}`,to:N(gv)};
-  if(st.kind==='talk')return{t:st.goal(),to:st.to()};return P.mflag?{t:st.ret,to:N(tn)}:{t:st.goal(),to:st.to()};}
+  if(st.kind==='talk')return{t:st.goal(),to:st.to()};if(st.kind==='bring')return countItem(st.item)>=st.n?{t:st.ret,to:N(tn)}:{t:st.goal(),to:st.to()};return P.mflag?{t:st.ret,to:N(tn)}:{t:st.goal(),to:st.to()};}
  case 5:{if(!P.macc)return L<qd('lvH')?{t:`Erreiche Stufe ${qd('lvH')} und sprich mit Gunnar in der Taverne`,to:N('gunnar')}:{t:'Sprich mit Drachenjäger Gunnar in der Taverne',to:N('gunnar')};
   const sh=P.shards||{},n=Object.keys(sh).length;if(n>=3)return L<qd('lvD')?{t:`Alle Splitter! Erreiche Stufe ${qd('lvD')} und bring sie Gunnar`,to:N('gunnar')}:{t:'Bring die drei Glutsiegel-Splitter zu Gunnar',to:N('gunnar')};
   const H=[['schnitter','Vael, den Schnitter, in den Ruinen von Aschental',ASHVALE.x,ASHVALE.y-4],['eldtree','Mortholz, den Baumhirten, an der Abtei im Schattenwald',HERALDPOS().eldtree.x,HERALDPOS().eldtree.y],['sandking','Khepri, den Sandkönig, am Grab in den Dünen',HERALDPOS().sandking.x,HERALDPOS().sandking.y]].filter(h=>!sh[h[0]]);
@@ -1059,6 +1288,29 @@ const SHOPS={wirt:{n:'Schankstube „Zum Krummen Krug“',items:['beer','met','b
  sven:{n:'Svens Handelshaus',items:['potion','potion2','mpotion','bread','carrot','arrow','bolt']},
  brann:{n:'Feldscher Brann',items:['potion','potion2','mpotion','arrow','bolt']},
  hilda:{n:'Hildas Schmiede',items:['arrow','bolt'],smith:1}};Object.assign(SHOPS,SHOP_ADD);G.SHOPS=SHOPS;
+// ===== v21: Jeder NPC kauft und verkauft nur, was zu ihm passt =====
+Object.assign(SHOPS,{bernd:{n:'Bernds Backstube',items:['bread'],buys:'bake',recipes:1},
+ linde:{n:'Lindes Gärtnerei',items:['harke','kanne',...FOODC.map(c=>'s_'+c[0]),'seed','hseed',...FLOWC.map(c=>'f_'+c[0]),...TREEC.map(c=>'t_'+c[0])],buys:'garden'},
+ liv:{n:'Livs Försterhütte',items:['axt',...TREEC.map(c=>'t_'+c[0]),'arrow'],buys:'wood'},
+ isolde:{n:'Abenteurergilde von Eichenhain',items:['potion','potion2','mpotion','arrow','bolt'],buys:'hunt'}});
+SHOPS.hilda.buys='gear';SHOPS.wirt.buys='tavern';SHOPS.brann.buys='potion';SHOPS.fiete&&(SHOPS.fiete.buys='fish');
+const BUYN={gear:'nur Waffen, Rüstungen, Amulette und Ringe',garden:'nur Saatgut, Pflanzen, Blumen, Feldfrüchte und Gartenwerkzeug',bake:'nur Weizen, Feldfrüchte und Backwaren',tavern:'nur Speisen und Getränke',potion:'nur Tränke und Heilkräuter',hunt:'nur Jagdbeute und Trophäen von Monstern',wood:'nur Holz, Stöcke, Harz und Setzlinge',fish:'nur Fisch und Angelkram'};G.BUYN=BUYN;
+function shopAccepts(sid,it){const r=(SHOPS[sid]&&SHOPS[sid].buys)||'all';if(!it)return false;const S=it.stack?STACK[it.id]:null;if(S&&(S.qitem||S.type==='quest'))return false;if(r==='all')return true;
+ if(r==='gear')return !it.stack;if(!S)return false;const id=it.id;
+ if(r==='garden')return S.type==='seed'||!!S.flower||!!S.crop||id==='wheat'||id==='carrot'||id==='herb'||id==='harke'||id==='kanne';
+ if(r==='bake')return id==='wheat'||id==='carrot'||id==='bread'||!!S.crop||!!S.buff;
+ if(r==='tavern')return S.type==='food'&&!/potion/.test(id);
+ if(r==='potion')return /potion/.test(id)||id==='herb'||id==='hseed';
+ if(r==='hunt')return !!S.trophy;
+ if(r==='wood')return !!S.wood||/^t_/.test(id)||id==='axt';
+ if(r==='fish')return !!S.fish||S.type==='junk'||id==='rod';return false;}
+G.shopAccepts=shopAccepts;
+G.shopPrice=(sid,it)=>{if(!sid)return sellPrice(it);if(!shopAccepts(sid,it))return 0;const S=it.stack&&STACK[it.id];return Math.round(sellPrice(it)*(S&&S.trophy&&SHOPS[sid].buys==='hunt'?1.5:1));};
+G.shopWhy=sid=>{const r=SHOPS[sid]&&SHOPS[sid].buys;return r&&BUYN[r]?`${npcName(sid)} kauft ${BUYN[r]}. Alles andere bekommst du beim Händler los.`:'Das kauft hier niemand.';};
+// Bäcker-Rezepte (Zutaten → Gericht mit Stärkung); 3 Weizen → 2 Brot bleibt
+G.RECIPES=[['bread',2,{wheat:3}],...DISH.map(d=>[d[0],1,d[3]])];
+G.cook=i=>{const r=G.RECIPES[i];if(!r)return false;for(const k in r[2])if(countItem(k)<r[2][k]){G.toast('Dir fehlen Zutaten.','#ff8a80');return false;}for(const k in r[2])removeItem(k,r[2][k]);give(mkStack(r[0],r[1]));sfx('coin');P.cooked=(P.cooked||0)+1;return true;};
+
 const SQ={
  berta:{npc:'berta',n:'Bertas Ehering',lv:11,fetch:'banditcave',item:'Bertas Ehering',give:'Banditen haben mir den Ehering meines Mannes gestohlen … Sie hausen im Räubernest, einer Höhle östlich der Ruinen von Aschental. Bitte bring ihn mir zurück.',done:'Mein Ring! Den Göttern sei Dank. Nimm das, es ist nicht viel … aber von Herzen.',rw:{gold:180,xp:700,it:['ring',2]}},
  durin:{npc:'durin',n:'Der Ahnenhammer',lv:27,fetch:'dwarf',item:'Durins Ahnenhammer',give:'Die Zwergenbinge im Graukamm-Gebirge, östlich von hier … Grauzwerge und Golems haben sie überrannt. Der Hammer meines Vaters liegt dort in einer Truhe. Hol ihn, und ich schmiede dir etwas Feines.',done:'Bei meinem Bart! Vaters Hammer! Hier, nimm diesen – ich hab ihn für dich neu geschärft.',rw:{gold:300,xp:2400,it:['mace',3,'Runenhammer der Binge']}},
@@ -1070,7 +1322,7 @@ const SQ={
  wendla:{npc:'wendla',n:'Hexenwerk',lv:29,fetch:'witchhut',item:'Hexenkessel-Rezept',give:'Die Sumpfhexe in ihrer Kate im Süden stiehlt meine Rezepte! Hol mir mein Kesselbuch zurück.',done:'Kröte, Kraut … ja, alles da! Nimm diese Tränke.',rw:{gold:120,xp:1200,stack:['potion2',3]}},
  jorg:{npc:'jorg',n:'Rattenplage',lv:2,kill:'rat',cnt:8,give:'Riesenratten fressen mir das Korn aus der Scheune! Erschlag acht von den Biestern draußen auf den Wiesen.',done:'Endlich Ruhe in der Scheune. Hier, für deine Mühe – und ein Brot von Bernd.',rw:{gold:30,xp:220,stack:['bread',3]}},
  hedwig:{npc:'hedwig',n:'Wilde Keiler',lv:4,kill:'boar',cnt:6,give:'Ach, die Wildschweine wühlen mir den Kräutergarten um, Kindchen. Jag sechs von ihnen fort, ja?',done:'Du bist ein Schatz. Nimm diesen alten Ring, er hat meinem Mann Glück gebracht.',rw:{gold:45,xp:420,it:['ring',1,'Hedwigs Glücksring']}},
- lukas:{npc:'lukas',n:'Die gestohlene Laute',lv:8,fetch:'wolfden',item:'Lukas’ Laute',give:'Meine Laute! Ein Wolf hat sie mir auf der Wiese aus der Hand gerissen und in seinen Bau im Nordwesten geschleppt. Ohne sie kann ich keine Balladen über dich singen!',done:'Meine Laute! Hör nur: „Der Ritter, der aus Walhall kam …“ Nimm das, als Dank.',rw:{gold:80,xp:900,it:['amulet',2,'Bardenamulett']}},
+ lukas:{npc:'lukas',n:'Die gestohlene Laute',lv:8,fetch:'wolfden',item:'Lukas’ Laute',give:'Meine Laute! Ein Wolf hat sie mir auf der Wiese aus der Hand gerissen und in seinen Bau im Nordwesten geschleppt. Ohne sie kann ich keine Balladen über dich singen!',done:'Meine Laute! Hör nur: „Der Ritter, der aus Valhalla kam …“ Nimm das, als Dank.',rw:{gold:80,xp:900,it:['amulet',2,'Bardenamulett']}},
  konrad:{npc:'konrad',n:'Das Schwert meines Vaters',lv:10,fetch:'cellar',item:'Konrads Familienschwert',give:'Mein Vater fiel in Aschental, als das Dorf brannte. Sein Schwert liegt noch im verkohlten Keller. Bring es mir, bitte.',done:'Vaters Schwert … Danke. Nimm meins, ich trage jetzt seins.',rw:{gold:90,xp:1200,it:['sword',2,'Wachschwert der Burg']}},
  greta:{npc:'greta',n:'Wegelagerer',lv:14,kill:'bandit',cnt:10,give:'Banditen überfallen meine Wagen am Rand des Finsterwalds. Erledige zehn von ihnen, dann fahre ich wieder.',done:'Meine Wagen rollen wieder! Hier, ein Anteil am Gewinn.',rw:{gold:180,xp:2100,stack:['potion',5]}},
  finn:{npc:'finn',n:'Zentaurenjagd',lv:22,kill:'centaur',cnt:6,give:'Die Zentauren schießen auf meine Holzfäller. Erlege sechs, und ich baue dir einen Bogen, wie du noch keinen gesehen hast.',done:'Sechs! Hier, mein Meisterstück.',rw:{gold:300,xp:5200,it:['longbow',3,'Finns Meisterbogen']}},
@@ -1103,7 +1355,7 @@ G.sqMark=n=>{for(const k in SQ){const q=SQ[k];if(q.npc!==n.id)continue;const st=
 const QT=t=>{sfx('quest');G.toast('📜 Neue Quest: '+t,'#ffd54a',true);},DONE=t=>{sfx('quest');G.toast('✔ Quest abgeschlossen: '+t,'#ffd54a',true);};
 const npcDialog0=function(n){const q=P.q,L=P.level,B=(l,f,c)=>({l,f,c});
  switch(n.id){
- case'mara':{if(P.main===0)return{t:'Du bist wach, den Göttern sei Dank! Ich fand dich vor drei Tagen am Flussufer, halb erfroren und ohne Erinnerung. Doch in deinen Augen brennt etwas … als hätten dich die Walküren selbst zurückgeschickt. Eichenhain braucht dich: Der Drache Ignarok hat Prinzessin Elara entführt – und seit seiner Rückkehr rieselt seine Asche über das Land. Sie vergiftet sogar die Tiere: Hasen, Keiler, Füchse … wer davon frisst, bekommt glühend rote Augen und greift alles an. Geh hinauf zur Burg und sprich mit Fürst Aldric.',b:[B('Ich gehe zur Burg',()=>{P.main=1;give(mkStack('potion',2));G.toast('📜 Hauptquest: Audienz beim Fürsten','#ffd54a',true);},1)]};
+ case'mara':{if(P.main===0)return{t:'Du bist wach, den Göttern sei Dank! Ich fand dich vor drei Tagen am Flussufer, halb erfroren und ohne Erinnerung. Doch in deinen Augen brennt etwas … als hätten dich die Walküren selbst zurückgeschickt. Eichenhain braucht dich: Der Drache Ignarok hat Prinzessin Elara entführt. Und seit er erwacht ist, liegt der Aschenfluch über dem Land. Draußen vor den Mauern verfällt fast jedes Geschöpf dem Zorn – Hasen, Keiler, Füchse, ja sogar Wanderer bekommen glühend rote Augen und greifen alles an. Nur die Runensteine unserer Mauern halten den Fluch fern, und fließendes Wasser wäscht ihn ab – darum lässt er den alten Angler Fiete an seinem Weiher in Ruhe. Woher der Fluch kommt? Das weiß niemand. Geh hinauf zur Burg und sprich mit Fürst Aldric.',b:[B('Ich gehe zur Burg',()=>{P.main=1;give(mkStack('potion',2));G.toast('📜 Hauptquest: Audienz beim Fürsten','#ffd54a',true);},1)]};
   const bb=[B('Heile mich',()=>{P.hp=G.S.maxhp;P.poison=null;P.burn=null;G.toast('❤ Vollständig geheilt','#ef9a9a');})];if(countItem('herb')>=3)bb.push(B('3 Heilkraut → Heiltrank',()=>{removeItem('herb',3);give(mkStack('potion',1));}));else bb.push(B('Heilkrautsamen (Geschenk)',()=>{if(q.maraSeed){G.toast('Mara: Pflanze die Samen nahe am Wasser.','#ccc');return;}q.maraSeed=1;give(mkStack('hseed',3));}));return{t:pick(['Komm zu mir, wann immer du verwundet bist. Innerhalb der Mauern heilen Wunden schneller.','Die Walküren warten auf dich, Ritter. Aber nicht heute.','Gift? Lass mich sehen … meine Kräuter helfen.']),b:bb};}
  case'aldric':{
   if(P.main===0)return{t:'Ein Fremder in meiner Burg? Die Heilerin Mara hat von dir erzählt. Ruh dich erst aus und sprich mit ihr.',b:[]};
@@ -1122,7 +1374,7 @@ const npcDialog0=function(n){const q=P.q,L=P.level,B=(l,f,c)=>({l,f,c});
    if(L<qd('lvD'))return{t:`Alle drei Splitter! Aber gegen Ignarok selbst bist du mit Stufe ${L} noch Futter. Komm ab Stufe ${qd('lvD')} wieder.`,b:[]};
    return{t:'Gib her. Ich weiß, wie man das Siegel bricht: Stein und Blut. Ignaroks Festung liegt auf dem Goldberg im Nordosten. Hier, nimm meinen Glücksbringer, er hat mich durch drei Drachenjagden gebracht. Das Siegel ist gebrochen, der Weg zum Hort ist offen. Tu, was ich nicht konnte.',b:[B('Für deinen Bruder',()=>{P.main=6;P.barrier=true;G.flags.barrier=true;give(genItem('amulet',L+1,3,{name:'Gunnars Glücksbringer',f:'luck'}));G.toast('🔥 Das Aschensiegel ist gebrochen!','#ff8a50',true);},1)]};}
   if(P.main===6)return{t:'Ignarok schläft in seiner Festung auf dem Goldberg, ganz im Nordosten der Aschenberge. Der Außenposten Glutwacht ist der letzte sichere Ort davor, aktiviere dort den Wegschrein. Weiche den glühenden Kreisen aus und nutze deine Rolle (🌀)! Und nimm Heiltränke mit.',b:[]};
-  return{t:'Du hast es geschafft. Mein Bruder kann nun in Walhall ruhen. Und du eines Tages auch.',b:[]};}
+  return{t:'Du hast es geschafft. Mein Bruder kann nun in Valhalla ruhen. Und du eines Tages auch.',b:[]};}
  case'elara':{if(P.main===7)return{t:'Du hast ihn besiegt?! Ich dachte schon, ich müsste mich selbst durch die Aschenberge kämpfen. Ich kenne einen geheimen Pfad nach Hause. Wir treffen uns auf der Burg, beeil dich!',b:[B('Bis gleich auf der Burg',()=>{P.main=8;placeElara();G.toast('📜 Hauptquest: Heimkehr','#ffd54a',true);},1)]};
   return{t:'Ohne dich wäre ich noch immer in diesem Hort. Danke, Ritter.',b:[]};}
  case'bernd':{const w=countItem('wheat');
@@ -1155,13 +1407,34 @@ const npcDialog0=function(n){const q=P.q,L=P.level,B=(l,f,c)=>({l,f,c});
  case'greta':return{t:`Willkommen an meinem Stand! Du hast ${P.gold} Gold. Was darf es sein?`,b:[]};
  }
  return{t:pick(n.greet||['Sei gegrüßt.']),b:[]};};
-G.npcDialog=function(n){const d=(G.extraDialog&&G.extraDialog(n))||mainDialog(n)||npcDialog0(n);d.b=d.b||[];sqDialog(n,d);const sh=SHOPS[n.id];if(sh){d.b=d.b||[];if(sh.smith){d.b.unshift({l:'⚒ Schmiede: Umschmieden',f:()=>G.ui&&G.ui.openShop(n.id,'forge'),c:1});d.b.unshift({l:'⚔ Ausrüstung kaufen',f:()=>G.ui&&G.ui.openShop(n.id,'gear'),c:1});}d.b.unshift({l:'🛒 Handeln (Kaufen & Verkaufen)',f:()=>G.ui&&G.ui.openShop(n.id,'buy'),c:1});}return d;};
+G.npcDialog=function(n){const d=(G.extraDialog&&G.extraDialog(n))||mainDialog(n)||npcDialog0(n);d.b=d.b||[];sqDialog(n,d);if(G.services)G.services(n,d);const sh=SHOPS[n.id];if(sh&&G.shopOpen&&!G.shopOpen(n.id)&&!(isGuard(n)&&P.bounty>0)){d.b.push({l:`🔒 Laden geschlossen – geöffnet ${G.shopHoursTxt(n.id)}`,f:()=>G.toast(`🕰 Es ist ${WDAY[wday()]}, ${clockStr(G.dayInfo().t)} Uhr. ${n.short||n.name} verkauft ${G.shopHoursTxt(n.id)}.`,'#ffcc80',true),c:0});return d;}if(sh){d.b=d.b||[];if(sh.smith){d.b.unshift({l:'⚒ Schmiede: Umschmieden',f:()=>G.ui&&G.ui.openShop(n.id,'forge'),c:1});d.b.unshift({l:'⚔ Ausrüstung kaufen',f:()=>G.ui&&G.ui.openShop(n.id,'gear'),c:1});}d.b.unshift({l:'🛒 Handeln (Kaufen & Verkaufen)',f:()=>G.ui&&G.ui.openShop(n.id,'buy'),c:1});}return d;};
 
 
 // ===================== Update =====================
 
-function enterRoom(r){G.mons=G.mons.filter(m=>m.boss==='dragon');G.proj=[];G.teles=[];G.room=r;P.x=(r.door.tx+.5)*TILE;P.y=(r.door.ty-.5)*TILE;P.prevX=null;P.fx=0;P.fy=-1;G.enterT=.7;sfx('door');
- if(r.dungeon){for(const c of r.chests)if(c.opened&&Date.now()-c.at>240000)c.opened=false;const b=r.b;const ks=Object.keys(P.kills||{}).filter(k=>MT[k]&&!MT[k].passive);let key=ks.length?pick(ks):b.def;const dq=curStep(),qa=dq&&dq.kind==='dungeon'&&dq.room===r.id&&P.macc&&!P.mflag;let m;if(qa){key=dq.add;m=mkMini(dq.base,qd(dq.lv),(r.x0+r.w/2)*TILE,(r.y0+2.5)*TILE);m.name=dq.name;m.qkey=r.id;m.maxhp=m.hp=Math.round(m.maxhp*1.15);G.toast(dq.enter,'#ff8a65',true);}else m=mkMini(key,r.lvl+1,(r.x0+r.w/2)*TILE,(r.y0+2.5)*TILE);m.room=r.id;G.mons.push(m);
+// v20: Jeder Dungeon hat immer denselben Boss (gezielt farmbar), mit eigenen Angriffen, Dienern und Beute
+const DBOSS={
+ hut:{abil:['slam','summon','line'],minion:'skeleton',loot:[{k:'scythe',name:'Sense des Einsiedlers',f:'melee',ufx:{poison:1},d:'vergiftet'},{t:'amulet',name:'Bertolts Fluchamulett',f:'regen'}]},
+ wolfden:{abil:['leap','summon','line'],minion:'wolf',loot:[{k:'dagger',name:'Graumähnes Reißzahn',f:'melee',ufx:{crit:6},d:'+6 % Krit'},{set:'waldlaeufer',s:'chest',name:'Pelz der Wolfsmutter',f:'spd'}]},
+ cellar:{abil:['fire','volley','summon'],minion:'ghoul',loot:[{k:'tome_fire',name:'Malriks Brandfibel',f:'spell',ufx:{burn:1},d:'setzt in Brand'},{t:'ring',name:'Malriks Zunderring',f:'spell'}]},
+ banditcave:{abil:['volley','combo','summon','line'],minion:'archer',loot:[{k:'sword',name:'Räuberfürst Falks Säbel',f:'melee',ufx:{crit:5},d:'+5 % Krit'},{k:'bow',name:'Räuberfürst Falks Bogen',f:'ranged',ufx:{crit:6},d:'+6 % Krit'},{k:'dagger',name:'Räuberfürst Falks Dolch',f:'melee',ufx:{poison:1},d:'vergiftet'}]},
+ wtower:{abil:['volley','summon','quake'],minion:'zombie',loot:[{k:'tome_storm',name:'Grimeldas Sumpfgrimoire',f:'spell',ufx:{slow:1},d:'verlangsamt Gegner'},{set:'magier',s:'helm',name:'Grimeldas Hexenhut',f:'spell'}]},
+ grotto:{abil:['combo','leap','line','summon'],minion:'orc',loot:[{k:'axe',name:'Brakkas Schädelspalter',f:'melee',ufx:{stun:.12},d:'12 % Betäubung'},{k:'warhammer',name:'Brakkas Kriegshammer',f:'melee',ufx:{stun:.15},d:'15 % Betäubung'}]},
+ dwarf:{abil:['quake','slam','summon'],minion:'golem',loot:[{k:'warhammer',name:'Grimbarts Essenhammer',f:'melee',ufx:{burn:1},d:'setzt in Brand'},{set:'ritter',s:'helm',name:'Steinkrone Grimbarts',f:'hp'}]},
+ mistgate:{abil:['volley','summon','leap','quake'],minion:'sucher',loot:[{k:'spear',name:'Stachel der Sucherkönigin',f:'melee',ufx:{poison:1,crit:4},d:'vergiftet, +4 % Krit'},{t:'amulet',name:'Herz des Schwarms',f:'crit'}]},
+ cave:{name:'Spinnenmutter Ezzra',base:'spider',add:'spider',abil:['volley','summon','leap'],minion:'spider',loot:[{k:'dagger',name:'Ezzras Giftzahn',f:'melee',ufx:{poison:1},d:'vergiftet'},{k:'crossbow',name:'Ezzras Netzwerfer',f:'ranged',ufx:{slow:1},d:'verlangsamt Gegner'}]},
+ mine:{name:'Erzkoloss Grollbart',base:'golem',add:'greydwarf',abil:['quake','slam','line'],minion:'greydwarf',loot:[{k:'mace',name:'Faust des Erzkolosses',f:'melee',ufx:{stun:.15},d:'15 % Betäubung'},{set:'ritter',s:'chest',name:'Erzpanzer Grollbarts',f:'hp'}]},
+ icecave:{name:'Eishexe Hrimgerd',base:'icewitch',add:'frostslime',abil:['volley','quake','summon'],minion:'frostslime',loot:[{k:'tome_frost',name:'Hrimgerds Frostfibel',f:'spell',ufx:{slow:1},d:'verlangsamt Gegner'},{t:'ring',name:'Hrimgerds Eisherz',f:'res'}]},
+ shrine:{name:'Glutdämon Azhrak',base:'imp',add:'lavaslime',abil:['inferno','volley','summon'],minion:'imp',loot:[{k:'flail',name:'Azhraks Glutflegel',f:'melee',ufx:{burn:1},d:'setzt in Brand'},{t:'amulet',name:'Azhraks Höllenauge',f:'crit'}]},
+ pyramid:{name:'Pharao Setnakht',base:'mummy',add:'scorpion',abil:['summon','combo','quake'],minion:'scorpion',loot:[{k:'scythe',name:'Setnakhts Sichelklinge',f:'melee',ufx:{ls:.04},d:'4 % Lebensraub'},{set:'magier',s:'helm',name:'Maske des Pharaos',f:'spell'}]},
+ abbey:{name:'Abt Mordrian, der Schattengeist',base:'wraith',add:'skeleton',abil:['volley','summon','line'],minion:'skeleton',loot:[{k:'tome_light',name:'Mordrians Totenbuch',f:'spell',ufx:{ls:.04},d:'4 % Lebensraub'},{k:'halberd',name:'Mordrians Kirchenhellebarde',f:'melee',ufx:{crit:5},d:'+5 % Krit'}]},
+ witchhut:{name:'Hexenmutter Morgha',base:'witch',add:'zombie',abil:['volley','summon','fire'],minion:'zombie',loot:[{k:'tome_storm',name:'Morghas Kessel-Grimoire',f:'spell',ufx:{poison:1},d:'vergiftet'},{t:'ring',name:'Morghas Krötenring',f:'luck'}]}};
+G.DBOSS=DBOSS;
+function dungeonBoss(r){const dq=[...MSQ[3],...MSQ[4],...MSQ[9]].find(st=>st.kind==='dungeon'&&st.room===r.id);const D0=DBOSS[r.id]||{};
+ const base=dq?dq.base:(D0.base||(r.b&&r.b.def)||'skeleton'),add=dq?dq.add:(D0.add||base),name=dq?dq.name:(D0.name||null);
+ const lvl=dq?Math.max(r.lvl+1,qd(dq.lv)):r.lvl+1;return{dq,base,add,name,lvl,def:D0};}
+function enterRoom(r){if(P.riding){dismount(true);G.toast(`🐴 Du sitzt ab – ${P.mount.name} wartet draußen.`,'#e8d0a0');}G.mons=G.mons.filter(m=>m.boss==='dragon');G.proj=[];G.teles=[];G.room=r;P.x=(r.door.tx+.5)*TILE;P.y=(r.door.ty-.5)*TILE;P.prevX=null;P.fx=0;P.fy=-1;G.enterT=.7;sfx('door');
+ if(r.dungeon){for(const c of r.chests)if(c.opened&&Date.now()-c.at>240000)c.opened=false;const b=r.b;const ks=Object.keys(P.kills||{}).filter(k=>MT[k]&&!MT[k].passive);const dq=curStep(),qa=dq&&dq.kind==='dungeon'&&dq.room===r.id&&P.macc&&!P.mflag;const DB=dungeonBoss(r);let key=DB.add;const m=mkMini(DB.base,qa?qd(dq.lv):DB.lvl,(r.x0+r.w/2)*TILE,(r.y0+2.5)*TILE);if(DB.name)m.name=DB.name;m.maxhp=m.hp=Math.round(m.maxhp*1.15);Object.assign(m.B,{dboss:1,abil:DB.def.abil||m.B.abil,minion:DB.def.minion||DB.add,loot:DB.def.loot||[]});if(qa){m.qkey=r.id;G.toast(dq.enter,'#ff8a65',true);}m.room=r.id;G.mons.push(m);
   [[3,5],[r.w-4,5],[Math.floor(r.w/2),7]].forEach(([x,y])=>{const k=mkMonster(key,r.lvl,(r.x0+x+.5)*TILE,(r.y0+y+.5)*TILE);k.room=r.id;k.passive=false;G.mons.push(k);});
   G.toast(`☠ ${r.name}: ${m.name} lauert hier!`,'#ff8a80',true);sfx('aggro',{type:'boss'});}
  else G.toast('🚪 '+r.name,'#ffe9b0');}
@@ -1181,39 +1454,113 @@ function openChest(c){const r=G.room,L=Math.max(1,P.level),D=G.D();c.opened=true
 Object.assign(G,{enterRoom,exitRoom});
 const ALLK=Object.keys(WKIND).concat(Object.keys(SETS),['ring','amulet']);
 // ---- Ackerbau (wie Minecraft: nahe Wasser, wächst langsam in Stufen)
-const CROPS={wheat:{n:'Weizen',grow:[40,70],col:'#e8c95a',yield:()=>[['wheat',rint(1,2)],['seed',rint(1,3)]]},carrot:{n:'Karotten',grow:[35,60],col:'#ff8a1e',yield:()=>[['carrot',rint(2,4)]]},herb:{n:'Heilkraut',grow:[45,80],col:'#4ac04a',yield:()=>[['herb',rint(1,2)],['hseed',rint(0,2)]]}};
-G.CROPS=CROPS;const fk=(x,y)=>x*2048+y;G.farmAt=(x,y)=>G.farm.has(fk(x,y));
+const CROPS={wheat:{n:'Weizen',grow:[40,70],col:'#e8c95a',yield:()=>[['wheat',rint(1,2)],['seed',Math.random()<.4?1:0]]},carrot:{n:'Karotten',grow:[35,60],col:'#ff8a1e',yield:()=>[['carrot',rint(1,2)]]},herb:{n:'Heilkraut',grow:[45,80],col:'#4ac04a',yield:()=>[['herb',rint(1,2)],['hseed',Math.random()<.35?1:0]]}};
+// v21: Lebensmittel (Harke + Wasser ≤3 + Gießkanne), Blumen (überall, ohne Gießen), Bäume (Setzlinge)
+CROPS.wheat.kind=CROPS.carrot.kind=CROPS.herb.kind='food';CROPS.wheat.shape='wheat';CROPS.carrot.shape='carrot';CROPS.herb.shape='herb';
+const SEEDBACK=.33;CROPS.carrot.yield=()=>[['carrot',rint(1,2)],['carrot',0]];
+for(const [id,n,ic,gr,shape,col,heal,sl] of FOODC)CROPS[id]={n,grow:gr,col,shape,kind:'food',yield:()=>[[id,id==='kuerbis'?1:rint(1,2)],['s_'+id,Math.random()<SEEDBACK?1:0]]};
+for(const [id,n,ic,col] of FLOWC)CROPS['fl_'+id]={n,grow:[30,50],col,shape:'flower',kind:'flower',yield:()=>[['fl_'+id,1],['f_'+id,Math.random()<.5?1:0]]};
+for(const [id,n,kind] of TREEC)CROPS['tr_'+id]={n:n+'-Setzling',grow:[300,420],col:'#5a8a3a',shape:'sapling',kind:'tree',tree:kind,yield:()=>[]};
+G.CROPS=CROPS;const fk=(x,y)=>x*2048+y;G.farmAt=(x,y)=>G.farm.has(fk(x,y));G.fk=fk;
 const FARMABLE=[T.GRASS,T.GRASS2,T.DIRT,T.FLOWER,T.SWAMP,T.SAND,T.FIELD,T.SNOW];
-function nearWater(tx,ty){for(let dy=-4;dy<=4;dy++)for(let dx=-4;dx<=4;dx++)if(tileAt(tx+dx,ty+dy)===T.WATER)return true;return false;}
-function plantable(tx,ty){if(tx>=WW||G.farm.has(fk(tx,ty)))return false;const t=tileAt(tx,ty);if(t===T.FIELD)return true;if(FARMABLE.indexOf(t)<0)return false;return nearWater(tx,ty);}
+function nearWater(tx,ty,r){r=r||3;for(let dy=-r;dy<=r;dy++)for(let dx=-r;dx<=r;dx++)if(tileAt(tx+dx,ty+dy)===T.WATER)return true;return false;}
+const BADGROUND=new Set([T.WATER,T.LAVA,T.PATH,T.COBBLE,T.BRIDGE,T.ICE,T.FIELD,T.STONEF,T.WOOD,T.CARPET]);
+const FLOWERGROUND=new Set([T.GRASS,T.GRASS2,T.DIRT,T.FLOWER,T.DGRASS,T.SNOW,T.SAND,T.SWAMP,T.BURNT]);
+const heldTool=()=>{const it=P.inv[P.sel];return it&&STACK[it.id]&&STACK[it.id].tool||null;};G.heldTool=heldTool;
+// Ackerfelder (T.FIELD) im Dorf gelten als schon gelockert und bewässert.
+function plantable(tx,ty,c){if(tx>=WW)return false;const f=G.farm.get(fk(tx,ty)),C=CROPS[c];if(!C)return false;const t=tileAt(tx,ty);
+ if(C.kind==='food'){if(t===T.FIELD)return !f;return !!(f&&f.c==null)&&nearWater(tx,ty,3);}
+ if(f||BADGROUND.has(t)||!FLOWERGROUND.has(t))return false;
+ if(C.kind==='tree'){if(inSafe((tx+.5)*TILE,(ty+.5)*TILE)&&vDist((tx+.5)*TILE,(ty+.5)*TILE)<RV-2)return false;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const q=tileAt(tx+dx,ty+dy);if(SOLIDS[q]||q===T.WATER||q===T.LAVA||G.farm.has(fk(tx+dx,ty+dy))&&(dx||dy)&&CROPS[G.farm.get(fk(tx+dx,ty+dy)).c]&&CROPS[G.farm.get(fk(tx+dx,ty+dy)).c].kind==='tree')return false;}}
+ return true;}
+const tillable=(tx,ty)=>tx<WW&&!G.farm.has(fk(tx,ty))&&FARMABLE.indexOf(tileAt(tx,ty))>=0&&tileAt(tx,ty)!==T.FIELD;
 function seedSlot(){const it=P.inv[P.sel];if(it&&STACK[it.id]&&STACK[it.id].plant)return P.sel;for(const id of ['seed','carrot','hseed']){const i=P.inv.findIndex(s=>s&&s.id===id);if(i>=0)return i;}return -1;}
-G.tapTile=(tx,ty)=>{if(G.room||P.dead)return false;if(Math.hypot(tx+.5-P.x/TILE,ty+.5-P.y/TILE)>4.6)return false;const f=G.farm.get(fk(tx,ty));if(f){if(f.s>=3)harvest(f);else G.toast(`🌱 ${CROPS[f.c].n} wächst noch (Stufe ${f.s+1}/4)`,'#a5d6a7');return true;}if(seedSlot()>=0&&plantable(tx,ty)){plant(tx,ty);return true;}return false;};
-function plant(tx,ty){const i=seedSlot();if(i<0)return;const it=P.inv[i];const c=STACK[it.id].plant;G.farm.set(fk(tx,ty),{tx,ty,c,s:0,t:rnd(...CROPS[c].grow)});it.count--;if(it.count<=0)P.inv[i]=null;G.invDirty=true;sfx('plant');G.toast(`🌱 ${CROPS[c].n} gepflanzt`,'#a5d6a7');}
-function harvest(f){G.farm.delete(fk(f.tx,f.ty));sfx('pickup');for(const [id,n] of CROPS[f.c].yield())if(n>0)give(mkStack(id,n));}
+const seedCrop=()=>{const i=seedSlot();return i<0?null:STACK[P.inv[i].id].plant;};
+// Aktion auf ein Feld (Klick/Tipp oder ⚔ mit Werkzeug). Ziel wird auf das 3×3 um den Spieler gelegt.
+function tileUse(tx,ty,dry){const f=G.farm.get(fk(tx,ty)),tool=heldTool(),sc=seedCrop(),t=tileAt(tx,ty);
+ if(tool==='axe'&&(t===T.TREE))return dry||chopTree(tx,ty);
+ if(tool==='can'&&t===T.WATER)return dry||refillCan();
+ if(f){if(f.c&&f.s>=3)return dry||harvest(f);if(tool==='can'&&f.c)return dry||waterCrop(f);if(f.c==null&&sc&&plantable(tx,ty,sc))return dry||plant(tx,ty);
+  if(dry)return false;if(f.c==null){G.toast(sc&&CROPS[sc].kind!=='food'?'🌱 Blumen und Setzlinge brauchen keinen gelockerten Boden – setz sie auf Gras.':(nearWater(tx,ty,3)?'🌱 Gelockerter Boden – jetzt Lebensmittel-Saat auswählen und säen.':'💧 Zu weit vom Wasser (max. 3 Felder) – hier wächst nichts.'),'#a5d6a7');return true;}
+  const C=CROPS[f.c];G.toast(C.kind==='food'&&!cropWet(f)?`💧 ${C.n} ist trocken – mit der Gießkanne gießen!`:`🌱 ${C.n} wächst noch (Stufe ${f.s+1}/4)`,'#a5d6a7');return true;}
+ if(tool==='hoe'&&tillable(tx,ty))return dry||till(tx,ty);
+ if(sc&&plantable(tx,ty,sc))return dry||plant(tx,ty);
+ return false;}
+G.tileUse=tileUse;
+// ===== v21: Natur-Schicht (hohes Gras, Gestrüpp, Riesenbüsche, große Blumen) – deterministisch, einmal berechnet =====
+// 1 hohes Gras (schlagbar, Samen) · 2 Gestrüpp (durchquerbar, bremst leicht) · 3 Riesenbusch (durchquerbar, Versteck) · 4 große Blume
+let DECO=null;const DECOP={meadow:[.17,.012,.004,.018],forest:[.08,.075,.022,.01],dark:[.05,.085,.025,0],swamp:[.13,.04,.006,0],village:[.05,0,0,.01],mist:[.03,.035,.01,0],peaks:[.02,0,0,0]};
+function buildDeco(){DECO=new Uint8Array(WW*H);for(let ty=1;ty<H-1;ty++)for(let tx=1;tx<WW-1;tx++){const t=map[ty*W+tx];if(t!==T.GRASS&&t!==T.GRASS2&&t!==T.DGRASS&&t!==T.FLOWER)continue;const pr=DECOP[biome(tx,ty)];if(!pr)continue;
+  const cl=.55+G.noise(tx*.09,ty*.09,31)*.9,r=G.h2(tx,ty,301);let nearT=0;if(pr[1]>.03)for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]])if(map[(ty+dy)*W+tx+dx]===T.TREE)nearT++;
+  let v=0,acc=pr[2]*cl;if(r<acc)v=3;else if(r<(acc+=pr[1]*cl*(1+nearT*.6)))v=2;else if(r<(acc+=pr[3]*cl))v=4;else if(r<(acc+=pr[0]*cl*1.2))v=1;if(!v)continue;
+  if(vDist((tx+.5)*TILE,(ty+.5)*TILE)<RV+1.5||townAt(tx,ty)||inCastle(tx,ty))continue;let road=false;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const q=map[(ty+dy)*W+tx+dx];if(q===T.PATH||q===T.COBBLE||q===T.BRIDGE||q===T.DOOR)road=true;}if(road&&v!==1)continue;DECO[ty*WW+tx]=v;}}
+const decoCut=new Map();
+function decoAt(tx,ty){if(tx<0||ty<0||tx>=WW||ty>=H)return 0;if(!DECO)buildDeco();const v=DECO[ty*WW+tx];if(!v)return 0;if(decoCut.size&&decoCut.has(fk(tx,ty)))return 0;if(G.farm.has(fk(tx,ty)))return 0;return v;}
+G.decoAt=decoAt;
+// Gras schlagen: Chance auf Samen (wie in Minecraft)
+function cutGrass(){const cx=P.x+P.fx*TILE*.8,cy=P.y+P.fy*TILE*.8;const tx0=Math.floor(cx/TILE),ty0=Math.floor(cy/TILE);let n=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const tx=tx0+dx,ty=ty0+dy;if(decoAt(tx,ty)!==1)continue;const wx=(tx+.5)*TILE,wy=(ty+.5)*TILE;if(Math.hypot(wx-cx,wy-cy)>TILE*1.25)continue;
+  decoCut.set(fk(tx,ty),P.dayT+DAYLEN*2);n++;G.dirtyTile(tx,ty);for(let i=0;i<5;i++)G.parts.push({x:wx+rnd(-10,10),y:wy,z:10,vx:rnd(-50,50),vy:rnd(-50,20),life:.5,c:i%2?'#7cbf4a':'#a6d86a'});
+  if(Math.random()<.11*(1+G.S.luck/200)){const r=Math.random(),id=r<.55?'seed':r<.7?'hseed':r<.85?'s_'+pick(FOODC)[0]:'f_'+pick(FLOWC)[0];dropGround(mkStack(id,1),wx,wy);}}
+ if(n)sfx('swish');}
+G.cutGrass=cutGrass;
+// nachwachsendes Gras (selten geprüft, billig)
+G.decoTick=()=>{if(!decoCut.size)return;for(const [k,t] of decoCut)if(t<P.dayT){decoCut.delete(k);const tx=Math.floor(k/2048),ty=k%2048;G.dirtyTile(tx,ty);}};
+// ===== v21: Baumarten (nicht immer derselbe Baum) & Holzfällen =====
+const ptree=new Map(),MODS=new Map();
+G.dirtyTile=(tx,ty)=>{for(const r of [G.R2D,G.R3D])if(r&&r.dirtyTile)try{r.dirtyTile(tx,ty);}catch(e){}};
+const setTileMod=(tx,ty,t)=>{const k=ty*W+tx;if(!MODS.has(k))MODS.set(k,map[k]);map[k]=t;G.dirtyTile(tx,ty);};
+G.treeKind=(tx,ty)=>{const k=ptree.get(fk(tx,ty));if(k)return k;const b=biome(tx,ty),r=G.h2(tx,ty,11),r2=G.h2(tx,ty,77);
+ if(b==='winter'||b==='peaks')return 'pine';if(b==='swamp')return r2<.22?'birch':'willow';if(b==='dark')return r>.45?'pine':'dark';if(b==='ash'||b==='waste')return 'dry';
+ if(b==='forest')return r>.4?'pine':r2<.18?'birch':r2<.3?'maple':r2<.36?'giant':'oak';
+ return r2<.14?'birch':r2<.2?'cherry':r2<.27?'maple':r2<.31?'giant':'oak';};
+const TREEFROM={oak:'eiche',giant:'eiche',birch:'birke',pine:'kiefer',willow:'weide',maple:'ahorn',cherry:'kirsche',dark:'kiefer',dry:'eiche'};
+function chopTree(tx,ty){if(tx>=WW)return false;const k=fk(tx,ty);P.chopHits=P.chopHits&&P.chopHits.k===k?P.chopHits:{k,n:0};P.chopHits.n++;sfx('hit');P.sta=Math.max(0,P.sta-4);
+ for(let i=0;i<5;i++)G.parts.push({x:(tx+.5)*TILE+rnd(-6,6),y:(ty+.6)*TILE,z:18,vx:rnd(-50,50),vy:rnd(-40,10),life:.5,c:'#8a6a3a'});
+ const need=G.treeKind(tx,ty)==='giant'?5:3;if(P.chopHits.n<need){G.floats.push({x:(tx+.5)*TILE,y:ty*TILE-10,t:'🪓 '+P.chopHits.n+'/'+need,c:'#e8d0a0',life:.6});return true;}
+ const kind=G.treeKind(tx,ty);P.chopHits=null;setTileMod(tx,ty,T.GRASS);ptree.delete(k);P.chopped=P.chopped||{};P.chopped[k]=[P.dayT+DAYLEN*3,kind];G.dirtyTile(tx,ty);sfx('boom');
+ const wx=(tx+.5)*TILE,wy=(ty+.5)*TILE;give(mkStack('holz',rint(2,4)+(kind==='giant'?3:0)));if(Math.random()<.7)give(mkStack('stock',rint(1,3)));if(Math.random()<.12)give(mkStack('harz',1));if(Math.random()<.15)dropGround(mkStack('t_'+TREEFROM[kind],1),wx,wy+16);
+ P.woodN=(P.woodN||0)+1;return true;}
+function growTree(f){G.farm.delete(fk(f.tx,f.ty));const kind=CROPS[f.c].tree;setTileMod(f.tx,f.ty,T.TREE);ptree.set(fk(f.tx,f.ty),kind);P.ptrees=P.ptrees||{};P.ptrees[fk(f.tx,f.ty)]=kind;G.dirtyTile(f.tx,f.ty);G.toast(`🌳 Dein ${CROPS[f.c].n.replace('-Setzling','')} ist ausgewachsen!`,'#a5d6a7');}
+// gefällte Bäume wachsen nach; gepflanzte Bäume bleiben (gespeichert in P)
+function applyTrees(reset){if(reset){for(const [k,t] of MODS){map[k]=t;G.dirtyTile(k%W,Math.floor(k/W));}MODS.clear();ptree.clear();}const ch=P.chopped||{},pt=P.ptrees||{};
+ for(const k in pt){const tx=Math.floor(k/2048),ty=k%2048;if(map[ty*W+tx]!==T.TREE&&!SOLIDS[map[ty*W+tx]])setTileMod(tx,ty,T.TREE);ptree.set(+k,pt[k]);}
+ for(const k in ch){const tx=Math.floor(k/2048),ty=k%2048;if(ch[k][0]<P.dayT){delete ch[k];if(map[ty*W+tx]===T.GRASS)setTileMod(tx,ty,T.TREE);}else if(map[ty*W+tx]===T.TREE)setTileMod(tx,ty,T.GRASS);}}
+G.applyTrees=applyTrees;
+G.tapTile=(tx,ty)=>{if(G.room||P.dead)return false;if(Math.hypot(tx+.5-P.x/TILE,ty+.5-P.y/TILE)>4.6)return false;const px=Math.floor(P.x/TILE),py=Math.floor(P.y/TILE);if(Math.max(Math.abs(tx-px),Math.abs(ty-py))>1){const c=[];for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)c.push([px+dx,py+dy]);c.sort((a,b)=>Math.hypot(a[0]-tx,a[1]-ty)-Math.hypot(b[0]-tx,b[1]-ty));const ok=c.find(([x,y])=>tileUse(x,y,true));if(!ok)return false;tx=ok[0];ty=ok[1];}return !!tileUse(tx,ty,false);};
+// ⚔ mit Werkzeug in der Hand: Feld direkt vor dem Spieler (oder das beste im 3×3)
+G.toolSwing=()=>{const px=Math.floor(P.x/TILE),py=Math.floor(P.y/TILE),fx=Math.floor((P.x+P.fx*TILE*.9)/TILE),fy=Math.floor((P.y+P.fy*TILE*.9)/TILE);P.swing=.22;if(tileUse(fx,fy,true))return tileUse(fx,fy,false);for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)if(tileUse(px+dx,py+dy,true))return tileUse(px+dx,py+dy,false);const tl=heldTool();warn(tl==='axe'?'Kein Baum in Reichweite':tl==='can'?'Nichts zu gießen':'Hier lässt sich nichts umgraben');return false;};
+const cropWet=f=>tileAt(f.tx,f.ty)===T.FIELD||(f.wet||0)>P.dayT;G.cropWet=cropWet;
+function till(tx,ty){G.farm.set(fk(tx,ty),{tx,ty,c:null,s:-1,t:0,wet:0});sfx('plant');for(let i=0;i<5;i++)G.parts.push({x:(tx+.5)*TILE+rnd(-8,8),y:(ty+.5)*TILE,z:6,vx:rnd(-30,30),vy:rnd(-30,10),life:.4,c:'#6a4a2a'});if(!nearWater(tx,ty,3))G.toast('⛏ Gelockert – aber hier ist kein Wasser in der Nähe (max. 3 Felder). Lebensmittel wachsen hier nicht.','#ffcc80');return true;}
+function refillCan(){const it=P.inv[P.sel];it.wc=25;G.invDirty=true;sfx('splash');G.toast('🚿 Gießkanne aufgefüllt (25 Güsse)','#90caf9');return true;}
+function waterCrop(f){const it=P.inv[P.sel];if(it.wc==null)it.wc=25;if(it.wc<=0){G.toast('🚿 Die Gießkanne ist leer – fülle sie am Wasser auf.','#90caf9');return true;}if(CROPS[f.c].kind!=='food'){G.toast('🌸 Das braucht kein Wasser.','#a5d6a7');return true;}
+ let n=0;for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const q=G.farm.get(fk(f.tx+dx,f.ty+dy));if(q&&q.c&&CROPS[q.c].kind==='food'&&!cropWet(q)&&it.wc>0&&(dx===0&&dy===0||n<8)){q.wet=P.dayT+DAYLEN;it.wc--;n++;}}if(!n){G.toast('💧 Schon gegossen.','#90caf9');return true;}
+ for(let i=0;i<8;i++)G.parts.push({x:(f.tx+.5)*TILE+rnd(-14,14),y:(f.ty+.5)*TILE-10,z:16,vx:rnd(-10,10),vy:rnd(10,40),life:.5,c:'#7ec8ff'});sfx('splash');G.invDirty=true;return true;}
+function plant(tx,ty){const i=seedSlot();if(i<0)return;const it=P.inv[i];const c=STACK[it.id].plant;const old=G.farm.get(fk(tx,ty));G.farm.set(fk(tx,ty),{tx,ty,c,s:0,t:rnd(...CROPS[c].grow),wet:old&&old.wet||0});it.count--;if(it.count<=0)P.inv[i]=null;G.invDirty=true;sfx('plant');const C=CROPS[c];G.toast(C.kind==='food'&&tileAt(tx,ty)!==T.FIELD?`🌱 ${C.n} gesät – jetzt mit der Gießkanne gießen!`:`🌱 ${C.n} gepflanzt`,'#a5d6a7');return true;}
+function harvest(f){const C=CROPS[f.c];if(C.kind==='food'&&tileAt(f.tx,f.ty)!==T.FIELD)G.farm.set(fk(f.tx,f.ty),{tx:f.tx,ty:f.ty,c:null,s:-1,t:0,wet:f.wet||0});else G.farm.delete(fk(f.tx,f.ty));sfx('pickup');for(const [id,n] of C.yield())if(n>0)give(mkStack(id,n));return true;}
 // ---- Wegschreine
 G.travel=function(id){const w=WAYS.find(q=>q.id===id);if(!w||!P.ways[id])return;if(G.room)exitRoom();G.mons=G.mons.filter(m=>m.boss==='dragon');G.proj=[];G.teles=[];P.x=(w.tx+.5)*TILE;P.y=(w.ty+1.6)*TILE;P.fy=1;sfx('quest');G.toast('✨ Gereist nach '+w.name,'#b388ff',true);};
 function act(){const t=target();if(!t)return;if(G.extraAct&&G.extraAct(t))return;if(t.k==='npc'){G.ui&&G.ui.openDialog(t.n);return;}
  if(t.k==='door'){enterRoom(t.b.room);return;}if(t.k==='exit'){exitRoom();return;}if(t.k==='chest'){openChest(t.c);return;}
  if(t.k==='way'){G.ui&&G.ui.openTravel&&G.ui.openTravel();return;}
- if(t.k==='soil'){plant(t.tx,t.ty);return;}
- if(t.k==='crop'){if(t.f.s>=3)harvest(t.f);else G.toast(`🌱 ${CROPS[t.f.c].n} wächst noch (Stufe ${t.f.s+1}/4)`,'#a5d6a7');}}
+ if(t.k==='soil'){tileUse(t.tx,t.ty,false);return;}
+ if(t.k==='crop'){tileUse(t.f.tx,t.f.ty,false);}}
 function target(){let best=null,bd=52;
  if(G.room){const r=G.room;for(const c of r.chests){if(c.opened)continue;const d=Math.hypot((c.tx+.5)*TILE-P.x,(c.ty+.5)*TILE-P.y);if(d<bd){bd=d;best={k:'chest',c};}}const dd=Math.hypot((r.door.tx+.5)*TILE-P.x,(r.door.ty+.5)*TILE-P.y);if(dd<bd){bd=dd;best={k:'exit',r};}return G.extraTarget?G.extraTarget(best,bd):best;}
  for(const n of NPCS){if(!G.npcVisible(n))continue;const d=Math.hypot(n.x-P.x,n.y-P.y);if(d<bd){bd=d;best={k:'npc',n};}}
  for(const w of WAYS){const d=Math.hypot((w.tx+.5)*TILE-P.x,(w.ty+.5)*TILE-P.y);if(d<bd){bd=d;best={k:'way',w};}}
  const ptx=Math.floor(P.x/TILE),pty=Math.floor(P.y/TILE);for(let dy=-2;dy<=2;dy++)for(let dx=-2;dx<=2;dx++){const f=G.farm.get(fk(ptx+dx,pty+dy));if(!f)continue;const d=Math.hypot((f.tx+.5)*TILE-P.x,(f.ty+.5)*TILE-P.y)-(f.s>=3?6:0);if(d<Math.min(bd,44)){bd=d;best={k:'crop',f};}}
- const mt=G.mouseTile;if(mt&&Math.hypot(mt.x+.5-P.x/TILE,mt.y+.5-P.y/TILE)<3.6){const f=G.farm.get(fk(mt.x,mt.y));if(f)return{k:'crop',f};const hs=P.inv[P.sel];if(hs&&STACK[hs.id]&&STACK[hs.id].plant&&plantable(mt.x,mt.y))return{k:'soil',tx:mt.x,ty:mt.y};}
- if((!best||(best.k==='crop'&&best.f.s<3))&&seedSlot()>=0&&!G.mouseTile){const ftx=Math.floor((P.x+P.fx*30)/TILE),fty=Math.floor((P.y+P.fy*30)/TILE);const c=[[ftx,fty],[ptx,pty]];for(const [x,y] of c)if(plantable(x,y)&&!(x===ptx&&y===pty&&false)){best={k:'soil',tx:x,ty:y};break;}}
+ const mt=G.mouseTile;if(mt&&Math.hypot(mt.x+.5-P.x/TILE,mt.y+.5-P.y/TILE)<3.6){const f=G.farm.get(fk(mt.x,mt.y));if(f)return{k:'crop',f};const hs=P.inv[P.sel];if(hs&&STACK[hs.id]&&(STACK[hs.id].plant||STACK[hs.id].tool)&&tileUse(mt.x,mt.y,true))return{k:'soil',tx:mt.x,ty:mt.y};}
+ if((!best||(best.k==='crop'&&best.f.s<3))&&seedSlot()>=0&&!G.mouseTile){const ftx=Math.floor((P.x+P.fx*30)/TILE),fty=Math.floor((P.y+P.fy*30)/TILE);const c=[[ftx,fty],[ptx,pty]];for(const [x,y] of c)if(tileUse(x,y,true)){best={k:'soil',tx:x,ty:y};break;}}
  for(const b of BUILD){if(!b.room)continue;const d=Math.hypot((b.door.tx+.5)*TILE-P.x,(b.y+b.h+.25)*TILE-P.y);if(d<Math.min(bd,46)){bd=d;best={k:'door',b};}}return G.extraTarget?G.extraTarget(best,bd):best;}
 G.targetPos=t=>t.k==='npc'?{x:t.n.x,y:t.n.y}:t.k==='crop'?{x:(t.f.tx+.5)*TILE,y:(t.f.ty+.5)*TILE}:t.k==='soil'?{x:(t.tx+.5)*TILE,y:(t.ty+.5)*TILE}:t.k==='way'?{x:(t.w.tx+.5)*TILE,y:(t.w.ty+.5)*TILE}:t.k==='door'?{x:(t.b.door.tx+.5)*TILE,y:(t.b.y+t.b.h+.2)*TILE}:t.k==='chest'?{x:(t.c.tx+.5)*TILE,y:(t.c.ty+.5)*TILE}:{x:(t.r.door.tx+.5)*TILE,y:(t.r.door.ty+.3)*TILE};
-G.targetLabel=t=>t.k==='npc'?['💬','Reden']:t.k==='soil'?['🌱','Pflanzen']:t.k==='crop'?(t.f.s>=3?['🌾','Ernten']:['⏳',`${t.f.s+1}/4`]):t.k==='way'?['✨','Reisen']:t.k==='door'?['🚪','Betreten']:t.k==='chest'?['🧰','Öffnen']:['🚪','Verlassen'];
+G.targetLabel=t=>t.k==='npc'?['💬','Reden']:t.k==='soil'?['🌱','Pflanzen']:t.k==='crop'?(t.f.c==null?(seedCrop()?['🌱','Säen']:['🟫','Feld']):t.f.s>=3?['🌾','Ernten']:heldTool()==='can'&&!cropWet(t.f)?['🚿','Gießen']:CROPS[t.f.c].kind==='food'&&!cropWet(t.f)?['💧','Trocken']:['⏳',`${t.f.s+1}/4`]):t.k==='soil'?(heldTool()==='hoe'?['⛏️','Umgraben']:heldTool()==='axe'?['🪓','Fällen']:heldTool()==='can'?['🚿','Auffüllen']:['🌱','Pflanzen']):t.k==='way'?['✨','Reisen']:t.k==='door'?['🚪','Betreten']:t.k==='chest'?['🧰','Öffnen']:['🚪','Verlassen'];
 Object.assign(G,{act,target});
 const DAYLEN=720;
 G.dayInfo=()=>{const t=((G.P&&G.P.dayT)||0)%DAYLEN,n=Math.floor(((G.P&&G.P.dayT)||0)/DAYLEN);let L;if(t<470)L=1;else if(t<530)L=1-(t-470)/60*.78;else if(t<680)L=.22;else L=.22+(t-680)/40*.78;
  return{t,n,light:clamp(L,.22,1),night:t>=505&&t<700,dusk:t>=440&&t<540,full:h2(n,7,777)<.1,sunA:(t/DAYLEN)};};
 G.update=function(dt){if(P&&!P.dead){const st=P.stats||(P.stats={});st.time=(st.time||0)+dt;}P=G.P;G.time+=dt;P.dayT=(P.dayT||0)+dt;{const di=G.dayInfo();if(di.night!==G._wasNight){if(di.night){G.toast(di.full?'🌕 Vollmond! Werwölfe streifen umher …':'🌙 Die Nacht bricht herein. Untote erheben sich.','#b3c7ff',true);sfx('horn');}else if(G._wasNight!=null)G.toast('🌅 Der Morgen graut.','#ffe0a0');G._wasNight=di.night;}}const S=G.S=calc();if(P.hp>S.maxhp)P.hp=S.maxhp;
  let mx=G.input.x,my=G.input.y;
- if(P.drunk>0){const d0=P.drunk;P.drunk=Math.max(0,P.drunk-dt/70);if(d0>=3&&P.drunk<3){G.toast('🙂 Du bist wieder einigermaßen nüchtern.','#c8e6c9');G.S=calc();}else if(Math.floor(d0)!==Math.floor(P.drunk))G.S=calc();
+ if(P.drunk>0){const d0=P.drunk;P.drunk=Math.max(0,P.drunk-dt/20);if(d0>=3&&P.drunk<3){G.toast('🙂 Du bist wieder einigermaßen nüchtern.','#c8e6c9');G.S=calc();}else if(Math.floor(d0)!==Math.floor(P.drunk))G.S=calc();
   if(P.drunk>=3){const amp=Math.min(1.05,.38+(P.drunk-3)*.1),a=Math.sin(G.time*1.6)*amp+Math.sin(G.time*3.7+1)*amp*.35;if(Math.hypot(mx,my)>.05){const c=Math.cos(a),s2=Math.sin(a);const nx=mx*c-my*s2,ny=mx*s2+my*c;mx=nx;my=ny;}else if(P.drunk>=6&&!P.dead){const w=Math.sin(G.time*.9)*.22;mx=Math.cos(G.time*.7)*w;my=Math.sin(G.time*1.1)*w;}}}
  const len=Math.hypot(mx,my);P.moving=false;
  P.dodgeCd-=dt;if(P.invT>0)P.invT-=dt;if(P.secondT>0)P.secondT-=dt;
@@ -1227,7 +1574,7 @@ G.update=function(dt){if(P&&!P.dead){const st=P.stats||(P.stats={});st.time=(st.
  if(P.pullT>0&&P.pullFrom&&!P.dead&&P.dodgeT<=0){P.pullT-=dt;const m=P.pullFrom,ddx=m.x-P.x,ddy=m.y-P.y,dd=Math.hypot(ddx,ddy)||1;if(dd>m.r+18){const sp=520*dt;if(canMoveP(P.x+ddx/dd*sp,P.y,10))P.x+=ddx/dd*sp;if(canMoveP(P.x,P.y+ddy/dd*sp,10))P.y+=ddy/dd*sp;}}
  if(P.dodgeT>0&&!P.dead){P.dodgeT-=dt;const sp=S.speed*3.3*dt;if(canMoveP(P.x+P.ddx*sp,P.y,10))P.x+=P.ddx*sp;if(canMoveP(P.x,P.y+P.ddy*sp,10))P.y+=P.ddy*sp;P.moving=true;P.anim+=dt*1.5;if(Math.random()<.6)G.parts.push({x:P.x,y:P.y+6,z:2,vx:rnd(-20,20),vy:rnd(-20,20),life:.3,c:'#d8c8a0'});}
  else if(P.rootT>0&&!P.dead){P.rootT-=dt;P.moving=false;if(Math.random()<.2)G.parts.push({x:P.x+rnd(-10,10),y:P.y+4,z:6,vx:0,vy:0,life:.3,c:'#5a8a3a'});}
- else if(len>.15&&!P.dead){const nx=mx/len,ny=my/len;if(G.fpDir){P.fx=G.fpDir.x;P.fy=G.fpDir.y;}else if(!G.aim||!G.attackHeld){P.fx=nx;P.fy=ny;}const dr=G.attackHeld&&S.kind&&WKIND[S.kind].draw?WKIND[S.kind].draw:1;const sp=S.speed*Math.min(1,len)*dt*dr*(P.climb?.45:1)*(P.sprint?1.6:1)*(G.devSpd||1);if(G.noclip||canMoveP(P.x+nx*sp,P.y,10))P.x+=nx*sp;if(G.noclip||canMoveP(P.x,P.y+ny*sp,10))P.y+=ny*sp;P.moving=true;P.anim+=dt;}
+ else if(len>.15&&!P.dead){const nx=mx/len,ny=my/len;if(G.fpDir){P.fx=G.fpDir.x;P.fy=G.fpDir.y;}else if(!G.aim||!G.attackHeld){P.fx=nx;P.fy=ny;}const dr=G.attackHeld&&S.kind&&WKIND[S.kind].draw?WKIND[S.kind].draw:1;const dco=!G.room?decoAt(Math.floor(P.x/TILE),Math.floor(P.y/TILE)):0;const sp=S.speed*Math.min(1,len)*dt*dr*(P.climb?.45:1)*(dco===2||dco===3?.82:1)*(P.sprint?1.6:1)*(G.devSpd||1);const ox0=P.x,oy0=P.y;if(G.noclip||canMoveP(P.x+nx*sp,P.y,10))P.x+=nx*sp;if(G.noclip||canMoveP(P.x,P.y+ny*sp,10))P.y+=ny*sp;if(!G.room&&!G.noclip&&Math.hypot(P.x-ox0,P.y-oy0)<sp*.3)treeSlide(nx,ny,sp);P.moving=true;P.anim+=dt;}
  {const rr=G.room;if(rr&&!P.dead&&(P.x<rr.x0*TILE||P.y<rr.y0*TILE||P.x>=(rr.x0+rr.w)*TILE||P.y>=(rr.y0+rr.h)*TILE)){if(rr.door){P.x=(rr.door.tx+.5)*TILE;P.y=(rr.door.ty-.5)*TILE;}}}
  G.enterT=(G.enterT||0)-dt;
  if(G.enterT<=0&&!P.dead){if(G.room){if(tileAt(Math.floor(P.x/TILE),Math.floor((P.y+6)/TILE))===T.DOOR){exitRoom();}}
@@ -1238,13 +1585,13 @@ G.update=function(dt){if(P&&!P.dead){const st=P.stats||(P.stats={});st.time=(st.
  const SLEEPR=G.simR();for(const m of G.mons){if(m.dead)continue;if(!m.boss&&!m.aggro&&!m.room&&Math.abs(m.x-P.x)+Math.abs(m.y-P.y)>SLEEPR){m.mvg=0;continue;}m.atkCd-=dt;m.hitT-=dt;m.swing-=dt;{const _d=Math.hypot(m.x-(m._lx==null?m.x:m._lx),m.y-(m._ly==null?m.y:m._ly));m._lx=m.x;m._ly=m.y;m.mvg=(m.mvg||0)*.82+(_d>dt*6?.18:0);if(m.mvg>.3)m.anim+=dt*Math.min(1.6,Math.max(.5,_d/dt/55));}
   if(m.burn){m.burn.t-=dt;m.hp-=m.burn.dps*dt;if(Math.random()<.3)G.parts.push({x:m.x+rnd(-8,8),y:m.y,z:14,vx:0,vy:-40,life:.4,c:'#ff8a2a'});if(m.burn.t<=0)m.burn=null;if(m.hp<=0){killMonster(m);continue;}}
   m.slowT=(m.slowT||0)-dt;if(m.stunT>0){m.stunT-=dt;m.wind=0;if(Math.random()<.15)G.parts.push({x:m.x+rnd(-8,8),y:m.y,z:m.r*2+8,vx:0,vy:0,life:.3,c:'#fff59d'});continue;}
-  if(!m.room&&!m.boss&&(dV(m.x/TILE,m.y/TILE)<RV+.5||townAt(m.x/TILE,m.y/TILE))){m.dead=true;continue;}
+  if(!m.room&&!m.boss&&!m.realm&&!m.camp&&(dV(m.x/TILE,m.y/TILE)<RV+.5||townAt(m.x/TILE,m.y/TILE))){m.dead=true;continue;}
   if(m.t.night&&!m.boss&&!m.room){const di=G.dayInfo();if(!di.night&&!di.dusk){m.hp-=m.maxhp*.2*dt;if(Math.random()<.4)G.parts.push({x:m.x+rnd(-8,8),y:m.y,z:12,vx:0,vy:-50,life:.6,c:'#555',smoke:1});if(m.hp<=0){m.dead=true;continue;}}}
   if(m.t.human&&m.aggro&&!m.wereCk&&!m.room){m.wereCk=1;const di=G.dayInfo();if(di.night&&di.full&&Math.random()<.4){const w=mkMonster('werewolf',m.lvl+1,m.x,m.y);w.aggro=true;Object.assign(m,{dead:true});G.mons.push(w);sfx('aggro',{type:'wolf',x:m.x,y:m.y});G.toast(`🌕 ${m.name} verwandelt sich in einen Werwolf!`,'#ffab91',true);for(let i=0;i<16;i++)G.parts.push({x:w.x,y:w.y,z:16,vx:rnd(-120,120),vy:rnd(-120,120),life:.6,c:'#5a4a3a'});continue;}}
   if(m.cor&&Math.random()<.12)G.parts.push({x:m.x+rnd(-m.r,m.r),y:m.y+rnd(-4,4),z:m.r*1.4,vx:rnd(-10,10),vy:-rnd(20,45),life:.7,c:Math.random()<.5?'#ff6a1a':'#3a2a22'});
   const dx=P.x-m.x,dy=P.y-m.y,d=Math.hypot(dx,dy)||1;let vx=0,vy=0,spd=m.spd*(m.slowT>0?.5:1);
   const aggroR=m.boss?340:(m.ai==='ranged'?300:240);
-  m.voiceT-=dt;const hd0=Math.hypot(m.x-m.home.x,m.y-m.home.y);const leashed=m.boss==='dragon'?hd0>TILE*8:(hd0>TILE*(m.room?60:m.boss?30:45)&&d>TILE*6);
+  m.voiceT-=dt;const hd0=Math.hypot(m.x-m.home.x,m.y-m.home.y);const leashed=m.boss==='dragon'?hd0>TILE*8:(hd0>TILE*(m.room?60:m.boss?30:m.realm?14:45)&&d>TILE*6);
   if(m.terr&&!m.provoked&&d<70&&!P.dead&&!safe){m.provoked=true;G.floats.push({x:m.x,y:m.y-m.r-14,t:'Grunz! Revier!',c:'#ffcc80',life:.9});}
   if(m.flee&&(m.provoked||d<90)&&!P.dead){m.aggro=false;m.provoked=false;const fx=-dx/d,fy=-dy/d;const sp2=m.spd*(m.slowT>0?.6:1.35)*dt;let nx=m.x+fx*sp2,ny=m.y+fy*sp2;if(!canMove(nx,ny,m.cr)){nx=m.x+fy*sp2;ny=m.y-fx*sp2;}if(canMove(nx,ny,m.cr)){m.x=nx;m.y=ny;m.fx=fx;m.fy=fy;}m.fleeT=(m.fleeT||0)+dt;if(d>TILE*14&&m.fleeT>4)m.dead=true;continue;}
   const can=!P.dead&&!safe&&!leashed&&(!m.passive||m.provoked)&&(d<aggroR||(m.aggro&&d<aggroR*2.6));
@@ -1254,7 +1601,7 @@ G.update=function(dt){if(P&&!P.dead){const st=P.stats||(P.stats={});st.time=(st.
   else if(m.st==='blink'){m.stT-=dt;if(m.stT<=0){m.st=null;for(let k=0;k<10;k++){const a=Math.random()*6.283,r=rnd(50,80);const nx=P.x+Math.cos(a)*r,ny=P.y+Math.sin(a)*r;if(canMove(nx,ny,m.cr)&&(m.room||!monBlocked(nx,ny))){for(let i=0;i<10;i++)G.parts.push({x:m.x,y:m.y,z:14,vx:rnd(-90,90),vy:rnd(-90,90),life:.4,c:'#6a3a8a'});m.x=nx;m.y=ny;m.atkCd=Math.min(m.atkCd,.2);break;}}}}
   else if(m.st==='wind'){m.stT-=dt;if(m.stT<=0){m.st='dash';m.stT=.45;m.hitDone=false;}}
   else if(m.st==='dash'){m.stT-=dt;vx=m.ddx;vy=m.ddy;spd=m.spd*3.6;if(!m.hitDone&&d<m.r+16){m.hitDone=true;hitPlayer(m.dmg*1.3,{lvl:m.lvl,type:'phys',burn:m.t.burn,chill:m.t.chill});}if(m.stT<=0){m.st=null;m.chCd=rnd(2.5,4);}}
-  else if(can){if(m.cor&&!P.corSeen&&d<260){P.corSeen=1;G.toast('🔥 Rot glühende Augen … Die Asche Ignaroks vergiftet die Tiere. Befallene greifen alles an – gesunde Hasen und Füchse fliehen, Wildschweine verteidigen nur ihr Revier.','#ffab91',true);}if(!m.aggro&&m.voiceT<=0){sfx('aggro',{type:m.boss?(m.boss==='dragon'?'dragon':'boss'):m.type,x:m.x,y:m.y});m.voiceT=12;}m.aggro=true;
+  else if(can){if(m.cor&&!P.corSeen&&d<260){P.corSeen=1;G.toast('🔥 Rot glühende Augen … Der Aschenfluch hat dieses Tier ganz ergriffen. Befallene greifen alles an – weniger befallene Hasen und Füchse fliehen, Wildschweine verteidigen nur ihr Revier.','#ffab91',true);}if(!m.aggro&&m.voiceT<=0){sfx('aggro',{type:m.boss?(m.boss==='dragon'?'dragon':'boss'):m.type,x:m.x,y:m.y});m.voiceT=12;}m.aggro=true;
    if(m.ai==='ranged'){if(d<130){vx=-dx/d;vy=-dy/d;}else if(d>220){vx=dx/d;vy=dy/d;}else{vx=-dy/d*.45*m.strafe;vy=dx/d*.45*m.strafe;}
     m.shotCd-=dt;if(m.shotCd<=0&&d<340){shoot(m,dx,dy,m.t.shot);m.shotCd=m.t.shot.cd*rnd(.85,1.15);m.swing=.25;}monSkills(m,dt,d,dx,dy);}
    else{if(m.ai==='charge'){m.chCd-=dt;if(m.chCd<=0&&d<210&&d>50&&!(m.wind>0)){m.st='wind';m.stT=.6;m.ddx=dx/d;m.ddy=dy/d;}}
@@ -1279,9 +1626,9 @@ G.update=function(dt){if(P&&!P.dead){const st=P.stats||(P.stats={});st.time=(st.
    if(p.pierce>0)p.pierce--;else{p.life=0;break;}}}
   if(p.life<=0)for(let i=0;i<4;i++)G.parts.push({x:p.x,y:p.y,z:10,vx:rnd(-60,60),vy:rnd(-60,60),life:.3,c:p.kind==='fire'?'#ff8a2a':p.kind==='frost'?'#9be7ff':'#e8e0c8'});}
  G.pproj=G.pproj.filter(p=>p.life>0);G.slashes=(G.slashes||[]).filter(s=>(s.t-=dt)>0);
- for(const f of G.farm.values())if(f.s<3){f.t-=dt*(tileAt(f.tx,f.ty)===T.FIELD?1.3:1);if(f.t<=0){f.s++;f.t=rnd(...CROPS[f.c].grow);}}
+ for(const f of G.farm.values())if(f.c&&f.s<3){const C=CROPS[f.c];if(C.kind==='food'&&!cropWet(f))continue;f.t-=dt*(tileAt(f.tx,f.ty)===T.FIELD?1.3:1);if(f.t<=0){f.s++;f.t=rnd(...C.grow);if(f.s>=3&&C.kind==='tree')growTree(f);}}
  if(!G.room)for(const w of WAYS){if(!P.ways[w.id]&&Math.hypot((w.tx+.5)*TILE-P.x,(w.ty+.5)*TILE-P.y)<TILE*3){P.ways[w.id]=1;sfx('quest');G.toast(`✨ Wegschrein „${w.name}“ entdeckt! Du kannst nun hierher reisen.`,'#b388ff',true);}}
- for(const t of G.teles){t.t-=dt;if(t.t<=0&&!t.done){t.done=true;sfx('boom',t);if(Math.hypot(P.x-t.x,P.y-t.y)<t.r)hitPlayer(t.dmg,{lvl:t.lvl,type:t.type||'phys',burn:t.burn,root:t.root,slow:t.slow});for(let i=0;i<16;i++)G.parts.push({x:t.x+rnd(-t.r,t.r)*.7,y:t.y+rnd(-t.r,t.r)*.7,z:4,vx:rnd(-40,40),vy:rnd(-40,40),vz:rnd(40,120),life:.5,c:`rgb(${t.c})`});}}
+ for(const t of G.teles){t.t-=dt;if(t.t<=0&&!t.done){t.done=true;if(!t.q)sfx('boom',t);if(Math.hypot(P.x-t.x,P.y-t.y)<t.r)hitPlayer(t.dmg,{lvl:t.lvl,type:t.type||'phys',burn:t.burn,root:t.root,slow:t.slow});for(let i=0;i<16;i++)G.parts.push({x:t.x+rnd(-t.r,t.r)*.7,y:t.y+rnd(-t.r,t.r)*.7,z:4,vx:rnd(-40,40),vy:rnd(-40,40),vz:rnd(40,120),life:.5,c:`rgb(${t.c})`});}}
  G.teles=G.teles.filter(t=>!t.done);
  // Boden
  fullT-=dt;for(const g of G.grounds){g.t+=dt;if(g.t>.4&&Math.hypot(g.x-P.x,g.y-P.y)<30){if(g.gold){sfx('coin');P.gold+=g.gold;g.gone=true;G.floats.push({x:P.x,y:P.y-40,t:`+${g.gold} Gold`,c:'#ffd54a',life:.9});G.invDirty=true;continue;}
@@ -1293,6 +1640,7 @@ G.update=function(dt){if(P&&!P.dead){const st=P.stats||(P.stats={});st.time=(st.
  for(const f of G.floats){f.life-=dt;f.y-=28*dt;}G.floats=G.floats.filter(f=>f.life>0);
  for(const p of G.parts){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vx*=.92;p.vy*=.92;p.z=(p.z||0)+(p.vz||0)*dt;}G.parts=G.parts.filter(p=>p.life>0);if(G.parts.length>400)G.parts.splice(0,G.parts.length-400);
  spawnTick(dt);if(!G.room)fixedTick(dt);
+ if(!P.curseTip&&P.main>=1&&!G.room&&vDist(P.x,P.y)>RV+3&&!townAt(Math.floor(P.x/TILE),Math.floor(P.y/TILE))){P.curseTip=1;G.toast('🜂 Du verlässt den Schutz der Runensteine. Hier draußen wirkt der Aschenfluch: Fast jedes Geschöpf ist dir feindlich gesinnt – selbst der kleinste Hase.','#ff8a65',true);}
  if(!safe&&!P.dead&&!G.room){bossT-=dt;if(bossT<=0){if(!G.mons.some(m=>m.boss&&!BOSSES[m.boss].fixed&&!m.dead)){bossT=(P.level>=3&&spawnBoss())?rnd(480,720):30;}else bossT=30;}}
  G.flashT-=dt;};
 
@@ -1302,10 +1650,10 @@ G.setSlot=n=>{G.slot=n;try{localStorage.setItem('aschen_slot',n)}catch(e){}};
 G.slotInfo=n=>{try{const raw=localStorage.getItem(SK(n))||(n===1?localStorage.getItem(SAVEK4):null);if(!raw)return null;const s=JSON.parse(raw);if(!s||!s.P)return null;const p=s.P;return{lvl:p.lvl||1,gold:p.gold||0,diff:p.diff,at:p.savedAt||0,look:p.look||null,chapter:p.chapter||null};}catch(e){return null;}};
 G.wipeSlot=n=>{try{localStorage.removeItem(SK(n));if(n===1)localStorage.removeItem(SAVEK4);}catch(e){}};
 G.hasSave=()=>{try{return !!(localStorage.getItem(SK(G.slot))||(G.slot===1&&localStorage.getItem(SAVEK4)));}catch(e){return false;}};
-G.save=function(){if(!G.P)return;try{const p=Object.assign({},G.P);delete p.dead;p.roomId=G.room?G.room.id:null;p.savedAt=Date.now();p.wv=2;const ch={};ROOMS.forEach(r=>{if(r.chests.length)ch[r.id]=r.chests.map(c=>[c.opened?1:0,c.at]);});localStorage.setItem(SK(G.slot),JSON.stringify({P:p,farm:[...G.farm.values()],fixT:G.fixT,chests2:ch}));}catch(e){}};
+G.save=function(){if(!G.P)return;try{if(MSQ[G.P.main])G.P.msId=(MSQ[G.P.main][G.P.ms]||{}).id;G.P.qv=21;const p=Object.assign({},G.P);delete p.dead;p.roomId=G.room?G.room.id:null;p.savedAt=Date.now();p.wv=2;const ch={};ROOMS.forEach(r=>{if(r.chests.length)ch[r.id]=r.chests.map(c=>[c.opened?1:0,c.at]);});localStorage.setItem(SK(G.slot),JSON.stringify({P:p,farm:[...G.farm.values()],fixT:G.fixT,chests2:ch}));}catch(e){}};
 G.load=function(){try{let raw=localStorage.getItem(SK(G.slot)),mig=false;if(!raw&&G.slot===1){raw=localStorage.getItem(SAVEK4);mig=!!raw;}const s=JSON.parse(raw||'null');if(!s||!s.P)return false;if(mig){delete s.farm;delete s.chests;s.P.roomId=null;s.P.x=SPAWN.x;s.P.y=SPAWN.y;}newGame(s.P.diff||G.settings.diff);Object.assign(P,s.P);if(P.sta==null)P.sta=100;if(P.mp==null)P.mp=40;P.staT=0;P.dead=false;P.poison=null;P.dodgeT=0;
- if(!Array.isArray(P.inv)||P.inv.length!==36)return false;if(!P.chat)P.chat={};const oldW=!P.wv;if(Array.isArray(s.farm))s.farm.forEach(f=>{if(f&&CROPS[f.c]){if(oldW){const q=oldToNew(f.tx,f.ty);if(!q)return;f.tx=q[0];f.ty=q[1];}G.farm.set(fk(f.tx,f.ty),f);}});if(!P.kills)P.kills={};if(P.ms==null){P.ms=P.main===3?((P.macc||P.level>=qd('lvG'))?3:0):P.main===4?(P.macc?1:0):0;P.lgN=0;}if(!P.ways)P.ways={city:1};P.burn=null;P.slow=0;if(s.fixT)G.fixT=Object.assign({grukk:0,bonelord:0,dragon:0},s.fixT);
- G.flags.barrier=!!P.barrier;if(s.chests2)for(const id in s.chests2){const r=ROOMS.find(q=>q.id===id),a=s.chests2[id];if(r&&Array.isArray(a))a.forEach((v,j)=>{if(r.chests[j]){r.chests[j].opened=!!v[0];r.chests[j].at=v[1]||0;}});}if(!oldW&&!s.chests2&&Array.isArray(s.chests))s.chests.forEach((a,i)=>{const r=ROOMS[i];if(r&&Array.isArray(a))a.forEach((v,j)=>{if(r.chests[j]){r.chests[j].opened=!!v[0];r.chests[j].at=v[1]||0;}});});G.room=null;if(oldW){migrateWorld();}if(P.roomId){const r=ROOMS.find(q=>q.id===P.roomId);if(r){P.x=r.ent.x;P.y=r.ent.y;}}if(P.diff){G.settings.diff=P.diff;}if(!P.side)P.side={};if(P.dayT==null)P.dayT=60;if(mig){P.x=SPAWN.x;P.y=SPAWN.y;G.toast('🗺 Die Welt ist gewachsen! Du startest wieder in Eichenhain. Deine Ausrüstung und Stufe bleiben.','#ffd54a',true);}placeElara();P.furn=P.furn||{};P.inv.forEach((it,i)=>{if(it&&it.stack&&STACK[it.id]&&STACK[it.id].type==='furn'){P.furn[it.id]=(P.furn[it.id]||0)+it.count;P.inv[i]=null;}});{let nb=0;const fixIt=it=>{if(!it||it.stack||it.v13||it.rarity==null)return;const k=RMULT[it.rarity]/RMULT_OLD[it.rarity];if(it.dmg!=null)it.dmg=Math.max(1,Math.round(it.dmg*k));if(it.def!=null)it.def=Math.max(1,Math.round(it.def*k));it.v13=1;if(it.rarity>0)nb++;};(P.inv||[]).forEach(fixIt);for(const k in P.eq||{})fixIt(P.eq[k]);if(P.chest)(P.chest||[]).forEach(fixIt);if(nb)setTimeout(()=>G.toast('⚖ Update 13: Seltene Waffen & Rüstungen wurden neu ausbalanciert.','#ffd54a',true),3500);}if(!canMove(P.x,P.y,10)){P.x=SPAWN.x;P.y=SPAWN.y;}G.S=calc();if(P.hp<=0)P.hp=G.S.maxhp;return true;}catch(e){console.error(e);return false;}};
+ if(!Array.isArray(P.inv)||P.inv.length!==36)return false;if(!P.chat)P.chat={};const oldW=!P.wv;if(Array.isArray(s.farm))s.farm.forEach(f=>{if(f&&(f.c==null||CROPS[f.c])){if(oldW){const q=oldToNew(f.tx,f.ty);if(!q)return;f.tx=q[0];f.ty=q[1];}G.farm.set(fk(f.tx,f.ty),f);}});if(!P.kills)P.kills={};if(P.ms==null){P.ms=P.main===3?((P.macc||P.level>=qd('lvG'))?3:0):P.main===4?(P.macc?1:0):0;P.lgN=0;}if(!P.ways)P.ways={city:1};P.burn=null;P.slow=0;if(s.fixT)G.fixT=Object.assign({grukk:0,bonelord:0,dragon:0},s.fixT);
+ G.flags.barrier=!!P.barrier;if(s.chests2)for(const id in s.chests2){const r=ROOMS.find(q=>q.id===id),a=s.chests2[id];if(r&&Array.isArray(a))a.forEach((v,j)=>{if(r.chests[j]){r.chests[j].opened=!!v[0];r.chests[j].at=v[1]||0;}});}if(!oldW&&!s.chests2&&Array.isArray(s.chests))s.chests.forEach((a,i)=>{const r=ROOMS[i];if(r&&Array.isArray(a))a.forEach((v,j)=>{if(r.chests[j]){r.chests[j].opened=!!v[0];r.chests[j].at=v[1]||0;}});});G.room=null;if(oldW){migrateWorld();}if(P.roomId){const r=ROOMS.find(q=>q.id===P.roomId);if(r){P.x=r.ent.x;P.y=r.ent.y;}}if(P.diff){G.settings.diff=P.diff;}if(!P.side)P.side={};if(P.dayT==null)P.dayT=60;if(mig){P.x=SPAWN.x;P.y=SPAWN.y;G.toast('🗺 Die Welt ist gewachsen! Du startest wieder in Eichenhain. Deine Ausrüstung und Stufe bleiben.','#ffd54a',true);}placeElara();P.furn=P.furn||{};P.inv.forEach((it,i)=>{if(it&&it.stack&&STACK[it.id]&&STACK[it.id].type==='furn'){P.furn[it.id]=(P.furn[it.id]||0)+it.count;P.inv[i]=null;}});{let nb=0;const fixIt=it=>{if(!it||it.stack||it.v13||it.rarity==null)return;const k=RMULT[it.rarity]/RMULT_OLD[it.rarity];if(it.dmg!=null)it.dmg=Math.max(1,Math.round(it.dmg*k));if(it.def!=null)it.def=Math.max(1,Math.round(it.def*k));it.v13=1;if(it.rarity>0)nb++;};(P.inv||[]).forEach(fixIt);for(const k in P.eq||{})fixIt(P.eq[k]);if(P.chest)(P.chest||[]).forEach(fixIt);if(nb)setTimeout(()=>G.toast('⚖ Update 13: Seltene Waffen & Rüstungen wurden neu ausbalanciert.','#ffd54a',true),3500);}if(!canMove(P.x,P.y,10)){P.x=SPAWN.x;P.y=SPAWN.y;}P.inv=P.inv.map(x=>x&&x.stack&&!STACK[x.id]?null:x);G.questMigrate();qSync();applyTrees(true);G.S=calc();if(P.hp<=0)P.hp=G.S.maxhp;return true;}catch(e){console.error(e);return false;}};
 G.wipe=()=>G.wipeSlot(G.slot);
 // ===== v18: alte Spielstände (kleine Karte) auf die große Welt umrechnen =====
 function oldToNew(x,y){const OT=t=>({x:t.x/2,y:t.y/2});let nx,ny;if(Math.hypot(x-288,y-300)<RV+4){nx=x+VCX-288;ny=y+VCY-300;}else{const t=TOWNS.find(t=>{const o=OT(t);return Math.hypot(x-o.x,y-o.y)<t.r+4;});if(t){const o=OT(t);nx=t.x+(x-o.x);ny=t.y+(y-o.y);}else{nx=x*2;ny=y*2;}}
@@ -1317,74 +1665,40 @@ function migrateWorld(){const tx=P.x/TILE,ty=P.y/TILE;if(tx<576){const q=oldToNe
  setTimeout(()=>G.toast('🗺 Update 18: Die Welt ist doppelt so groß geworden! Deine Position und deine Quests wurden übernommen.','#ffd54a',true),1500);}
 // ===================== v8: Zuhause, Möbel, Angeln, Katzen, Schätze, Tagesablauf =====================
 const HOMEB=BUILD.find(b=>b.id==='h4'),HR=HOMEB.room;HOMEB.name='Dein Haus';HOMEB.sign='🏠';HOMEB.player=1;HR.name='Dein Haus';HR.player=true;HR.chests=[];
-const CARPB=BUILD.find(b=>b.id==='h7');CARPB.name='Schreinerei';CARPB.sign='🪑';CARPB.room.name='Schreinerei Holger';
+const CARPB=BUILD.find(b=>b.id==='h7');
 {const ab=BUILD.find(b=>b.id==='angler');if(ab&&ab.room){const r=ab.room;r.dungeon=false;r.name='Anglerhütte';for(let y=0;y<r.h;y++)for(let x=0;x<r.w;x++)F(r,x,y,T.WOOD);r.chests=[];F(r,0,0,T.BED);F(r,0,1,T.BED);F(r,r.w-1,0,T.HEARTH);F(r,4,3,T.TABLE);F(r,5,3,T.TABLE);F(r,r.w-1,3,T.BARREL);F(r,r.w-1,4,T.BARREL);F(r,2,0,T.SHELF);F(r,r.w-1,r.h-1,T.CRATE);CH_(r,1,r.h-1,'home');}}
 G.HOME={b:HOMEB,r:HR};
-const FURN={bed:{n:'Bett',ic:'🛏',t:[null,['Strohlager',0],['Feldbett',60],['Einzelbett',180],['Doppelbett',450],['Königsbett',1200]]},
- table:{n:'Tisch',ic:'🪵',t:[null,['Holzklotz',25],['Brettertisch',80],['Eichentisch mit Stühlen',220],['Festtafel',600]]},
- hearth:{n:'Kamin',ic:'🔥',t:[null,['Feuerstelle',50],['Steinkamin',200],['Prunkkamin',550]]},
- shelf:{n:'Regal',ic:'📚',t:[null,['Brettregal',35],['Bücherregal',140],['Trophäenregal',420]]},
- rug:{n:'Teppich',ic:'🟥',t:[null,['Strohmatte',20],['Wollteppich',90],['Bärenfell',260]]},
- lamp:{n:'Licht',ic:'🕯',t:[null,['Kerzenständer',25],['Öllampe',90],['Kronleuchter',380]]},
- deco:{n:'Deko',ic:'🖼',t:[null,['Topfpflanze',30],['Gemälde',120],['Wandteppich',300],['Rüstungsständer',700]]},
- basket:{n:'Katzenkorb',ic:'🧺',t:[null,['Katzenkorb',45],['Kuschelkissen',150]]}};
-G.FURN=FURN;
-const FOOT={bed:t=>t>=4?[[0,0],[1,0],[0,1],[1,1]]:t>=2?[[0,0],[0,1]]:[[0,0]],table:t=>t>=3?[[3,2],[4,2]]:[[4,2]],hearth:t=>[[7,0]],shelf:t=>t>=3?[[3,0],[4,0]]:[[3,0]],deco:t=>t===1||t===4?[[7,5]]:[],basket:t=>[],rug:t=>[],lamp:t=>[]};
-const homeRel=(k,t,pos)=>{const f=FOOT[k](t);if(!f.length)return f;const p=pos||(P.home&&P.home.pos&&P.home.pos[k]);if(!p)return f;const a=f[0];return f.map(([x,y])=>[x-a[0]+p[0],y-a[1]+p[1]]);};
-G.homeFoot=k=>{const t=(G.P&&G.P.home&&G.P.home[k])||0;return t?homeRel(k,t).map(([x,y])=>[HR.x0+x,HR.y0+y]):[];};
-const HDEF={rug:[4,3],lamp:[2,0],basket:[6,5],deco:[5,0]};
-G.homePos=(k,def)=>{const p=(G.P&&G.P.home&&G.P.home.pos&&G.P.home.pos[k])||def||HDEF[k]||[0,0];return[HR.x0+p[0],HR.y0+p[1]];};
-G.homeCustom=k=>!!(G.P&&G.P.home&&G.P.home.pos&&G.P.home.pos[k]);
-function applyHome(){const h=P.home||(P.home={bed:1});for(let y=0;y<HR.h;y++)for(let x=0;x<HR.w;x++)F(HR,x,y,T.WOOD);for(const k of ['bed','table','hearth','shelf','deco']){const t=h[k]||0;if(!t)continue;for(const [x,y] of homeRel(k,t))if(x>=0&&y>=0&&x<HR.w&&y<HR.h&&!(y===HR.h-1&&Math.abs(x-(HR.door.tx-HR.x0))<1))F(HR,x,y,T.PFURN);}G.homeV=(G.homeV||0)+1;}
-G.applyHome=applyHome;
-const comfort=()=>{const h=P.home||{};let c=0;for(const k in FURN)c+=(h[k]||0)*(k==='bed'?2:1);return c;};G.comfort=comfort;
-// Freies Einrichten: Möbel kommen ins Inventar und werden im eigenen Haus frei aufgestellt
-for(const k in FURN)FURN[k].t.forEach((v,t)=>{if(!v)return;STACK['f_'+k+t]={name:v[0],type:'furn',fk:k,ft:t,desc:`${FURN[k].n} (Stufe ${t}). In deinem Haus: auswählen und „Aufstellen“ – es landet auf dem Feld vor dir. Mit dem Schreinerhammer wieder abbauen.`,sell:Math.max(1,Math.round(v[1]*.35))};});
+// v22: das alte Stufen-Möbelsystem wurde durch Einzelstücke ersetzt (siehe „Möbel & Deko“ weiter unten)
+function applyHome(){}
+let comfort=()=>0;
 STACK.hammer={name:'Schreinerhammer',type:'tool',desc:'In der Hand halten: Rechtsklick (Handy: ✋ im Haus) öffnet dein Möbellager. Im eigenen Haus ein Möbelstück anvisieren und [F]/✋ drücken baut es ab.',price:60,sell:20};
-const bestFurn=k=>{let b=P.home[k]||0;for(const id in P.furn||{})if(P.furn[id]>0&&STACK[id]&&STACK[id].fk===k)b=Math.max(b,STACK[id].ft);for(const it of P.inv)if(it&&it.stack&&STACK[it.id]&&STACK[it.id].fk===k)b=Math.max(b,STACK[it.id].ft);return b;};G.bestFurn=bestFurn;
-function buyFurn(k){const f=FURN[k],cur=bestFurn(k),nx=f.t[cur+1];if(!nx){G.toast('Das ist schon die beste Stufe!','#ccc');return;}if(P.gold<nx[1]){G.toast(`Zu wenig Gold (${nx[1]} nötig)`,'#ff8a80');sfx('click');return;}P.gold-=nx[1];furnAdd('f_'+k+(cur+1));G.invDirty=true;sfx('coin');G.toast(`${f.ic} ${nx[0]} liegt jetzt in deinem Möbellager (nimmt keinen Inventarplatz weg). Im Haus: Hammer in die Hand und Rechtsklick (Handy: ✋) zum Aufstellen.`,'#ffd54a',true);G.save();}
 function furnAdd(id,n){P.furn=P.furn||{};P.furn[id]=(P.furn[id]||0)+(n||1);}G.furnAdd=furnAdd;
-const WALLF={hearth:1,shelf:1};const wallItem=(k,t)=>WALLF[k]||(k==='deco'&&(t===2||t===3))||(k==='lamp'&&t===2);
-G.placeFurn=function(i,fromBox){const it=fromBox?(P.furn&&P.furn[i]>0?{id:i,count:P.furn[i],box:1}:null):P.inv[i];if(!it||!STACK[it.id]||STACK[it.id].type!=='furn')return false;if(G.room!==HR){G.toast('🏠 Möbel kannst du nur in deinem eigenen Haus aufstellen.','#ffcc80');return false;}
- const S=STACK[it.id],k=S.fk,t=S.ft;let ax=Math.floor(P.x/TILE)-HR.x0+Math.round(P.fx),ay=Math.floor(P.y/TILE)-HR.y0+Math.round(P.fy);if(wallItem(k,t))ay=0;
- const f0=FOOT[k](t);const fp=f0.length?homeRel(k,t,[ax,ay]):[[ax,ay]];
- if(f0.length&&fp.some(([x,y])=>x>=HR.w)){const sh=Math.max(...fp.map(q=>q[0]))-(HR.w-1);ax-=sh;}if(f0.length&&fp.some(([x,y])=>y>=HR.h)){const sh=Math.max(...fp.map(q=>q[1]))-(HR.h-1);ay-=sh;}
- const fp2=f0.length?homeRel(k,t,[ax,ay]):[[ax,ay]];const px=Math.floor(P.x/TILE)-HR.x0,py=Math.floor(P.y/TILE)-HR.y0,dx=HR.door.tx-HR.x0;
- const bad=fp2.some(([x,y])=>x<0||y<0||x>=HR.w||y>=HR.h||(y>=HR.h-2&&Math.abs(x-dx)<1)||(f0.length&&x===px&&y===py));
- let clash=false;if(f0.length)for(const k2 of ['bed','table','hearth','shelf','deco']){if(k2===k)continue;const t2=P.home[k2]||0;if(!t2)continue;for(const q of homeRel(k2,t2))if(fp2.some(([x,y])=>x===q[0]&&y===q[1]))clash=true;}
- if(bad||clash){G.toast(bad?'Hier ist kein Platz (Wand, Tür oder du stehst im Weg). Dreh dich zu einer freien Stelle.':'Da steht schon ein anderes Möbelstück. Bau es mit dem Hammer ab oder such dir einen anderen Platz.','#ff8a80');sfx('click');return false;}
- const old=P.home[k]||0;if(it.box){P.furn[i]--;if(P.furn[i]<=0)delete P.furn[i];}else{it.count--;if(it.count<=0)P.inv[i]=null;}if(old)furnAdd('f_'+k+old);P.home[k]=t;P.home.pos=P.home.pos||{};P.home.pos[k]=[ax,ay];applyHome();G.invDirty=true;sfx('door');
- G.toast(`${FURN[k].ic} ${S.name} aufgestellt!${old?` Das alte Stück liegt in deinem Möbellager.`:''}`,'#ffd54a',true);G.save();return true;};
-// ===== Einrichtungsmodus (Rasterplan von oben) =====
-const LDEF={1:[2,0],2:[5,0],3:[4,2]};
-G.furnAnchor=k=>{const t=P.home[k]||0;if(!t)return null;const p=P.home.pos&&P.home.pos[k];if(p)return p.slice();const f=FOOT[k](t);if(f.length)return f[0].slice();if(k==='lamp')return (LDEF[t]||[2,0]).slice();if(k==='deco')return[5,0];return (HDEF[k]||[0,0]).slice();};
-G.furnFoot=(k,t,ax,ay)=>{const f=FOOT[k](t);return f.length?homeRel(k,t,[ax,ay]):[[ax,ay]];};
-G.furnSolid=(k,t)=>FOOT[k](t).length>0;
-G.furnWall=(k,t)=>wallItem(k,t);
-G.furnValid=(k,t,ax,ay)=>{if(wallItem(k,t)&&ay!==0)return false;const fp=G.furnFoot(k,t,ax,ay),dx=HR.door.tx-HR.x0;if(fp.some(([x,y])=>x<0||y<0||x>=HR.w||y>=HR.h))return false;if(!G.furnSolid(k,t))return true;if(fp.some(([x,y])=>y>=HR.h-2&&Math.abs(x-dx)<1))return false;
- for(const k2 of ['bed','table','hearth','shelf','deco']){if(k2===k)continue;const t2=P.home[k2]||0;if(!t2)continue;for(const q of homeRel(k2,t2))if(fp.some(([x,y])=>x===q[0]&&y===q[1]))return false;}return true;};
-G.furnPut=(id,ax,ay)=>{const S=STACK[id];if(!S||!(P.furn&&P.furn[id]>0))return false;const k=S.fk,t=S.ft;if(!G.furnValid(k,t,ax,ay))return false;const old=P.home[k]||0;P.furn[id]--;if(P.furn[id]<=0)delete P.furn[id];if(old)furnAdd('f_'+k+old);P.home[k]=t;P.home.pos=P.home.pos||{};P.home.pos[k]=[ax,ay];applyHome();sfx('door');G.invDirty=true;G.save();return true;};
-G.furnMoveTo=(k,ax,ay)=>{const t=P.home[k]||0;if(!t||!G.furnValid(k,t,ax,ay))return false;P.home.pos=P.home.pos||{};P.home.pos[k]=[ax,ay];applyHome();sfx('door');G.save();return true;};
 G.HR=HR;
 const hasHammerHeld=()=>{const h=P.inv[P.sel];return h&&h.id==='hammer';};G.hasHammer=()=>hasHammerHeld();
-function furnAt(){let best=null,bd=60;for(const k in FURN){const t=P.home[k]||0;if(!t)continue;let tiles=G.homeFoot(k);if(!tiles.length){const p=G.homePos(k,k==='lamp'?(t===2?[5,0]:t>=3?[4,2]:[2,0]):k==='deco'?[5,0]:null);tiles=[p];}for(const [x,y] of tiles){const d=Math.hypot((x+.5)*TILE-P.x,(y+.5)*TILE-P.y);if(d<bd){bd=d;best={k:'furnpick',fk:k,x,y};}}}return best;}
-G.pickFurn=function(fk){const t=P.home[fk]||0;if(!t)return;furnAdd('f_'+fk+t);P.home[fk]=0;if(P.home.pos)delete P.home.pos[fk];applyHome();G.invDirty=true;sfx('hit');G.toast(`🔨 ${FURN[fk].t[t][0]} abgebaut – liegt im Möbellager.`,'#ffd54a');G.save();};
+function furnAt(){return null;}
 G.sleepNow=()=>sleep();
-function sleep(){const di=G.dayInfo();if(!(di.t>=430||di.t<40)){G.toast('😴 Du bist noch nicht müde. Ab dem Abend kannst du schlafen.','#ccc');return;}if(G.reviveNPCs)G.reviveNPCs();const n=Math.floor(P.dayT/DAYLEN);P.dayT=(di.t>=430?(n+1):n)*DAYLEN+28;const S=calc();P.hp=S.maxhp;P.sta=S.maxSta;P.mp=S.maxMp;P.poison=null;P.burn=null;const c=comfort();P.rested={until:P.dayT+680,b:Math.min(30,c)};G.sleepFx=2.6;G.mons=G.mons.filter(m=>m.room===undefined&&false);sfx('quest');
- setTimeout(()=>{G.toast(`☀ Guten Morgen! Ausgeruht: +${Math.min(30,c)} % Leben & Regeneration (Gemütlichkeit ${c})`,'#ffe9a0',true);if(P.pet&&(P.home.bed||0)>=5)G.toast(`😺 ${P.pet.name} hat sich die ganze Nacht neben dich gekuschelt.`,'#ffd0e0');else if(P.pet)G.toast(`🐱 ${P.pet.name} hat im ${P.home.basket?'Körbchen':'Eck'} geschlafen.`,'#ffd0e0');},900);G.save();}
+function sleep(){const di=G.dayInfo();if(!(di.t>=430||di.t<40)){G.toast('😴 Du bist noch nicht müde. Ab dem Abend kannst du schlafen.','#ccc');return;}if(G.reviveNPCs)G.reviveNPCs();const n=Math.floor(P.dayT/DAYLEN);P.dayT=(di.t>=430?(n+1):n)*DAYLEN+28;const S=calc();P.hp=S.maxhp;P.sta=S.maxSta;P.mp=S.maxMp;P.poison=null;P.burn=null;const c=G.room&&G.room!==HR&&G.rentedHere&&G.rentedHere()?12:comfort();if(G.room!==HR)P.rent=null;P.rested={until:P.dayT+680,b:Math.min(30,c)};G.sleepFx=2.6;G.mons=G.mons.filter(m=>m.room===undefined&&false);sfx('quest');if(P.mount){const wasDead=P.mount.dead;P.mount.dead=0;P.mount.hp=mountMax();if(wasDead)setTimeout(()=>G.toast(`🐎 ${P.mount.name} ist im Stall wieder auf den Beinen!`,'#a5d6a7',true),1800);}
+ setTimeout(()=>{G.toast(`☀ Guten Morgen! Ausgeruht: +${Math.min(30,c)} % Leben & Regeneration (Gemütlichkeit ${c})`,'#ffe9a0',true);if(P.pet&&G.homeBed()&&G.FDECO[G.homeBed().i].sh==='bedk')G.toast(`😺 ${P.pet.name} hat sich die ganze Nacht neben dich gekuschelt.`,'#ffd0e0');else if(P.pet)G.toast(`🐱 ${P.pet.name} hat im ${G.homeItems().some(it=>G.FDECO[it.i].sh==='basket')?'Körbchen':'Eck'} geschlafen.`,'#ffd0e0');},900);G.save();}
 // Schreiner & Angler
 const mkN=(o)=>{o.x=o.hx=(o.tx+.5)*TILE;o.y=o.hy=(o.ty+.5)*TILE;o.fx=0;o.fy=1;o.wt=0;o.vx=0;o.vy=0;o.anim=0;NPCS.push(o);return o;};
 mkN({id:'holger',name:'Schreiner Holger',short:'Holger',abs:1,tx:CARPB.door.tx+1,ty:CARPB.y+CARPB.h+1,look:{body:'#7a5a3a',skin:'#e0b890',hair:'#8a5a2a',beard:'#8a5a2a'},persona:'Gemütlicher, etwas brummiger Schreiner aus Eichenhain. Baut Betten, Tische und Kamine und liebt den Duft von frischem Holz.',greet:['Holz lebt, mein Freund.','Mein Hobel ist mein bester Freund.']});
 mkN({id:'runa',name:'Wächterin Runa',short:'Runa',lord:1,abs:1,tx:TP('nebel',0,-3).x,ty:TP('nebel',0,-3).y,look:{body:'#3a3050',skin:'#e8c8a8',hair:'#d8d8e8',helm:'#7a7290',cape:'#2a2240'},persona:'Kühle, unerschütterliche Wächterin von Nebelwacht, dem letzten Außenposten am Rand der Nebellande. Spricht knapp, kennt die Sucher und die Nebelzwerge, hasst Kaiser Valdrik, der den Nebel geweckt hat.',greet:['Der Nebel schläft nie. Wir auch nicht.','Halte deine Klinge bereit.','Nebelwacht steht – noch.']});
+
+// v20: Anführer der neuen Königreiche
+mkN({id:'sirka',name:'Häuptlingin Sirka',short:'Sirka',lord:1,abs:1,tx:TP('fell',5,-5).x,ty:TP('fell',5,-5).y,look:{body:'#5a2a1a',skin:'#f0d0b0',hair:'#c8692a',cape:'#3a5a2a'},persona:'Häuptlingin des Fellvolks in Rotfellhain, eine Fuchsfrau mit rotem Haar, Fuchsohren und buschigem Schweif. Klug, misstrauisch gegenüber Menschen, aber ehrenhaft. Das Fellvolk riecht den Aschenfluch und meidet deshalb die Menschenstädte. Die Schwarze Legion jagt ihre Jungen.',greet:['Deine Nase ist schlecht, Mensch, aber dein Herz scheint gut.','Das Fellvolk vergisst nie – weder Freund noch Feind.','Rotfellhain steht.']});
+mkN({id:'svanhild',name:'Walküre Svanhild',short:'Svanhild',lord:1,abs:1,tx:TP('schild',5,-5).x,ty:TP('schild',5,-5).y,look:{body:'#d8dce8',skin:'#f4dcc4',hair:'#f0e0a0',helm:'#c8ccd2',cape:'#6a7aa8'},persona:'Anführerin der Walküren auf dem Schildhorst. Sie hat den Spieler einst am Aschenpass zurückgeschickt, weil sein Werk unvollendet war. Spricht feierlich, wählt die Gefallenen für Valhalla. Walküren dürfen keine Burg der Lebenden betreten.',greet:['Valhalla wartet, Ritter. Noch nicht.','Wir sehen alles, was unter dem Himmel geschieht.','Dein Werk ist noch nicht vollendet.']});
+{const SP={sirka:['fox','#c8692a'],ruko:['fox','#b8602a'],mauz:['cat','#d9a060'],wuffel:['dog','#8a6a4a'],nala:['cat','#7a7a80'],tiko:['fox','#d07a32'],wache_fell:['wolf','#8a8a90']};
+ for(const n of NPCS){const sp=SP[n.id];if(sp){n.look.ears=sp[0];n.look.tail=sp[0];n.look.fur=sp[1];n.look.hair=sp[1];n.look.skin=sp[0]==='wolf'||sp[0]==='dog'?'#e0b890':'#f0d0b0';n.look.beard=null;n.look.hat=null;n.folk=1;if(n.id==='wache_fell'){n.look.helm=null;n.look.body='#4a3a2a';}}
+  if(['svanhild','brynja','eira','wache_schild'].indexOf(n.id)>=0){n.look.wings='#f4f2ec';n.look.helm=n.look.helm||'#c8ccd2';n.look.dress=0;n.look.cape=n.look.cape||'#6a7aa8';}}}
 mkN({id:'odo',name:'Händler Odo',short:'Odo',abs:1,tx:TP('nebel',7,4).x,ty:TP('nebel',7,4).y,look:{body:'#4a4060',skin:'#d8b890',hair:'#6a5a4a',beard:'#6a5a4a',hat:'#3a3048'},persona:'Zwielichtiger, aber ehrlicher Händler in Nebelwacht. Verkauft Tränke und kauft Nebelbeute zu guten Preisen.',greet:['Große Tränke, frisch aus dem Kessel!','Was der Nebel ausspuckt, kaufe ich.']});
 SHOPS.odo={n:'Odos Nebelladen',items:['potion2','potion','mpotion','bread','arrow','bolt']};
 const ANG=BUILD.find(b=>b.id==='angler');
-mkN({id:'fiete',name:'Angler Fiete',short:'Fiete',abs:1,tx:ANG.x+6,ty:ANG.y+7,look:{body:'#3a4a5a',skin:'#d9a878',hair:'#9a9a8a',beard:'#9a9a8a',hat:'#4a5a3a'},persona:'Einsamer, wortkarger alter Angler, der an seinem Weiher in den Wiesen westlich von Eichenhain lebt. Redet gern über Fische, Köder und Katzen. Misstraut Städtern.',greet:['Psst. Du verscheuchst die Fische.','Heute beißen sie …']});
+mkN({id:'fiete',name:'Angler Fiete',short:'Fiete',abs:1,tx:ANG.x+6,ty:ANG.y+7,look:{body:'#3a4a5a',skin:'#d9a878',hair:'#9a9a8a',beard:'#9a9a8a',hat:'#4a5a3a'},persona:'Einsamer, wortkarger alter Angler, der an seinem Weiher in den Wiesen westlich von Eichenhain lebt. Redet gern über Fische, Köder und Katzen. Misstraut Städtern. Er ist der Einzige außerhalb der Mauern, den der Aschenfluch verschont: Fließendes Wasser wäscht den Fluch ab, und er lebt seit Jahren am Bach.',greet:['Psst. Du verscheuchst die Fische.','Heute beißen sie …','Der Fluch? Der kommt nicht übers Wasser. Die Fische und ich, wir haben unsere Ruhe.','Mein Weiher wird vom Bach gespeist. Fließendes Wasser – da hat der Aschenfluch nichts zu melden.']});
 JOBS.holger=[['door:h7','saw',[6,10]],['home','idle',[3,5]],['door:h7','saw',[5,8]]];JOBS.fiete=[['home','fish',[12,20]],['door:angler','idle',[3,5]]];
 SHOPS.fiete={n:'Fietes Angelkram',items:['bread','potion','arrow']};
 const killsOf=s=>{let n=0;for(const k in P.kills||{})if(k.indexOf(s)>=0)n+=P.kills[k];return n;};
 // Außentruhen
-const OCH=[{id:'tut',tx:VCX+44,ty:VCY+6,loot:'small'},{id:'can1',tx:458,ty:918,loot:'canyon'},{id:'can2',tx:654,ty:944,loot:'canyon'},{id:'bait',tx:722,ty:948,loot:'bait'},{id:'summit',tx:G.SUMMIT.x+2,ty:G.SUMMIT.y-1,loot:'summit'},{id:'abbeyring',tx:HERALDRING()[0][0]-5,ty:HERALDRING()[0][1]+2,loot:'canyon'},{id:'pyrring',tx:HERALDRING()[1][0]+6,ty:HERALDRING()[1][1]+4,loot:'canyon'}];
+const OCH=[{id:'tut',tx:VCX+56,ty:VCY+6,loot:'small'},{id:'can1',tx:458,ty:918,loot:'canyon'},{id:'can2',tx:654,ty:944,loot:'canyon'},{id:'bait',tx:722,ty:948,loot:'bait'},{id:'summit',tx:G.SUMMIT.x+2,ty:G.SUMMIT.y-1,loot:'summit'},{id:'abbeyring',tx:HERALDRING()[0][0]-5,ty:HERALDRING()[0][1]+2,loot:'canyon'},{id:'pyrring',tx:HERALDRING()[1][0]+6,ty:HERALDRING()[1][1]+4,loot:'canyon'}];
 for(const c of OCH){const t=tileAt(c.tx,c.ty);if(t!==T.LEDGE&&SOLIDS[t])map[c.ty*W+c.tx]=T.DIRT;}G.OCH=OCH;
 function openOCH(c){P.och=P.och||{};if(P.och[c.id])return;P.och[c.id]=1;sfx('chest');const L=Math.max(P.level,zoneLevel(c.tx,c.ty)),D=G.D();const gold=n=>{P.gold+=n;G.floats.push({x:P.x,y:P.y-40,t:`+${n} Gold`,c:'#ffd54a',life:1});G.invDirty=true;};
  if(c.loot==='small'){gold(30);give(mkStack('potion',1));give(mkStack('arrow',20));G.tip('🦘 Gut gesprungen! Mit '+(G.ui&&G.ui.isPc&&G.ui.isPc()?'der Leertaste':'dem ⤒-Knopf')+' kommst du auf Felsstufen.','jump');G.toast('💰 Versteck gefunden!','#ffe0a0');}
@@ -1416,7 +1730,7 @@ const CATC=['#d08a3a','#2a2a2a','#9a9a9a','#e8e0d0','#a0582a','#5a4a3a'],CATN=['
 function spawnCats(){G.CATS=[];for(let i=0;i<6;i++){for(let k=0;k<30;k++){const x=VCX+rint(-24,24),y=VCY+rint(-14,24);if(walkTile(x,y)&&!SOLIDS[tileAt(x,y)]&&tileAt(x,y)!==T.WATER){G.CATS.push({x:(x+.5)*TILE,y:(y+.5)*TILE,fx:0,fy:1,c:CATC[i%CATC.length],wt:0,path:null,anim:Math.random()*9,moving:false,sit:0});break;}}}}
 G.spawnCats=spawnCats;
 function catTick(c,dt,pet){c.anim+=dt;if(pet){const inR=!!G.room;const tx=P.x-P.fx*24,ty=P.y-P.fy*24+6,d=Math.hypot(tx-c.x,ty-c.y);if(c.room!==G.room||d>TILE*9){c.x=P.x-P.fx*20;c.y=P.y+14;c.room=G.room;}
-  if(inR&&G.room===HR&&G.dayInfo().night&&(P.home.bed||0)>=5){const b=G.homeFoot('bed');if(b.length){c.x=(b[1][0]+.5)*TILE;c.y=(b[0][1]+.7)*TILE;c.moving=false;c.lie=1;return;}}c.lie=0;
+  if(inR&&G.room===HR&&G.dayInfo().night&&G.homeBed&&G.homeBed()&&G.FDECO[G.homeBed().i].sh==='bedk'){const b=G.homeFoot('bed');if(b.length){c.x=(b[1][0]+.5)*TILE;c.y=(b[0][1]+.7)*TILE;c.moving=false;c.lie=1;return;}}c.lie=0;
   if(d>20){const sp=Math.min(d,(d>60?P.sprint?230:150:80)*dt);c.x+=(tx-c.x)/d*sp;c.y+=(ty-c.y)/d*sp;c.fx=(tx-c.x)/d;c.fy=(ty-c.y)/d;c.moving=true;}else c.moving=false;return;}
  if(c.scared>0){c.scared-=dt;c.sit=0;const dx=c.x-P.x,dy=c.y-P.y,d=Math.hypot(dx,dy)||1;if(d<TILE*7){const sp=140*dt,nx=c.x+dx/d*sp,ny=c.y+dy/d*sp;if(canMove(nx,ny,6)){c.x=nx;c.y=ny;}else if(canMove(nx,c.y,6))c.x=nx;else if(canMove(c.x,ny,6))c.y=ny;c.fx=dx/d;c.fy=dy/d;c.moving=true;}else c.moving=false;return;}
  if(c.path&&c.path.length){const [px,py]=c.path[0];const gx=(px+.5)*TILE,gy=(py+.5)*TILE,dx=gx-c.x,dy=gy-c.y,dd=Math.hypot(dx,dy),sp=34*dt;if(dd<=sp){c.x=gx;c.y=gy;c.path.shift();}else{c.x+=dx/dd*sp;c.y+=dy/dd*sp;c.fx=dx/dd;c.fy=dy/dd;}c.moving=true;return;}
@@ -1437,13 +1751,14 @@ const ROLE={hilda:['anvil','hammer'],bernd:['hearth','knead'],mara:['shelf','bre
 const FT={bed:T.BED,table:T.TABLE,hearth:T.HEARTH,shelf:T.SHELF,altar:T.ALTAR,anvil:T.ANVIL,throne:T.THRONE,pew:T.PEW};
 function phase(t){return t>=505||t<22?'sleep':t<75?'morning':t<370?'work':t<465?'social':'home';}
 function want(n,t){const ph=phase(t),h=houseOf(n);if(n.id==='elara')return null;const day=Math.floor(((P&&P.dayT)||0)/DAYLEN),r=h2(n.id.length*31+n.id.charCodeAt(0),day,991);
+ {const J=G.jobNow&&G.jobNow(n,t);if(J)return J;if(h&&G.weekWant){const ww=G.weekWant(n,t,ph,h,r);if(ww)return ww;}}
  if(n.id==='otto'||n.id==='berta'&&false)return ph==='sleep'&&t>=600?{b:h,spot:'bed',act:'sleep'}:null;
  if(ph==='work')return null;if(!h)return ph==='sleep'?null:null;
  if(ph==='sleep')return{b:h,spot:n.child&&false?'any':'bed',act:'sleep'};
  if(ph==='social'){const tv=tavOf(n);if(tv&&r<.5&&!n.lord&&n.id!=='aldric')return{b:tv,spot:'table',act:'drink'};if(r<.72)return null;}
  const ro=ROLE[n.id];if(ro&&(ph!=='social'||r<.86))return{b:ro[0]==='altar'&&n.id==='anselm'?BUILD.find(b=>b.id==='chapel'):h,spot:ro[0],act:ro[1]};
  return{b:h,spot:r<.5?'table':r<.75?'hearth':'any',act:r<.5?'eat':'warm'};}
-function spotIn(r,kind,n){const want=FT[kind];const c=[];for(let y=r.y0;y<r.y0+r.h;y++)for(let x=r.x0;x<r.x0+r.w;x++){const t=tileAt(x,y);if(want!=null&&t!==want)continue;if(want==null){if(!SOLIDS[t]&&t!==T.DOOR)c.push({fx:x,fy:y,sx:x,sy:y});continue;}for(const [dx,dy] of [[0,1],[0,-1],[1,0],[-1,0]]){const ax=x+dx,ay=y+dy;if(ax<r.x0||ay<r.y0||ax>=r.x0+r.w||ay>=r.y0+r.h)continue;const at=tileAt(ax,ay);if(!SOLIDS[at]&&at!==T.DOOR)c.push({fx:x,fy:y,sx:ax,sy:ay});}}
+function spotIn(r,kind,n){if(kind&&typeof kind==='object'){if(kind.bed){const s=G.nbBed(r,kind.x,kind.y+1);return{fx:kind.x,fy:kind.y,sx:s[0],sy:s[1]};}return{fx:kind.x,fy:kind.y+1,sx:kind.x,sy:kind.y};}const want=FT[kind];const c=[];for(let y=r.y0;y<r.y0+r.h;y++)for(let x=r.x0;x<r.x0+r.w;x++){const t=tileAt(x,y);if(want!=null&&t!==want)continue;if(want==null){if(!SOLIDS[t]&&t!==T.DOOR)c.push({fx:x,fy:y,sx:x,sy:y});continue;}for(const [dx,dy] of [[0,1],[0,-1],[1,0],[-1,0]]){const ax=x+dx,ay=y+dy;if(ax<r.x0||ay<r.y0||ax>=r.x0+r.w||ay>=r.y0+r.h)continue;const at=tileAt(ax,ay);if(!SOLIDS[at]&&at!==T.DOOR)c.push({fx:x,fy:y,sx:ax,sy:ay});}}
  if(!c.length)return null;const taken=new Set(NPCS.filter(q=>q!==n&&q.spot).map(q=>q.spot.sx+','+q.spot.sy+(kind==='bed'?'b'+q.spot.fx+','+q.spot.fy:'')));const free=c.filter(s=>!taken.has(s.sx+','+s.sy+(kind==='bed'?'b'+s.fx+','+s.fy:'')));const L=free.length?free:c;return L[Math.floor(h2(n.id.length,n.id.charCodeAt(1)||3,77)*L.length)%L.length];}
 function goTo(n,x,y){n.path=npcPath(n,x,y)||[];n.moving=true;}
 function stepPath(n,dt){if(!n.path||!n.path.length)return false;const [px,py]=n.path[0];const gx=(px+.5)*TILE,gy=(py+.5)*TILE,ddx=gx-n.x,ddy=gy-n.y,dd=Math.hypot(ddx,ddy);const sp=(n.child?62:44)*dt;if(dd<=sp){n.x=gx;n.y=gy;n.path.shift();}else{n.x+=ddx/dd*sp;n.y+=ddy/dd*sp;n.fx=ddx/dd;n.fy=ddy/dd;}n.moving=true;n.anim+=dt;return true;}
@@ -1476,7 +1791,7 @@ function witnesses(){const out=[];for(const n of NPCS){if(n.dead||n.ko>0||n.lie|
 const wanted=()=>{const b=P.bounty||0;return b<=0?0:b<100?1:b<250?2:b<500?3:b<900?4:5;};G.wanted=wanted;
 const guardLvl=()=>Math.max(2,P.level+wanted());G.guardLvl=guardLvl;
 const hostile=()=>P.bounty>0&&(wanted()>=2||!!P.guardHostile);G.guardHostile=hostile;
-function jail(why){G.reviveNPCs();const fine=Math.floor(P.gold*.1);P.gold-=fine;{const st=P.stats||(P.stats={});st.jail=(st.jail||0)+1;st.bountyPaid=(st.bountyPaid||0)+fine;}P.bounty=0;P.guardHostile=0;P.dayT+=720;if(G.room){G.room=null;}P.x=SPAWN.x;P.y=SPAWN.y;P.prevX=null;G.mons.length=0;P.hp=Math.max(P.hp,Math.round((G.S||calc()).maxhp*.5));for(const n of NPCS)if(isGuard(n)){n.ghp=0;}G.toast(`⛓ ${why||''}Du hast einen Tag im Kerker verbracht${fine?` und ${fine} Gold Strafe gezahlt`:''}. Das Kopfgeld ist erlassen.`,'#ffcc80',true);G.save();}
+function jail(why){G.reviveNPCs();const fine=Math.floor(P.gold*.25)+Math.min(Math.floor(P.gold*.75),Math.round((P.bounty||0)*.5));P.gold-=fine;const took=G.jailTake();P.guardKill=null;{const st=P.stats||(P.stats={});st.jail=(st.jail||0)+1;st.bountyPaid=(st.bountyPaid||0)+fine;}P.bounty=0;P.guardHostile=0;P.dayT+=720;if(G.room){G.room=null;}P.x=SPAWN.x;P.y=SPAWN.y;P.prevX=null;G.mons.length=0;P.hp=Math.max(P.hp,Math.round((G.S||calc()).maxhp*.5));for(const n of NPCS)if(isGuard(n)){n.ghp=0;}G.toast(`⛓ ${why||''}Du hast einen Tag im Kerker verbracht${fine?` und ${fine} Gold Strafe gezahlt`:''}. Das Kopfgeld ist erlassen.`,'#ffcc80',true);if(took.length)setTimeout(()=>G.toast(`👮 Die Wachen haben dir abgenommen: ${took.join(', ')}`,'#ff8a80',true),1200);G.save();}
 G.jail=jail;
 // Wirt in der Taverne
 {const tv=ROOMS.find(r=>r.b&&r.b.id==='tavern');if(tv&&!NPCS.find(n=>n.id==='wirt')){let bx=0,by=0;for(const [rx,ry] of [[6,1],[6,0],[6,2],[7,1],[0,1],[0,2]]){const x=tv.x0+rx,y=tv.y0+ry;if(walkTile(x,y)&&!SOLIDS[tileAt(x,y)]){bx=x;by=y;break;}}
@@ -1490,7 +1805,7 @@ function stealAt(t){const key=t.rid+':'+t.x+','+t.y;P.searched=P.searched||{};P.
  const r=Math.random();let val=0;if(r<.42){const g=rint(2,12);P.gold+=g;val=g;G.floats.push({x:P.x,y:P.y-40,t:`+${g} Gold`,c:'#ffd54a',life:.9});}else if(r<.67){give(mkStack(pick(['bread','carrot','bread']),rint(1,2)));val=6;}else if(r<.77){give(mkStack('potion',1));val=15;}else if(r<.88){give(mkStack('arrow',rint(3,8)));val=6;}else{G.toast('Nichts Brauchbares gefunden.','#ccc');}
  const w=witnesses();if(w.length){const n=w[0];G.floats.push({x:n.x,y:n.y-46,t:'Dieb! Wachen!',c:'#ff5252',life:1.4});addBounty(20+val*2,`Diebstahl – ${n.short||n.name} hat dich gesehen!`);if(!isGuard(n))G.floats.push({x:n.x,y:n.y-60,t:'📣 Meldet es den Wachen!',c:'#ffcc80',life:1.6});}else if(val)G.toast('🤫 Niemand hat dich gesehen …','#b0bec5');G.save();}
 function hitNPC(n,dmg){if(n.dead||n.ko>0)return;sfx('hit');if(isGuard(n)&&!hostile()){P.guardHostile=1;addBounty(80,`Angriff auf ${n.short||n.name}!`);n.ghp=0;return;}
- if(isGuard(n)&&hostile()){const gl=guardLvl(),mx=60+gl*22;if(!(n.ghp>0))n.ghp=mx;const d=Math.max(1,Math.round(dmg*rnd(.85,1.15)));n.ghp-=d;n.hitFlash=.15;if(G.settings.dmgNums)G.floats.push({x:n.x+rnd(-6,6),y:n.y-44,t:`${d}`,c:'#fff',life:.8});P.bounty+=5;if(n.ghp<=0){n.ghp=0;n.ko=60;n.lie=1;n.path=[];addBounty(60,`${n.short||n.name} niedergeschlagen!`);G.toast(`💫 ${n.short||n.name} ist bewusstlos.`,'#ffcc80');}return;}
+ if(isGuard(n)&&hostile()){const gl=guardLvl(),mx=60+gl*22;if(!(n.ghp>0))n.ghp=mx;const d=Math.max(1,Math.round(dmg*rnd(.85,1.15)));n.ghp-=d;n.hitFlash=.15;if(G.settings.dmgNums)G.floats.push({x:n.x+rnd(-6,6),y:n.y-44,t:`${d}`,c:'#fff',life:.8});P.bounty+=5;if(n.ghp<=0){n.ghp=0;G.guardDown(n);addBounty(150,`${n.short||n.name} getötet!`);G.toast(`☠ ${n.short||n.name} ist tot. Das Kopfgeld kannst du erst morgen früh bei einer anderen Wache begleichen.`,'#ffcc80',true);}return;}
  n.scared=6;n.hitCnt=(n.hitCnt||0)+1;G.floats.push({x:n.x,y:n.y-40,t:pick(['Au!','Hey!','Lass das!','Hilfe!']),c:'#ff8a80',life:.9});
  if(!P.npcWarn||G.time-P.npcWarn>90){P.npcWarn=G.time;n.hitCnt=0;G.toast('⚠ Vorsicht! Wer Bürger angreift, bekommt Kopfgeld und die Wachen jagen ihn.','#ffcc80',true);return;}
  addBounty(isGuard(n)?80:40,`Angriff auf ${n.short||n.name}!`);
@@ -1511,25 +1826,55 @@ G.crimeTick=(n,dt,dn)=>{if(n.dead){if((P.dayT||0)>=(n.deadUntil||0)){n.dead=0;n.
  if(n.scared>0&&isGuard(n))n.scared=0;
  if(n.scared>0){n.scared-=dt;if(!same||n.lie)return false;const dx=n.x-P.x,dy=n.y-P.y,d=Math.hypot(dx,dy)||1;if(d<TILE*6){const sp=120*dt;const nx=n.x+dx/d*sp,ny=n.y+dy/d*sp;if(canMove(nx,ny,10)){n.x=nx;n.y=ny;n.moving=true;n.fx=dx/d;n.fy=dy/d;n.anim+=dt;}}return true;}
  return !!n.post;};
-function guardDialog(n){const b=P.bounty,B=(l,f,c)=>({l,f,c}),st=wanted();return{t:`Halt, im Namen des Gesetzes! Auf deinen Kopf sind ${b} Gold ausgesetzt (Fahndungsstufe ${'★'.repeat(st)}). Bezahl, oder du wanderst in den Kerker.`,b:[
+function guardDialog(n){const b=P.bounty,B=(l,f,c)=>({l,f,c}),st=wanted();if(G.bountyBlocked())return{t:`Du hast heute eine Wache getötet! Mit dir verhandle ich nicht – erst morgen früh kann das Kopfgeld (${b} Gold) beglichen werden. Bis dahin: Ergib dich oder flieh!`,b:[B('⛓ Ergeben (Kerker)',()=>jail(''),1),B('🏃 Fliehen',()=>{P.guardCd=G.time+12;P.guardHostile=1;},1)]};return{t:`Halt, im Namen des Gesetzes! Auf deinen Kopf sind ${b} Gold ausgesetzt (Fahndungsstufe ${'★'.repeat(st)}). Bezahl, oder du wanderst in den Kerker.`,b:[
  B(`⚖ Kopfgeld bezahlen (${b} Gold)`,()=>{if(P.gold<b){G.toast(`Du hast nur ${P.gold} Gold.`,'#ff8a80');return;}P.gold-=b;{const st=P.stats||(P.stats={});st.bountyPaid=(st.bountyPaid||0)+b;}P.bounty=0;P.guardHostile=0;for(const q of NPCS)if(isGuard(q))q.ghp=0;sfx('coin');G.toast('⚖ Kopfgeld bezahlt. Du bist wieder ein freier Bürger.','#a5d6a7',true);},1),
  B('⛓ Ins Gefängnis (Kopfgeld wird erlassen)',()=>jail(''),1),
  B('🏃 Fliehen',()=>{P.guardCd=G.time+12;P.bounty+=10;P.guardHostile=1;G.toast('🏃 Widerstand! Die Wachen greifen dich jetzt an.','#ff8a80');},1)]};}
 // Ziel-Erweiterung: Truhen, Gipfel, Bett, Katzen
-G.extraTarget=(best,bd)=>{if(G.room){if(G.room===HR&&hasHammerHeld()){const f=furnAt();if(f)return f;return{k:'furnbox'};}if(G.room===HR&&!hasHammerHeld()){for(const [x,y] of G.homeFoot('bed')){const d=Math.hypot((x+.5)*TILE-P.x,(y+.5)*TILE-P.y);if(d<Math.min(bd,50)){bd=d;best={k:'bed'};}}}
+G.extraTarget=(best,bd)=>{if(G.room){if(G.room===HR&&hasHammerHeld()){const f=furnAt();if(f)return f;return{k:'furnbox'};}if(G.room===HR&&!hasHammerHeld()){for(const [x,y] of G.homeFoot('bed')){const d=Math.hypot((x+.5)*TILE-P.x,(y+.5)*TILE-P.y);if(d<Math.min(bd,50)){bd=d;best={k:'bed',x,y};}}}
+  {const r=G.room;if(r.guest&&G.rentedHere()){for(let y=r.guest[1];y<=r.guest[3];y++)for(let x=r.guest[0];x<=r.guest[2];x++){if(tileAt(x,y)!==T.BED)continue;const d=Math.hypot((x+.5)*TILE-P.x,(y+.5)*TILE-P.y);if(d<Math.min(bd,50)){bd=d;best={k:'bed',x,y};}}}
+   if(r.id==='casino'){const ptx=Math.floor(P.x/TILE),pty=Math.floor(P.y/TILE);for(let yy=pty-1;yy<=pty+1;yy++)for(let xx=ptx-1;xx<=ptx+1;xx++){if(tileAt(xx,yy)!==T.SLOTM)continue;const d=Math.hypot((xx+.5)*TILE-P.x,(yy+.5)*TILE-P.y);if(d<Math.min(bd,46)){bd=d;best={k:'slot',x:xx,y:yy};}}}
+   if(r.show){for(const s0 of r.show){const x=r.x0+s0[0]+.5,y=r.y0+s0[1]+.5;const d=Math.hypot(x*TILE-P.x,y*TILE-P.y);if(d<Math.min(bd,62)){bd=d;best={k:'show',x:x-.5,y:y-.5};}}}}
   for(const n of NPCS){if(n.loc!==G.room||n.dead)continue;const d=Math.hypot(n.x-P.x,n.y-P.y);if(d<Math.min(bd,52)){bd=d;best={k:'npc',n};}}
   {const r=G.room;if(r&&!r.player&&!r.dungeon&&r.b&&r.kind!=='stall'){const ptx=Math.floor(P.x/TILE),pty=Math.floor(P.y/TILE),dn=dayNo();for(let yy=pty-1;yy<=pty+1;yy++)for(let xx=ptx-1;xx<=ptx+1;xx++){if(!STEALT.has(tileAt(xx,yy)))continue;if(P.searched&&P.searched[r.id+':'+xx+','+yy]===dn)continue;const d=Math.hypot((xx+.5)*TILE-P.x,(yy+.5)*TILE-P.y);if(d<Math.min(bd,44)){bd=d;best={k:'steal',rid:r.id,x:xx,y:yy};}}}}for(const h of G.HORSES||[]){if(h.room!==G.room)continue;const d=Math.hypot(h.x+h.fx*28-P.x,h.y+h.fy*28-P.y);if(d<Math.min(bd,46)){bd=d;best={k:'horse',h};}}if(G.PET&&G.PET.room===G.room){}return best;}
+ if(hasHammerHeld()&&G.townIdAt(Math.floor(P.x/TILE),Math.floor(P.y/TILE)))return{k:'vdeco'};
  for(const c of OCH){if(P.och&&P.och[c.id])continue;const d=Math.hypot((c.tx+.5)*TILE-P.x,(c.ty+.5)*TILE-P.y);if(d<Math.min(bd,48)){bd=d;best={k:'och',c};}}
  {const d=Math.hypot((G.SUMMIT.x+.5)*TILE-P.x,(G.SUMMIT.y+.5)*TILE-P.y);if(d<Math.min(bd,60)){bd=d;best={k:'frost'};}}
  for(const c of G.CATS||[]){const d=Math.hypot(c.x-P.x,c.y-P.y);if(d<Math.min(bd,44)){bd=d;best={k:'cat',c};}}for(const h of G.HORSES||[]){if(h.room)continue;const d=Math.hypot(h.x+h.fx*20-P.x,h.y+h.fy*20-P.y);if(d<Math.min(bd,52)){bd=d;best={k:'horse',h};}}return best;};
-G.extraAct=t=>{if(t.k==='steal'){stealAt(t);return true;}if(t.k==='furnbox'){G.ui&&G.ui.openFurnBox&&G.ui.openFurnBox();return true;}if(t.k==='furnpick'){G.pickFurn(t.fk);return true;}if(t.k==='bed'){sleep();return true;}if(t.k==='och'){openOCH(t.c);return true;}if(t.k==='frost'){takeFrost();return true;}if(t.k==='cat'){feedCat(t.c);return true;}if(t.k==='horse'){patHorse(t.h);return true;}return false;};
-G.extraPos=t=>t.k==='steal'?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='furnbox'?{x:P.x,y:P.y}:t.k==='furnpick'?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='och'?{x:(t.c.tx+.5)*TILE,y:(t.c.ty+.5)*TILE}:t.k==='frost'?{x:(G.SUMMIT.x+.5)*TILE,y:(G.SUMMIT.y+.5)*TILE}:t.k==='cat'?{x:t.c.x,y:t.c.y}:t.k==='horse'?{x:t.h.x+t.h.fx*20,y:t.h.y+t.h.fy*20}:t.k==='bed'?(()=>{const b=G.homeFoot('bed')[0];return{x:(b[0]+.5)*TILE,y:(b[1]+.5)*TILE};})():null;
-G.extraLabel=t=>t.k==='steal'?['🖐','Stehlen']:t.k==='furnbox'?['📦','Möbellager']:t.k==='furnpick'?['🔨','Abbauen: '+FURN[t.fk].t[P.home[t.fk]||1][0]]:t.k==='horse'?['🐴','Streicheln']:t.k==='bed'?['🛏','Schlafen']:t.k==='och'?['🧰','Öffnen']:t.k==='frost'?['❄','Frostherz']:t.k==='cat'?(['trout','carp','salmon','pike','cfish','goldfish'].some(id=>countItem(id)>0)?['🐟','Füttern']:['🐱','Streicheln']):null;
+G.extraAct=t=>{if(t.k==='vdeco'){G.ui&&G.ui.openBuild('town');return true;}if(t.k==='slot'){G.ui&&G.ui.openCasino('slots');return true;}if(t.k==='show'){G.ui&&G.ui.openShowcase();return true;}if(t.k==='steal'){stealAt(t);return true;}if(t.k==='furnbox'){G.ui&&G.ui.openFurnBox&&G.ui.openFurnBox();return true;}if(t.k==='bed'){sleep();return true;}if(t.k==='och'){openOCH(t.c);return true;}if(t.k==='frost'){takeFrost();return true;}if(t.k==='cat'){feedCat(t.c);return true;}if(t.k==='horse'){feedHorse(t.h);return true;}return false;};
+G.extraPos=t=>t.k==='vdeco'?{x:P.x,y:P.y}:t.k==='slot'||t.k==='show'||(t.k==='bed'&&t.x!=null)?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='steal'?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='furnbox'?{x:P.x,y:P.y}:t.k==='furnpick'?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='och'?{x:(t.c.tx+.5)*TILE,y:(t.c.ty+.5)*TILE}:t.k==='frost'?{x:(G.SUMMIT.x+.5)*TILE,y:(G.SUMMIT.y+.5)*TILE}:t.k==='cat'?{x:t.c.x,y:t.c.y}:t.k==='horse'?{x:t.h.x+t.h.fx*20,y:t.h.y+t.h.fy*20}:t.k==='bed'?(()=>{const b=G.homeFoot('bed')[0];return{x:(b[0]+.5)*TILE,y:(b[1]+.5)*TILE};})():null;
+G.extraLabel=t=>t.k==='vdeco'?['🏡','Dorf dekorieren']:t.k==='slot'?['🎰','Spielautomat']:t.k==='show'?['🪟','Schaufenster']:t.k==='steal'?['🖐','Stehlen']:t.k==='furnbox'?['📦','Möbellager']:t.k==='horse'?(countItem('carrot')>0&&(!P.mount||G.HORSES.indexOf(t.h)===P.mount.idx)?['🥕','Füttern']:['🐴','Streicheln']):t.k==='bed'?['🛏','Schlafen']:t.k==='och'?['🧰','Öffnen']:t.k==='frost'?['❄','Frostherz']:t.k==='cat'?(['trout','carp','salmon','pike','cfish','goldfish'].some(id=>countItem(id)>0)?['🐟','Füttern']:['🐱','Streicheln']):null;
 // Dialoge
+// ===== v21: Abenteurergilde – Aufträge rotieren alle 3 Tage und skalieren mit der Spielerstufe =====
+const GTYPES=['rabbit','boar','fox','wolf','slime','spider','goblin','bandit','skeleton','ghoul','bear','centaur','orc','zombie','wasp','jackal','scorpion','icewolf','draugr','imp','salamander','troll','wraith','minotaur','golem','harpy','mummy','frostgiant','vampire','reaper','sucher','nebelgarde','legion','blackknight','shadowhound','banshee'];
+function mkContract(){const L=P.level;const fit=GTYPES.filter(k=>MT[k]&&MT[k].lv&&MT[k].lv[0]<=L+2&&MT[k].lv[1]>=L-3);const pool=fit.length?fit:['wolf','boar'];const k=pick(pool),mn=MT[k].n,r=Math.random();
+ const gold=Math.round((40+L*16)*G.D().gold),xp=Math.round(xpNeed(L)*.3),it=Math.random()<.4;
+ if(L>=8&&r<.2)return{k:'boss',n:1,t:'Erschlage einen Boss oder Dungeon-Boss',gold:gold*2,xp:xp*2,it:1};
+ if(r<.5&&STACK['m_'+k])return{k:'trophy',id:'m_'+k,n:L<10?1:2,t:`Bring ${L<10?'eine Trophäe':'zwei Trophäen'}: ${STACK['m_'+k].name} (${mn})`,gold:Math.round(gold*1.2),xp,it};
+ const n=Math.round(6+L*.35);return{k:'kill',type:k,n,t:`Erlege ${n}× ${mn}`,gold,xp,it};}
+function guildState(){const cyc=Math.floor(Math.floor(P.dayT/DAYLEN)/3);if(!P.guild||P.guild.cyc!==cyc)P.guild={cyc,acc:0,done:0,base:0,ct:mkContract()};return P.guild;}
+const guildBase=c=>c.k==='kill'?killsOf(c.type):c.k==='boss'?(P.bossK||0):0;
+const guildProg=g=>{const c=g.ct;if(!g.acc)return 0;return c.k==='kill'?killsOf(c.type)-g.base:c.k==='boss'?(P.bossK||0)-g.base:countItem(c.id);};
+G.guildState=guildState;G.guildProg=guildProg;
 G.extraDialog=n=>{const q=P.q,B=(l,f,c)=>({l,f,c});
  if(isGuard(n)&&P.bounty>0)return guardDialog(n);
- if(n.id==='holger'){const b=[];if(countItem('hammer')<1)b.push(B('🔨 Schreinerhammer – 60 Gold',()=>{if(buy('hammer',1,60))G.toast('🔨 Halte den Hammer in der Hand und bau in deinem Haus Möbel ab, um sie neu zu stellen.','#ffd54a',true);setTimeout(()=>G.ui&&G.ui.openDialog(n),60);},0));for(const k in FURN){const f=FURN[k],cur=bestFurn(k),nx=f.t[cur+1];if(nx)b.push(B(`${f.ic} ${nx[0]} – ${nx[1]} Gold`,()=>{buyFurn(k);setTimeout(()=>G.ui&&G.ui.openDialog(n),60);},0));}
-  return{t:`Na, ${P.level>=10?'Held':'Neuling'}? Dein Haus ist ja noch ziemlich ${comfort()<6?'leer':comfort()<15?'gemütlich':'prächtig'}. Ich zimmere dir, was du willst – du nimmst es mit und stellst es in deinem Haus auf, wo du magst. Mit meinem Schreinerhammer kannst du alles wieder abbauen und umstellen. Gemütlichkeit: ${comfort()}. (Du hast ${P.gold} Gold)`,b};}
+ if(n.id==='isolde'){{const md=mainDialog(n);if(md)return md;}const g=guildState(),c=g.ct,L=P.level;const prog=guildProg(g),left=3-(Math.floor(P.dayT/DAYLEN)%3);
+  if(g.done)return{t:`Auftrag erledigt – gute Arbeit. Der nächste Aushang kommt in ${left} ${left===1?'Tag':'Tagen'}. Bis dahin kaufe ich dir gern Jagdbeute ab: Felle, Hauer, Hasenpfoten – alles, was Monster so fallen lassen.`,b:[]};
+  if(!g.acc)return{t:`📋 Aushang der Gilde (gilt noch ${left} ${left===1?'Tag':'Tage'}): „${c.t}“ – Belohnung: ${c.gold} Gold und Erfahrung${c.it?' + Ausrüstung':''}.`,b:[B('Auftrag annehmen',()=>{g.acc=1;g.base=guildBase(c);QT('Gildenauftrag: '+c.t);},1)]};
+  if(prog>=c.n)return{t:`Ausgezeichnet! „${c.t}“ – erledigt. Hier ist dein Lohn.`,b:[B('Belohnung',()=>{if(c.k==='trophy')removeItem(c.id,c.n);g.done=1;P.gold+=c.gold;gainXP(c.xp);if(c.it)give(genItem(pick(['ring','amulet','boots','gloves','helm']),Math.max(2,L),2));P.guildN=(P.guildN||0)+1;DONE('Gildenauftrag: '+c.t);},1)]};
+  return{t:`„${c.t}“ – Fortschritt: ${Math.min(prog,c.n)}/${c.n}. Der Aushang gilt noch ${left} ${left===1?'Tag':'Tage'}.`,b:[]};}
+ if(n.id==='edwin'){{const md=mainDialog(n);if(md)return md;}const lv=P.mapR||0;return{t:`Willkommen in meiner Kartenstube. Ich verkaufe Ortsmarker für alle Städte und verbessere deine Karte, damit du beim Erkunden mehr siehst.${lv>=3?' Deine Karte ist so gut, wie Karten nur sein können.':''} Und wenn du alte oder beschädigte Karten findest – bring sie mir, ich entziffere sie.`,b:[]};}
+ if(n.id==='linde'){const st=curStep();if(st&&st.id==='vorrat'&&P.macc&&!P.q.lindeKit){return{t:'Aldric schickt dich? Dann bekommst du das hier umsonst: eine Harke, eine Gießkanne und Weizensaat. So geht’s: Mit der Harke den Boden nahe am Wasser lockern (höchstens 3 Felder entfernt), dann säen und mit der Gießkanne gießen. Die Ackerfelder im Dorf sind schon gelockert und bewässert – da reicht säen.',b:[B('Danke, Linde!',()=>{P.q.lindeKit=1;give(mkStack('harke',1));give(mkStack('kanne',1));give(mkStack('seed',6));},1)]};}
+  return{t:'Lebensmittel: Boden mit der Harke lockern, max. 3 Felder vom Wasser entfernt säen, dann gießen – ein Guss hält einen Tag. Blumen wachsen überall ohne Gießen, Setzlinge werden in zwei Tagen zu Bäumen – auch draußen vor den Mauern, nur nicht auf Wasser, Lava oder Wegen. Bei der Ernte springt manchmal Saat zurück.',b:[]};}
+ if(n.id==='liv'){const st=curStep();if(st&&st.id==='forst'&&P.macc&&!P.q.livAxe&&countItem('holz')<10&&countItem('axt')<1)return{t:'Holz für die Palisade? Endlich jemand, der anpackt! Hier, nimm meine alte Axt. Drei, vier Schläge, dann fällt ein Baum. Und keine Sorge – gefällte Bäume wachsen bei uns nach ein paar Tagen nach.',b:[B('Axt nehmen',()=>{P.q.livAxe=1;give(mkStack('axt',1));},1)]};}
+ if(n.id==='matthes'){const L=P.level,need=6;
+  if(!q.stall){if(L<3)return{t:`Die Wölfe werden frech … Komm wieder, wenn du Stufe 3 bist. Dann hätte ich Arbeit für dich.`,b:[]};return{t:'Seit dem Fluch kommen die Wölfe bis an die Koppel und reißen mir die Schafe. Erschlag sechs von ihnen, dann sorge ich dafür, dass Greta dir Karotten verkauft – die besten Freunde eines Pferdes.',b:[B('Ich jage die Wölfe',()=>{q.stall='active';q.stallW0=killsOf('wolf');QT('Wölfe an der Koppel');},1)]};}
+  if(q.stall==='active'){const k=killsOf('wolf')-(q.stallW0||0);if(k>=need)return{t:'Ha! Meine Schafe sind wieder sicher. Ab heute verkauft Greta dir Karotten. Und hier, drei zum Anfangen: Gib einem Pferd drei Karotten, dann vertraut es dir. Komm dann wieder – ein Pferd ohne Sattel ist nur ein großer Hund.',b:[B('Belohnung nehmen',()=>{q.stall='done';P.carrotOK=1;give(mkStack('carrot',3));P.gold+=Math.round(40*G.D().gold);gainXP(Math.round(xpNeed(P.level)*.25));DONE('Wölfe an der Koppel');G.toast('🥕 Karotten sind jetzt bei Händlerin Greta erhältlich.','#ffd54a',true);},1)]};return{t:`${Math.max(0,k)}/${need} Wölfe erschlagen. Sie streunen in den Wiesen rund ums Dorf.`,b:[]};}
+  if(!P.mount)return{t:'Such dir ein Pferd aus – in der Koppel oder im Stall. Drei Karotten, und es folgt dir überallhin.',b:[]};
+  if(!P.mount.saddle)return{t:`${P.mount.name}? Ein prächtiges Tier! Hier, nimm diesen Sattel. Damit kannst du reiten – schneller als zu Fuß, und du kannst vom Pferd aus kämpfen. Aber pass auf: Was dich trifft, trifft auch dein Pferd. Fällt es, pflege ich es im Stall – erst nach einer Nacht, in der du wirklich geschlafen hast, ist es wieder bei Kräften.`,b:[B('Sattel nehmen',()=>{P.mount.saddle=1;sfx('quest');DONE('Ein eigenes Pferd');G.toast('🐎 Sattel erhalten! Auf- und Absitzen: Taste R (PC) oder 🐴-Knopf (Handy).','#ffd54a',true);G.save();},1)]};
+  if(P.mount.dead)return{t:`${P.mount.name} liegt hier im Stroh und schnauft. Ich hab die Wunden versorgt. Schlaf dich aus – morgen früh steht es wieder.`,b:[]};
+  return{t:`${P.mount.name} sieht gut aus${P.mount.armor?' in der '+P.mount.armor.name:''}. Pferderüstung findest du bei Zentauren in den Wiesen und Wäldern – je stärker der Zentaur, desto besser die Rüstung. Und Karotten heilen dein Pferd unterwegs.`,b:[]};}
+ if(n.id==='holger')return{t:`Na, ${P.level>=10?'Held':'Neuling'}? Dein Haus ist ${comfort()<6?'ja noch ziemlich leer':comfort()<15?'schon recht gemütlich':'richtig prächtig'} (Gemütlichkeit ${comfort()}). Jedes Stück baue ich einzeln – stell so viele auf, wie du magst. Mein Laden im Handwerkshof hat ${G.shopHoursTxt('holger')} geöffnet.`,b:[]};
  if(n.id==='fiete'){if(n.lie)return{t:'Zzz … hm? Die Fische schlafen auch, Junge. Komm morgen wieder.',b:[]};
   if(!q.angler)return{t:'Psst! Du verscheuchst die Fische. … Na gut, wo du schon da bist: Meine Angelschnur ist gerissen, und die beste Schnur macht man aus Spinnenseide. Erlege 6 Spinnen, dann knüpfe ich mir eine neue.',b:[B('Ich jage Spinnen für dich',()=>{q.angler='spiders';q.anglerK=killsOf('spider');G.toast('📜 Nebenquest: Fietes Angelschnur (6 Spinnen)','#ffd54a',true);},1)]};
   if(q.angler==='spiders'){const k=killsOf('spider')-q.anglerK;if(k<6)return{t:`${k} von 6 Spinnen. Die fetten sitzen im Finsterwald und in der Spinnenhöhle.`,b:[]};return{t:'Prächtige Seide! Jetzt fehlt nur mein goldener Köder. Der ist mir in die Schlucht im Süden gefallen, als ich übers Geröll gestiegen bin. Runter kommst du nur über die Kletterwände an den Schluchträndern, behalte deine Ausdauer im Auge!',b:[B('Ich hole den Köder',()=>{q.angler='bait';G.toast('📜 Fietes goldener Köder (Schlucht, klettern!)','#ffd54a',true);},1)]};}
@@ -1537,22 +1882,57 @@ G.extraDialog=n=>{const q=P.q,B=(l,f,c)=>({l,f,c});
   return{t:pick([`${q.fishN||0} Fische hast du schon rausgezogen. ${(q.fishN||0)>30?'Respekt!':'Weiter so.'}`,'Nachts beißen die großen Hechte.','In der Schlucht schwimmen Forellen, die es sonst nirgends gibt.','Goldfische bringen ein Vermögen beim Händler.']),b:[]};}
  if(n.lie)return{t:pick(['Zzz … *gähn* … Was ist denn? Es ist mitten in der Nacht!','Hm? … Komm morgen wieder, ich schlafe.','*schnarch* … oh! Du hast mich erschreckt.']),b:[],keep:1};
  return null;};
-G.extraMark=n=>{const q=P.q;if(n.id==='fiete')return !q.angler?'!':q.angler==='spiders'&&killsOf('spider')-q.anglerK>=6?'?':q.angler==='bait'&&q.anglerBait?'?':'';if(n.id==='holger')return '';return null;};
+G.extraMark=n=>{const q=P.q;if(n.id==='isolde'){const mm=mainMark(n);if(mm)return mm;const g=guildState();return g.done?'':!g.acc?'!':guildProg(g)>=g.ct.n?'?':'';}if(n.id==='linde'){const st=curStep();return st&&st.id==='vorrat'&&P.macc&&!q.lindeKit?'!':'';}if(n.id==='liv'){const st=curStep();if(st&&st.id==='forst'&&P.macc&&!q.livAxe&&countItem('holz')<10&&countItem('axt')<1)return '!';}if(n.id==='matthes')return !q.stall?(P.level>=3?'!':'.'):q.stall==='active'&&killsOf('wolf')-(q.stallW0||0)>=6?'?':(P.mount&&!P.mount.saddle?'?':'');if(n.id==='fiete')return !q.angler?'!':q.angler==='spiders'&&killsOf('spider')-q.anglerK>=6?'?':q.angler==='bait'&&q.anglerBait?'?':'';if(n.id==='holger')return '';return null;};
 // ===== v9: Pferde & Koppel =====
 const PEN={x0:309,y0:316,x1:316,y1:320};{const sb=BUILD.find(b=>b.id==='stable');if(sb){PEN.x0=sb.x-1;PEN.x1=sb.x+sb.w+1;PEN.y0=sb.y+sb.h+1;PEN.y1=PEN.y0+4;}
  let ok=true;for(let y=PEN.y0;y<=PEN.y1;y++)for(let x=PEN.x0;x<=PEN.x1;x++){const t=tileAt(x,y);if(SOLIDS[t]&&t!==T.TREE||t===T.WATER||t===T.DOOR)ok=false;}
  if(ok){for(let y=PEN.y0;y<=PEN.y1;y++)for(let x=PEN.x0;x<=PEN.x1;x++){const ring=x===PEN.x0||x===PEN.x1||y===PEN.y0||y===PEN.y1;map[y*W+x]=ring?T.PFENCE:(h2(x,y,5)<.15?T.FLOWER:T.GRASS);}}else PEN.none=1;}
 G.PEN=PEN;
+// v21: Gärtnerin, Abenteurergilde, Kartograph – in bisher namenlose Häuser von Eichenhain
+{const place=(bid,name,sign)=>{const b=BUILD.find(q=>q.id===bid);if(!b)return {x:VCX,y:VCY+3};b.name=name;b.sign=sign;let x=b.door?b.door.tx+1:b.x+b.w,y=b.y+b.h+1;for(let k=0;k<20&&!walkTile(x,y);k++){x=b.x+(k%(b.w+2))-1;y=b.y+b.h+1+Math.floor(k/(b.w+2));}return{x,y};};
+ const pl=place('h9','Gärtnerei','🌻'),pg=place('h1','Abenteurergilde','⚔'),pk=place('h3','Kartenstube','🗺');
+ mkN({id:'linde',name:'Gärtnerin Linde',short:'Linde',abs:1,tx:pl.x,ty:pl.y,look:{body:'#4a7a3a',skin:'#f0d0b0',hair:'#b86a2a',hat:'#c9a64a',dress:1},persona:'Gärtnerin von Eichenhain. Liebt Pflanzen, redet mit ihren Blumen, verkauft Saatgut, Setzlinge, Harken und Gießkannen. Erklärt geduldig: Lebensmittel brauchen gelockerten Boden, Wasser in max. 3 Feldern Nähe und die Gießkanne; Blumen und Bäume wachsen fast überall.',greet:['Erde unter den Fingernägeln ist ein gutes Zeichen.','Gieß deine Beete, sonst wächst nichts!','Blumen sind die Freude, Gemüse das Brot.']});
+ mkN({id:'isolde',name:'Gildenmeisterin Isolde',short:'Isolde',abs:1,tx:pg.x,ty:pg.y,look:{body:'#5a3a2a',skin:'#e8c4a0',hair:'#2a2a2a',cape:'#7a2a2a'},persona:'Meisterin der Abenteurergilde von Eichenhain, ehemalige Söldnerin mit Narbe über dem Auge. Vergibt Kopfgelder und Jagdaufträge, die alle drei Tage wechseln, und kauft Jagdbeute wie Wolfsfelle und Wildschweinhauer zu guten Preisen.',greet:['Neue Aufträge alle drei Tage. Wer zögert, verliert.','Bring mir Felle und Hauer – ich zahl besser als jeder Krämer.','Die Gilde vergisst keinen, der liefert.']});
+ mkN({id:'edwin',name:'Kartograph Edwin',short:'Edwin',abs:1,tx:pk.x,ty:pk.y,look:{body:'#3a4a6a',skin:'#f0d8c0',hair:'#9a9a9a',beard:'#9a9a9a',hat:'#4a3a2a'},persona:'Alter, pedantischer Kartograph in der Kartenstube von Eichenhain. Kann alte und beschädigte Karten entziffern, verkauft Ortsmarker und verbessert Karten, damit man beim Erkunden mehr sieht. Liebt Tinte und Pergament.',greet:['Vorsicht, die Tinte ist noch feucht!','Eine Karte ist nur so gut wie der, der sie zeichnet.','Weißt du, wie viele Furten es in Eldmar gibt? Ich schon.']});}
+// v20: Stallmeister Matthes – Schafe, Pferde, Karotten und Sättel
+{let mx=PEN.none?VCX+20:PEN.x0-2,my=PEN.none?VCY+16:PEN.y0+2;for(let k=0;k<12&&!walkTile(mx,my);k++){mx--;}mkN({id:'matthes',name:'Stallmeister Matthes',short:'Matthes',abs:1,tx:mx,ty:my,look:{body:'#6a5a3a',skin:'#e0b890',hair:'#7a5a3a',beard:'#7a5a3a',hat:'#8a6a3a'},persona:'Stallmeister von Eichenhain. Kümmert sich um Pferde und Schafe, riecht nach Heu, redet mit seinen Tieren mehr als mit Menschen. Gibt Reitern Sättel und erklärt, wie man Pferde zähmt (drei Karotten) und reitet.',greet:['Ein Pferd ist ein Freund, kein Werkzeug.','Hast du Karotten dabei? Die Tiere riechen das.','Pass auf die Hufe auf.']});}
 const HCOL=[['#7a4a26','#2a1a10'],['#2a2422','#141010'],['#d8d2c6','#efe9dc'],['#a0582a','#5a2a12'],['#8a7a6a','#3a3028']];
-function spawnHorses(){G.HORSES=[];let ci=0;const mk=(x,y,fx,fy,room,pen)=>G.HORSES.push({x,y,fx,fy,c:HCOL[ci%5][0],mane:HCOL[ci++%5][1],room,pen,anim:Math.random()*9,moving:false,graze:Math.random()<.5?1:0,gt:0,wt:1+Math.random()*4,tx:x,ty:y,pat:0});
+function spawnHorses(){G.HORSES=[];let ci=0;const mk=(x,y,fx,fy,room,pen)=>G.HORSES.push({x,y,fx,fy,c:HCOL[ci%5][0],mane:HCOL[ci++%5][1],room,pen,anim:Math.random()*9,moving:false,graze:Math.random()<.5?1:0,gt:0,wt:1+Math.random()*4,tx:x,ty:y,pat:0,hx0:x,hy0:y,hroom:room,hpen:pen,hfx:fx,hfy:fy});
  for(const r of ROOMS){if(r.kind!=='barn'||r.id==='barn')continue;const boxes=r.id==='stable'?[0,3,9]:[0,6];for(const bx of boxes)mk((r.x0+bx+1)*TILE,(r.y0+1.95)*TILE,0,-1,r,null);}
  if(!PEN.none)for(let i=0;i<2;i++)mk((PEN.x0+2+i*3)*TILE,(PEN.y0+2.5)*TILE,i?-1:1,0,null,PEN);}
-function horseTick(h,dt){h.anim+=dt*(h.moving?1:.3);if(h.pat>0)h.pat-=dt;h.gt-=dt;if(h.gt<=0){h.graze=h.room?(Math.random()<.6?1:0):(Math.random()<.7?1:0);h.gt=2+Math.random()*6;}
+function horseTick(h,dt){if(h.ridden){h.x=P.x;h.y=P.y;h.fx=P.fx;h.fy=P.fy;h.moving=P.moving;h.anim=P.anim||0;return;}h.anim+=dt*(h.moving?1:.3);if(h.pat>0)h.pat-=dt;h.gt-=dt;if(h.gt<=0){h.graze=h.room?(Math.random()<.6?1:0):(Math.random()<.7?1:0);h.gt=2+Math.random()*6;}
  if(!h.pen)return;if(h.moving){const dx=h.tx-h.x,dy=h.ty-h.y,d=Math.hypot(dx,dy),sp=24*dt;if(d<=sp){h.moving=false;h.wt=3+Math.random()*7;}else{h.x+=dx/d*sp;h.y+=dy/d*sp;const k=Math.min(1,dt*3);h.fx+=(dx/d-h.fx)*k;h.fy+=(dy/d-h.fy)*k;const l=Math.hypot(h.fx,h.fy)||1;h.fx/=l;h.fy/=l;}return;}
  h.wt-=dt;if(h.wt<=0&&h.pat<=0){const p=h.pen,o=G.HORSES.find(q=>q!==h&&q.pen);for(let k=0;k<8;k++){const nx=(p.x0+1.9+Math.random()*(p.x1-p.x0-2.8))*TILE,ny=(p.y0+1.9+Math.random()*(p.y1-p.y0-2.8))*TILE;if(o&&Math.hypot(nx-o.x,ny-o.y)<TILE*2.2)continue;if(Math.hypot(nx-h.x,ny-h.y)<TILE)continue;h.tx=nx;h.ty=ny;h.moving=true;h.graze=0;break;}if(!h.moving)h.wt=2;}}
-function horseVisible(h){return h.room?G.room===h.room:!G.room;}
+function horseVisible(h){if(h.ridden||(P&&P.mount&&P.mount.dead&&G.HORSES&&G.HORSES[P.mount.idx]===h))return false;return h.room?G.room===h.room:!G.room;}
+// ===================== v20: Reiten =====================
+const HORSEN=['Blitz','Sturmwind','Asche','Donner','Falbe','Mira','Kastanie','Nebel','Rabe','Funke','Sleipnir','Wolke'];
+const mountMax=()=>Math.round(140+P.level*9+(P.mount&&P.mount.armor?P.mount.armor.hp||0:0));G.mountMax=mountMax;
+const myHorse=()=>P.mount&&G.HORSES?G.HORSES[P.mount.idx]:null;
+function feedHorse(h){const idx=G.HORSES.indexOf(h);if(countItem('carrot')<1){patHorse(h);if(!P.mount&&!h._hint){h._hint=1;setTimeout(()=>G.toast(P.carrotOK?'🥕 Mit Karotten könntest du das Pferd zähmen (3 Stück).':'🥕 Pferde lieben Karotten – doch die sind gerade knapp. Frag Stallmeister Matthes.','#e8d0a0'),900);}return;}
+ if(P.mount){if(idx===P.mount.idx){removeItem('carrot',1);P.mount.hp=Math.min(mountMax(),P.mount.hp+60);h.pat=3;G.toast(`🥕 ${P.mount.name} frisst genüsslich. (+60 Pferde-LP)`,'#e8d0a0');}else{patHorse(h);G.toast(`🐴 Du hast schon ${P.mount.name}.`,'#e8d0a0');}return;}
+ removeItem('carrot',1);h.trust=(h.trust||0)+1;h.pat=3;h.graze=0;h.moving=false;for(let i=0;i<6;i++)G.parts.push({x:h.x+rnd(-8,8),y:h.y-14,z:22,vx:rnd(-20,20),vy:-40,life:.9,c:'#ff9a3a'});
+ if(h.trust>=3){const nm=pick(HORSEN);P.mount={idx,c:h.c,mane:h.mane,name:nm,hp:0,dead:0,armor:null,saddle:0};P.mount.hp=mountMax();sfx('quest');G.flashT=.5;G.toast(`🐎 Das Pferd vertraut dir! Du nennst es „${nm}“. Für einen Ritt brauchst du noch einen Sattel – Stallmeister Matthes am Stall hilft dir.`,'#ffd54a',true);G.save();}
+ else{G.toast(`🥕 Das Pferd frisst und stupst dich an … (${h.trust}/3 Vertrauen)`,'#e8d0a0');sfx('pickup');}}
+function dismount(quiet){if(!P.riding)return;P.riding=false;const h=myHorse();if(h){h.ridden=0;let px=P.x-P.fy*26,py=P.y+P.fx*26;if(!canMove(px,py,12)){px=P.x+P.fy*26;py=P.y-P.fx*26;}if(!canMove(px,py,12)){px=P.x;py=P.y+20;}h.x=px;h.y=py;h.fx=P.fx||1;h.fy=P.fy||0;h.room=null;h.pen=null;h.moving=false;h.free=1;}G.S=calc();if(!quiet)G.toast('🐴 Abgesessen.','#e8d0a0');}
+G.dismount=dismount;
+G.toggleRide=function(){if(P.dead)return;if(P.riding){dismount();return;}
+ if(!P.mount){G.toast('🐴 Du hast noch kein Pferd. Zähme eines mit drei Karotten.','#e8d0a0');return;}
+ if(!P.mount.saddle){G.toast('🐴 Ohne Sattel kannst du nicht reiten. Stallmeister Matthes am Stall von Eichenhain hilft dir.','#e8d0a0');return;}
+ if(P.mount.dead){G.toast(`🐴 ${P.mount.name} ist verletzt und wird im Stall gepflegt. Schlaf eine Nacht in deinem Bett – dann ist es wieder auf den Beinen.`,'#ffab91',true);return;}
+ if(G.room){G.toast('🐴 Drinnen kann man nicht reiten.','#e8d0a0');return;}
+ const h=myHorse();if(h){const far=h.room||Math.hypot(h.x-P.x,h.y-P.y)>TILE*3;h.ridden=1;h.free=0;G.toast(far?`🐎 Ein Pfiff – ${P.mount.name} trabt herbei. Aufgesessen!`:`🐎 Aufgesessen auf ${P.mount.name}!`,'#ffd54a');}
+ P.riding=true;sfx('click');G.S=calc();};
+G.canRide=()=>!!(P&&P.mount&&P.mount.saddle);
+function horseHurt(d){const m=P.mount;if(!m||m.dead)return;const def=m.armor?m.armor.def:0;d=Math.max(1,Math.round(d*70/(70+def)));m.hp-=d;G.floats.push({x:P.x+14,y:P.y-18,t:'🐴-'+d,c:'#ffb38a',life:.7});if(m.hp<=0)horseDie();}
+function horseDie(){const m=P.mount;m.hp=0;m.dead=1;P.riding=false;const h=myHorse();if(h){h.ridden=0;h.free=0;h.x=h.hx0;h.y=h.hy0;h.room=h.hroom;h.pen=h.hpen;h.fx=h.hfx;h.fy=h.hfy;h.trust=3;}G.S=calc();sfx('hurt');G.flashT=.5;G.toast(`💀 ${m.name} ist zusammengebrochen! Stallmeister Matthes bringt es in den Stall. Erst wenn du eine Nacht in deinem Bett geschlafen hast, ist es wieder auf den Beinen.`,'#ff8a80',true);G.save();}
+G.mountTick=dt=>{const m=P.mount;if(!m)return;if(m.dead){if(P.riding)P.riding=false;return;}const mx=mountMax();if(m.hp>mx)m.hp=mx;if(m.hp<mx&&!(P.hurtT>0))m.hp=Math.min(mx,m.hp+mx*(P.riding?.004:.02)*dt);if(P.riding&&(G.room||P.dead))dismount(true);};
+// Pferderüstung (Barde): fällt bei Zentauren (und selten bei Bossen), stufenabhängig
+const BARDN=['Leder-Pferdedecke','Beschlagene Pferdedecke','Kettenbarde','Plattenbarde','Drachenbarde','Mythische Barde'];
+function mkBarding(ilvl,rar){ilvl=Math.max(1,Math.round(ilvl));rar=Math.max(0,Math.min(5,rar|0));const M=RMULT[rar]||1;return{uid:(Date.now()%1e8)+'-'+(uidC++),type:'barding',rarity:rar,ilvl,def:Math.round((6+ilvl*1.7)*M),hp:Math.round((20+ilvl*4.5)*M),name:BARDN[rar],v13:1,af:{}};}
+G.mkBarding=mkBarding;
+G.equipBarding=idx=>{const it=P.inv[idx];if(!it||it.type!=='barding')return false;if(!P.mount){G.toast('🐴 Du brauchst erst ein eigenes Pferd.','#ff8a80');return false;}if(P.level<reqLvl(it)){G.toast(`Benötigt Stufe ${reqLvl(it)}`,'#ff8a80');return false;}const old=P.mount.armor;P.mount.armor=it;P.inv[idx]=old||null;P.mount.hp=Math.min(mountMax(),P.mount.hp+(it.hp||0));G.invDirty=true;G.toast(`🐎 ${P.mount.name} trägt jetzt: ${it.name} (Rüstung ${it.def})`,'#ffd54a');G.save();return true;};
 function patHorse(h){h.pat=3;h.graze=0;h.moving=false;h.wt=3;sfx('click');G.toast(pick(['🐴 Das Pferd schnaubt zufrieden und stupst dich an.','🐴 Es wiehert leise und lässt sich den Hals kraulen.','🐴 Das Pferd legt dir den Kopf auf die Schulter.','🐴 Weiches Fell, warme Nüstern. Es mag dich.']),'#e8d0a0');}
-function horsePush(){for(const h of G.HORSES||[]){if(!horseVisible(h))continue;const hx=h.x,hy=h.y;if(Math.abs(hx-P.x)>TILE*2||Math.abs(hy-P.y)>TILE*2)continue;const L=.72*TILE;const ax=hx-h.fx*L,ay=hy-h.fy*L,bx=hx+h.fx*L,by=hy+h.fy*L;const vx=bx-ax,vy=by-ay;let t=((P.x-ax)*vx+(P.y-ay)*vy)/(vx*vx+vy*vy);t=Math.max(0,Math.min(1,t));const cx=ax+vx*t,cy=ay+vy*t;const dx=P.x-cx,dy=P.y-cy,d=Math.hypot(dx,dy),R=.42*TILE+10;if(d<R&&d>.01){const nx=cx+dx/d*R,ny=cy+dy/d*R;if(canMoveP(nx,ny,10)){P.x=nx;P.y=ny;}}}}
+function horsePush(){if(P.riding)return;for(const h of G.HORSES||[]){if(!horseVisible(h))continue;const hx=h.x,hy=h.y;if(Math.abs(hx-P.x)>TILE*2||Math.abs(hy-P.y)>TILE*2)continue;const L=.72*TILE;const ax=hx-h.fx*L,ay=hy-h.fy*L,bx=hx+h.fx*L,by=hy+h.fy*L;const vx=bx-ax,vy=by-ay;let t=((P.x-ax)*vx+(P.y-ay)*vy)/(vx*vx+vy*vy);t=Math.max(0,Math.min(1,t));const cx=ax+vx*t,cy=ay+vy*t;const dx=P.x-cx,dy=P.y-cy,d=Math.hypot(dx,dy),R=.42*TILE+10;if(d<R&&d>.01){const nx=cx+dx/d*R,ny=cy+dy/d*R;if(canMoveP(nx,ny,10)){P.x=nx;P.y=ny;}}}}
 G.horseVisible=horseVisible;
 G.smithStock=()=>{const day=Math.floor((P.dayT||0)/720);let st=P.smithStock;if(!st||st.day!==day||st.lvl!==P.level){const L=P.level||1,maxR=L<6?1:L<12?2:L<20?3:L<30?4:5,items=[];const keys=['sword','axe','mace','spear','dagger','greatsword','halberd','warhammer','bow','longbow','crossbow','ritter','waechter','waldlaeufer','magier','heiler','ring','amulet'].filter(k=>WKIND[k]||SETS[k]||k==='ring'||k==='amulet');
   for(let i=0;i<8;i++){const rr=Math.random();let r=rr<.45?0:rr<.75?1:rr<.9?2:rr<.97?3:4;if(i===0)r=maxR;r=Math.min(r,maxR);const it=lootItem(pick(keys),L,r,{});if(!it)continue;it.shopPrice=Math.round(sellPrice(it)*7/(1+r*.35)/5)*5;items.push(it);}
@@ -1649,12 +2029,266 @@ const POI=[];G.POI=POI;
  G.REACHFIX=fixed;}
 let poiT=0;function poiTick(dt){poiT+=dt;if(poiT<.5||G.room)return;poiT=0;P.disc=P.disc||{};for(const p of POI){if(P.disc[p.id])continue;if(Math.hypot(P.x/TILE-p.tx,P.y/TILE-p.ty)<4.5){P.disc[p.id]=1;const n=Object.keys(P.disc).length;sfx('rare');gainXP(60+zoneLevel(p.tx,p.ty)*12);if(p.kind==='grove'){const S=G.calc();P.hp=S.maxhp;P.mp=S.maxMp;}G.toast(`✦ Entdeckt: ${p.name} (${n}/${POI.length})\n${p.text}`,'#ffe9a0',true);G.save();}}}
 // Hooks
-G.v8tick=dt=>{poiTick(dt);if(!G.HORSES)spawnHorses();for(const h of G.HORSES)if(h.room?G.room===h.room:(!G.room&&Math.hypot(h.x-P.x,h.y-P.y)<TILE*40))horseTick(h,dt);horsePush();G.fishTick(dt);if(!G.CATS)spawnCats();for(const c of G.CATS)if(!G.room&&Math.hypot(c.x-P.x,c.y-P.y)<TILE*30)catTick(c,dt,false);if(P.pet){if(!G.PET)G.PET={x:P.x,y:P.y+14,fx:0,fy:1,c:P.pet.c,anim:0,room:G.room,pet:1};catTick(G.PET,dt,true);}
+G.v8tick=dt=>{poiTick(dt);G._natT=(G._natT||0)-dt;if(G._natT<=0){G._natT=5;G.decoTick();if(P.buffs){let ch=false;for(const k in P.buffs)if(P.buffs[k]<=P.dayT){delete P.buffs[k];ch=true;}if(ch){G.S=calc();G.toast('⌛ Eine Stärkung ist abgeklungen.','#ccc');}}if(P.chopped&&Object.keys(P.chopped).length)applyTrees();}if(!G.HORSES)spawnHorses();if(P.riding){const mh=myHorse();if(mh&&!mh.ridden)mh.ridden=1;}G.mountTick(dt);for(const h of G.HORSES)if(h.ridden||(h.room?G.room===h.room:(!G.room&&Math.hypot(h.x-P.x,h.y-P.y)<TILE*40)))horseTick(h,dt);horsePush();G.fishTick(dt);if(!G.CATS)spawnCats();for(const c of G.CATS)if(!G.room&&Math.hypot(c.x-P.x,c.y-P.y)<TILE*30)catTick(c,dt,false);if(P.pet){if(!G.PET)G.PET={x:P.x,y:P.y+14,fx:0,fy:1,c:P.pet.c,anim:0,room:G.room,pet:1};catTick(G.PET,dt,true);}
  if(P.main===6&&!P.frost&&!P.q.frostHint){P.q.frostHint=1;G.toast('❄ Gunnar: „Ohne das Frostherz vom Frostgipfel verbrennt dich Ignarok! Klettere hinauf, ganz im Nordwesten der Frostlande.“','#81d4fa',true);}
  if(G.sleepFx>0)G.sleepFx-=dt;};
 G.fishAct=fishAct;
 
+// ===================== v22 (Teil 3B): Möbel & Deko, Haus-Upgrades, Wochentage, Casino, Läden, Strafen =====================
+// ---- Wochentage & Uhrzeit (Tag 0 = Montag, t=0 entspricht 06:00 Uhr)
+const WDAY=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'],WD2=['Mo','Di','Mi','Do','Fr','Sa','So'];
+const wday=()=>Math.floor(((P&&P.dayT)||0)/DAYLEN)%7;
+const hourOf=t=>(6+t/DAYLEN*24)%24;
+const clockStr=t=>{const h=hourOf(t),hh=Math.floor(h),mm=Math.floor((h-hh)*60/10)*10;return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');};
+Object.assign(G,{WDAY,WD2,wday,hourOf,clockStr});
+// ---- Öffnungszeiten (Stunden von–bis, Tage-Maske; bis < von = über Mitternacht)
+const HOURS={chapel:[7,20,'all'],craft:[9,18,'MoSa'],shop:[8,19,'MoSa'],inn:[10,2,'all'],potion:[8,20,'all'],casino:[12,2,'all'],guild:[8,20,'MoSa']};
+const HCLS=id=>id==='anselm'?'chapel':id==='holger'||id==='flora'||id==='baldur'?'craft':id==='edwin'||id==='isolde'?'guild':/^(wirt|inn_)/.test(id)?'inn':/^(fortunato|kasimir|bella)$/.test(id)?'casino':/^(wenda|pot_)/.test(id)||id==='brann'||id==='mara'?'potion':'shop';
+G.shopOpen=id=>{const c=HOURS[HCLS(id)],h=hourOf(G.dayInfo().t),wd=wday();let open=c[1]>c[0]?(h>=c[0]&&h<c[1]):(h>=c[0]||h<c[1]);if(c[2]==='MoSa'&&wd===6)open=false;return open;};
+G.shopHoursTxt=id=>{const c=HOURS[HCLS(id)];return `${String(c[0]).padStart(2,'0')}:00–${String(c[1]).padStart(2,'0')}:00 Uhr, ${c[2]==='MoSa'?'Mo–Sa (sonntags Ruhetag)':'täglich'}`;};
+
+// ---- Möbel- & Deko-Katalog: Formen × Materialien
+// sh: Form-Schlüssel | w,h Grundfläche | s: blockiert | l: Ebene (f=flach am Boden, w=Wand, n=normal) | o: Außen | p: Grundpreis | c: Gemütlichkeit
+const SHP={
+ bed1:{n:'Strohlager',ic:'🛏',w:1,h:1,s:1,p:400,c:1,bed:1},bed2:{n:'Einzelbett',ic:'🛏',w:1,h:2,s:1,p:1400,c:3,bed:1},bed3:{n:'Doppelbett',ic:'🛏',w:2,h:2,s:1,p:3600,c:5,bed:1},bedk:{n:'Himmelbett',ic:'👑',w:2,h:2,s:1,p:9500,c:8,bed:1},
+ table1:{n:'Runder Tisch',ic:'🪵',w:1,h:1,s:1,p:500,c:1},table2:{n:'Langer Tisch',ic:'🪵',w:2,h:1,s:1,p:1300,c:2},chair:{n:'Stuhl',ic:'🪑',w:1,h:1,s:0,p:300,c:1},stool:{n:'Hocker',ic:'🪑',w:1,h:1,s:0,p:150,c:0},
+ bench:{n:'Sitzbank',ic:'🪑',w:2,h:1,s:1,p:700,c:1},sofa:{n:'Sofa',ic:'🛋',w:2,h:1,s:1,p:2600,c:4},shelf:{n:'Wandregal',ic:'📚',w:1,h:1,s:1,l:'w',p:700,c:1},bookcase:{n:'Bücherschrank',ic:'📚',w:2,h:1,s:1,l:'w',p:2400,c:3},
+ wardrobe:{n:'Kleiderschrank',ic:'🚪',w:1,h:1,s:1,l:'w',p:1900,c:2},chest:{n:'Truhe',ic:'🧰',w:1,h:1,s:1,p:900,c:1},hearth:{n:'Kamin',ic:'🔥',w:2,h:1,s:1,l:'w',p:3800,c:5},stove:{n:'Kachelofen',ic:'🔥',w:1,h:1,s:1,p:2300,c:3},
+ lampf:{n:'Stehlampe',ic:'🕯',w:1,h:1,s:0,p:800,c:1},candle:{n:'Kerzenständer',ic:'🕯',w:1,h:1,s:0,p:250,c:1},rug:{n:'Teppich',ic:'🟥',w:2,h:2,s:0,l:'f',p:1500,c:2},rugs:{n:'Kleiner Teppich',ic:'🟧',w:1,h:1,s:0,l:'f',p:500,c:1},
+ plant:{n:'Topfpflanze',ic:'🪴',w:1,h:1,s:0,p:350,c:1},vase:{n:'Blumenvase',ic:'🏺',w:1,h:1,s:0,p:600,c:1},painting:{n:'Gemälde',ic:'🖼',w:1,h:1,s:0,l:'w',p:1600,c:2},tapestry:{n:'Wandteppich',ic:'🧶',w:2,h:1,s:0,l:'w',p:2600,c:3},
+ mirror:{n:'Spiegel',ic:'🪞',w:1,h:1,s:0,l:'w',p:1700,c:1},clock:{n:'Standuhr',ic:'🕰',w:1,h:1,s:1,p:2900,c:2},statue:{n:'Statue',ic:'🗿',w:1,h:1,s:1,p:4200,c:2},armor:{n:'Rüstungsständer',ic:'🛡',w:1,h:1,s:1,p:3600,c:2},
+ barrel:{n:'Fass',ic:'🛢',w:1,h:1,s:1,p:250,c:0},crate:{n:'Kiste',ic:'📦',w:1,h:1,s:1,p:200,c:0},desk:{n:'Schreibtisch',ic:'✒',w:2,h:1,s:1,p:1900,c:2},piano:{n:'Spinett',ic:'🎹',w:2,h:1,s:1,p:7200,c:5},
+ globe:{n:'Globus',ic:'🌍',w:1,h:1,s:1,p:2600,c:2},aquarium:{n:'Aquarium',ic:'🐠',w:2,h:1,s:1,p:5200,c:4},bath:{n:'Badezuber',ic:'🛁',w:2,h:1,s:1,p:3900,c:4},basket:{n:'Katzenkorb',ic:'🧺',w:1,h:1,s:0,p:450,c:1,cat:1},
+ trophy:{n:'Jagdtrophäe',ic:'🦌',w:1,h:1,s:0,l:'w',p:2100,c:2},banner:{n:'Wappenbanner',ic:'🚩',w:1,h:1,s:0,l:'w',p:900,c:1},throne:{n:'Thron',ic:'👑',w:1,h:1,s:1,p:12000,c:6},harp:{n:'Harfe',ic:'🎼',w:1,h:1,s:1,p:4800,c:3},
+ // Außen
+ obench:{n:'Parkbank',ic:'🪑',w:2,h:1,s:1,o:1,p:900},lantern:{n:'Laterne',ic:'🏮',w:1,h:1,s:1,o:1,p:1200},fountain:{n:'Springbrunnen',ic:'⛲',w:2,h:2,s:1,o:1,p:8500},fbed:{n:'Blumenbeet',ic:'🌷',w:2,h:1,s:0,l:'f',o:1,p:700},
+ ostatue:{n:'Denkmal',ic:'🗽',w:1,h:1,s:1,o:1,p:5200},hedge:{n:'Hecke',ic:'🌳',w:1,h:1,s:1,o:1,p:400},arch:{n:'Rosenbogen',ic:'🌹',w:1,h:1,s:0,o:1,p:1900},sign:{n:'Wegweiser',ic:'🪧',w:1,h:1,s:1,o:1,p:500},
+ birdbath:{n:'Vogeltränke',ic:'🐦',w:1,h:1,s:1,o:1,p:1500},owell:{n:'Zierbrunnen',ic:'🪣',w:1,h:1,s:1,o:1,p:4600},pavilion:{n:'Pavillon',ic:'⛺',w:2,h:2,s:1,o:1,p:9200},flag:{n:'Fahnenmast',ic:'🚩',w:1,h:1,s:1,o:1,p:800},
+ planter:{n:'Kübelbäumchen',ic:'🌲',w:1,h:1,s:1,o:1,p:900},scarecrow:{n:'Vogelscheuche',ic:'🎃',w:1,h:1,s:1,o:1,p:600},sundial:{n:'Sonnenuhr',ic:'☀',w:1,h:1,s:1,o:1,p:2600},campfire:{n:'Feuerschale',ic:'🔥',w:1,h:1,s:1,o:1,p:700},
+ fence:{n:'Zierzaun',ic:'🚧',w:1,h:1,s:1,o:1,p:150},stonepath:{n:'Pflasterstein',ic:'🪨',w:1,h:1,s:0,l:'f',o:1,p:120},pond:{n:'Zierteich',ic:'💧',w:2,h:2,s:1,o:1,p:3600},cart:{n:'Blumenkarren',ic:'🛒',w:2,h:1,s:1,o:1,p:1700},
+ hay:{n:'Heuballen',ic:'🌾',w:1,h:1,s:1,o:1,p:400},obelisk:{n:'Obelisk',ic:'🗼',w:1,h:1,s:1,o:1,p:6200},picnic:{n:'Picknicktisch',ic:'🧺',w:2,h:1,s:1,o:1,p:1400},swing:{n:'Schaukel',ic:'🎠',w:2,h:1,s:1,o:1,p:2400}};
+// Materialien: [Name, Hauptfarbe, Akzentfarbe, Preisfaktor]
+const MW=[['Kiefer','#a07a4a','#7a4a2a',1],['Eiche','#73502a','#a02828',1.25],['Nussbaum','#4e3420','#2a5a9a',1.5],['Birke','#d8c8a0','#3a7a4a',1.3],['Kirschholz','#8a3a26','#e0b040',1.7],['Weiß lackiert','#ece6da','#6a8ab0',1.8],['Ebenholz','#2a1e18','#c8a040',2.2]];
+const MC=[['Rot','#a02828','#e8d0a0',1],['Blau','#2a4a8a','#e0e0e8',1.1],['Grün','#2a6a3a','#e8d8a0',1.1],['Gold','#d8a830','#7a1020',1.8],['Violett','#5a2a7a','#e0c060',1.5],['Beige','#d8c8a0','#8a5a30',1]];
+const MS=[['Sandstein','#c8b088','#8a7050',1],['Granit','#8a8a90','#5a5a62',1.2],['Marmor','#ece8e0','#b0a890',1.8],['Bronze','#a8743a','#5a3a1a',2],['Moosstein','#7a8a70','#3a6a2a',1.3]];
+const MFL=[['Rosen','#d83a5a','#3a7a3a',1],['Tulpen','#f0c020','#3a8a3a',1],['Lavendel','#8a6ad8','#4a7a4a',1.1],['Sonnenblumen','#f0b020','#4a7a2a',1.2],['Vergissmeinnicht','#5a8ae8','#3a7a3a',1.1]];
+const SHMAT={bed1:[['Stroh','#d8c070','#8a6a3a',1],['Heu & Decke','#c8a860','#a03030',1.3]],bed2:MW.slice(0,6),bed3:MW,bedk:MW.slice(1),table1:MW.slice(0,5),table2:MW,chair:MW,stool:MW.slice(0,4),bench:MW.slice(0,5),sofa:MC,
+ shelf:MW.slice(0,5),bookcase:MW,wardrobe:MW,chest:MW.slice(0,5),hearth:MS,stove:[['Weiße Kacheln','#ece8e0','#3a6ab0',1],['Grüne Kacheln','#3a7a5a','#e8e0c0',1.2],['Rote Kacheln','#a04030','#e8d8b0',1.2]],lampf:[['Messing','#c8a040','#ffe0a0',1],['Eisen','#4a4a50','#ffd080',1],['Silber','#c8ccd4','#e0f0ff',1.6]],
+ candle:[['Eisen','#3a3a40','#ffe0a0',1],['Messing','#c8a040','#ffe0a0',1.4],['Silber','#c8ccd4','#fff0c0',2]],rug:MC,rugs:MC,plant:[['Farn','#3a8a3a','#a06a3a',1],['Palme','#4a9a3a','#c88a5a',1.5],['Kaktus','#5a8a4a','#d07040',1.2],['Zitronenbaum','#4a8a2a','#f0e030',2]],
+ vase:MFL,painting:[['Landschaft','#4a8ad0','#c8a040',1],['Porträt','#8a5a3a','#c8a040',1.3],['Seestück','#2a5a8a','#a07a3a',1.2],['Stillleben','#a06a3a','#c8a040',1.1],['Drachenjagd','#a02828','#c8a040',2]],
+ tapestry:MC,mirror:[['Holzrahmen','#73502a','#cfe0ec',1],['Goldrahmen','#d8a830','#cfe0ec',2]],clock:MW.slice(1),statue:MS,armor:[['Eisen','#8a8e96','#73502a',1],['Ritter','#c8ccd4','#a02828',1.5],['Gold','#d8a830','#2a2a30',2.5]],barrel:MW.slice(0,3),crate:MW.slice(0,3),desk:MW,
+ piano:[['Ebenholz','#2a1e18','#ece6da',1],['Weiß','#ece6da','#2a1e18',1.1],['Nussbaum','#4e3420','#ece6da',1]],globe:[['Messing','#c8a040','#4a8ad0',1],['Holz','#73502a','#4a9a6a',.9]],aquarium:[['Klar','#73502a','#4ab0d0',1],['Korallen','#2a1e18','#e07a5a',1.3]],bath:[['Holz','#8a5a30','#bfe0f0',1],['Kupfer','#b8703a','#bfe0f0',1.4]],
+ basket:[['Weide','#b08850','#d8c8a0',1],['Kuschelkissen','#b08850','#d070a0',2]],trophy:[['Hirsch','#73502a','#d8c8a0',1],['Keiler','#4e3420','#ece6da',1.2],['Wolf','#5a5a60','#ece6da',1.4]],banner:MC,throne:[['Eiche','#73502a','#a02828',1],['Gold','#d8a830','#7a1020',1.8]],harp:[['Gold','#d8a830','#ece6da',1],['Holz','#73502a','#ece6da',.8]],
+ obench:MW.slice(0,4).concat([['Schmiedeeisen','#2a2a30','#73502a',1.4]]),lantern:[['Eisen','#2a2a30','#ffd080',1],['Messing','#c8a040','#ffe0a0',1.3],['Steinsockel','#8a8a90','#ffd080',1.5]],fountain:MS,fbed:MFL,ostatue:MS,
+ hedge:[['Buchs','#3a6a2a','#2a4a1a',1],['Eibe','#2a5a32','#1a3a22',1.1],['Blühend','#3a7a3a','#e870a0',1.4]],arch:MFL.slice(0,3),sign:MW.slice(0,3),birdbath:MS.slice(0,4),owell:MS.slice(0,3),pavilion:[['Weiß','#ece6da','#a02828',1],['Grün','#2a6a3a','#ece6da',1.1],['Blau','#2a4a8a','#ece6da',1.1]],
+ flag:MC,planter:[['Buchskugel','#3a7a2a','#a06a3a',1],['Zypresse','#2a5a32','#8a8a90',1.2],['Apfelbäumchen','#4a8a2a','#d03030',1.4]],scarecrow:[['Klassisch','#c8a860','#a02828',1],['Kürbiskopf','#c8a860','#e07a20',1.3]],sundial:MS.slice(1,4),campfire:[['Eisen','#3a3a40','#ff8a30',1],['Stein','#8a8a90','#ff8a30',1.2]],
+ fence:[['Weißer Lattenzaun','#ece6da','#c8c0b0',1],['Holzzaun','#73502a','#4e3420',1],['Schmiedeeisen','#2a2a30','#c8a040',2]],stonepath:MS.slice(0,3),pond:[['Seerosen','#3a6aa0','#e870a0',1],['Goldfische','#3a6aa0','#f08020',1.2]],cart:MFL.slice(0,3),hay:[['Stroh','#d8c070','#a08040',1]],
+ obelisk:MS.slice(1,4),picnic:MW.slice(0,3),swing:MW.slice(0,3)};
+const FDECO={};let DECO_N=0;
+const mkDeco=(sh,m,i,ex)=>{const S=SHP[sh],id='d_'+sh+'_'+(ex?'x':'')+i;const price=Math.round(S.p*m[3]*(ex?2.6:1)/50)*50;FDECO[id]={id,sh,c1:m[1],c2:m[2],n:ex?`${S.n} „${m[0]}“`:`${S.n} (${m[0]})`,mat:m[0],price,o:!!S.o,ex:!!ex,ic:S.ic};DECO_N++;};
+for(const sh in SHMAT)SHMAT[sh].forEach((m,i)=>mkDeco(sh,m,i,0));
+// Exklusive Schaufenster-Stücke (nur einzeln im Schaufenster, täglich wechselnd)
+const MEX=[['Drachenglut','#7a1010','#ffb030'],['Mondsilber','#b8c8e0','#5a7ab0'],['Feenholz','#c8e0b0','#e890c0'],['Obsidian','#1a1420','#9a5ad8'],['Elfenbein','#f4ecd8','#c8a040'],['Smaragd','#1a7a4a','#e8d890'],['Bernstein','#d88a20','#5a3010'],['Kristall','#bfeaf4','#ffffff'],['Sturmfeder','#3a4a6a','#e0e8f0']];
+const EXSH=['bedk','sofa','throne','clock','statue','hearth','harp','lampf','fountain','ostatue','pavilion','lantern'];
+{let k=0;for(let i=0;i<MEX.length;i++)for(let j=0;j<8;j++){const sh=EXSH[(i*5+j)%EXSH.length];mkDeco(sh,[MEX[i][0],MEX[i][1],MEX[i][2],1],k++,1);}}
+G.FDECO=FDECO;G.SHP=SHP;
+for(const id in FDECO){const d=FDECO[id],S=SHP[d.sh];STACK[id]={name:d.n,type:'furn',deco:1,desc:`${S.o?'Außen-Deko fürs Dorf':'Möbelstück fürs Haus'} · ${S.w}×${S.h} Felder${S.s?'':' · begehbar'}${S.l==='w'?' · an die Wand':''}${S.c?` · Gemütlichkeit +${S.c}`:''}`,sell:Math.round(d.price*.3)};}
+const decoFoot=(id,x,y)=>{const S=SHP[FDECO[id].sh],o=[];for(let j=0;j<S.h;j++)for(let i=0;i<S.w;i++)o.push([x+i,y+j]);return o;};
+G.decoFoot=decoFoot;G.decoInfo=id=>{const d=FDECO[id];return d?Object.assign({},SHP[d.sh],d):null;};
+// Alte Möbel (Stufen-System) auf neue Einzelstücke abbilden
+const OLDF={bed:[null,'d_bed1_0','d_bed2_0','d_bed2_1','d_bed3_1','d_bedk_1'],table:[null,'d_table1_0','d_table2_0','d_table2_1','d_table2_4'],hearth:[null,'d_hearth_0','d_hearth_1','d_hearth_2'],shelf:[null,'d_shelf_0','d_bookcase_1','d_trophy_0'],rug:[null,'d_rugs_5','d_rug_0','d_rug_3'],lamp:[null,'d_candle_0','d_lampf_0','d_lampf_2'],deco:[null,'d_plant_0','d_painting_0','d_tapestry_0','d_armor_1'],basket:[null,'d_basket_0','d_basket_1']};
+for(const k in OLDF)OLDF[k].forEach((id,t)=>{if(id&&!STACK['f_'+k+t])STACK['f_'+k+t]={name:FDECO[id].n,type:'furn',desc:'Altes Möbelstück – wird ins Möbellager übernommen.',sell:1};});
+const oldFid=id=>{const m=/^f_([a-z]+)(\d)$/.exec(id);return m&&OLDF[m[1]]?OLDF[m[1]][+m[2]]:null;};
+
+// ---- Haus: großer Grundriss, Ausbaustufen schalten Räume frei
+const HZ=[[8,7,15,12,0,'Stube'],[8,0,15,5,1,'Schlafzimmer'],[0,0,6,12,2,'Westflügel'],[17,0,23,12,2,'Ostflügel']];
+const HUPG=[null,{n:'Schlafzimmer-Anbau',p:8000,d:'Ein zweiter Raum im Norden – Platz für Betten, Schränke und mehr.'},{n:'Zwei Seitenflügel',p:30000,d:'Ost- und Westflügel: zwei große Räume für Bibliothek, Festsaal oder Bad.'}];
+G.HUPG=HUPG;G.HZ=HZ;
+function homeLayout(){const lv=(P.home&&P.home.lvl)||0,L=(x,y,t)=>F(HR,x,y,t);for(let y=0;y<HR.h;y++)for(let x=0;x<HR.w;x++)L(x,y,T.VOID);
+ for(const z of HZ){if(z[4]>lv)continue;for(let y=z[1];y<=z[3];y++)for(let x=z[0];x<=z[2];x++)L(x,y,T.WOOD);}
+ const wallH=(y,x0,x1)=>{for(let x=x0;x<=x1;x++)if(tileAt(HR.x0+x,HR.y0+y)===T.VOID)L(x,y,T.IWALL);},wallV=(x,y0,y1)=>{for(let y=y0;y<=y1;y++)if(tileAt(HR.x0+x,HR.y0+y)===T.VOID)L(x,y,T.IWALL);};
+ wallH(6,7,16);wallV(7,0,12);wallV(16,0,12);if(lv>=1){L(11,6,T.WOOD);L(12,6,T.WOOD);}if(lv>=2){L(7,9,T.WOOD);L(7,10,T.WOOD);L(16,9,T.WOOD);L(16,10,T.WOOD);}}
+G.homeLayout=homeLayout;
+// Feste Kollision für platzierte Stücke (Haus, Schaufenster, Dorf) – billige Lookup-Tabelle
+const markItems=(list,ox,oy,on)=>{for(const it of list){const S=SHP[(FDECO[it.i]||{}).sh];if(!S||!S.s)continue;for(const [x,y] of decoFoot(it.i,ox+it.x,oy+it.y))VDS[y*W+x]=on?1:0;}};
+function homeItems(){const h=P.home||(P.home={});if(!h.items)h.items=[];return h.items;}
+G.homeItems=homeItems;
+applyHome=function(){if(!P.home)P.home={};homeLayout();for(let y=HR.y0;y<HR.y0+HR.h;y++)for(let x=HR.x0;x<HR.x0+HR.w;x++)VDS[y*W+x]=0;markItems(homeItems(),HR.x0,HR.y0,1);G.homeV=(G.homeV||0)+1;};
+G.applyHome=applyHome;
+// Alte Spielstände: Stufen-Möbel → Einzelstücke, Lager-IDs umschreiben
+function migrateHome(){const h=P.home||(P.home={});if(h.items)return;h.items=[];h.lvl=h.lvl||0;
+ for(const k in OLDF){const t=h[k]||0;if(!t)continue;const id=OLDF[k][t];const pos=h.pos&&h.pos[k];let x,y;if(pos){x=pos[0]+8;y=pos[1]+7;}else{const d={bed:[8,7],table:[12,9],hearth:[14,7],shelf:[11,7],rug:[12,10],lamp:[10,7],deco:[13,7],basket:[14,12]}[k];x=d[0];y=d[1];}h.items.push({i:id,x,y});delete h[k];}
+ delete h.pos;if(!h.items.some(it=>SHP[FDECO[it.i].sh].bed))h.items.push({i:'d_bed1_0',x:8,y:7});
+ const f=P.furn||{},nf={};for(const id in f){const nid=FDECO[id]?id:oldFid(id);if(nid&&f[id]>0)nf[nid]=(nf[nid]||0)+f[id];}P.furn=nf;
+ for(let i=0;i<P.inv.length;i++){const s=P.inv[i];if(s&&s.stack&&/^f_/.test(s.id)){const nid=oldFid(s.id);if(nid)P.furn[nid]=(P.furn[nid]||0)+s.count;P.inv[i]=null;}}
+ // ungültige Plätze (z. B. nach dem Umbau) ins Lager
+ homeLayout();h.items=h.items.filter(it=>{if(!itemFits(it.i,it.x,it.y,it,'home')){P.furn[it.i]=(P.furn[it.i]||0)+1;return false;}return true;});}
+G.migrateHome=migrateHome;
+const floorOK=t=>t===T.WOOD||t===T.STONEF||t===T.CARPET||t===T.STRAW;
+const wallT=t=>t===T.IWALL||t===T.SWALL;
+// Darf ein Stück hier stehen? mode 'home' (relativ zum Haus) oder 'town' (Weltkoordinaten)
+function itemFits(id,x,y,skip,mode){const d=FDECO[id];if(!d)return false;const S=SHP[d.sh],lay=S.l||'n';const fp=decoFoot(id,x,y);
+ if(mode==='home'){if(S.o)return false;const dx=HR.door.tx-HR.x0,dy=HR.h-1;for(const [a,b] of fp){if(a<0||b<0||a>=HR.w||b>=HR.h)return false;if(!floorOK(tileAt(HR.x0+a,HR.y0+b)))return false;if(lay!=='f'&&lay!=='w'&&a===dx&&b>=dy-1)return false;if(lay==='w'&&!wallT(tileAt(HR.x0+a,HR.y0+b-1)))return false;}
+  const px=Math.floor(P.x/TILE)-HR.x0,py=Math.floor(P.y/TILE)-HR.y0;if(G.room===HR&&S.s&&fp.some(([a,b])=>a===px&&b===py))return false;
+  for(const it of homeItems()){if(it===skip)continue;const S2=SHP[FDECO[it.i].sh],l2=S2.l||'n';if(l2!==lay)continue;if(decoFoot(it.i,it.x,it.y).some(([a,b])=>fp.some(([c,e])=>a===c&&b===e)))return false;}return true;}
+ // Dorf
+ if(!S.o)return false;const tw=G.townIdAt(x,y);if(!tw)return false;
+ for(const [a,b] of fp){if(G.townIdAt(a,b)!==tw)return false;const t=tileAt(a,b);if(SOLIDS[t]||t===T.WATER||t===T.FIELD||t===T.CROP||t===T.WELL||t===T.WAYSTONE)return false;if(S.s&&(t===T.COBBLE||t===T.PATH||t===T.BRIDGE))return false;
+  if(S.s)for(const bb of BUILD)if(!bb.wild&&a>=bb.door.tx-1&&a<=bb.door.tx+1&&b>=bb.y+bb.h&&b<=bb.y+bb.h+1)return false;}
+ for(const it of townItems(tw)){if(it===skip)continue;const S2=SHP[FDECO[it.i].sh],l2=S2.l||'n';if(l2!==lay&&!(S.s&&S2.s))continue;if(decoFoot(it.i,it.x,it.y).some(([a,b])=>fp.some(([c,e])=>a===c&&b===e)))return false;}
+ if(S.s){const px=Math.floor(P.x/TILE),py=Math.floor(P.y/TILE);if(fp.some(([a,b])=>a===px&&b===py))return false;}return true;}
+G.itemFits=itemFits;
+// Gemütlichkeit (Schlaf-Bonus) aus allen aufgestellten Stücken
+comfort=()=>{let c=0;for(const it of homeItems()){const d=FDECO[it.i];if(d)c+=(SHP[d.sh].c||0)*(d.ex?2:1);}return Math.min(60,c);};G.comfort=comfort;
+const homeBed=()=>{let best=null;for(const it of homeItems()){const S=SHP[FDECO[it.i].sh];if(S.bed&&(!best||S.c>SHP[FDECO[best.i].sh].c))best=it;}return best;};
+G.homeBed=homeBed;
+G.homeFoot=k=>{if(k!=='bed')return[];const b=homeBed();return b?decoFoot(b.i,HR.x0+b.x,HR.y0+b.y):[];};
+G.homePut=(id,x,y)=>{if(!(P.furn&&P.furn[id]>0)||!itemFits(id,x,y,null,'home'))return false;P.furn[id]--;if(P.furn[id]<=0)delete P.furn[id];homeItems().push({i:id,x,y});applyHome();sfx('door');G.invDirty=true;G.save();return true;};
+G.homeMove=(it,x,y)=>{if(!itemFits(it.i,x,y,it,'home'))return false;it.x=x;it.y=y;applyHome();sfx('door');G.save();return true;};
+G.homeTake=it=>{const L=homeItems(),i=L.indexOf(it);if(i<0)return;L.splice(i,1);furnAdd(it.i);applyHome();sfx('hit');G.invDirty=true;G.save();};
+G.homeAt=(x,y)=>{let hit=null;for(const it of homeItems())if(decoFoot(it.i,it.x,it.y).some(([a,b])=>a===x&&b===y)){const l=SHP[FDECO[it.i].sh].l||'n';if(!hit||l==='n'||(l==='w'&&(SHP[FDECO[hit.i].sh].l==='f')))hit=it;}return hit;};
+
+// ---- Dorf-Deko: nur im Dorf, in dem man gerade steht
+G.townIdAt=(x,y)=>{if(dV(x,y)<RV-1.5&&!inCastle(x,y))return'city';for(const t of TOWNS)if(!t.hostile&&Math.hypot(x-t.x,y-t.y)<t.r-1.5)return t.id;return null;};
+function townItems(tid){const v=P.vdeco||(P.vdeco={});return v[tid]||(v[tid]=[]);}
+G.townItems=townItems;
+const VIDX=new Map();G.VIDX=VIDX;// Chunk-Schlüssel → Liste für Renderer
+const vchunk=(x,y)=>Math.floor(x/CH)+','+Math.floor(y/CH);
+function rebuildVillage(){VIDX.clear();VDS.fill(0);markItems(homeItems(),HR.x0,HR.y0,1);if(G.showMark)G.showMark();
+ for(const tid in (P.vdeco||{}))for(const it of P.vdeco[tid]){const k=vchunk(it.x,it.y);if(!VIDX.has(k))VIDX.set(k,[]);VIDX.get(k).push(it);markItems([it],0,0,1);}G.vdecoV=(G.vdecoV||0)+1;}
+G.rebuildVillage=rebuildVillage;
+const dirtyFoot=(id,x,y)=>{for(const [a,b] of decoFoot(id,x,y))G.dirtyTile&&G.dirtyTile(a,b);};
+G.townPut=(id,x,y)=>{const tw=G.townIdAt(x,y);if(!tw||!(P.furn&&P.furn[id]>0)||!itemFits(id,x,y,null,'town'))return false;P.furn[id]--;if(P.furn[id]<=0)delete P.furn[id];const it={i:id,x,y};townItems(tw).push(it);const k=vchunk(x,y);if(!VIDX.has(k))VIDX.set(k,[]);VIDX.get(k).push(it);markItems([it],0,0,1);G.vdecoV=(G.vdecoV||0)+1;dirtyFoot(id,x,y);sfx('door');G.save();return true;};
+const vUnlink=it=>{const k=vchunk(it.x,it.y),L=VIDX.get(k);if(L){const i=L.indexOf(it);if(i>=0)L.splice(i,1);}markItems([it],0,0,0);dirtyFoot(it.i,it.x,it.y);};
+G.townMove=(it,x,y)=>{if(!itemFits(it.i,x,y,it,'town'))return false;vUnlink(it);it.x=x;it.y=y;const k=vchunk(x,y);if(!VIDX.has(k))VIDX.set(k,[]);VIDX.get(k).push(it);markItems([it],0,0,1);G.vdecoV=(G.vdecoV||0)+1;dirtyFoot(it.i,x,y);sfx('door');G.save();return true;};
+G.townTake=it=>{const tw=G.townIdAt(it.x,it.y)||Object.keys(P.vdeco||{}).find(k=>P.vdeco[k].includes(it));const L=townItems(tw),i=L.indexOf(it);if(i<0)return;L.splice(i,1);vUnlink(it);furnAdd(it.i);G.vdecoV=(G.vdecoV||0)+1;sfx('hit');G.save();};
+G.townAt=(x,y)=>{const tw=G.townIdAt(x,y);if(!tw)return null;let hit=null;for(const it of townItems(tw))if(decoFoot(it.i,it.x,it.y).some(([a,b])=>a===x&&b===y))if(!hit||(SHP[FDECO[it.i].sh].l||'n')!=='f')hit=it;return hit;};
+
+// ---- Schaufenster im Handwerkshof: täglich 1–2 zufällige Exklusiv-Stücke
+const WERK=ROOMS.find(r=>r.id==='werk');G.WERK=WERK;
+const EXPOOL=Object.keys(FDECO).filter(id=>FDECO[id].ex);G.EXPOOL_N=EXPOOL.length;
+function showcase(){const dn=Math.floor(((P&&P.dayT)||0)/DAYLEN);if(!P.shopSeed)P.shopSeed=1+Math.floor(Math.random()*99999);const sd=P.shopSeed;
+ const n=h2(dn,sd,4401)<.45?1:2,out=[];let k=0;while(out.length<n&&k<20){const id=EXPOOL[Math.floor(h2(dn*7+k,sd,4402)*EXPOOL.length)];if(!out.includes(id))out.push(id);k++;}
+ const sold=(P.showSold&&P.showSold.d===dn)?P.showSold.ids:[];return out.map((id,i)=>({i:id,x:WERK.show[i][0],y:WERK.show[i][1],sold:sold.includes(id)}));}
+G.showcase=showcase;G.showDay=()=>Math.floor(((P&&P.dayT)||0)/DAYLEN);
+G.showMark=()=>{if(!WERK)return;for(let y=WERK.y0+7;y<WERK.y0+WERK.h;y++)for(let x=WERK.x0;x<WERK.x0+8;x++)VDS[y*W+x]=0;markItems(showcase().filter(s=>!s.sold),WERK.x0,WERK.y0,1);};
+G.buyShow=id=>{const s=showcase().find(q=>q.i===id);if(!s||s.sold)return false;if(!G.shopOpen('baldur')){G.toast('🔒 Der Laden ist gerade geschlossen.','#ffcc80');return false;}const d=FDECO[id];if(P.gold<d.price){G.toast(`Zu wenig Gold (${d.price} nötig)`,'#ff8a80');return false;}
+ P.gold-=d.price;furnAdd(id);const dn=G.showDay();if(!P.showSold||P.showSold.d!==dn)P.showSold={d:dn,ids:[]};P.showSold.ids.push(id);G.showMark();G.showV=(G.showV||0)+1;sfx('coin');G.toast(`✨ ${d.n} gehört dir! Es liegt in deinem Möbellager.`,'#ffd54a',true);G.save();return true;};
+G.buyDeco=id=>{const d=FDECO[id];if(!d||d.ex)return false;if(P.gold<d.price){G.toast(`Zu wenig Gold (${d.price} nötig)`,'#ff8a80');sfx('click');return false;}P.gold-=d.price;furnAdd(id);sfx('coin');G.invDirty=true;G.save();return true;};
+G.buyUpgrade=()=>{const lv=(P.home.lvl||0)+1,u=HUPG[lv];if(!u)return false;if(P.gold<u.p){G.toast(`Zu wenig Gold (${u.p.toLocaleString('de-DE')} nötig)`,'#ff8a80');return false;}P.gold-=u.p;P.home.lvl=lv;applyHome();sfx('quest');G.toast(`🏗 ${u.n} fertig! Dein Haus hat jetzt ${HZ.filter(z=>z[4]<=lv).length} Räume.`,'#ffd54a',true);G.save();return true;};
+
+// ---- Neue Bewohner: Handwerkshof, Casino, Trankläden, Tavernen, Schmieden, Schlosswachen
+const inRoom=(id,rx,ry)=>{const r=ROOMS.find(q=>q.id===id);return r?{r,x:r.x0+rx,y:r.y0+ry}:null;};
+const homeDoor=id=>{const b=BUILD.find(q=>q.id===id);return b?{x:b.door.tx,y:b.y+b.h+1,b}:null;};
+function mkWorker(o,home,job,bed){const hd=homeDoor(home);if(!hd)return null;const n=mkN(Object.assign({abs:1,tx:hd.x,ty:hd.y},o));n._house=hd.b;if(job){const J=inRoom(job[0],job[1],job[2]);if(J)n.job22={b:J.r.b,x:J.x,y:J.y};}if(bed){const B=inRoom(bed[0],bed[1],bed[2]);if(B)n.bed22={x:B.x,y:B.y};}return n;}
+// Holger zieht in den Handwerkshof (wohnt weiter im alten Haus)
+{const ho=npcById('holger');if(ho){ho._house=BUILD.find(b=>b.id==='h7');const J=inRoom('werk',3,3);ho.job22={b:J.r.b,x:J.x,y:J.y};const hd=homeDoor('h7');ho.hx=ho.x=(hd.x+.5)*TILE;ho.hy=ho.y=(hd.y+.5)*TILE;}
+ const cb=BUILD.find(b=>b.id==='h7');cb.name='Holgers Haus';cb.sign=null;cb.room.name='Holgers Haus';}
+mkWorker({id:'flora',name:'Gartenkünstlerin Flora',short:'Flora',look:{body:'#4a7a3a',skin:'#f0d0b0',hair:'#c8602a',dress:1,hat:'#d8c070'},persona:'Fröhliche Gartenkünstlerin im Handwerkshof von Eichenhain. Verkauft Bänke, Laternen, Brunnen, Beete und Statuen, mit denen man das Dorf schmücken kann. Schwärmt von Rosen.',greet:['Ein Dorf ist nur so schön wie seine Beete!','Eine Laterne hier, ein Brunnen da …','Riechst du die Rosen?']},'h11',['werk',12,3]);
+mkWorker({id:'baldur',name:'Baumeister Baldur',short:'Baldur',look:{body:'#5a4a3a',skin:'#e0b890',hair:'#7a7a7a',beard:'#7a7a7a',hat:'#8a6a3a'},persona:'Bärbeißiger, genauer Baumeister im Handwerkshof von Eichenhain. Baut Häuser aus und plant neue Räume. Rechnet alles zweimal nach und mag keine Ausreden.',greet:['Erst messen, dann sägen.','Ein Haus wächst mit seinem Besitzer.','Gutes Handwerk hat seinen Preis.']},'h12',['werk',20,3]);
+mkWorker({id:'fortunato',name:'Casinobesitzer Fortunato',short:'Fortunato',look:{body:'#5a1a3a',skin:'#e8c098',hair:'#1a1a1a',beard:'#1a1a1a',hat:'#2a1a2a',cape:'#3a0a2a'},persona:'Charmanter, geschniegelter Besitzer des Casinos „Goldene Krone“ in Eichenhain. Liebt Glücksspiel, Gold und große Worte. Ehrlich im Spiel, aber nie um einen Spruch verlegen.',greet:['Willkommen in der Goldenen Krone! Das Glück wartet.','Das Haus gewinnt immer? Nicht heute, mein Freund!','Setz dein Gold weise.']},'cas1',['casino',16,2]);
+mkWorker({id:'kasimir',name:'Croupier Kasimir',short:'Kasimir',look:{body:'#2a2a3a',skin:'#e8c8a8',hair:'#3a2a1a',beard:'#3a2a1a'},persona:'Ruhiger, undurchschaubarer Croupier am Pokertisch des Casinos. Spricht leise, verzieht nie eine Miene.',greet:['Die Karten lügen nicht.','Setzen Sie, bitte.','Pokerface, mein Freund.']},'cas2',['casino',3,7]);
+mkWorker({id:'bella',name:'Croupière Bella',short:'Bella',look:{body:'#7a1a2a',skin:'#f0d0b8',hair:'#e0c060',dress:1},persona:'Flinke, freundliche Croupière am Blackjack-Tisch des Casinos. Zählt schneller als jeder andere im Dorf.',greet:['Einundzwanzig – oder drüber?','Karten gefällig?','Viel Glück am Tisch!']},'cas3',['casino',5,4]);
+mkWorker({id:'wenda',name:'Trankmischerin Wenda',short:'Wenda',look:{body:'#3a6a5a',skin:'#f0d0b0',hair:'#6a3a8a',dress:1},persona:'Junge Trankmischerin mit eigenem Laden in Eichenhain. Verkauft kleine Heil- und Manatränke für Anfänger. Riecht immer nach Minze.',greet:['Klein, aber wirksam!','Frisch gemischt, heute früh!','Für die großen Tränke musst du weiter reisen.']},'trank',['trank',4,1],['trank',0,4]);
+// Bewohner in den Städten: Wirte, Schmiede, Trankhändler – wohnen in ihren Häusern
+const TNPC={glut_tav:['inn_glut','Wirtin Hedda','Hedda','f'],moor_tav:['inn_moor','Wirt Fenno','Fenno','m'],wald_tav:['inn_wald','Wirtin Maren','Maren','f'],nebel_tav:['inn_nebel','Wirt Grimwald','Grimwald','m'],sand_tav:['inn_sand','Wirt Yusuf','Yusuf','m'],fell_tav:['inn_fell','Wirtin Pelzi','Pelzi','f'],schild_tav:['inn_schild','Wirt Hrolf','Hrolf','m'],
+ glut_smith:['smith_glut','Waffenmeister Brandt','Brandt','m'],nebel_smith:['smith_nebel','Runenschmied Thrain','Thrain','m'],schild_smith:['smith_schild','Schildschmiedin Gudrun','Gudrun','f'],wald_potion:['pot_wald','Kräuterhändler Alrik','Alrik','m'],sand_potion:['pot_sand','Alchemistin Zahra','Zahra','f']};
+for(const bid in TNPC){const b=BUILD.find(q=>q.id===bid);if(!b)continue;const [id,name,short,sx]=TNPC[bid],tw=TOWNS.find(t=>Math.hypot(b.x-t.x,b.y-t.y)<t.r+2),k=b.tx22;const fem=sx==='f';
+ const job=k==='tav'?[bid,6,3]:k==='smith'?[bid,4,3]:[bid,4,1],bed=k==='tav'?[bid,4,0]:k==='smith'?[bid,0,4]:[bid,0,4];
+ const n=mkWorker({id,name,short,town:tw&&tw.id,look:{body:k==='smith'?'#4a4a50':k==='tav'?'#8a6a3a':'#3a6a5a',skin:tw&&tw.id==='sand'?'#c68642':'#f0d0b0',hair:fem?'#8a4a2a':'#5a3a1a',dress:fem?1:0,beard:!fem?'#5a3a1a':null},persona:`${k==='tav'?'Wirt der Taverne':k==='smith'?'Schmied':'Trankhändler'} in ${tw?tw.name:'der Stadt'}.${k==='tav'?' Vermietet ein Gästezimmer für die Nacht.':''}`,greet:k==='tav'?['Ein Zimmer für die Nacht?','Setz dich, das Feuer brennt!','Bier, Met oder ein Bett?']:k==='smith'?['Der Amboss ruft.','Gutes Eisen, gute Klinge.','Für Anfänger hab ich nichts.']:['Tränke für jede Wunde.','Frisch destilliert!','Nur das Beste aus dem Kessel.']},bid,job,bed);
+ if(!n)continue;if(k==='tav')SHOPS[id]={n:'Taverne '+(tw?tw.name:''),items:['beer','met','bread'],buys:'tavern',inn:1};else if(k==='smith')SHOPS[id]={n:name,items:['arrow','bolt'],smith:1,buys:'gear'};else SHOPS[id]={n:name,items:[],buys:'potion'};}
+// Bodo: Arbeit hinter dem Tresen, eigenes Bett in der Taverne
+{const bo=npcById('wirt');if(bo){bo.post=null;const tv=BUILD.find(b=>b.id==='tavern');bo._house=tv;const J=inRoom('tavern',6,5);bo.job22={b:tv,x:J.x,y:J.y};const B=inRoom('tavern',12,0);bo.bed22={x:B.x,y:B.y};const hd=homeDoor('tavern');bo.hx=(hd.x+.5)*TILE;bo.hy=(hd.y+.5)*TILE;}
+ SHOPS.wirt&&(SHOPS.wirt.inn=1);}
+// Jorg schläft in seinem Hof, Bruder Anselm im Pfarrhaus (tagsüber in der Kapelle)
+{const j=npcById('jorg');if(j)j._house=BUILD.find(b=>b.id==='farm');const a=npcById('anselm');if(a){a._house=BUILD.find(b=>b.id==='h10');const J=inRoom('chapel',3,2);if(J)a.job22={b:J.r.b,x:J.x,y:J.y};}}
+// Zwei Schlosswachen am Thron
+{const K=ROOMS.find(r=>r.id==='keep');if(K)[[15,2,'wache_s1','Schlosswache Edmund','Edmund'],[20,2,'wache_s2','Schlosswache Wilhelm','Wilhelm']].forEach(([rx,ry,id,name,short])=>{const x=K.x0+rx,y=K.y0+ry;NPCS.push({id,name,short,abs:1,tx:x,ty:y,guard:1,lord:1,post:K,look:{body:'#7a1b1b',skin:'#e8c0a0',helm:'#c8ccd4',cape:'#5a0a10'},persona:'Schlosswache im Thronsaal von Schloss Eichenhain. Steht stramm neben dem Thron des Fürsten und spricht nur das Nötigste.',greet:['Halt. Der Fürst empfängt nur zu festen Zeiten.','Benimm dich im Thronsaal.','Für Eichenhain!'],hx:(x+.5)*TILE,hy:(y+.5)*TILE,x:(x+.5)*TILE,y:(y+.5)*TILE,fx:0,fy:1,wt:0,vx:0,vy:0,anim:0,loc:K});GUARDS.add(id);});}
+// ---- Läden nach Spielerfortschritt staffeln: Schmiede (max. Stufe) & Tränke (klein / mittel / groß)
+const SMCAP={hilda:12,smith_glut:24,smith_schild:36,smith_nebel:50};G.SMCAP=SMCAP;
+Object.assign(STACK,{potion_s:{name:'Kleiner Heiltrank',type:'food',pct:.3,desc:'Heilt 30 % deiner LP und heilt Gift. Tippen zum Trinken.',price:14,sell:5},
+ mpotion_s:{name:'Kleiner Manatrank',type:'food',mana:.35,desc:'Füllt 35 % deines Manas auf. Tippen zum Trinken.',price:12,sell:4},
+ mpotion2:{name:'Großer Manatrank',type:'food',mana:1,desc:'Füllt dein Mana komplett auf.',price:80,sell:26}});
+STACK.potion.name='Mittlerer Heiltrank';STACK.mpotion.name='Mittlerer Manatrank';
+const PTIER=tid=>!tid||tid==='city'?0:({frost:1,moor:1,wald:1,glut:1,fell:1,sand:2,schild:2,nebel:2,schwarz:2})[tid]||1;
+const PSET=[['potion_s','mpotion_s'],['potion_s','potion','mpotion_s','mpotion'],['potion','potion2','mpotion','mpotion2']];
+const shopTown=id=>{const n=npcById(id);if(!n)return null;if(n.town)return n.town;const x=n.hx/TILE,y=n.hy/TILE;if(x>=WW&&n._house)return G.townIdAt(n._house.x,n._house.y);return G.townIdAt(Math.floor(x),Math.floor(y))||(TOWNS.find(t=>Math.hypot(x-t.x,y-t.y)<t.r+6)||{}).id||null;};
+const isPot=id=>/^m?potion/.test(id);
+for(const sid in SHOPS){const sh=SHOPS[sid];if(!sh.items)continue;const tier=PTIER(shopTown(sid));const hadPot=sh.items.some(isPot)||/^pot_|^wenda$/.test(sid);sh.items=sh.items.filter(i=>!isPot(i));if(hadPot)sh.items=PSET[tier].concat(sh.items);}
+SHOPS.wenda={n:'Wendas Trankladen',items:PSET[0].slice(),buys:'potion'};SHOPS.pot_wald&&(SHOPS.pot_wald.items=PSET[1].slice());SHOPS.pot_sand&&(SHOPS.pot_sand.items=PSET[2].slice());
+// Schmiede-Ware: je Schmied eigene Höchststufe
+{const _ss=G.smithStock;G.smithStock=sid=>{sid=sid||G._shopSid||'hilda';const cap=SMCAP[sid]||P.level;const L0=P.level;const st=P.smithStocks||(P.smithStocks={});const day=Math.floor((P.dayT||0)/720);let s=st[sid];
+ if(!s||s.day!==day||s.lvl!==L0){const keep=P.smithStock;P.smithStock=null;P.level=Math.min(L0,cap);try{_ss();}finally{P.level=L0;}s=st[sid]={day,lvl:L0,items:P.smithStock.items,cap};P.smithStock=keep;}return s.items;};
+ G.buyGear=i=>{const st=G.smithStock(),it=st[i];if(!it)return false;if(P.gold<it.shopPrice){G.toast('Nicht genug Gold','#ff8a80');return false;}if(!P.inv.some(s=>!s)){G.toast('Kein Platz im Rucksack','#ff8a80');return false;}P.gold-=it.shopPrice;const c=Object.assign({},it);delete c.shopPrice;give(c);st.splice(i,1);sfx('coin');G.invDirty=true;return true;};}
+// quickHeal kennt auch kleine Tränke
+{const _qh=quickHeal;quickHeal=G.quickHeal=function(){if(!P.inv.some(s=>s&&(s.id==='potion'||s.id==='potion2'))){const i=P.inv.findIndex(s=>s&&s.id==='potion_s');if(i>=0){useItem(i);return;}}return _qh();};}
+
+// ---- Tagesabläufe: Arbeitszeiten, Sonntags-Andacht, Mittwochs-Stammtisch, feste Betten
+G.jobNow=(n,t)=>{if(!n.job22||!G.shopOpen(n.id))return null;return{b:n.job22.b,spot:{x:n.job22.x,y:n.job22.y},act:'work'};};
+const CHAPEL=BUILD.find(b=>b.id==='chapel');
+G.weekWant=(n,t,ph,h,r)=>{const wd=wday();
+ if(n.bed22&&ph==='sleep')return{b:h,spot:{x:n.bed22.x,y:n.bed22.y,bed:1},act:'sleep'};
+ if(wd===6&&t>=90&&t<165&&!n.lord&&!n.job22&&r<.75){if(!n.town&&CHAPEL)return{b:CHAPEL,spot:'pew',act:'sit'};const tv=n.town&&BUILD.find(b=>b.id===n.town+'_tav');if(tv&&tv.room)return{b:tv,spot:'table',act:'sit'};}
+ if(wd===2&&ph==='social'&&!n.lord&&!n.child&&!n.job22){const tv=!n.town?BUILD.find(b=>b.id==='tavern'):BUILD.find(b=>b.id===n.town+'_tav');if(tv&&tv.room)return{b:tv,spot:'table',act:'drink'};}
+ return null;};
+G.nbBed=(r,x,y)=>{for(const [dx,dy] of [[1,0],[-1,0],[0,1],[1,1],[-1,1],[0,2],[1,2],[-1,2]]){const ax=x+dx,ay=y+dy;if(ax<r.x0||ay<r.y0||ax>=r.x0+r.w||ay>=r.y0+r.h)continue;const t=tileAt(ax,ay);if(!SOLIDS[t]&&t!==T.DOOR&&!VDS[ay*W+ax])return[ax,ay];}return[x,y];};
+
+// ---- Gästezimmer mieten (eine Nacht)
+const RENT={wirt:60,inn_moor:90,inn_wald:120,inn_glut:180,inn_fell:150,inn_sand:300,inn_schild:350,inn_nebel:500};G.RENT=RENT;
+G.rentRoom=(id,paid)=>{const pr=RENT[id]||100,n=npcById(id),b=n&&n._house;if(!b||!b.room||!b.room.guest)return false;if(!paid){if(P.gold<pr){G.toast(`Zu wenig Gold (${pr} nötig)`,'#ff8a80');return false;}P.gold-=pr;}P.rent={r:b.room.id,until:(Math.floor((P.dayT||0)/DAYLEN)+1)*DAYLEN+90};sfx('coin');G.toast(`🛏 Das Gästezimmer gehört heute Nacht dir. Leg dich ab dem Abend ins Bett (bis morgen 09:00 Uhr).`,'#ffd54a',true);G.save();return true;};
+G.rentedHere=()=>!!(P.rent&&G.room&&P.rent.r===G.room.id&&(P.dayT||0)<P.rent.until);
+
+// ---- Wachen: getötete Wachen bleiben bis zum Morgen liegen; Kopfgeld nur bei lebenden Wachen
+G.guardDown=n=>{n.dead=1;n.ko=0;n.lie=1;n.path=[];const dn=Math.floor((P.dayT||0)/DAYLEN),t=(P.dayT||0)%DAYLEN;n.deadUntil=(t<0?dn:dn+1)*DAYLEN+5;P.guardKill=dn;};
+G.bountyBlocked=()=>P.guardKill!=null&&P.guardKill===Math.floor((P.dayT||0)/DAYLEN);
+
+// ---- Nebelwacht: Nebelschleier an den Toren, bis die Reise in die Nebellande beginnt; Nebelwächter halten die Zufahrt
+const NEB=TOWNS.find(t=>t.id==='nebel');
+G.mistOpen=()=>!!(P&&(P.devMist||G.pastStep('n1')||(G.curStep&&G.curStep()&&G.curStep().id==='n1'&&P.macc)));
+const MISTPOST=[];NEB.gates.forEach(g=>{for(const k of [6,9])for(const s2 of [-2,2])MISTPOST.push([Math.round(NEB.x+Math.cos(g)*(NEB.r+k)-Math.sin(g)*s2),Math.round(NEB.y+Math.sin(g)*(NEB.r+k)+Math.cos(g)*s2)]);});
+G._mistDead={};
+function mistTick(dt){G._msT=(G._msT||0)-dt;if(G._msT>0)return;G._msT=2;const op=G.mistOpen();if(op!==G._mistWas){G._mistWas=op;for(const g of NEB.gates)for(let s2=-1;s2<=1;s2++){const x=Math.round(NEB.x+Math.cos(g)*NEB.r-Math.sin(g)*s2),y=Math.round(NEB.y+Math.sin(g)*NEB.r+Math.cos(g)*s2);G.dirtyTile&&G.dirtyTile(x,y);}}
+ if(G.room)return;const near=Math.hypot(P.x/TILE-NEB.x,P.y/TILE-NEB.y)<NEB.r+34;if(!near){for(const m of G.mons)if(m.mistg&&!m.aggro)m.dead=true;return;}
+ if(!op&&!P._mistTip&&Math.hypot(P.x/TILE-NEB.x,P.y/TILE-NEB.y)<NEB.r+6){P._mistTip=1;G.toast('🌫 Ein uralter Nebelschleier versiegelt die Tore von Nebelwacht. Erst wenn dich die Hauptquest in die Nebellande führt, öffnet Wächterin Runa den Weg.','#c8b8ff',true);}
+ const lvl=Math.max(34,zoneLevel(NEB.x-30,NEB.y));MISTPOST.forEach(([x0,y0],i)=>{if(G.mons.some(m=>m.mistg===i+1&&!m.dead))return;if((G._mistDead[i]||0)>G.time)return;const x=(x0+.5)*TILE,y=(y0+.5)*TILE;if(Math.hypot(P.x-x,P.y-y)<TILE*10||!walkTile(x0,y0))return;
+  const m=mkMonster(i%4===0?'runenwirker':'sucherkrieger',lvl+(i%4===0?2:0),x,y);m.mistg=i+1;m.passive=false;m.home={x,y};m.name='Nebelwächter';G.mons.push(m);});}
+G.mistKilled=m=>{if(m.mistg)G._mistDead[m.mistg-1]=G.time+240;};
+G.mistTick=mistTick;
+
+// ---- Härtere Strafen: Tod & Kerker
+G.deathLoss=()=>{const D=G.D();const pct=Math.max(D.goldLoss||0,G.settings.diff==='leicht'?.08:G.settings.diff==='schwer'?.3:.2);return Math.floor(P.gold*pct)+Math.min(P.gold,Math.round(P.level*15*(G.settings.diff==='leicht'?.5:1)));};
+G.jailTake=()=>{const cand=[];P.inv.forEach((s,i)=>{if(s&&!(s.stack&&STACK[s.id]&&(STACK[s.id].qitem||STACK[s.id].type==='quest'))&&i!==P.sel)cand.push(i);});const out=[];for(let k=0;k<3&&cand.length;k++){const j=cand.splice(Math.floor(Math.random()*cand.length),1)[0],s=P.inv[j];out.push(G.iname?G.iname(s)+(s.count>1?' ×'+s.count:''):s.id);P.inv[j]=null;}G.invDirty=true;return out;};
+
+
+// ---- Angebote (Shop-Fenster mit Bild, Beschreibung & Werten) und Dienste der NPCs
+const OB=(l,f,c)=>({l,f,c:c==null?1:c});
+G.offers=id=>{const lv=P.mapR||0,out=[];
+ if(id==='edwin'){out.push({ic:'🗺',n:'Ortsmarker aller Städte',d:'Trägt alle Städte, Dörfer und Königreiche dauerhaft auf deiner Karte ein – auch die, die du noch nicht besucht hast.',st:['Einmaliger Kauf','Wirkt sofort'],price:120,own:!!P.mapMarks,buy:()=>{P.mapMarks=1;G.ui&&G.ui.revealTowns&&G.ui.revealTowns();G.toast('🗺 Alle Städte und Dörfer sind jetzt auf deiner Karte eingetragen.','#ffd54a',true);}});
+  [250,600,1400].forEach((c,i)=>out.push({ic:'🔭',n:`Kartenverbesserung Stufe ${i+1}`,d:'Beim Erkunden deckst du einen größeren Bereich um dich herum auf der Karte auf.',st:[`Sichtweite ${9+i*3} → ${12+i*3} Felder`,i?`Benötigt Stufe ${i}`:'Erste Stufe'],price:c,own:lv>i,lock:lv<i,buy:()=>{P.mapR=i+1;sfx('quest');G.toast(`🔭 Beim Erkunden deckst du jetzt ${12+i*3} Felder um dich auf.`,'#ffd54a',true);}}));}
+ if(id==='holger')out.push({ic:'🔨',n:'Schreinerhammer',d:'Werkzeug zum Einrichten. Halte ihn im eigenen Haus in der Hand und öffne mit ✋ / Rechtsklick den Einrichtungsplan.',st:['Werkzeug','Unbegrenzt haltbar'],price:60,own:countItem('hammer')>0,buy:()=>give(mkStack('hammer',1))});
+ if(id==='baldur'){const L=P.home.lvl||0;HUPG.forEach((u,i)=>{if(!u)return;out.push({ic:'🏗',n:u.n,d:u.d,st:[`Ausbaustufe ${i}`,`Räume danach: ${HZ.filter(z=>z[4]<=i).length}`,`Neue Fläche: ${HZ.filter(z=>z[4]===i).reduce((a,z)=>a+(z[2]-z[0]+1)*(z[3]-z[1]+1),0)} Felder`],price:u.p,own:L>=i,lock:L<i-1,plan:i,buy:()=>{P.home.lvl=i;applyHome();sfx('quest');G.toast(`🏗 ${u.n} fertig! Dein Haus hat jetzt ${HZ.filter(z=>z[4]<=i).length} Räume.`,'#ffd54a',true);}});});}
+ if(RENT[id]){const n=npcById(id),b=n&&n._house;out.push({ic:'🛏',n:'Gästezimmer für eine Nacht',d:'Ein eigenes Zimmer mit Bett in dieser Taverne. Ab dem Abend kannst du dort schlafen – mit vollem Ausruh-Bonus wie zu Hause.',st:['Gilt bis morgen 09:00 Uhr','Leben, Ausdauer & Mana voll',`Ausgeruht-Bonus +12 %`],price:RENT[id],own:!!(P.rent&&b&&b.room&&P.rent.r===b.room.id&&(P.dayT||0)<P.rent.until),buy:()=>G.rentRoom(id,1)});}
+ return out;};
+G.buyOffer=(id,k)=>{const o=G.offers(id)[k];if(!o||o.own||o.lock)return false;if(P.gold<o.price){G.toast(`Zu wenig Gold (${o.price} nötig)`,'#ff8a80');sfx('click');return false;}P.gold-=o.price;o.buy();sfx('coin');G.invDirty=true;G.save();return true;};
+G.services=(n,d)=>{const id=n.id,open=!G.shopOpen||G.shopOpen(id),U=G.ui;if(!U)return;const add=(l,f)=>d.b.unshift(OB(l,f));
+ if(['holger','flora','baldur','edwin','fortunato','kasimir','bella'].includes(id)||RENT[id]){if(!open){if(!SHOPS[id])d.b.push(OB(`🔒 Geschlossen – geöffnet ${G.shopHoursTxt(id)}`,()=>G.toast(`🕰 ${WDAY[wday()]}, ${clockStr(G.dayInfo().t)} Uhr – ${n.short} ist ${G.shopHoursTxt(id)} für dich da.`,'#ffcc80',true),0));return;}
+  const inShop=n.job22&&n.loc===n.job22.b.room;if((id==='holger'||id==='flora'||id==='baldur')&&!inShop){d.b.push(OB('🏪 Verkauf nur im Laden (Handwerkshof)',()=>G.toast('🪚 Holger, Flora und Baldur verkaufen nur in ihrem Handwerkshof im Süden des Dorfs.','#ffcc80',true),0));return;}
+  if(id==='holger'){add('🔨 Werkzeug',()=>U.openOffers('holger'));add('🪑 Möbelkatalog',()=>U.openCatalog('in'));}
+  if(id==='flora')add('🌷 Dorf- & Park-Deko',()=>U.openCatalog('out'));
+  if(id==='baldur'){add('🪟 Schaufenster (heute)',()=>U.openShowcase());add('🏗 Haus ausbauen',()=>U.openOffers('baldur'));}
+  if(id==='edwin')add('🗺 Kartenladen',()=>U.openOffers('edwin'));
+  if(RENT[id])add(`🛏 Zimmer mieten (${RENT[id]} G)`,()=>U.openOffers(id));
+  if(id==='kasimir')add('🃏 Casino Hold’em spielen',()=>U.openCasino('poker'));
+  if(id==='bella')add('🂡 Blackjack spielen',()=>U.openCasino('bj'));
+  if(id==='fortunato'){add('🎰 Spielautomat',()=>U.openCasino('slots'));const q=P.q||(P.q={});if(!q.casino)d.b.push(OB('Gibt es hier auch Arbeit?',()=>{q.casino='on';q.casW0=P.casWins||0;G.toast('📜 Nebenquest: Glückssträhne – gewinne 5 Runden im Casino.','#ffd54a',true);}));else if(q.casino==='on'&&(P.casWins||0)-(q.casW0||0)>=5)d.b.unshift(OB('🍀 Glückssträhne abgeben',()=>{q.casino='done';P.gold+=400;furnAdd('d_flag_3');gainXP(Math.round(xpNeed(P.level)*.15));G.toast('🍀 Fortunato: „Ein Naturtalent!“ +400 Gold und ein goldener Fahnenmast fürs Dorf.','#ffd54a',true);sfx('quest');G.save();}));}}};
+// Casino: Ein- und Auszahlungen
+G.casinoBet=v=>{v=Math.floor(v);if(v<=0||P.gold<v)return false;P.gold-=v;G.invDirty=true;return true;};
+G.casinoPay=(v,win)=>{v=Math.floor(v);if(v>0)P.gold+=v;if(win){P.casWins=(P.casWins||0)+1;}const st=P.stats||(P.stats={});st.casino=(st.casino||0)+1;G.invDirty=true;G.save();};
+G.casinoLimit=()=>Math.max(50,Math.min(5000,Math.round(P.level*60)));
+// Neuer Tag: Wochentag ansagen
+G.weekTick=()=>{const dn=Math.floor((P.dayT||0)/DAYLEN);if(G._wdN===dn)return;const first=G._wdN==null;G._wdN=dn;if(first)return;const wd=wday();G.toast(`📅 ${WDAY[wd]}${wd===6?' – Sonntag: Die Läden im Handwerkshof haben Ruhetag, viele gehen in die Kapelle.':wd===2?' – abends trifft sich das Dorf in der Taverne.':''}`,'#ffe9b0');if(G.showMark)G.showMark();G.showV=(G.showV||0)+1;};
+
 {const _tp=G.targetPos,_tl=G.targetLabel;G.targetPos=t=>G.extraPos(t)||_tp(t);G.targetLabel=t=>G.extraLabel(t)||_tl(t);}
-{const _ng=G.newGame;G.newGame=function(d){_ng(d);applyHome();G.CATS=null;G.PET=null;G.room=HR;P.x=(HR.door.tx+.5)*TILE;P.y=(HR.y0+3.5)*TILE;P.fx=0;P.fy=1;for(const n of NPCS){n.loc=null;clearPose(n);}};}
-{const _ld=G.load;G.load=function(){const ok=_ld();if(ok){if(!P.home)P.home={bed:1};P.och=P.och||{};P.z=0;P.vz=0;applyHome();G.CATS=null;G.PET=null;}return ok;};}
+{const _ng=G.newGame;G.newGame=function(d){_ng(d);P.qv=22;P.home={lvl:0,items:[{i:'d_bed1_0',x:8,y:7}]};P.vdeco={};P.furn={};G.migrateHome();applyHome();G.rebuildVillage();G._wdN=null;try{G.applyTrees(true);}catch(e){}G.CATS=null;G.PET=null;G.room=HR;P.x=(HR.door.tx+.5)*TILE;P.y=(HR.y0+9.5)*TILE;P.fx=0;P.fy=1;for(const n of NPCS){n.loc=null;clearPose(n);}};}
+{const _ld=G.load;G.load=function(){const ok=_ld();if(ok){if(!P.home)P.home={bed:1};P.och=P.och||{};P.z=0;P.vz=0;G.migrateHome();applyHome();G.rebuildVillage();G._wdN=null;{const tx=Math.floor(P.x/TILE),ty=Math.floor(P.y/TILE);if(tx>=HR.x0-1&&tx<=HR.x0+HR.w&&ty>=HR.y0-1&&ty<=HR.y0+HR.h&&!walkTile(tx,ty)){P.x=(HR.door.tx+.5)*TILE;P.y=(HR.door.ty-1.5)*TILE;}}G.CATS=null;G.PET=null;}return ok;};}
 })();
