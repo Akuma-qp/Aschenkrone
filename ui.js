@@ -7,6 +7,12 @@ G.paused=()=>state!=='game'||(typeof furnOpen!=='undefined'&&(furnOpen||buildOpe
 const c2d=$('c2d'),ctx=c2d.getContext('2d'),c3d=$('c3d');
 let VW=1,VH=1,DPR=1,use3d=false;
 let RS=1,rsT=0;const qPR=()=>{const d=window.devicePixelRatio||1,q=G.settings.quality;let pr={low:Math.min(d,1.5),mid:Math.min(d,2),high:Math.min(d,2.5)}[q]||1;const px=Math.max(1,innerWidth*innerHeight),bud={low:1.3e6,mid:2.6e6,high:3.9e6}[q]||2.6e6;pr=Math.min(pr,Math.sqrt(bud/px));return Math.max(.5,pr)*RS;};
+function placeBoss(){const bb=$('bossbar');if(!bb||bb.style.display!=='block')return;if(document.body.classList.contains('pc')){bb.style.left=bb.style.width=bb.style.top=bb.style.transform='';return;}
+ const port=innerHeight>innerWidth,sa=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sat'))||0;
+ if(port){const mi=$('mini').getBoundingClientRect(),tb=document.querySelector('#hudTR .tbtns').getBoundingClientRect();const L=Math.max(mi.left-6,innerWidth*.58),W=innerWidth-L-8;bb.style.transform='none';bb.style.left=L+'px';bb.style.width=W+'px';bb.style.top=(Math.max(mi.bottom,tb.bottom)+8)+'px';return;}
+ const br=document.querySelector('#hudTL .bars').getBoundingClientRect();let R=innerWidth;for(const e of $('hudTR').querySelectorAll('canvas,.rbtn,button')){const r=e.getBoundingClientRect();if(r.width&&r.top<70)R=Math.min(R,r.left);}
+ const L=br.right+10,W=Math.min(320,R-L-10);bb.style.transform='none';bb.style.width=W+'px';bb.style.left=(L+(R-10-L-W)/2)+'px';bb.style.top='';}
+addEventListener('resize',()=>setTimeout(placeBoss,60));
 function resize(){VW=innerWidth;VH=innerHeight;DPR=Math.min(window.devicePixelRatio||1,2);c2d.width=Math.round(VW*DPR);c2d.height=Math.round(VH*DPR);c2d.style.width=VW+'px';c2d.style.height=VH+'px';if(use3d)G.R3D.resize(VW,VH,qPR());}
 addEventListener('resize',resize);
 function applyMode(){if(G.settings.mode==='3d'&&!G.R3D.ok){if(!G.R3D.init(c3d)){G.settings.mode='2d';G.saveSettings();toast(G.R3D.noCtx?'3D konnte nicht starten: WebGL ist im Browser aus. Tipp: In den Browser-Einstellungen „Hardwarebeschleunigung“ einschalten und neu starten. 2D ist aktiv.':'3D konnte auf diesem Gerät nicht starten. 2D ist aktiv.','#ff8a80');}}
@@ -596,7 +602,7 @@ function hud(){{const now=performance.now(),dt=Math.min(.5,(now-(hud._t||now))/1
  const t=G.target(),ba=$('bAct');if(t){ba.classList.remove('off');const lb=G.targetLabel(t);ba.innerHTML=lb[0]+'<br>'+lb[1];}else{ba.classList.add('off');ba.innerHTML='✋';}
  $('bDodge').classList.toggle('cd',P.dodgeCd>0);
  let nb=null,nd=520;for(const m of G.mons){if(m.dead||!m.boss)continue;const d=Math.hypot(m.x-P.x,m.y-P.y);if(d<nd){nd=d;nb=m;}}
- const bb=$('bossbar');if(nb){bb.style.display='block';$('bbn').textContent=`☠ ${nb.name} · Stufe ${nb.lvl}`;$('bbf').style.width=(100*Math.max(0,nb.hp)/nb.maxhp)+'%';}else bb.style.display='none';
+ const bb=$('bossbar');if(nb){if(bb.style.display!=='block'){bb.style.display='block';document.body.classList.add('bossOn');placeBoss();}$('bbn').textContent=`☠ ${nb.name} · Stufe ${nb.lvl}`;$('bbf').style.width=(100*Math.max(0,nb.hp)/nb.maxhp)+'%';}else if(bb.style.display!=='none'){bb.style.display='none';document.body.classList.remove('bossOn');}
  $('flash').style.opacity=G.flashT>0?Math.min(1,G.flashT):0;
  if(G.invDirty){renderHot();if(invOpen)renderInv();G.invDirty=false;}
  drawMini();drawSkyClock();}
@@ -873,6 +879,12 @@ ui.openCatalog=function(kind){const out=kind==='out',W=ov22(out?'🌷 Flora · D
    card.appendChild(furnPrev(d.id,96,!out));const own=(P.furn&&P.furn[d.id])||0;const t=document.createElement('div');t.style.cssText='font-size:13px;margin:4px 0';t.innerHTML=`<b>${esc22(d.n)}</b><div style="font-size:11px;color:#5a4020">${S.w}×${S.h} Felder${S.s?'':' · begehbar'}${S.l==='w'?' · Wand':''}${S.c?` · Gemütlichkeit +${S.c}`:''}${S.bed?' · zum Schlafen':''}${own?` · im Lager: ${own}`:''}</div>`;card.appendChild(t);
    const b=document.createElement('button');b.className='btn'+(P.gold<d.price?' dis':'');b.textContent=`${GOLDF(d.price)} G`;b.onclick=()=>{if(G.buyDeco(d.id)){toast(`${S.ic} ${d.n} gekauft!`,'#ffd54a');render();}};card.appendChild(b);grid.appendChild(card);});};render();};
 // --- Schaufenster: das heutige Exklusiv-Stück im Raum
+ui.openMail=function(){const W=ov22('✉ Dein Briefkasten',480);let cur=null;const esc=t=>String(t).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));const WD=['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];const ds=d=>WD[d%7]+', Tag '+(d+1);
+ const render=()=>{const L=G.mailList();if(cur){const m=L.find(x=>x.id===cur);if(!m){cur=null;return render();}G.mailRead(m.id);
+   W.body.innerHTML=`<div class="mlL"><div class="mlH"><b>${esc(m.f)}</b><span>${ds(m.d)}</span></div><div class="mlS">${esc(m.s)}</div><div class="mlT">${esc(m.t)}</div>${m.g?`<div class="mlG">${m.gc?'Beilage angenommen: ':'Beilage: '}<b>${esc(G.mailGiftName(m))}</b>${m.gc?'':' <button class="btn" data-a="claim">Annehmen</button>'}</div>`:''}</div><div class="mlB"><button class="btn" data-a="back">Zurück</button><button class="btn" data-a="del">Löschen</button></div>`;}
+  else{W.body.innerHTML=L.length?`<div class="mlList">${L.map(m=>`<div class="mlR${m.r?'':' un'}" data-id="${m.id}"><i class="mlDot"></i><div class="mlRt"><div class="mlRf">${esc(m.f.split(' · ')[0])}<span>${ds(m.d)}</span></div><div class="mlRs">${esc(m.s)}${m.g&&!m.gc?' <em>+ Beilage</em>':''}</div></div></div>`).join('')}</div><div class="mlB"><button class="btn" data-a="delr">Gelesene löschen</button></div>`:'<div class="mlE">Dein Briefkasten ist leer. Schau später wieder vorbei.</div>';}
+  ui.hudDirty=true;};
+ W.body.onclick=e=>{const a=e.target.closest('[data-a]'),r=e.target.closest('.mlR');if(a){const k=a.dataset.a;if(k==='back')cur=null;else if(k==='del'){G.mailDel(cur);cur=null;}else if(k==='claim'){G.mailClaim(cur);G.save&&G.save();}else if(k==='delr')G.mailDelRead();render();return;}if(r){cur=+r.dataset.id;render();}};render();};
 ui.openShowcase=function(){const W=ov22('🪟 Schaufenster · nur heute',460),P=G.P;const render=()=>{W.body.innerHTML=`<div class="hint">Jeden Tag stellt der Handwerkshof 1–2 Einzelstücke aus, die es nur heute und nur hier gibt. Morgen ist es etwas anderes. (Dein Gold: <b>${GOLDF(P.gold)}</b>)</div>`;const open=G.shopOpen('baldur');
   for(const it of G.showcase()){const d=G.FDECO[it.i],S=G.SHP[d.sh];const box=document.createElement('div');box.style.cssText='margin:8px 0;padding:8px;background:rgba(255,245,215,.65);border:2px solid #c8a040;border-radius:10px;text-align:center';box.appendChild(furnPrev(it.i,220,!S.o));
    const t=document.createElement('div');t.innerHTML=`<b style="font-size:16px">✨ ${esc22(d.n)}</b><div style="font-size:12px;color:#5a4020">Exklusives Einzelstück · ${S.o?'Außen-Deko fürs Dorf':'fürs Haus'} · ${S.w}×${S.h} Felder${S.c?` · Gemütlichkeit +${S.c*2}`:''}</div>`;box.appendChild(t);
