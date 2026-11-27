@@ -61,6 +61,32 @@ button{touch-action:manipulation;cursor:pointer}
 #bInv{right:94px;bottom:74px;width:52px;height:52px;font-size:25px;background:radial-gradient(#f4e6c4,#a07840)}
 #joy{position:fixed;width:116px;height:116px;margin:-58px 0 0 -58px;border-radius:50%;border:3px solid rgba(244,230,196,.55);background:rgba(0,0,0,.22);display:none;pointer-events:none}
 #knob{position:absolute;left:50%;top:50%;width:50px;height:50px;margin:-25px 0 0 -25px;border-radius:50%;background:radial-gradient(#f4e6c4,#a07840);border:2px solid #5a3d1e}
+/* ===== v26: aufgeräumtes Handy-HUD ===== */
+#gold{display:flex;flex-wrap:wrap;gap:4px;align-items:center}.gch,.dch,.bch{display:inline-flex;align-items:center;gap:3px;padding:1px 7px;border-radius:9px;background:rgba(20,12,4,.66);border:1px solid rgba(201,168,106,.55);font-size:11px;line-height:15px}.gch small{font-size:9px;opacity:.8}.dch{color:#e8d8b0;font-weight:bold}.bch{color:#ff6b5a}
+.qtg,.qnq{display:none}
+#joyHint.jhOut{animation:jhOut 7s forwards}@keyframes jhOut{0%,70%{opacity:1}100%{opacity:0;visibility:hidden}}
+body:not(.pc) #hudTL{width:min(42vw,232px)}
+body:not(.pc) .bar{height:13px}body:not(.pc) .bar span{font-size:9.5px;line-height:10px}body:not(.pc) .bar2 .bar{height:8px}body:not(.pc) .bar2 .bar span{font-size:7.5px;line-height:5px}
+body:not(.pc) #lvl{width:32px;height:32px;font-size:14px}
+body:not(.pc) #zone{font-size:10.5px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+body:not(.pc) #fxBar{margin:2px 0}body:not(.pc) .fxc{font-size:9.5px;padding:0 5px}
+body:not(.pc) #quests{pointer-events:auto;position:relative;padding:4px 26px 4px 7px;font-size:10.5px;cursor:pointer}
+body:not(.pc) #quests .qtg{display:flex;position:absolute;right:3px;top:3px;width:19px;height:19px;border-radius:5px;border:1px solid #c9a86a;background:#5a3d1e;color:#ffe9b0;font:bold 14px/1 Georgia;align-items:center;justify-content:center;padding:0;pointer-events:none}
+body:not(.pc) #quests.qc{max-width:100%}body:not(.pc) #quests.qc .qh,body:not(.pc) #quests.qc .qh2,body:not(.pc) #quests.qc .sq{display:none}
+body:not(.pc) #quests.qc .ob{margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+body:not(.pc) #quests.qc .qnq{display:inline-block;position:absolute;right:3px;bottom:3px;font-size:8.5px;font-weight:bold;color:#9ad0ff;background:rgba(20,30,50,.8);border:1px solid #5a7ab0;border-radius:6px;padding:0 3px;pointer-events:none}
+body:not(.pc) #quests.qc{padding-bottom:4px;min-height:30px}
+@media (min-aspect-ratio:1/1){body:not(.pc) #skyclock{zoom:calc(var(--gui,1)*.8)}}
+@media (max-height:520px) and (min-aspect-ratio:1/1){
+ body:not(.pc) #mini{width:88px;height:88px}
+ body:not(.pc) #hudTR{flex-direction:row-reverse;align-items:flex-start;gap:6px}
+ body:not(.pc) .tbtns{flex-direction:column;gap:5px}
+ body:not(.pc) .rbtn{width:33px;height:33px;font-size:16px;border-width:2px}
+ body:not(.pc) #ctrls{zoom:calc(var(--gui,1)*.86)}
+ :root{--s:min(34px,calc((100vw - 40px)/9))}
+ body:not(.pc) .slot .cnt{font-size:10px}
+ body:not(.pc) #quests:not(.qc){max-height:46vh;overflow:auto}
+}
 #joyHint{position:fixed;left:18px;bottom:calc(var(--s) + 46px + env(safe-area-inset-bottom));color:rgba(244,230,196,.65);font-size:12px;pointer-events:none;text-shadow:0 1px 2px #000;max-width:40vw}
 #fxBar{display:flex;flex-wrap:wrap;gap:4px;margin:3px 0;pointer-events:none}.fxc{font:bold 11px Georgia;padding:1px 6px;border:1px solid;border-radius:9px;background:rgba(20,12,4,.72);animation:fxIn .3s}@keyframes fxIn{from{transform:scale(1.3);opacity:0}to{transform:none;opacity:1}}
 #tipBox{position:fixed;left:10px;top:150px;width:240px;z-index:6;background:rgba(25,15,6,.78);border:1px solid #8a6a3a;border-left:3px solid #ffd54a;border-radius:6px;padding:5px 8px;font:12px/1.35 Georgia,serif;color:#f4e6c4;opacity:0;transform:translateX(-12px);transition:opacity .4s,transform .4s;pointer-events:none}#tipBox.on{opacity:1;transform:none;pointer-events:auto;cursor:pointer}body:not(.pc) #tipBox{font-size:11px;padding:4px 7px}
@@ -422,12 +448,12 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
 </div>
 <div id="cs"><div id="csText"></div><button id="csSkip">Überspringen ⏭</button><div id="csTap">▶ Tippen / Klicken zum Weiterlesen</div></div>
 
-<script src="icons.js?v=25"></script>
-<script src="core.js?v=25"></script>
-<script src="sound.js?v=25"></script>
-<script src="r2d.js?v=25"></script>
-<script src="r3d.js?v=25"></script>
-<script src="ui.js?v=25"></script>
+<script src="icons.js?v=26"></script>
+<script src="core.js?v=26"></script>
+<script src="sound.js?v=26"></script>
+<script src="r2d.js?v=26"></script>
+<script src="r3d.js?v=26"></script>
+<script src="ui.js?v=26"></script>
 <!-- PWA: Service Worker starten (für Offline-Betrieb) -->
 <script>
 if ('serviceWorker' in navigator) {
