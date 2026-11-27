@@ -90,7 +90,7 @@ body:not(.pc) #quests.qc{padding-bottom:4px;min-height:30px}
 #joyHint{position:fixed;left:18px;bottom:calc(var(--s) + 46px + env(safe-area-inset-bottom));color:rgba(244,230,196,.65);font-size:12px;pointer-events:none;text-shadow:0 1px 2px #000;max-width:40vw}
 #fxBar{display:flex;flex-wrap:wrap;gap:4px;margin:3px 0;pointer-events:none}.fxc{font:bold 11px Georgia;padding:1px 6px;border:1px solid;border-radius:9px;background:rgba(20,12,4,.72);animation:fxIn .3s}@keyframes fxIn{from{transform:scale(1.3);opacity:0}to{transform:none;opacity:1}}
 #tipBox{position:fixed;left:10px;top:150px;width:240px;z-index:6;background:rgba(25,15,6,.78);border:1px solid #8a6a3a;border-left:3px solid #ffd54a;border-radius:6px;padding:5px 8px;font:12px/1.35 Georgia,serif;color:#f4e6c4;opacity:0;transform:translateX(-12px);transition:opacity .4s,transform .4s;pointer-events:none}#tipBox.on{opacity:1;transform:none;pointer-events:auto;cursor:pointer}body:not(.pc) #tipBox{font-size:11px;padding:4px 7px}
-#gBook{padding:4px 2px}#gBook .gtoc{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 8px}#gBook .gtoc button{padding:5px 9px;font:13px Georgia;border:1px solid #8a6a3a;border-radius:7px;background:#ead7b0;color:#3b2410;cursor:pointer}#gBook .gtoc button.on{background:#7a4a1a;color:#ffe9b0}#gBook .gsub button{font-size:12px;padding:4px 7px}#gBook .gent{background:rgba(255,245,215,.55);border:1px solid #b09060;border-radius:8px;padding:7px 9px;margin:6px 0;font-size:13px;line-height:1.4}#gBook .gent b{color:#4a2a0a}#gBook .glock{opacity:.6;font-style:italic}#gBook table{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px}#gBook td{padding:2px 4px;border-bottom:1px dotted #b09060}#gBook td:last-child{text-align:right;white-space:nowrap}
+#gBook{padding:4px 2px}#gBook .gtoc{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 8px}#gBook .gtoc button{padding:5px 9px;font:13px Georgia;border:1px solid #8a6a3a;border-radius:7px;background:#ead7b0;color:#3b2410;cursor:pointer}#gBook .gtoc button.on{background:#7a4a1a;color:#ffe9b0}#gBook .gsub button{font-size:12px;padding:4px 7px}#gBook .gent{background:rgba(255,245,215,.55);border:1px solid #b09060;border-radius:8px;padding:7px 9px;margin:6px 0;font-size:13px;line-height:1.4}#gBook .gent b{color:#4a2a0a}#gBook .gent.gclk{cursor:pointer;-webkit-tap-highlight-color:transparent}#gBook .gent.gclk:active{background:rgba(255,225,150,.75)}#gBook [data-npc]{display:inline-block;padding:4px 2px;margin:-4px 0}#gBook .gtoc button{min-height:34px}#gBook .glock{opacity:.6;font-style:italic}#gBook table{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px}#gBook td{padding:2px 4px;border-bottom:1px dotted #b09060}#gBook td:last-child{text-align:right;white-space:nowrap}
 #toasts{position:fixed;left:50%;top:calc(200px + env(safe-area-inset-top));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;width:92vw;z-index:5}
 .toast{background:rgba(25,15,6,.9);border:2px solid #8a6a3a;border-radius:6px;padding:3px 9px;font-size:12px;color:#f4e6c4;display:flex;align-items:center;gap:6px;animation:tin .25s ease-out;max-width:100%}
 .toast img{width:24px;height:24px;flex:none}
@@ -449,12 +449,12 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
 </div>
 <div id="cs"><div id="csText"></div><button id="csSkip">Überspringen ⏭</button><div id="csTap">▶ Tippen / Klicken zum Weiterlesen</div></div>
 
-<script src="icons.js?v=30"></script>
-<script src="core.js?v=30"></script>
-<script src="sound.js?v=30"></script>
-<script src="r2d.js?v=30"></script>
-<script src="r3d.js?v=30"></script>
-<script src="ui.js?v=30"></script>
+<script src="icons.js?v=32"></script>
+<script src="core.js?v=32"></script>
+<script src="sound.js?v=32"></script>
+<script src="r2d.js?v=32"></script>
+<script src="r3d.js?v=32"></script>
+<script src="ui.js?v=32"></script>
 <!-- PWA: Service Worker starten (für Offline-Betrieb) -->
 <script>
 if ('serviceWorker' in navigator) {
