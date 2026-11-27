@@ -1764,8 +1764,8 @@ function tavOf(n){let best=null,bd=70;for(const b of TAVS){const d=Math.hypot(b.
 const ROLE={hilda:['anvil','hammer'],bernd:['hearth','knead'],mara:['shelf','brew'],anselm:['altar','pray'],durin:['anvil','hammer'],holger:['table','saw'],aldric:['throne','sit'],samira:['throne','sit'],liv:['table','eat'],aldwin:['table','eat'],jarl:['throne','sit']};
 const FT={bed:T.BED,table:T.TABLE,hearth:T.HEARTH,shelf:T.SHELF,altar:T.ALTAR,anvil:T.ANVIL,throne:T.THRONE,pew:T.PEW};
 function phase(t){return t>=505||t<22?'sleep':t<75?'morning':t<370?'work':t<465?'social':'home';}
-function want(n,t){const ph=phase(t),h=houseOf(n);if(n.id==='elara')return null;const day=Math.floor(((P&&P.dayT)||0)/DAYLEN),r=h2(n.id.length*31+n.id.charCodeAt(0),day,991);
- {const J=G.jobNow&&G.jobNow(n,t);if(J)return J;if(h&&G.weekWant){const ww=G.weekWant(n,t,ph,h,r);if(ww)return ww;}}
+function want(n,t,dayO){const ph=phase(t),h=houseOf(n);if(n.id==='elara')return null;const day=dayO!=null?dayO:Math.floor(((P&&P.dayT)||0)/DAYLEN),r=h2(n.id.length*31+n.id.charCodeAt(0),day,991),wd=day%7;
+ {const J=G.jobNow&&G.jobNow(n,t,wd);if(J)return J;if(h&&G.weekWant){const ww=G.weekWant(n,t,ph,h,r,wd);if(ww)return ww;}}
  if(n.id==='otto'||n.id==='berta'&&false)return ph==='sleep'&&t>=600?{b:h,spot:'bed',act:'sleep'}:null;
  if(ph==='work')return null;if(!h)return ph==='sleep'?null:null;
  if(ph==='sleep')return{b:h,spot:n.child&&false?'any':'bed',act:'sleep'};
@@ -2059,7 +2059,7 @@ Object.assign(G,{WDAY,WD2,wday,hourOf,clockStr});
 // ---- Öffnungszeiten (Stunden von–bis, Tage-Maske; bis < von = über Mitternacht)
 const HOURS={chapel:[7,20,'all'],craft:[9,18,'MoSa'],shop:[8,19,'MoSa'],inn:[10,2,'all'],potion:[8,20,'all'],casino:[12,2,'all'],guild:[8,20,'MoSa']};
 const HCLS=id=>id==='anselm'?'chapel':id==='holger'||id==='flora'||id==='baldur'?'craft':id==='edwin'||id==='isolde'?'guild':/^(wirt|inn_)/.test(id)?'inn':/^(fortunato|kasimir|bella)$/.test(id)?'casino':/^(wenda|pot_)/.test(id)||id==='brann'||id==='mara'?'potion':'shop';
-G.shopOpen=id=>{const c=HOURS[HCLS(id)],h=hourOf(G.dayInfo().t),wd=wday();let open=c[1]>c[0]?(h>=c[0]&&h<c[1]):(h>=c[0]||h<c[1]);if(c[2]==='MoSa'&&wd===6)open=false;return open;};
+G.shopOpen=(id,t,wd)=>{const c=HOURS[HCLS(id)],h=hourOf(t==null?G.dayInfo().t:t);if(wd==null)wd=wday();let open=c[1]>c[0]?(h>=c[0]&&h<c[1]):(h>=c[0]||h<c[1]);if(c[2]==='MoSa'&&wd===6)open=false;return open;};
 G.shopHoursTxt=id=>{const c=HOURS[HCLS(id)];return `${String(c[0]).padStart(2,'0')}:00–${String(c[1]).padStart(2,'0')}:00 Uhr, ${c[2]==='MoSa'?'Mo–Sa (sonntags Ruhetag)':'täglich'}`;};
 
 // ---- Möbel- & Deko-Katalog: Formen × Materialien
@@ -2239,9 +2239,9 @@ SHOPS.wenda={n:'Wendas Trankladen',items:PSET[0].slice(),buys:'potion'};SHOPS.po
 {const _qh=quickHeal;quickHeal=G.quickHeal=function(){if(!P.inv.some(s=>s&&(s.id==='potion'||s.id==='potion2'))){const i=P.inv.findIndex(s=>s&&s.id==='potion_s');if(i>=0){useItem(i);return;}}return _qh();};}
 
 // ---- Tagesabläufe: Arbeitszeiten, Sonntags-Andacht, Mittwochs-Stammtisch, feste Betten
-G.jobNow=(n,t)=>{if(!n.job22||!G.shopOpen(n.id))return null;return{b:n.job22.b,spot:{x:n.job22.x,y:n.job22.y},act:'work'};};
+G.jobNow=(n,t,wd)=>{if(!n.job22||!G.shopOpen(n.id,t,wd))return null;return{b:n.job22.b,spot:{x:n.job22.x,y:n.job22.y},act:'work'};};
 const CHAPEL=BUILD.find(b=>b.id==='chapel');
-G.weekWant=(n,t,ph,h,r)=>{const wd=wday();
+G.weekWant=(n,t,ph,h,r,wd0)=>{const wd=wd0!=null?wd0:wday();
  if(n.bed22&&ph==='sleep')return{b:h,spot:{x:n.bed22.x,y:n.bed22.y,bed:1},act:'sleep'};
  if(wd===6&&t>=90&&t<165&&!n.lord&&!n.job22&&r<.75){if(!n.town&&CHAPEL)return{b:CHAPEL,spot:'pew',act:'sit'};const tv=n.town&&BUILD.find(b=>b.id===n.town+'_tav');if(tv&&tv.room)return{b:tv,spot:'table',act:'sit'};}
  if(wd===2&&ph==='social'&&!n.lord&&!n.child&&!n.job22){const tv=!n.town?BUILD.find(b=>b.id==='tavern'):BUILD.find(b=>b.id===n.town+'_tav');if(tv&&tv.room)return{b:tv,spot:'table',act:'drink'};}
@@ -2338,6 +2338,16 @@ function npcDetail(n){const id=n.id,o=[];const hrs=(SHOPS[id]||G.offers(id).leng
  if(SMCAP[id])o.push(`⚒ Ausrüstung bis höchstens Stufe ${SMCAP[id]}.`);if(RENT[id])o.push(`🛏 Gästezimmer: ${RENT[id]} Gold pro Nacht.`);
  if(id==='baldur')o.push('🏗 Ausbau: '+HUPG.filter(Boolean).map(u=>`${u.n} ${u.p.toLocaleString('de-DE')} G`).join(' · '));if(id==='edwin')o.push('🗺 '+G.offers('edwin').map(x=>`${x.n} ${x.price} G`).join(' · '));
  return o;}
+// v24: genauer Wochenplan einer Person – direkt aus derselben Tagesablauf-Logik berechnet, nach der sie im Spiel läuft
+const ACTN={hammer:'schmiedet',knead:'backt',brew:'braut Tränke',saw:'sägt',mend:'flickt',write:'schreibt',spin:'spinnt',stir:'kocht',sleep:'schläft',work:'arbeitet',drink:'sitzt bei einem Getränk',eat:'isst',warm:'wärmt sich am Feuer',sit:'sitzt',pray:'betet',read:'liest',cook:'kocht',sew:'näht',craft:'werkelt',count:'zählt Gold',guard:'hält Wache'};
+const placeName=b=>b?(b.room&&b.room.name)||b.name||(b.kind==='keep'?'Burg':b.kind==='chapel'?'Kapelle':'Haus'):'';
+const outsideName=n=>{const x=n.hx/TILE,y=n.hy/TILE;let best=null,bd=1e9;for(const b of BUILD){if(b.wild||!b.name)continue;const d=Math.hypot(b.x+b.w/2-x,b.y+b.h/2-y);if(d<bd){bd=d;best=b;}}const tw=npcTown(n);return (bd<14&&best?'bei „'+best.name+'“':'draußen')+(tw==='wild'?'':' ('+TNAME(tw)+')');};
+G.weekPlan=n=>{const dn=Math.floor((P.dayT||0)/DAYLEN),ws=dn-dn%7,out=[];const fixed=n.post&&n.post.b?placeName(n.post.b):null;
+ for(let wd=0;wd<7;wd++){const segs=[];let cur=null;for(let t=0;t<DAYLEN;t+=15){let lab;if(fixed)lab='hält sich in „'+fixed+'“ auf';else{const w=want(n,t,ws+wd);if(!w)lab=(phase(t)==='sleep'?'unterwegs ':'ist ')+outsideName(n);else{const pl=placeName(w.b);lab=(ACTN[w.act]||'ist')+(pl?' – '+pl:'');}}
+  if(!cur||cur.l!==lab){cur={l:lab,a:t,b:t+15};segs.push(cur);}else cur.b=t+15;}
+  // über Mitternacht (06:00-Grenze) zusammenfassen bleibt getrennt, damit die Uhrzeiten stimmen
+  out.push({wd,name:WDAY[wd],today:wd===dn%7,segs:segs.map(q=>({from:clockStr(q.a),to:clockStr(q.b%DAYLEN),l:q.l,now:wd===dn%7&&(P.dayT%DAYLEN)>=q.a&&(P.dayT%DAYLEN)<q.b}))});}
+ return out;};
 G.guideNPCs=()=>{const g={};for(const n of NPCS){if(n.hidden||n.id==='elara'&&!G.npcVisible(n))continue;const tw=npcTown(n);(g[tw]||(g[tw]=[])).push(n);}
  const order=['city'].concat(TOWNS.map(t=>t.id),['wild']).filter(k=>g[k]);return order.map(k=>({id:k,name:TNAME(k),list:g[k].sort((a,b)=>(a.name||'').localeCompare(b.name||'')).map(n=>{const met=!!(P.met&&P.met[n.id]);return{id:n.id,name:n.name,role:ROLEW(n),can:npcCan(n),met,det:met?npcDetail(n):null};})}));};
 const BIOME_ORDER=['m','f','s','w','i','a','d','e','p','n',''];const BIOME_N={m:'Sonnenwiesen',f:'Finsterwald',s:'Nebelmoor',w:'Steinöde',i:'Frostlande',a:'Aschenberge',d:'Schattenwald',e:'Sengende Dünen',p:'Graukamm-Gebirge',n:'Nebellande','':'Dungeons & Verliese'};
