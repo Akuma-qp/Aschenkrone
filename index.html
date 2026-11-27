@@ -39,7 +39,7 @@ button{touch-action:manipulation;cursor:pointer}
 #invTabs{display:flex;gap:4px;margin-bottom:6px}#invTabs button{flex:1;font-family:inherit;font-weight:bold;font-size:13px;padding:6px;border:2px solid #5a3d1e;border-radius:6px;background:#c9a86a;color:#3b2410;cursor:pointer}#invTabs button.on{background:#5a3d1e;color:#ffe9b0}
 #qBook{max-height:calc(100vh - 150px);overflow:auto;overscroll-behavior:contain;touch-action:pan-y;color:#3b2410;font-size:13px;line-height:1.45}.qbh{font-weight:bold;font-size:14px;margin:8px 0 4px;color:#5a3d1e;border-bottom:2px solid #8a6a3a}.qbc{background:rgba(255,245,215,.55);border:1px solid #a88a5a;border-radius:6px;padding:6px 8px;margin-bottom:6px}.qbt{font-weight:bold;color:#7a4a10}.qbd{color:#8a5a00;font-weight:bold;font-size:12px;margin-top:2px}.qbg{font-size:11.5px;opacity:.8}.qbi{font-style:italic;font-size:11.5px;opacity:.75;margin-top:3px}.qbe{opacity:.8}
 #hudTR{position:fixed;right:calc(8px + env(safe-area-inset-right));top:calc(8px + env(safe-area-inset-top));display:flex;flex-direction:column;align-items:flex-end;gap:6px}
-#hotbar,#hudTL,#ctrls,#inv>.panel,.tbtns{zoom:var(--gui,1)}#inv>.panel{max-height:calc(100% / var(--gui,1))}
+#hotbar,#hudTL,#ctrls,.overlay>.panel,.tbtns,#dialog,#chat,#toasts{zoom:var(--gui,1)}.overlay>.panel{max-height:calc(100% / var(--gui,1))!important;max-width:calc(100vw / var(--gui,1) - 6px)!important}#dialog,#chat{max-width:calc(98vw / var(--gui,1))!important}#toasts{width:calc(92vw / var(--gui,1))}
 #mini{width:120px;height:120px;border:3px solid #5a3d1e;border-radius:6px;background:#000;box-shadow:0 2px 8px #000}
 .tbtns{display:flex;gap:6px}
 .rbtn{width:40px;height:40px;border-radius:50%;border:3px solid #5a3d1e;background:radial-gradient(#f4e6c4,#c9a86a);font-size:19px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px #000;color:#3b2612;font-family:inherit;padding:0;font-weight:bold}
@@ -64,6 +64,7 @@ button{touch-action:manipulation;cursor:pointer}
 #joyHint{position:fixed;left:18px;bottom:calc(var(--s) + 46px + env(safe-area-inset-bottom));color:rgba(244,230,196,.65);font-size:12px;pointer-events:none;text-shadow:0 1px 2px #000;max-width:40vw}
 #fxBar{display:flex;flex-wrap:wrap;gap:4px;margin:3px 0;pointer-events:none}.fxc{font:bold 11px Georgia;padding:1px 6px;border:1px solid;border-radius:9px;background:rgba(20,12,4,.72);animation:fxIn .3s}@keyframes fxIn{from{transform:scale(1.3);opacity:0}to{transform:none;opacity:1}}
 #tipBox{position:fixed;left:10px;top:150px;width:240px;z-index:6;background:rgba(25,15,6,.78);border:1px solid #8a6a3a;border-left:3px solid #ffd54a;border-radius:6px;padding:5px 8px;font:12px/1.35 Georgia,serif;color:#f4e6c4;opacity:0;transform:translateX(-12px);transition:opacity .4s,transform .4s;pointer-events:none}#tipBox.on{opacity:1;transform:none;pointer-events:auto;cursor:pointer}body:not(.pc) #tipBox{font-size:11px;padding:4px 7px}
+#gBook{padding:4px 2px}#gBook .gtoc{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 8px}#gBook .gtoc button{padding:5px 9px;font:13px Georgia;border:1px solid #8a6a3a;border-radius:7px;background:#ead7b0;color:#3b2410;cursor:pointer}#gBook .gtoc button.on{background:#7a4a1a;color:#ffe9b0}#gBook .gsub button{font-size:12px;padding:4px 7px}#gBook .gent{background:rgba(255,245,215,.55);border:1px solid #b09060;border-radius:8px;padding:7px 9px;margin:6px 0;font-size:13px;line-height:1.4}#gBook .gent b{color:#4a2a0a}#gBook .glock{opacity:.6;font-style:italic}#gBook table{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px}#gBook td{padding:2px 4px;border-bottom:1px dotted #b09060}#gBook td:last-child{text-align:right;white-space:nowrap}
 #toasts{position:fixed;left:50%;top:calc(200px + env(safe-area-inset-top));transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:4px;pointer-events:none;width:92vw;z-index:5}
 .toast{background:rgba(25,15,6,.9);border:2px solid #8a6a3a;border-radius:6px;padding:3px 9px;font-size:12px;color:#f4e6c4;display:flex;align-items:center;gap:6px;animation:tin .25s ease-out;max-width:100%}
 .toast img{width:24px;height:24px;flex:none}
@@ -221,10 +222,10 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
 <div id="inv" class="overlay">
  <div class="panel parch">
   <div class="ph"><span id="invTitle">⚜ Inventar ⚜</span><button class="x" id="invClose">✕</button></div>
-  <div id="invTabs"><button data-t="inv" class="on">🎒 Inventar</button><button data-t="quest">📜 Quests</button><button data-t="skill">⭐ Fähigkeiten</button><button data-t="stat">📊 Statistik</button></div>
+  <div id="invTabs"><button data-t="inv" class="on">🎒 Inventar</button><button data-t="quest">📜 Quests</button><button data-t="skill">⭐ Fähigkeiten</button><button data-t="stat">📊 Statistik</button><button data-t="guide">📖 Guide</button></div>
   <div id="shopBar"></div>
   <div id="qBook" style="display:none"></div>
-  <div id="skBook" style="display:none"></div><div id="stBook" style="display:none"></div>
+  <div id="skBook" style="display:none"></div><div id="stBook" style="display:none"></div><div id="gBook" style="display:none"></div>
   <div class="invWrap"><div class="invL">
   <div class="charRow"><div class="eqCol" id="eqL"></div><div id="statBox"></div><div class="eqCol" id="eqR"></div></div>
   <div class="ilabel">Rucksack</div><div class="grid" id="gMain"></div>
@@ -265,7 +266,7 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
   <h3>Wochentage & Tagesabläufe 📅</h3>
   <p>Eine Woche hat 7 Tage (Mo–So, oben im Himmel angezeigt). Händler haben Öffnungszeiten, viele Bewohner gehen sonntags vormittags in die Kapelle und treffen sich mittwochabends in der Taverne. Nachts schlafen alle in ihren eigenen Betten. In den Tavernen der anderen Städte kannst du ein <b>Gästezimmer</b> für eine Nacht mieten.</p>
   <h3>Casino „Goldene Krone“ 🎰</h3>
-  <p>Im Osten von Eichenhain (täglich 12:00–02:00 Uhr): Spielautomaten, Blackjack bei Croupière Bella und Casino Hold’em bei Croupier Kasimir – nach den echten Regeln. Inhaber Fortunato hat auch eine kleine Aufgabe für Glückspilze.</p>
+  <p>Im Osten von Eichenhain (täglich 12:00–02:00 Uhr): Roulette (mit 0 und 00), Spielautomaten, Blackjack bei Croupière Bella und Casino Hold’em bei Croupier Kasimir – nach den echten Regeln und ohne Höchsteinsatz: Du entscheidest selbst, wie viel du setzt. Inhaber Fortunato hat auch eine kleine Aufgabe für Glückspilze.</p>
   <h3>Der Aschenfluch 🔥</h3>
   <p>Seit Ignaroks Rückkehr rieselt Asche über Eldmar und vergiftet die Tiere. Befallene Tiere haben glühend rote Augen und Glut im Fell und greifen alles an. Gesunde Hasen und Füchse fliehen vor dir, Wildschweine verteidigen nur ihr Revier, wenn du ihnen zu nahe kommst.</p>
   <h3>Städte 🏘</h3>
@@ -350,7 +351,7 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
   <div id="keyBind" class="pcOnly"></div>
   <div class="snote pcOnly">Auf eine Taste klicken, dann die neue Taste drücken. Ist die Taste schon belegt, werden die beiden getauscht. Esc bricht ab.</div>
   <div class="slabel">GUI-Größe (Hotbar, Inventar, Knöpfe)</div>
-  <div class="seg" data-k="gui"><button data-v="85">Klein</button><button data-v="100">Normal</button><button data-v="120">Groß</button><button data-v="140">Sehr groß</button></div>
+  <div class="seg" data-k="gui"><button data-v="95">Klein</button><button data-v="112">Normal</button><button data-v="128">Groß</button><button data-v="145">Sehr groß</button><button data-v="165">Riesig</button></div>
   <div class="slabel">Minimap-Größe</div>
   <div class="seg" data-k="mini"><button data-v="96">Klein</button><button data-v="140">Mittel</button><button data-v="190">Groß</button><button data-v="240">Riesig</button></div>
   <div class="slabel">Schwierigkeit</div>
@@ -421,11 +422,12 @@ body:not(.pc) #bRotL,body:not(.pc) #bRotR,body:not(.pc) #bTiltU,body:not(.pc) #b
 </div>
 <div id="cs"><div id="csText"></div><button id="csSkip">Überspringen ⏭</button><div id="csTap">▶ Tippen / Klicken zum Weiterlesen</div></div>
 
-<script src="core.js?v=22"></script>
-<script src="sound.js?v=22"></script>
-<script src="r2d.js?v=22"></script>
-<script src="r3d.js?v=22"></script>
-<script src="ui.js?v=22"></script>
+<script src="icons.js?v=24"></script>
+<script src="core.js?v=24"></script>
+<script src="sound.js?v=24"></script>
+<script src="r2d.js?v=24"></script>
+<script src="r3d.js?v=24"></script>
+<script src="ui.js?v=24"></script>
 <!-- PWA: Service Worker starten (für Offline-Betrieb) -->
 <script>
 if ('serviceWorker' in navigator) {

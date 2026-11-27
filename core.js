@@ -3,6 +3,7 @@
 const G=window.G={};
 // ===================== Hilfsfunktionen =====================
 const h2=(x,y,s)=>{let h=Math.imul(x|0,374761393)^Math.imul(y|0,668265263)^Math.imul(s|0,1442695041);h=Math.imul(h^(h>>>13),1274126177);h^=h>>>16;return (h>>>0)/4294967296;};
+const DX4=[1,-1,0,0],DY4=[0,0,1,-1];// Nachbarfelder ohne Array-Erzeugung
 function noise(x,y,s){const xi=Math.floor(x),yi=Math.floor(y),xf=x-xi,yf=y-yi,u=xf*xf*(3-2*xf),v=yf*yf*(3-2*yf);const a=h2(xi,yi,s),b=h2(xi+1,yi,s),c=h2(xi,yi+1,s),d=h2(xi+1,yi+1,s);return a+(b-a)*u+(c-a)*v+(a-b-c+d)*u*v;}
 const fbm=(x,y,s)=>noise(x/9,y/9,s)*.6+noise(x/4,y/4,s+1)*.3+noise(x,y,s+2)*.1;
 const rnd=(a,b)=>a+Math.random()*(b-a),rint=(a,b)=>Math.floor(rnd(a,b+1)),pick=a=>a[Math.floor(Math.random()*a.length)];
@@ -17,8 +18,10 @@ const sfx=(n,o)=>{if(G.sfx)G.sfx(n,o);};
 
 // ===================== Einstellungen & Schwierigkeit =====================
 const SETK='eichenhain_settings_v2',SAVEK='eichenhain_save_v5',SAVEK4='eichenhain_save_v4';
-G.settings={mode:'3d',quality:'mid',diff:'normal',dmgNums:true,zoom:'normal',cam:'top',invX:'0',invY:'0',sens:'1',rd:'auto',win:'window',fps:'60',gui:'100',mini:'140',vMaster:80,vSfx:80,vMusic:55,vVoice:85,voices:'speech'};
+G.settings={mode:'3d',quality:'mid',diff:'normal',dmgNums:true,zoom:'normal',cam:'top',invX:'0',invY:'0',sens:'1',rd:'auto',win:'window',fps:'60',gui:'112',mini:'140',vMaster:80,vSfx:80,vMusic:55,vVoice:85,voices:'speech'};
 try{const s=JSON.parse(localStorage.getItem(SETK)||'null');if(s)Object.assign(G.settings,s);}catch(e){}
+// v23: alte GUI-Stufen auf die neue (etwas größere) Skala heben
+if(!G.settings.guiV){G.settings.gui=({'85':'95','100':'112','120':'128','140':'145'})[G.settings.gui]||G.settings.gui;G.settings.guiV=23;}
 G.saveSettings=()=>{try{localStorage.setItem(SETK,JSON.stringify(G.settings));}catch(e){}};
 G.DIFF={
  leicht:{n:'Leicht',d:'Für Entdecker. Monster sind schwächer, du steigst schneller auf und Quests sind kürzer.',mhp:1,mdmg:1,xpN:.75,pen:.05,ilvl:0,N:[55.544,28,12,4,0.446,0.005],B:[26.596,35,25,11,2.394,0.006],M:[41.24,32,18,7.5,1.24,0.01],chM:.6,chN:.30,chB:.70,gold:1,goldLoss:0},
@@ -60,8 +63,19 @@ function biomeRaw(x,y){const d=dV(x,y);if(d<RV+1)return'village';const mx=x+(noi
  if(wy<300||y<264){if(wx<472)return'winter';if(wx<600)return'peaks';return'ash';}
  if(wy>884||y>924){if(wx<444)return'dark';if(wx<744)return'waste';return'desert';}
  if(wx<304)return'swamp';if(wx>864)return'forest';return'meadow';}
-for(let y=0;y<H;y++)for(let x=0;x<WW;x++)BIO[y*WW+x]=BNAMES.indexOf(biomeRaw(x,y));
-{const vi=BNAMES.indexOf('village');for(let it=0;it<2;it++){const src=BIO.slice();const cnt=new Int16Array(BNAMES.length);for(let y=0;y<H;y++)for(let x=0;x<WW;x++){const c=src[y*WW+x];if(c===vi)continue;cnt.fill(0);for(let dy=-3;dy<=3;dy++){const yy=y+dy;if(yy<0||yy>=H)continue;for(let dx=-3;dx<=3;dx++){const xx=x+dx;if(xx<0||xx>=WW)continue;const b=src[yy*WW+xx];if(b!==vi)cnt[b]++;}}let bb=c,bn=cnt[c];for(let k=0;k<cnt.length;k++)if(cnt[k]>bn){bn=cnt[k];bb=k;}BIO[y*WW+x]=bb;}}}
+// v23 (Ladezeit): gleiche Berechnung wie biomeRaw, aber Gitterwerte des Rauschens werden zwischengespeichert (identisches Ergebnis, viel schneller)
+(()=>{const mkNC=s=>{let lx=1e9,ly=1e9,a=0,b=0,c=0,d=0;return(x,y)=>{const xi=Math.floor(x),yi=Math.floor(y);if(xi!==lx||yi!==ly){lx=xi;ly=yi;a=h2(xi,yi,s);b=h2(xi+1,yi,s);c=h2(xi,yi+1,s);d=h2(xi+1,yi+1,s);}const xf=x-xi,yf=y-yi,u=xf*xf*(3-2*xf),v=yf*yf*(3-2*yf);return a+(b-a)*u+(c-a)*v+(a-b-c+d)*u*v;};};
+ const n405=mkNC(405),n401=mkNC(401),n403=mkNC(403),n402=mkNC(402),n404=mkNC(404),BI={};BNAMES.forEach((n,i)=>BI[n]=i);
+ for(let y=0;y<H;y++)for(let x=0;x<WW;x++){let r;const d=dV(x,y);if(d<RV+1)r='village';else{const mx=x+(n405(x/70,y/70)-.5)*70;if(mx>1180)r='mist';else{
+  const wx=x+(n401(x/110,y/110)-.5)*160+(n403(x/28,y/28)-.5)*36,wy=y+(n402(x/110,y/110)-.5)*160+(n404(x/28,y/28)-.5)*36;
+  if(wy<300||y<264)r=wx<472?'winter':wx<600?'peaks':'ash';else if(wy>884||y>924)r=wx<444?'dark':wx<744?'waste':'desert';else r=wx<304?'swamp':wx>864?'forest':'meadow';}}BIO[y*WW+x]=BI[r];}})();
+// v23 (Ladezeit): Glättung mit gleitendem Fenster statt 7×7-Zählung pro Feld – identisches Ergebnis
+(()=>{const vi=BNAMES.indexOf('village'),NB=BNAMES.length;for(let it=0;it<2;it++){const src=BIO.slice();const col=new Int16Array(WW*NB),win=new Int16Array(NB);
+ const addRow=(yy,s1)=>{if(yy<0||yy>=H)return;const o=yy*WW;for(let x=0;x<WW;x++){const b=src[o+x];if(b!==vi)col[x*NB+b]+=s1;}};
+ for(let yy=0;yy<=3;yy++)addRow(yy,1);
+ for(let y=0;y<H;y++){if(y>0){addRow(y+3,1);addRow(y-4,-1);}win.fill(0);let tot=0;for(let x=0;x<=3&&x<WW;x++)for(let k=0;k<NB;k++){win[k]+=col[x*NB+k];tot+=col[x*NB+k];}
+  for(let x=0;x<WW;x++){if(x>0){const xa=x+3,xr=x-4;if(xa<WW)for(let k=0;k<NB;k++){const v=col[xa*NB+k];win[k]+=v;tot+=v;}if(xr>=0)for(let k=0;k<NB;k++){const v=col[xr*NB+k];win[k]-=v;tot-=v;}}
+   const c=src[y*WW+x];if(c===vi)continue;let bb=c,bn=win[c];if(bn*2>tot){BIO[y*WW+x]=c;continue;}for(let k=0;k<NB;k++)if(win[k]>bn){bn=win[k];bb=k;}BIO[y*WW+x]=bb;}}}})();
 function biome(x,y){x=Math.floor(x);y=Math.floor(y);if(x>=WW)return'interior';if(x<0||y<0||y>=H)return'waste';return BNAMES[BIO[y*WW+x]];}
 const BL={meadow:'m',forest:'f',swamp:'s',waste:'w',winter:'i',ash:'a',village:'v',interior:'x',dark:'d',desert:'e',peaks:'p',mist:'n'};
 // Gegnerstufe: wächst mit der Entfernung zum Dorf (Stufe 1 bis 40), je Region etwas verschoben
@@ -319,7 +333,7 @@ function bigKeep(b){const r=makeRoom(b,36,24,T.STONEF,T.SWALL),S=(x,y,t)=>F(r,x,
 function furnish(b){let r;const k=b.id;
  if(k==='keep'){bigKeep(b);return;}
  if(k==='h4'){r=makeRoom(b,24,13,T.WOOD,T.IWALL);return;}
- if(k==='casino'){r=layRoom(b,LAY22.casino,T.WOOD,T.IWALL,'tavern');r.zones=[[13,0,21,3,'Büro des Inhabers']];return;}
+ if(k==='casino'){r=layRoom(b,LAY22.casino,T.WOOD,T.IWALL,'tavern');r.zones=[[13,0,21,3,'Büro des Inhabers']];for(let y=8;y<=9;y++)for(let x=9;x<=11;x++)F(r,x,y,T.FELT);r.roul={x:r.x0+9,y:r.y0+8};return;}// v23: Roulette-Tisch
  if(k==='werk'){r=layRoom(b,LAY22.werk,T.WOOD,T.IWALL);r.zones=[[0,0,6,5,'Schreinerei Holger'],[8,0,15,5,'Gartenkunst Flora'],[17,0,23,5,'Baumeister Baldur'],[0,7,7,10,'Schaufenster']];r.show=[[1,7],[4,7]];return;}
  if(k==='tavern'){r=layRoom(b,LAY22.tavern,T.WOOD,T.IWALL,'tavern');r.guest=[r.x0+16,r.y0,r.x0+19,r.y0+3];r.zones=[[16,0,19,3,'Gästezimmer']];return;}
  if(b.tx22==='tav'){r=layRoom(b,LAY22.tav,T.WOOD,T.IWALL,'tavern');r.guest=[r.x0+8,r.y0,r.x0+11,r.y0+1];r.zones=[[8,0,11,1,'Gästezimmer']];return;}
@@ -742,7 +756,7 @@ function npcSpot(n,at){const ht=Math.floor(n.hx/TILE),hy=Math.floor(n.hy/TILE);c
  if(at==='npc'){const o=pick(NPCS.filter(q=>q!==n&&!q.abs&&Math.hypot(q.x-n.x,q.y-n.y)<TILE*16));if(o){n.healT=o;return[Math.floor(o.x/TILE)+1,Math.floor(o.y/TILE)];}}
  for(let k=0;k<12;k++){const x=ht+rint(-6,6),y=hy+rint(-6,6);if(ok(x,y))return[x,y];}return[ht,hy];}
 function npcPath(n,tx,ty){const sx=Math.floor(n.x/TILE),sy=Math.floor(n.y/TILE);if(sx===tx&&sy===ty)return[];const R0=22,Wd=R0*2+1,prev=new Int32Array(Wd*Wd).fill(-1);const id=(x,y)=>(y-sy+R0)*Wd+(x-sx+R0);
- const q=[[sx,sy]];prev[id(sx,sy)]=id(sx,sy);let found=false;for(let i=0;i<q.length&&i<1800;i++){const [x,y]=q[i];if(x===tx&&y===ty){found=true;break;}for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(Math.abs(nx-sx)>R0||Math.abs(ny-sy)>R0)continue;const k=id(nx,ny);if(prev[k]>=0)continue;if(!walkTile(nx,ny))continue;prev[k]=id(x,y);q.push([nx,ny]);}}
+ const q=[[sx,sy]];prev[id(sx,sy)]=id(sx,sy);let found=false;for(let i=0;i<q.length&&i<1800;i++){const [x,y]=q[i];if(x===tx&&y===ty){found=true;break;}for(let q4=0;q4<4;q4++){const dx=DX4[q4],dy=DY4[q4];const nx=x+dx,ny=y+dy;if(Math.abs(nx-sx)>R0||Math.abs(ny-sy)>R0)continue;const k=id(nx,ny);if(prev[k]>=0)continue;if(!walkTile(nx,ny))continue;prev[k]=id(x,y);q.push([nx,ny]);}}
  if(!found)return null;const path=[];let k=id(tx,ty);while(k!==id(sx,sy)){const x=k%Wd-R0+sx,y=Math.floor(k/Wd)-R0+sy;path.unshift([x,y]);k=prev[k];}return path;}
 function npcTick(n,dt,dn){const J=JOBS[n.id];if(!J&&!n.wander)return;
  if(dn<70||(G.ui&&G.ui.dlgNpc===n)){n.moving=false;n.act=null;return;}
@@ -893,7 +907,7 @@ const UNIQ={
  thornvine:[{k:'spear',name:'Dornenspieß',ufx:{poison:1},d:'vergiftet Gegner'}],shadowhound:[{k:'dagger',name:'Schattenzahn',ufx:{ls:.06},d:'Lebensraub 6 %'}]};
 G.UNIQ=UNIQ;G.killMonster=m=>killMonster(m);G.hitPlayer=(d,o)=>hitPlayer(d,o||{});
 function mkUnique(e,il,src){const o={name:e.name,src,ufx:e.ufx,ud:e.d,uniq:1};const rar=Math.random()<.25?4:3;if(e.k&&WKIND[e.k])return genItem('weapon',il+1,rar,Object.assign(o,{kind:e.k}));if(e.set)return genItem(e.s,il+1,rar,Object.assign(o,{set:e.set,kind:e.k}));return genItem(e.t,il+1,rar,o);}
-function killMonster(m){m.dead=true;if(m.boss&&!m.summoned)P.bossK=(P.bossK||0)+1;if(m.realm)G.realmKilled(m);if(m.mistg)G.mistKilled(m);if(!m.summoned&&(m.type==='centaur'&&Math.random()<(m.boss?.6:.18)||m.boss&&m.boss!=='mini'&&Math.random()<.05)){const D=G.D();dropGround(mkBarding(m.lvl+(D.ilvl||0),Math.max(m.boss?2:0,rollRar(D.M))),m.x,m.y);G.toast('🐎 Eine Pferderüstung ist gefallen!','#ffd54a');}if(P.side)for(const k in SQ){const q=SQ[k],st=P.side[k];if(st&&st.st==='active'&&q.kill===m.type&&st.c<q.cnt){st.c++;if(st.c===q.cnt)G.toast(`📜 ${q.n}: erledigt! Zurück zu ${npcById(q.npc).short}.`,'#ffd54a',true);}}sfx(m.boss?'bosskill':'kill',m);if(m.boss==='dragon')sfx('aggro',{type:'dragon'});const D=G.D();const diff=m.lvl-P.level;let xp=m.xp;if(diff<=-7)xp*=.05;else if(diff<=-4)xp*=.3;else if(diff>=2)xp*=1+Math.min(diff,4)*.08;if(m.summoned)xp*=.3;if(m.boss){const bk=m.boss==='mini'?'mini:'+(m.room||m.type):m.boss;P.bossN=P.bossN||{};const bn=P.bossN[bk]||0;xp*=Math.max(.15,1/(1+bn*.8));P.bossN[bk]=bn+1;}xp=Math.max(1,Math.round(xp));
+function killMonster(m){m.dead=true;if(m.boss&&!m.summoned){P.bossK=(P.bossK||0)+1;if(BOSSES[m.boss]){const bs=P.bossSeen||(P.bossSeen={});bs[m.boss]=(bs[m.boss]||0)+1;}}if(m.realm)G.realmKilled(m);if(m.mistg)G.mistKilled(m);if(!m.summoned&&(m.type==='centaur'&&Math.random()<(m.boss?.6:.18)||m.boss&&m.boss!=='mini'&&Math.random()<.05)){const D=G.D();dropGround(mkBarding(m.lvl+(D.ilvl||0),Math.max(m.boss?2:0,rollRar(D.M))),m.x,m.y);G.toast('🐎 Eine Pferderüstung ist gefallen!','#ffd54a');}if(P.side)for(const k in SQ){const q=SQ[k],st=P.side[k];if(st&&st.st==='active'&&q.kill===m.type&&st.c<q.cnt){st.c++;if(st.c===q.cnt)G.toast(`📜 ${q.n}: erledigt! Zurück zu ${npcById(q.npc).short}.`,'#ffd54a',true);}}sfx(m.boss?'bosskill':'kill',m);if(m.boss==='dragon')sfx('aggro',{type:'dragon'});const D=G.D();const diff=m.lvl-P.level;let xp=m.xp;if(diff<=-7)xp*=.05;else if(diff<=-4)xp*=.3;else if(diff>=2)xp*=1+Math.min(diff,4)*.08;if(m.summoned)xp*=.3;if(m.boss){const bk=m.boss==='mini'?'mini:'+(m.room||m.type):m.boss;P.bossN=P.bossN||{};const bn=P.bossN[bk]||0;xp*=Math.max(.15,1/(1+bn*.8));P.bossN[bk]=bn+1;}xp=Math.max(1,Math.round(xp));
  gainXP(xp);G.floats.push({x:m.x,y:m.y-m.r-22,t:`+${xp} XP`,c:'#b388ff',life:1.1});
  for(let i=0;i<14;i++)G.parts.push({x:m.x,y:m.y,z:12,vx:rnd(-140,140),vy:rnd(-140,140),life:.55,c:m.c});
  const q=P.q;if(!m.boss&&!m.summoned)P.kills[m.type]=(P.kills[m.type]||0)+1;{const st=P.stats||(P.stats={});st.kills=(st.kills||0)+1;if(m.boss&&m.boss!=='mini')st.bosses=(st.bosses||0)+1;else if(m.boss==='mini')st.minis=(st.minis||0)+1;}
@@ -1407,7 +1421,7 @@ const npcDialog0=function(n){const q=P.q,L=P.level,B=(l,f,c)=>({l,f,c});
  case'greta':return{t:`Willkommen an meinem Stand! Du hast ${P.gold} Gold. Was darf es sein?`,b:[]};
  }
  return{t:pick(n.greet||['Sei gegrüßt.']),b:[]};};
-G.npcDialog=function(n){const d=(G.extraDialog&&G.extraDialog(n))||mainDialog(n)||npcDialog0(n);d.b=d.b||[];sqDialog(n,d);if(G.services)G.services(n,d);const sh=SHOPS[n.id];if(sh&&G.shopOpen&&!G.shopOpen(n.id)&&!(isGuard(n)&&P.bounty>0)){d.b.push({l:`🔒 Laden geschlossen – geöffnet ${G.shopHoursTxt(n.id)}`,f:()=>G.toast(`🕰 Es ist ${WDAY[wday()]}, ${clockStr(G.dayInfo().t)} Uhr. ${n.short||n.name} verkauft ${G.shopHoursTxt(n.id)}.`,'#ffcc80',true),c:0});return d;}if(sh){d.b=d.b||[];if(sh.smith){d.b.unshift({l:'⚒ Schmiede: Umschmieden',f:()=>G.ui&&G.ui.openShop(n.id,'forge'),c:1});d.b.unshift({l:'⚔ Ausrüstung kaufen',f:()=>G.ui&&G.ui.openShop(n.id,'gear'),c:1});}d.b.unshift({l:'🛒 Handeln (Kaufen & Verkaufen)',f:()=>G.ui&&G.ui.openShop(n.id,'buy'),c:1});}return d;};
+G.npcDialog=function(n){(P.met||(P.met={}))[n.id]=1;const d=(G.extraDialog&&G.extraDialog(n))||mainDialog(n)||npcDialog0(n);d.b=d.b||[];sqDialog(n,d);if(G.services)G.services(n,d);const sh=SHOPS[n.id];if(sh&&G.shopOpen&&!G.shopOpen(n.id)&&!(isGuard(n)&&P.bounty>0)){d.b.push({l:`🔒 Laden geschlossen – geöffnet ${G.shopHoursTxt(n.id)}`,f:()=>G.toast(`🕰 Es ist ${WDAY[wday()]}, ${clockStr(G.dayInfo().t)} Uhr. ${n.short||n.name} verkauft ${G.shopHoursTxt(n.id)}.`,'#ffcc80',true),c:0});return d;}if(sh){d.b=d.b||[];if(sh.smith){d.b.unshift({l:'⚒ Schmiede: Umschmieden',f:()=>G.ui&&G.ui.openShop(n.id,'forge'),c:1});d.b.unshift({l:'⚔ Ausrüstung kaufen',f:()=>G.ui&&G.ui.openShop(n.id,'gear'),c:1});}d.b.unshift({l:'🛒 Handeln (Kaufen & Verkaufen)',f:()=>G.ui&&G.ui.openShop(n.id,'buy'),c:1});}return d;};
 
 
 // ===================== Update =====================
@@ -1493,7 +1507,7 @@ let DECO=null;const DECOP={meadow:[.17,.012,.004,.018],forest:[.08,.075,.022,.01
 function buildDeco(){DECO=new Uint8Array(WW*H);for(let ty=1;ty<H-1;ty++)for(let tx=1;tx<WW-1;tx++){const t=map[ty*W+tx];if(t!==T.GRASS&&t!==T.GRASS2&&t!==T.DGRASS&&t!==T.FLOWER)continue;const pr=DECOP[biome(tx,ty)];if(!pr)continue;
   const cl=.55+G.noise(tx*.09,ty*.09,31)*.9,r=G.h2(tx,ty,301);let nearT=0;if(pr[1]>.03)for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]])if(map[(ty+dy)*W+tx+dx]===T.TREE)nearT++;
   let v=0,acc=pr[2]*cl;if(r<acc)v=3;else if(r<(acc+=pr[1]*cl*(1+nearT*.6)))v=2;else if(r<(acc+=pr[3]*cl))v=4;else if(r<(acc+=pr[0]*cl*1.2))v=1;if(!v)continue;
-  if(vDist((tx+.5)*TILE,(ty+.5)*TILE)<RV+1.5||townAt(tx,ty)||inCastle(tx,ty))continue;let road=false;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const q=map[(ty+dy)*W+tx+dx];if(q===T.PATH||q===T.COBBLE||q===T.BRIDGE||q===T.DOOR)road=true;}if(road&&v!==1)continue;DECO[ty*WW+tx]=v;}}
+  if(vDist((tx+.5)*TILE,(ty+.5)*TILE)<RV+1.5||townAt(tx,ty)||inCastle(tx,ty))continue;let road=false;for(let q4=0;q4<4;q4++){const dx=DX4[q4],dy=DY4[q4];const q=map[(ty+dy)*W+tx+dx];if(q===T.PATH||q===T.COBBLE||q===T.BRIDGE||q===T.DOOR)road=true;}if(road&&v!==1)continue;DECO[ty*WW+tx]=v;}}
 const decoCut=new Map();
 function decoAt(tx,ty){if(tx<0||ty<0||tx>=WW||ty>=H)return 0;if(!DECO)buildDeco();const v=DECO[ty*WW+tx];if(!v)return 0;if(decoCut.size&&decoCut.has(fk(tx,ty)))return 0;if(G.farm.has(fk(tx,ty)))return 0;return v;}
 G.decoAt=decoAt;
@@ -1833,6 +1847,7 @@ function guardDialog(n){const b=P.bounty,B=(l,f,c)=>({l,f,c}),st=wanted();if(G.b
 // Ziel-Erweiterung: Truhen, Gipfel, Bett, Katzen
 G.extraTarget=(best,bd)=>{if(G.room){if(G.room===HR&&hasHammerHeld()){const f=furnAt();if(f)return f;return{k:'furnbox'};}if(G.room===HR&&!hasHammerHeld()){for(const [x,y] of G.homeFoot('bed')){const d=Math.hypot((x+.5)*TILE-P.x,(y+.5)*TILE-P.y);if(d<Math.min(bd,50)){bd=d;best={k:'bed',x,y};}}}
   {const r=G.room;if(r.guest&&G.rentedHere()){for(let y=r.guest[1];y<=r.guest[3];y++)for(let x=r.guest[0];x<=r.guest[2];x++){if(tileAt(x,y)!==T.BED)continue;const d=Math.hypot((x+.5)*TILE-P.x,(y+.5)*TILE-P.y);if(d<Math.min(bd,50)){bd=d;best={k:'bed',x,y};}}}
+   if(r.roul){const x=r.roul.x+1.5,y=r.roul.y+1;const d=Math.hypot(x*TILE-P.x,y*TILE-P.y);if(d<Math.min(bd,70)){bd=d;best={k:'roul',x:x-.5,y:y-.5};}}
    if(r.id==='casino'){const ptx=Math.floor(P.x/TILE),pty=Math.floor(P.y/TILE);for(let yy=pty-1;yy<=pty+1;yy++)for(let xx=ptx-1;xx<=ptx+1;xx++){if(tileAt(xx,yy)!==T.SLOTM)continue;const d=Math.hypot((xx+.5)*TILE-P.x,(yy+.5)*TILE-P.y);if(d<Math.min(bd,46)){bd=d;best={k:'slot',x:xx,y:yy};}}}
    if(r.show){for(const s0 of r.show){const x=r.x0+s0[0]+.5,y=r.y0+s0[1]+.5;const d=Math.hypot(x*TILE-P.x,y*TILE-P.y);if(d<Math.min(bd,62)){bd=d;best={k:'show',x:x-.5,y:y-.5};}}}}
   for(const n of NPCS){if(n.loc!==G.room||n.dead)continue;const d=Math.hypot(n.x-P.x,n.y-P.y);if(d<Math.min(bd,52)){bd=d;best={k:'npc',n};}}
@@ -1841,9 +1856,9 @@ G.extraTarget=(best,bd)=>{if(G.room){if(G.room===HR&&hasHammerHeld()){const f=fu
  for(const c of OCH){if(P.och&&P.och[c.id])continue;const d=Math.hypot((c.tx+.5)*TILE-P.x,(c.ty+.5)*TILE-P.y);if(d<Math.min(bd,48)){bd=d;best={k:'och',c};}}
  {const d=Math.hypot((G.SUMMIT.x+.5)*TILE-P.x,(G.SUMMIT.y+.5)*TILE-P.y);if(d<Math.min(bd,60)){bd=d;best={k:'frost'};}}
  for(const c of G.CATS||[]){const d=Math.hypot(c.x-P.x,c.y-P.y);if(d<Math.min(bd,44)){bd=d;best={k:'cat',c};}}for(const h of G.HORSES||[]){if(h.room)continue;const d=Math.hypot(h.x+h.fx*20-P.x,h.y+h.fy*20-P.y);if(d<Math.min(bd,52)){bd=d;best={k:'horse',h};}}return best;};
-G.extraAct=t=>{if(t.k==='vdeco'){G.ui&&G.ui.openBuild('town');return true;}if(t.k==='slot'){G.ui&&G.ui.openCasino('slots');return true;}if(t.k==='show'){G.ui&&G.ui.openShowcase();return true;}if(t.k==='steal'){stealAt(t);return true;}if(t.k==='furnbox'){G.ui&&G.ui.openFurnBox&&G.ui.openFurnBox();return true;}if(t.k==='bed'){sleep();return true;}if(t.k==='och'){openOCH(t.c);return true;}if(t.k==='frost'){takeFrost();return true;}if(t.k==='cat'){feedCat(t.c);return true;}if(t.k==='horse'){feedHorse(t.h);return true;}return false;};
-G.extraPos=t=>t.k==='vdeco'?{x:P.x,y:P.y}:t.k==='slot'||t.k==='show'||(t.k==='bed'&&t.x!=null)?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='steal'?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='furnbox'?{x:P.x,y:P.y}:t.k==='furnpick'?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='och'?{x:(t.c.tx+.5)*TILE,y:(t.c.ty+.5)*TILE}:t.k==='frost'?{x:(G.SUMMIT.x+.5)*TILE,y:(G.SUMMIT.y+.5)*TILE}:t.k==='cat'?{x:t.c.x,y:t.c.y}:t.k==='horse'?{x:t.h.x+t.h.fx*20,y:t.h.y+t.h.fy*20}:t.k==='bed'?(()=>{const b=G.homeFoot('bed')[0];return{x:(b[0]+.5)*TILE,y:(b[1]+.5)*TILE};})():null;
-G.extraLabel=t=>t.k==='vdeco'?['🏡','Dorf dekorieren']:t.k==='slot'?['🎰','Spielautomat']:t.k==='show'?['🪟','Schaufenster']:t.k==='steal'?['🖐','Stehlen']:t.k==='furnbox'?['📦','Möbellager']:t.k==='horse'?(countItem('carrot')>0&&(!P.mount||G.HORSES.indexOf(t.h)===P.mount.idx)?['🥕','Füttern']:['🐴','Streicheln']):t.k==='bed'?['🛏','Schlafen']:t.k==='och'?['🧰','Öffnen']:t.k==='frost'?['❄','Frostherz']:t.k==='cat'?(['trout','carp','salmon','pike','cfish','goldfish'].some(id=>countItem(id)>0)?['🐟','Füttern']:['🐱','Streicheln']):null;
+G.extraAct=t=>{if(t.k==='roul'){G.ui&&G.ui.openCasino('roulette');return true;}if(t.k==='vdeco'){G.ui&&G.ui.openBuild('town');return true;}if(t.k==='slot'){G.ui&&G.ui.openCasino('slots');return true;}if(t.k==='show'){G.ui&&G.ui.openShowcase();return true;}if(t.k==='steal'){stealAt(t);return true;}if(t.k==='furnbox'){G.ui&&G.ui.openFurnBox&&G.ui.openFurnBox();return true;}if(t.k==='bed'){sleep();return true;}if(t.k==='och'){openOCH(t.c);return true;}if(t.k==='frost'){takeFrost();return true;}if(t.k==='cat'){feedCat(t.c);return true;}if(t.k==='horse'){feedHorse(t.h);return true;}return false;};
+G.extraPos=t=>t.k==='roul'?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='vdeco'?{x:P.x,y:P.y}:t.k==='slot'||t.k==='show'||(t.k==='bed'&&t.x!=null)?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='steal'?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='furnbox'?{x:P.x,y:P.y}:t.k==='furnpick'?{x:(t.x+.5)*TILE,y:(t.y+.5)*TILE}:t.k==='och'?{x:(t.c.tx+.5)*TILE,y:(t.c.ty+.5)*TILE}:t.k==='frost'?{x:(G.SUMMIT.x+.5)*TILE,y:(G.SUMMIT.y+.5)*TILE}:t.k==='cat'?{x:t.c.x,y:t.c.y}:t.k==='horse'?{x:t.h.x+t.h.fx*20,y:t.h.y+t.h.fy*20}:t.k==='bed'?(()=>{const b=G.homeFoot('bed')[0];return{x:(b[0]+.5)*TILE,y:(b[1]+.5)*TILE};})():null;
+G.extraLabel=t=>t.k==='roul'?['🎡','Roulette']:t.k==='vdeco'?['🏡','Dorf dekorieren']:t.k==='slot'?['🎰','Spielautomat']:t.k==='show'?['🪟','Schaufenster']:t.k==='steal'?['🖐','Stehlen']:t.k==='furnbox'?['📦','Möbellager']:t.k==='horse'?(countItem('carrot')>0&&(!P.mount||G.HORSES.indexOf(t.h)===P.mount.idx)?['🥕','Füttern']:['🐴','Streicheln']):t.k==='bed'?['🛏','Schlafen']:t.k==='och'?['🧰','Öffnen']:t.k==='frost'?['❄','Frostherz']:t.k==='cat'?(['trout','carp','salmon','pike','cfish','goldfish'].some(id=>countItem(id)>0)?['🐟','Füttern']:['🐱','Streicheln']):null;
 // Dialoge
 // ===== v21: Abenteurergilde – Aufträge rotieren alle 3 Tage und skalieren mit der Spielerstufe =====
 const GTYPES=['rabbit','boar','fox','wolf','slime','spider','goblin','bandit','skeleton','ghoul','bear','centaur','orc','zombie','wasp','jackal','scorpion','icewolf','draugr','imp','salamander','troll','wraith','minotaur','golem','harpy','mummy','frostgiant','vampire','reaper','sucher','nebelgarde','legion','blackknight','shadowhound','banshee'];
@@ -2003,7 +2018,7 @@ const POI=[];G.POI=POI;
   else if(kind==='grove'){for(let k=0;k<10;k++){const an=k/10*6.283;const x=cx+Math.round(Math.cos(an)*3),y=cy+Math.round(Math.sin(an)*3);map[y*W+x]=biome(cx,cy)==='dark'?T.MUSH:T.FLOWER;}chest=false;}
   if(chest)OCH.push({id:'c_'+id,tx:cx,ty:cy,loot:'canyon'});POI.push({id,name,text,kind,tx:cx,ty:cy});});}
 // ===== v18: Wildwechsel-Pfade, versteckte Truhen und Erreichbarkeit =====
-{const R=(i,k)=>h2(i,k,1801);const okB=new Set(['forest','dark','mist','meadow','winter','swamp']);
+(()=>{const R=(i,k)=>h2(i,k,1801);const okB=new Set(['forest','dark','mist','meadow','winter','swamp']);
  const groundAt=(x,y)=>{const b=biome(x,y);return b==='winter'?T.SNOW:b==='swamp'?T.SWAMP:(b==='dark'||b==='mist')?T.DGRASS:b==='desert'?T.SAND:b==='waste'||b==='peaks'?T.DIRT:b==='ash'?T.ASH:T.GRASS2;};
  const SOFT=new Set([T.TREE,T.DEAD,T.STUMP,T.MUSH,T.ROCK,T.CACTUS]);
  const carve1=(x,y)=>{if(x<4||y<4||x>=WW-4||y>=H-4)return;const t=map[y*W+x];if(SOFT.has(t))map[y*W+x]=groundAt(x,y);};
@@ -2012,21 +2027,21 @@ const POI=[];G.POI=POI;
   made++;let a=R(i,3)*6.283;const len=16+Math.floor(R(i,4)*36);for(let st=0;st<len;st++){carve1(Math.round(x),Math.round(y));a+=(h2(i,st,1802)-.5)*.9;x+=Math.cos(a);y+=Math.sin(a);if(x<6||y<6||x>WW-6||y>H-6)break;}
   if(made%3===0){const cx=Math.round(x),cy=Math.round(y);if(cx>6&&cy>6&&cx<WW-6&&cy<H-6&&!townAt(cx,cy)){for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++)carve1(cx+dx,cy+dy);const t=map[cy*W+cx];if(!SOLIDS[t]&&t!==T.WATER&&t!==T.LAVA)OCH.push({id:'s_'+i,tx:cx,ty:cy,loot:'secret'});}}}
  // Erreichbarkeit: abgeschlossene Inseln mit dem Rest der Welt verbinden (Bäume/Felsen weg, über Wasser Stege)
- const N=WW*H,par=new Int32Array(N).fill(-1),cost=i=>{const t=map[Math.floor(i/WW)*W+i%WW];if(!SOLIDS[t]||t===T.CLIMB||t===T.BARRIER||t===T.LEDGE||t===T.WAYSTONE)return 0;if(SOFT.has(t))return 1;if(t===T.WATER)return 2;return -1;};
+ const N=WW*H,par=new Int32Array(N).fill(-1),SOFTA=new Uint8Array(128);SOFT.forEach(t=>SOFTA[t]=1);const cost=i=>{const y0=(i/WW)|0,t=map[y0*W+i-y0*WW];if(!SOLIDS[t]||t===T.CLIMB||t===T.BARRIER||t===T.LEDGE||t===T.WAYSTONE)return 0;if(SOFTA[t])return 1;if(t===T.WATER)return 2;return -1;};
  const start=VCY*WW+VCX+2;const best=new Int32Array(N).fill(1e9);best[start]=0;
  // Dijkstra mit kleiner Gewichtung über Ringpuffer (0-1-2-BFS)
  const buckets=[[start],[],[]];let cur=0,bi=0,guard=0;const done=new Uint8Array(N);
  while(guard++<40000000){let list=buckets[bi%3];if(!list.length){let any=false;for(let k=1;k<=2;k++)if(buckets[(bi+k)%3].length){any=true;break;}if(!any)break;bi++;continue;}const i=list.pop();if(done[i])continue;done[i]=1;const x=i%WW,y=(i/WW)|0;
-  for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(nx<3||ny<3||nx>=WW-3||ny>=H-3)continue;const j=ny*WW+nx;if(done[j])continue;const c=cost(j);if(c<0)continue;const nd=best[i]+c;if(nd<best[j]){best[j]=nd;par[j]=i;buckets[(bi+c)%3].push(j);}}}
+  for(let q4=0;q4<4;q4++){const dx=DX4[q4],dy=DY4[q4];const nx=x+dx,ny=y+dy;if(nx<3||ny<3||nx>=WW-3||ny>=H-3)continue;const j=ny*WW+nx;if(done[j])continue;const c=cost(j);if(c<0)continue;const nd=best[i]+c;if(nd<best[j]){best[j]=nd;par[j]=i;buckets[(bi+c)%3].push(j);}}}
  // Inseln (begehbare Felder, die nur über Umwege erreichbar sind) finden und verbinden
  const seen=new Uint8Array(N);let fixed=0;
- for(let i=0;i<N;i++){if(seen[i]||best[i]===0||best[i]>=1e9||cost(i)!==0)continue;const comp=[i];seen[i]=1;let mi=i;for(let k=0;k<comp.length;k++){const c=comp[k],x=c%WW,y=(c/WW)|0;if(best[c]<best[mi])mi=c;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const j=(y+dy)*WW+x+dx;if(!seen[j]&&best[j]>0&&best[j]<1e9&&cost(j)===0){seen[j]=1;comp.push(j);}}}
+ for(let i=0;i<N;i++){if(seen[i]||best[i]===0||best[i]>=1e9||cost(i)!==0)continue;const comp=[i];seen[i]=1;let mi=i;for(let k=0;k<comp.length;k++){const c=comp[k],x=c%WW,y=(c/WW)|0;if(best[c]<best[mi])mi=c;for(let q4=0;q4<4;q4++){const dx=DX4[q4],dy=DY4[q4];const j=(y+dy)*WW+x+dx;if(!seen[j]&&best[j]>0&&best[j]<1e9&&cost(j)===0){seen[j]=1;comp.push(j);}}}
   if(comp.length<5)continue;let c=mi,g2=0;while(c>=0&&best[c]>0&&g2++<4000){const x=c%WW,y=(c/WW)|0,t=map[y*W+x];if(SOFT.has(t))map[y*W+x]=groundAt(x,y);else if(t===T.WATER)map[y*W+x]=T.BRIDGE;c=par[c];}fixed++;}
  // winzige, weiterhin unerreichbare Lücken (1–4 Felder) zuwachsen lassen, damit man nirgends feststecken kann
- {const pass=i=>{const t=map[Math.floor(i/WW)*W+i%WW];return !SOLIDS[t]||t===T.CLIMB||t===T.BARRIER||t===T.LEDGE;};const rs=new Uint8Array(N);const q=[start];rs[start]=1;for(let k=0;k<q.length;k++){const c=q[k],x=c%WW,y=(c/WW)|0;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,ny=y+dy;if(nx<1||ny<1||nx>=WW-1||ny>=H-1)continue;const j=ny*WW+nx;if(!rs[j]&&pass(j)){rs[j]=1;q.push(j);}}}
-  const s3=new Uint8Array(N);for(let i=0;i<N;i++){if(rs[i]||s3[i]||!pass(i))continue;const comp=[i];s3[i]=1;for(let k=0;k<comp.length&&comp.length<6;k++){const c=comp[k],x=c%WW,y=(c/WW)|0;for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1]]){const j=(y+dy)*WW+x+dx;if(!rs[j]&&!s3[j]&&pass(j)){s3[j]=1;comp.push(j);}}}
+ {const pass=i=>{const t=map[Math.floor(i/WW)*W+i%WW];return !SOLIDS[t]||t===T.CLIMB||t===T.BARRIER||t===T.LEDGE;};const rs=new Uint8Array(N);const q=[start];rs[start]=1;for(let k=0;k<q.length;k++){const c=q[k],x=c%WW,y=(c/WW)|0;for(let q4=0;q4<4;q4++){const dx=DX4[q4],dy=DY4[q4];const nx=x+dx,ny=y+dy;if(nx<1||ny<1||nx>=WW-1||ny>=H-1)continue;const j=ny*WW+nx;if(!rs[j]&&pass(j)){rs[j]=1;q.push(j);}}}
+  const s3=new Uint8Array(N);for(let i=0;i<N;i++){if(rs[i]||s3[i]||!pass(i))continue;const comp=[i];s3[i]=1;for(let k=0;k<comp.length&&comp.length<6;k++){const c=comp[k],x=c%WW,y=(c/WW)|0;for(let q4=0;q4<4;q4++){const dx=DX4[q4],dy=DY4[q4];const j=(y+dy)*WW+x+dx;if(!rs[j]&&!s3[j]&&pass(j)){s3[j]=1;comp.push(j);}}}
    if(comp.length<5)for(const c0 of comp){const x=c0%WW,y=(c0/WW)|0,t=map[y*W+x];if(t===T.WATER||t===T.BRIDGE||t===T.WAYSTONE||t===T.PATH||t===T.COBBLE||t===T.LEDGE||t===T.CLIMB)continue;if(OCH.some(o=>o.tx===x&&o.ty===y))continue;const b=biome(x,y);map[y*W+x]=(b==='desert'||b==='waste'||b==='ash'||b==='peaks')?T.ROCK:T.TREE;}}}
- G.REACHFIX=fixed;}
+ G.REACHFIX=fixed;})();
 let poiT=0;function poiTick(dt){poiT+=dt;if(poiT<.5||G.room)return;poiT=0;P.disc=P.disc||{};for(const p of POI){if(P.disc[p.id])continue;if(Math.hypot(P.x/TILE-p.tx,P.y/TILE-p.ty)<4.5){P.disc[p.id]=1;const n=Object.keys(P.disc).length;sfx('rare');gainXP(60+zoneLevel(p.tx,p.ty)*12);if(p.kind==='grove'){const S=G.calc();P.hp=S.maxhp;P.mp=S.maxMp;}G.toast(`✦ Entdeckt: ${p.name} (${n}/${POI.length})\n${p.text}`,'#ffe9a0',true);G.save();}}}
 // Hooks
 G.v8tick=dt=>{poiTick(dt);G._natT=(G._natT||0)-dt;if(G._natT<=0){G._natT=5;G.decoTick();if(P.buffs){let ch=false;for(const k in P.buffs)if(P.buffs[k]<=P.dayT){delete P.buffs[k];ch=true;}if(ch){G.S=calc();G.toast('⌛ Eine Stärkung ist abgeklungen.','#ccc');}}if(P.chopped&&Object.keys(P.chopped).length)applyTrees();}if(!G.HORSES)spawnHorses();if(P.riding){const mh=myHorse();if(mh&&!mh.ridden)mh.ridden=1;}G.mountTick(dt);for(const h of G.HORSES)if(h.ridden||(h.room?G.room===h.room:(!G.room&&Math.hypot(h.x-P.x,h.y-P.y)<TILE*40)))horseTick(h,dt);horsePush();G.fishTick(dt);if(!G.CATS)spawnCats();for(const c of G.CATS)if(!G.room&&Math.hypot(c.x-P.x,c.y-P.y)<TILE*30)catTick(c,dt,false);if(P.pet){if(!G.PET)G.PET={x:P.x,y:P.y+14,fx:0,fy:1,c:P.pet.c,anim:0,room:G.room,pet:1};catTick(G.PET,dt,true);}
@@ -2280,14 +2295,72 @@ G.services=(n,d)=>{const id=n.id,open=!G.shopOpen||G.shopOpen(id),U=G.ui;if(!U)r
   if(RENT[id])add(`🛏 Zimmer mieten (${RENT[id]} G)`,()=>U.openOffers(id));
   if(id==='kasimir')add('🃏 Casino Hold’em spielen',()=>U.openCasino('poker'));
   if(id==='bella')add('🂡 Blackjack spielen',()=>U.openCasino('bj'));
-  if(id==='fortunato'){add('🎰 Spielautomat',()=>U.openCasino('slots'));const q=P.q||(P.q={});if(!q.casino)d.b.push(OB('Gibt es hier auch Arbeit?',()=>{q.casino='on';q.casW0=P.casWins||0;G.toast('📜 Nebenquest: Glückssträhne – gewinne 5 Runden im Casino.','#ffd54a',true);}));else if(q.casino==='on'&&(P.casWins||0)-(q.casW0||0)>=5)d.b.unshift(OB('🍀 Glückssträhne abgeben',()=>{q.casino='done';P.gold+=400;furnAdd('d_flag_3');gainXP(Math.round(xpNeed(P.level)*.15));G.toast('🍀 Fortunato: „Ein Naturtalent!“ +400 Gold und ein goldener Fahnenmast fürs Dorf.','#ffd54a',true);sfx('quest');G.save();}));}}};
+  if(id==='fortunato'){add('🎡 Roulette',()=>U.openCasino('roulette'));add('🎰 Spielautomat',()=>U.openCasino('slots'));const q=P.q||(P.q={});if(!q.casino)d.b.push(OB('Gibt es hier auch Arbeit?',()=>{q.casino='on';q.casW0=P.casWins||0;G.toast('📜 Nebenquest: Glückssträhne – gewinne 5 Runden im Casino.','#ffd54a',true);}));else if(q.casino==='on'&&(P.casWins||0)-(q.casW0||0)>=5)d.b.unshift(OB('🍀 Glückssträhne abgeben',()=>{q.casino='done';P.gold+=400;furnAdd('d_flag_3');gainXP(Math.round(xpNeed(P.level)*.15));G.toast('🍀 Fortunato: „Ein Naturtalent!“ +400 Gold und ein goldener Fahnenmast fürs Dorf.','#ffd54a',true);sfx('quest');G.save();}));}}};
 // Casino: Ein- und Auszahlungen
 G.casinoBet=v=>{v=Math.floor(v);if(v<=0||P.gold<v)return false;P.gold-=v;G.invDirty=true;return true;};
 G.casinoPay=(v,win)=>{v=Math.floor(v);if(v>0)P.gold+=v;if(win){P.casWins=(P.casWins||0)+1;}const st=P.stats||(P.stats={});st.casino=(st.casino||0)+1;G.invDirty=true;G.save();};
-G.casinoLimit=()=>Math.max(50,Math.min(5000,Math.round(P.level*60)));
+
 // Neuer Tag: Wochentag ansagen
 G.weekTick=()=>{const dn=Math.floor((P.dayT||0)/DAYLEN);if(G._wdN===dn)return;const first=G._wdN==null;G._wdN=dn;if(first)return;const wd=wday();G.toast(`📅 ${WDAY[wd]}${wd===6?' – Sonntag: Die Läden im Handwerkshof haben Ruhetag, viele gehen in die Kapelle.':wd===2?' – abends trifft sich das Dorf in der Taverne.':''}`,'#ffe9b0');if(G.showMark)G.showMark();G.showV=(G.showV||0)+1;};
 
+
+// ===================== v23 (Teil 4): Guide-Buch – Daten (spoilerfrei, schaltet sich durch Spielen frei) =====================
+const GUIDE_MECH=[
+ ['🧭 Steuerung & Grundlagen','Laufen mit WASD bzw. dem linken Stick, angreifen mit Linksklick bzw. ⚔. Mit ✋ / Rechtsklick sprichst du mit Leuten, öffnest Türen und Kisten oder nutzt Werkzeuge. Hinter Wegpunkt-Steinen kannst du später schnell reisen.'],
+ ['🌱 Anbauen (Harke & Gießkanne)','Mit der Harke lockerst du Erde auf, nur höchstens 3 Felder vom Wasser entfernt. Säe, dann gieße mit der Gießkanne – ein Guss hält einen Tag. Die Kanne füllst du am Wasser wieder auf. Pflanzen wachsen nur, solange sie nass sind. Die Ackerfelder im Dorf gelten schon als bewässert. Beim Ernten springt manchmal Saat zurück.'],
+ ['🌸 Blumen & Setzlinge','Blumen wachsen ohne Gießen. Setzlinge werden nach etwa zwei Tagen zu echten Bäumen. Beides geht auch außerhalb der Mauern – aber nie auf Wasser, Lava oder Wegen.'],
+ ['🌾 Gras schneiden für Samen','Hohes Gras kannst du mit jeder Waffe oder jedem Werkzeug abschlagen. Ab und zu fallen dabei Samen heraus. Das Gras wächst mit der Zeit nach.'],
+ ['🪓 Holzfällen','Mit einer Axt in der Hand fällst du Bäume mit wenigen Schlägen. Du bekommst Holz, Stöcke, manchmal Harz und Setzlinge. Gefällte Bäume wachsen nach ein paar Tagen nach.'],
+ ['🌳 Wald & Gestrüpp','Bäume blockieren nur am Stamm – du gleitest daran vorbei. Gestrüpp und Riesenbüsche kannst du durchqueren; sie bremsen dich etwas, verstecken dich aber auch.'],
+ ['🐱 Katzen zähmen','Streunende Katzen sind scheu. Wer geduldig ist und ihnen immer wieder etwas Leckeres anbietet, gewinnt vielleicht einen treuen Begleiter fürs eigene Haus.'],
+ ['🐴 Pferde & Reiten','Am Stall gibt es Pferde und Zubehör. Mit der Reit-Taste (R bzw. 🐎) steigst du auf und ab. Pferde mögen Karotten. Ein gestürztes Pferd erholt sich erst, wenn du richtig geschlafen hast.'],
+ ['🔍 Geheimnisse & Kisten','Eldmar ist voller versteckter Kisten, Höhlen und Orte, die man nicht gleich sieht. Schau hinter Felsen, in Ruinen, an Ufern und am Ende von Pfaden. Manche Wege öffnen sich erst später.'],
+ ['🛏 Schlafen & Gemütlichkeit','Schlafen geht ab dem Abend im eigenen Bett oder in einem gemieteten Gästezimmer. Danach bist du „ausgeruht“. Je gemütlicher dein Haus eingerichtet ist, desto stärker wirkt das.'],
+ ['🏡 Einrichten & Dorf-Deko','Mit dem Schreinerhammer in der Hand öffnest du im eigenen Haus (oder in einem befreundeten Dorf) einen zoombaren Plan. Dort stellst du gekaufte Möbel bzw. Deko frei auf – so viele du willst.'],
+ ['📅 Woche & Öffnungszeiten','Eine Woche hat sieben Tage. Händler haben Arbeitszeiten, manche einen Ruhetag. Die genauen Zeiten einer Person stehen hier im Buch, sobald du einmal mit ihr gesprochen hast.'],
+ ['🍞 Kochen & Stärkungen','Bäcker backen aus Zutaten Gerichte, die dich für einige Minuten stärken (Tempo, Stärke, Glück …). Aktive Stärkungen siehst du oben neben deinem Gold.'],
+ ['⚖ Gesetz & Strafen','Diebstahl und Angriffe bringen Kopfgeld. Wachen bieten Bezahlen, Kerker oder Flucht an. Im Kerker verlierst du Gold und die Wachen nehmen dir Gegenstände ab. Auch der Tod kostet spürbar Gold – sei vorsichtig.'],
+ ['💰 Was sich zum Farmen lohnt','Gildenaufträge bringen gutes Gold und wechseln alle drei Tage. Jagdtrophäen verkaufst du am besten bei der Abenteurergilde. Holz, Ernte und Blumen sind sichere Einnahmen. Bosse lassen öfter starke Ausrüstung fallen. Im Handwerkshof gibt es täglich wechselnde Einzelstücke – schau öfter vorbei.']];
+G.GUIDE_MECH=GUIDE_MECH;
+const TNAME=tid=>tid==='city'?'Eichenhain':tid==='wild'?'Unterwegs in Eldmar':(TOWNS.find(t=>t.id===tid)||{}).name||tid;
+const npcTown=n=>{if(n.town)return n.town;let x=n.hx/TILE,y=n.hy/TILE;if(x>=WW){const b=n._house||(n.loc&&n.loc.b)||(n.post&&n.post.b);if(b){x=b.x;y=b.y;}else{const r=ROOMS.find(q=>x>=q.x0&&x<q.x0+q.w&&y>=q.y0&&y<q.y0+q.h);if(r&&r.b){x=r.b.x;y=r.b.y;}}}
+ const tx=Math.floor(x),ty=Math.floor(y);if(dV(tx,ty)<RV+6)return'city';const t=TOWNS.find(q=>Math.hypot(tx-q.x,ty-q.y)<q.r+6);return t?t.id:'wild';};
+const ROLEW=n=>{const nm=n.name||'',sh=n.short||'';const r=nm.replace(sh,'').trim();return r&&r!==nm?r:(n.child?'Kind':'Bewohner');};
+function npcCan(n){const id=n.id,c=[],sh=SHOPS[id];if(sh){if(sh.smith)c.push('Schmiedeware & Ausrüstung');else c.push('Handel: '+(sh.n||'Waren'));}
+ if(id==='holger')c.push('Möbel & Schreinerhammer');if(id==='flora')c.push('Dorf- & Park-Deko');if(id==='baldur')c.push('Hausausbau & Schaufenster');if(id==='edwin')c.push('Karten & Ortsmarker');
+ if(RENT[id])c.push('Gästezimmer');if(id==='fortunato')c.push('Spielautomaten & Roulette');if(id==='kasimir')c.push('Casino Hold’em');if(id==='bella')c.push('Blackjack');if(id==='mara')c.push('Heilung');if(id==='isolde')c.push('Gildenaufträge');
+ if(isGuard(n))c.push('Wache – Kopfgeld begleichen');if(n.horse||id==='matthes')c.push('Pferde & Stall');return c;}
+function npcDetail(n){const id=n.id,o=[];const hrs=(SHOPS[id]||G.offers(id).length||['fortunato','kasimir','bella','anselm'].includes(id))?G.shopHoursTxt(id):null;if(hrs)o.push('🕰 '+hrs);
+ if(n.job22){const b=n.job22.b;o.push('🛠 Arbeitet '+(b&&b.name?'im Gebäude „'+b.name+'“':'an festem Platz')+'.');}
+ const h=n._house||(typeof houseOf==='function'?houseOf(n):null);if(h&&h.name)o.push('🛏 Schläft nachts: '+h.name+'.');else if(h)o.push('🛏 Schläft nachts in ihrem/seinem Haus.');
+ if(!n.lord&&!n.job22&&!isGuard(n)){const tw=npcTown(n);o.push(tw==='city'?'⛪ Sonntagvormittag oft in der Kapelle, mittwochabends in der Taverne.':'🍺 Mittwochabends meist in der Taverne.');}
+ const sh=SHOPS[id];if(sh&&sh.items&&sh.items.length)o.push('💰 Preise: '+sh.items.slice(0,10).map(i=>STACK[i]&&STACK[i].price?`${STACK[i].name} ${STACK[i].price*(STACK[i].pack||1)} G`:'').filter(Boolean).join(' · '));
+ if(SMCAP[id])o.push(`⚒ Ausrüstung bis höchstens Stufe ${SMCAP[id]}.`);if(RENT[id])o.push(`🛏 Gästezimmer: ${RENT[id]} Gold pro Nacht.`);
+ if(id==='baldur')o.push('🏗 Ausbau: '+HUPG.filter(Boolean).map(u=>`${u.n} ${u.p.toLocaleString('de-DE')} G`).join(' · '));if(id==='edwin')o.push('🗺 '+G.offers('edwin').map(x=>`${x.n} ${x.price} G`).join(' · '));
+ return o;}
+G.guideNPCs=()=>{const g={};for(const n of NPCS){if(n.hidden||n.id==='elara'&&!G.npcVisible(n))continue;const tw=npcTown(n);(g[tw]||(g[tw]=[])).push(n);}
+ const order=['city'].concat(TOWNS.map(t=>t.id),['wild']).filter(k=>g[k]);return order.map(k=>({id:k,name:TNAME(k),list:g[k].sort((a,b)=>(a.name||'').localeCompare(b.name||'')).map(n=>{const met=!!(P.met&&P.met[n.id]);return{id:n.id,name:n.name,role:ROLEW(n),can:npcCan(n),met,det:met?npcDetail(n):null};})}));};
+const BIOME_ORDER=['m','f','s','w','i','a','d','e','p','n',''];const BIOME_N={m:'Sonnenwiesen',f:'Finsterwald',s:'Nebelmoor',w:'Steinöde',i:'Frostlande',a:'Aschenberge',d:'Schattenwald',e:'Sengende Dünen',p:'Graukamm-Gebirge',n:'Nebellande','':'Dungeons & Verliese'};
+G.guideMobs=()=>{const D=G.D(),luck=1+(G.S.luck||0)/100,pc=v=>v>=.995?'100 %':v>=.1?Math.round(v*100)+' %':(Math.round(v*1000)/10).toLocaleString('de-DE')+' %';const out=BIOME_ORDER.map(b=>({b,name:BIOME_N[b],list:[]}));
+ for(const k in MT){const t=MT[k],n=(P.kills||{})[k]||0;const b0=(t.b||'')[0]||'';const sec=out.find(s=>s.b===b0)||out[out.length-1];if(!n){sec.list.push({k,unknown:1});continue;}
+  const dr=[['🪙 Gold',pc(.6)],['⚔ Ausrüstung (zufällig)',pc(Math.min(.95,D.chN*luck))],['🧪 Heiltrank',pc(.05)],['🔷 Manatrank',pc(.025)],['🌱 Saat',pc(.04)],[t.shot&&t.shot.kind==='arrow'?'🏹 Pfeile':'🏹 Pfeile/Bolzen',pc(t.shot&&t.shot.kind==='arrow'?.45:.04)]];
+  if(STACK['m_'+k])dr.push(['✦ '+STACK['m_'+k].name,pc(.05*(1+(G.S.luck||0)/200))]);for(const e of UNIQ[k]||[])dr.push(['★ '+e.name+(e.d?' ('+e.d+')':''),pc((e.ch||.035)*luck)]);
+  sec.list.push({k,name:t.n,kills:n,lv:t.lv,passive:!!t.passive,drops:dr});}
+ const bosses=Object.keys(BOSSES).map(k=>{const B=BOSSES[k],n=(P.bossSeen||{})[k]||0;if(!n)return{k,unknown:1};return{k,name:B.n,kills:n,lv:B.lv,drops:[['⚔ Beute (selten bis mythisch)',pc(Math.min(.95,D.chB*luck))]].concat((B.loot||[]).map(e=>['👑 '+e.name,'Teil der Boss-Beute'])).concat([['🪙 Viel Gold','immer'],['🧪 Heiltrank',pc(.35)]])};});
+ return{biomes:out.filter(s=>s.list.length),bosses};};
+G.guideQuests=()=>{const QL=G.questLog();const st=P.stats||{};return{main:QL.main,side:QL.side,done:Object.values(P.q||{}).filter(v=>v==='done').length,kills:st.kills||0,bosses:st.bosses||0,met:Object.keys(P.met||{}).length,npcs:NPCS.length};};
+
+
+// ===================== v23: Einzigartige Menschen in 3D – Statur nach Stand/Beruf, Frisur, Gesichtsmerkmale, Händigkeit =====================
+const FAT=/Fürst|König|Jarl|Kaufmann|Händler|Wirt|Casinobesitzer|Bürgermeister|Vogt|Bäcker|Koch|Köchin|Graf|Sultan|Kämmerer/,MUSC=/Schmied|Wache|Hauptmann|Förster|Holzfäll|Bauer|Bäuerin|Knecht|Jäger|Söldner|Walküre|Krieger|Ritter|Waffenmeister|Stallmeister|Fischer|Zimmermann|Schreiner|Baumeister|Bergmann|Gladiator|Schlosswache|Torwache/,THIN=/Witwe|Heiler|Bettler|Gelehrt|Kartograph|Schreiber|Bruder|Mönch|Alchemist|Trank|Croupier|Kräuter|Prophet|Seher|Nonne|Weise|Bibliothek|Waise/,SCHOL=/Kartograph|Gelehrt|Schreiber|Baumeister|Bibliothek|Alchemist|Astrolog|Chronist/;
+const HSM=['short','messy','side','buzz','curly','wavy','short','side','bald'],HSF=['long','wavy','curly','bun','braid','long','side','bun'],BEARDS=['short','stubble','mustache','goatee','long','small','full'];
+G.look3=n=>{if(n._l3)return n._l3;const l=n.look||{},nm=n.name||'',id=n.id||'x';let h=0;for(let i=0;i<id.length;i++)h=(h*31+id.charCodeAt(i))>>>0;const r=k=>h2(h%9973,k,5101);const fem=!!(l.dress||l.fem);
+ const o={};if(!n.child){if(FAT.test(nm)||r(1)<.08)o.fat=FAT.test(nm)?1:.6;else if(MUSC.test(nm)||r(2)<.1)o.musc=1;else if(THIN.test(nm)||r(3)<.12)o.thin=1;o.ht=.94+r(4)*.12+(o.musc?.03:0);}
+ if(!l.hairStyle&&l.hair)o.hairStyle=fem?HSF[Math.floor(r(5)*HSF.length)]:HSM[Math.floor(r(5)*HSM.length)];
+ if(l.beard&&!l.beardS)o.beardS=BEARDS[Math.floor(r(6)*BEARDS.length)];
+ const mk=r(7);o.mark=l.mark||(mk<.14?'freckles':mk<.22?'scar':mk<.3?'mole':null);if(SCHOL.test(nm)||r(8)<.07)o.glasses=1;if(r(9)<.12)o.lefty=1;
+ o.eyeC=l.eyeC||['#4a3020','#2a4a7a','#3a6a3a','#6a5a3a','#3a3a3a'][Math.floor(r(10)*5)];if(fem&&!l.lips)o.lips=['#b0505a','#a04040','#c06070'][Math.floor(r(11)*3)];if(!fem&&r(12)<.3)o.brows='thick';
+ return n._l3=o;};
 {const _tp=G.targetPos,_tl=G.targetLabel;G.targetPos=t=>G.extraPos(t)||_tp(t);G.targetLabel=t=>G.extraLabel(t)||_tl(t);}
 {const _ng=G.newGame;G.newGame=function(d){_ng(d);P.qv=22;P.home={lvl:0,items:[{i:'d_bed1_0',x:8,y:7}]};P.vdeco={};P.furn={};G.migrateHome();applyHome();G.rebuildVillage();G._wdN=null;try{G.applyTrees(true);}catch(e){}G.CATS=null;G.PET=null;G.room=HR;P.x=(HR.door.tx+.5)*TILE;P.y=(HR.y0+9.5)*TILE;P.fx=0;P.fy=1;for(const n of NPCS){n.loc=null;clearPose(n);}};}
 {const _ld=G.load;G.load=function(){const ok=_ld();if(ok){if(!P.home)P.home={bed:1};P.och=P.och||{};P.z=0;P.vz=0;G.migrateHome();applyHome();G.rebuildVillage();G._wdN=null;{const tx=Math.floor(P.x/TILE),ty=Math.floor(P.y/TILE);if(tx>=HR.x0-1&&tx<=HR.x0+HR.w&&ty>=HR.y0-1&&ty<=HR.y0+HR.h&&!walkTile(tx,ty)){P.x=(HR.door.tx+.5)*TILE;P.y=(HR.door.ty-1.5)*TILE;}}G.CATS=null;G.PET=null;}return ok;};}

@@ -2,11 +2,12 @@
 // Mit Internet: holt immer die neueste Version (Updates kommen sofort an).
 // Ohne Internet: startet das Spiel aus dem Speicher.
 // Bei jedem Spiel-Update die Versionsnummer hier um 1 erhöhen.
-const CACHE = 'aschenkrone-v22';
+const CACHE = 'aschenkrone-v25';
 
 const FILES = [
   './',
   './index.html',
+  './icons.js',
   './core.js',
   './sound.js',
   './r2d.js',
